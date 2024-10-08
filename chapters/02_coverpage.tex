@@ -1,7 +1,7 @@
 % use a sans-serif font for the pro-forma cover sheet
 \begin{sffamily}
 
-Total page count: \pageref{LastPage} %\pageref{lastpage}
+Total page count: \pageref{LastPage}
 
 % calculate number of pages from
 % \label{firstcontentpage} to \label{lastcontentpage} inclusive
@@ -18,21 +18,36 @@ Main chapters (excluding front-matter, references and appendix):
 
 Main chapters word count: 467
 
-Methodology used to generate that word count:
+% \vspace*{1em}
+% Methodology used to generate that word count:
 
-[For example:
+% [For example:
 
-\begin{quote}
-\begin{verbatim}
-$ make wordcount
-gs -q -dSAFER -sDEVICE=txtwrite -o - \
-   -dFirstPage=6 -dLastPage=11 report-submission.pdf | \
-egrep '[A-Za-z]{3}' | wc -w
-467
-\end{verbatim}
-\end{quote}
+% \begin{quote}
+% \begin{verbatim}
+% $ make wordcount
+% gs -q -dSAFER -sDEVICE=txtwrite -o - \
+%    -dFirstPage=6 -dLastPage=11 report-submission.pdf | \
+% egrep '[A-Za-z]{3}' | wc -w
+% 467
+% \end{verbatim}
+% \end{quote}
 
-]
+% ]
+
+\vspace*{2em}
+\begin{code}
+    \begin{minted}{text}
+        $ make wordcount
+        gs -q -dSAFER -sDEVICE=txtwrite -o - \
+           -dFirstPage=6 -dLastPage=11 report-submission.pdf | \
+        egrep '[A-Za-z]{3}' | wc -w
+        467
+    \end{minted}
+    \captionsetup{textfont=sf}
+    \caption*{\textbf{Listing:} Methodology used to generate that word count.}
+\end{code}
+
 
 \end{sffamily}
 

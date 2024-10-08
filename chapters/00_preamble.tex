@@ -33,5 +33,31 @@
 % ============= %
 % Modifications %
 % ============= %
-
 \usepackage{lastpage}
+\usepackage[nottoc,numbib]{tocbibind}
+\usepackage[acronym]{glossaries}
+
+\usepackage{minted}
+\setminted{%
+    linenos,%
+    breaklines,%
+    autogobble%
+}
+
+\usepackage{caption}
+\captionsetup{%
+    labelfont=bf,%
+    % textfont=it,%
+    font=small,%
+    skip=0pt,%
+    width=0.8\textwidth%
+}
+\newenvironment{code}{\captionsetup{type=listing}}{}
+
+\usepackage{hyperref}
+\hypersetup{
+	colorlinks=true,
+	linkcolor=black,
+	urlcolor=black,
+	citecolor=black
+}
