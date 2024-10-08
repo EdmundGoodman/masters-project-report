@@ -1,0 +1,37 @@
+% Suggested LaTeX style template for Masters project report submitted at the
+% Department of Computer Science and Technology
+%
+% Markus Kuhn, May 2022
+% (borrowing elements from an earlier template by Steven Hand)
+
+\usepackage[pdfborder={0 0 0}]{hyperref}  % turns references into hyperlinks
+\usepackage[vmargin=20mm,hmargin=25mm]{geometry}  % adjust page margins
+\usepackage{graphicx} % allows inclusion of PDF, PNG and JPG images
+\usepackage{parskip}  % separate paragraphs with vertical space
+                      % instead of indenting their first line
+\usepackage{setspace} % for \onehalfspacing
+\usepackage{refcount} % for counting pages
+\usepackage{upquote}  % for correct quotation marks in verbatim text
+
+\newif\ifsubmission % Boolean flag for distinguishing submitted/final version
+
+% Change the following lines to your own project title, name, college, course
+\title{A \LaTeX\ template for a Master's project report}
+\author{Edmund Goodman}
+\date{\today}
+\newcommand{\candidatenumber}{1234N}
+\newcommand{\college}{Clare College}
+\newcommand{\course}{Master of Philosophy in Advanced Computer Science}
+
+% Select which version this is:
+% For the (anonymous) submission (without your name or acknowledgements)
+% uncomment the following line (or let the makefile do this for you)
+%\submissiontrue
+% For the final version (with your name) leave the above commented.
+
+
+% ============= %
+% Modifications %
+% ============= %
+
+\usepackage{lastpage}

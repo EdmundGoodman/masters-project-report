@@ -1,0 +1,57 @@
+\begin{sffamily}
+\begin{titlepage}
+\makeatletter
+
+% University logo with shield hanging in left margin
+\hspace*{-14mm}\includegraphics[width=65mm]{images/logo-dcst-colour}
+
+\ifsubmission
+
+% submission proforma cover page for blind marking
+\begin{Large}
+\vspace{20mm}
+Research project report title page
+
+\vspace{35mm}
+Candidate \candidatenumber
+
+\vspace{42mm}
+\textsl{``\@title''}
+
+\end{Large}
+
+\else
+
+% regular cover page
+\begin{center}
+\Huge
+\vspace{\fill}
+
+\@title
+\vspace{\fill}
+
+\@author
+\vspace{10mm}
+
+\Large
+\college
+\vspace{\fill}
+
+\@date
+\vspace{\fill}
+
+\end{center}
+
+\fi
+
+\vspace{\fill}
+\begin{center}
+Submitted in partial fulfillment of the requirements for the\\
+\course
+\end{center}
+
+\makeatother
+\end{titlepage}
+\end{sffamily}
+
+\newpage

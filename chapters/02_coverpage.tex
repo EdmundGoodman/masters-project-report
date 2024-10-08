@@ -1,0 +1,60 @@
+% use a sans-serif font for the pro-forma cover sheet
+\begin{sffamily}
+
+Total page count: \pageref{LastPage} %\pageref{lastpage}
+
+% calculate number of pages from
+% \label{firstcontentpage} to \label{lastcontentpage} inclusive
+\makeatletter
+\@tempcnta=\getpagerefnumber{lastcontentpage}\relax%
+\advance\@tempcnta by -\getpagerefnumber{firstcontentpage}%
+\advance\@tempcnta by 1%
+\xdef\contentpages{\the\@tempcnta}%
+\makeatother
+
+Main chapters (excluding front-matter, references and appendix):
+\contentpages~pages
+(pp~\pageref{firstcontentpage}--\pageref{lastcontentpage})
+
+Main chapters word count: 467
+
+Methodology used to generate that word count:
+
+[For example:
+
+\begin{quote}
+\begin{verbatim}
+$ make wordcount
+gs -q -dSAFER -sDEVICE=txtwrite -o - \
+   -dFirstPage=6 -dLastPage=11 report-submission.pdf | \
+egrep '[A-Za-z]{3}' | wc -w
+467
+\end{verbatim}
+\end{quote}
+
+]
+
+\end{sffamily}
+
+
+\vspace{\fill}
+\onehalfspacing
+\ifsubmission\else\makeatletter
+\textbf{\Huge Declaration}
+\vspace{40pt}
+
+I, \@author\ of \college, being a candidate for the \course, hereby
+declare that this report and the work described in it are my own work,
+unaided except as may be specified below, and that the report does not
+contain material that has already been used to any substantial extent
+for a comparable purpose.
+
+% Add here things like: Figure X is the work of Y, etc.
+
+\bigskip 
+\textbf{Signed:}
+
+\bigskip
+\textbf{Date:}
+\vspace{\fill}
+\makeatother\fi
