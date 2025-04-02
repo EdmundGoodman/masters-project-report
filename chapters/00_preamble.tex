@@ -16,7 +16,7 @@
 \newif\ifsubmission % Boolean flag for distinguishing submitted/final version
 
 % Change the following lines to your own project title, name, college, course
-\title{A \LaTeX\ template for a Master's project report}
+\title{Rewriting the Rewriter: Dynamic Optimizations of User-extensible Compiler Infrastructure}
 \author{Edmund Goodman}
 \date{\today}
 \newcommand{\candidatenumber}{1234N}
@@ -33,17 +33,19 @@
 % ============= %
 % Modifications %
 % ============= %
-\usepackage{lastpage}
-\usepackage[nottoc,numbib]{tocbibind}
+
+%% Configure fonts
+\usepackage{libertine}
+\usepackage{FiraMono}
+
+%% Extra packages
 \usepackage[acronym]{glossaries}
+\usepackage{subcaption}
+\usepackage{amsmath}
+% \usepackage{lastpage}
+% \usepackage[nottoc,numbib]{tocbibind}
 
-\usepackage{minted}
-\setminted{%
-    linenos,%
-    breaklines,%
-    autogobble%
-}
-
+%% Caption configuration
 \usepackage{caption}
 \captionsetup{%
     labelfont=bf,%
@@ -52,12 +54,36 @@
     skip=0pt,%
     width=0.8\textwidth%
 }
+% \captionsetup{textfont=it}
+% \renewcommand\fbox{\fcolorbox{white}{white}}
+% % \captionsetup[figure]{skip=0pt}
+% \captionsetup[table]{skip=5pt}
+% \captionsetup[listing]{skip=0pt}
+
+%% Code highlighting
+\usepackage{minted}
+\setminted{%
+    linenos,%
+    breaklines,%
+    autogobble%
+    % escapeinside=||,
+}
+% https://tex.stackexchange.com/a/53540
 \newenvironment{code}{\captionsetup{type=listing}}{}
 
-\usepackage{hyperref}
-\hypersetup{
-	colorlinks=true,
-	linkcolor=black,
-	urlcolor=black,
-	citecolor=black
-}
+%% Configure urls
+\usepackage{url}
+% \hypersetup{
+% 	colorlinks=true,
+% 	linkcolor=black,
+% 	urlcolor=black,
+% 	citecolor=black
+% }
+
+
+%% Configure bibliography
+\usepackage[citestyle=ieee]{biblatex}
+\addbibresource{references.bib}
+% Avoid overflowing URLs (https://stackoverflow.com/a/43593557)
+\setcounter{biburllcpenalty}{7000}
+\setcounter{biburlucpenalty}{8000}
