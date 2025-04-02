@@ -1,5 +1,51 @@
-% use a sans-serif font for the pro-forma cover sheet
-\begin{sffamily}
+\ifsubmission
+% ===================== %
+% Submission cover page %
+% ===================== %
+
+\begin{defaultsffamily} % use a sans-serif font for the pro-forma cover sheet
+Total page count: \pageref{LastPage}
+
+% calculate number of pages from
+% \label{firstcontentpage} to \label{lastcontentpage} inclusive
+\makeatletter
+\@tempcnta=\getpagerefnumber{lastcontentpage}\relax%
+\advance\@tempcnta by -\getpagerefnumber{firstcontentpage}%
+\advance\@tempcnta by 1%
+\xdef\contentpages{\the\@tempcnta}%
+\makeatother
+
+Main chapters (excluding front-matter, references and appendix):
+\contentpages~pages
+(pp~\pageref{firstcontentpage}--\pageref{lastcontentpage})
+
+Main chapters word count: 467
+
+\vspace*{1em}
+Methodology used to generate that word count:
+
+\begin{quote}
+\begin{verbatim}
+$ make wordcount
+gs -q -dSAFER -sDEVICE=txtwrite -o - \
+   -dFirstPage=6 -dLastPage=11 report-submission.pdf | \
+egrep '[A-Za-z]{3}' | wc -w
+467
+\end{verbatim}
+\end{quote}
+
+\end{defaultsffamily}
+\vspace{\fill}
+\onehalfspacing
+
+
+
+
+\else
+% ================== %
+% Regular cover page %
+% ================== %
+
 
 Total page count: \pageref{LastPage}
 
@@ -18,23 +64,6 @@ Main chapters (excluding front-matter, references and appendix):
 
 Main chapters word count: 467
 
-% \vspace*{1em}
-% Methodology used to generate that word count:
-
-% [For example:
-
-% \begin{quote}
-% \begin{verbatim}
-% $ make wordcount
-% gs -q -dSAFER -sDEVICE=txtwrite -o - \
-%    -dFirstPage=6 -dLastPage=11 report-submission.pdf | \
-% egrep '[A-Za-z]{3}' | wc -w
-% 467
-% \end{verbatim}
-% \end{quote}
-
-% ]
-
 \vspace*{2em}
 \begin{code}
     \begin{minted}{text}
@@ -49,12 +78,10 @@ Main chapters word count: 467
 \end{code}
 
 
-\end{sffamily}
-
 
 \vspace{\fill}
 \onehalfspacing
-\ifsubmission\else\makeatletter
+\makeatletter
 \textbf{\Huge Declaration}
 \vspace{40pt}
 
@@ -64,12 +91,19 @@ unaided except as may be specified below, and that the report does not
 contain material that has already been used to any substantial extent
 for a comparable purpose.
 
+% TODO: This doesn't show up in the submission version!!!
 % Add here things like: Figure X is the work of Y, etc.
+Figure \ref{fig:compilers-lagging} was created by Anton Lydike, based on a slide from Sean Silva's talk at the March 2025 Cambridge Compiler Social.
 
 \bigskip 
-\textbf{Signed:} % Edmund Goodman
+\textbf{Signed:} \@author
 
 \bigskip
 \textbf{Date:} \today
 \vspace{\fill}
+
+% This dissertation is copyright \copyright \the\year{} \@author.
+% \\
+% All trademarks used in this dissertation are hereby acknowledged.
+
 \makeatother\fi

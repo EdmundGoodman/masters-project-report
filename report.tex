@@ -1,4 +1,12 @@
 \documentclass[12pt,a4paper,twoside]{report}
+
+\title{Rewriting the Rewriter: Dynamic Optimizations of User-extensible Compiler Infrastructure}
+\author{Edmund Goodman}
+\date{\today}
+\newcommand{\candidatenumber}{1234N}
+\newcommand{\college}{Clare College}
+\newcommand{\course}{Master of Philosophy in Advanced Computer Science}
+
 \input{chapters/00_preamble}
 
 % Select which version this is:
@@ -9,12 +17,16 @@
 
 \begin{document}
 
+\pagenumbering{gobble}
 \include{chapters/01_titlepage}
 \include{chapters/02_coverpage}
 \include{chapters/03_abstract}
 \include{chapters/04_acknowledgements}
-\include{chapters/05_acronyms}
-\include{chapters/06_contents}
+\pagenumbering{roman}
+\include{chapters/05_contents}
+\include{chapters/06_glossary}
+\include{chapters/07_elements}
+\pagenumbering{arabic}
 
 \label{firstcontentpage} % start page count here
 \include{chapters/11_introduction}
@@ -29,3 +41,65 @@
 \include{chapters/22_appendices}
 
 \end{document}
+
+
+
+
+\begin{code}
+    \begin{minted}{haskell}
+        newtype Lasagne = Lasagne Int
+            deriving (Show, Num)
+
+        -- The stacking operating can be considered integer
+        -- addition of the number of layers
+        instance Semigroup Lasagne where
+            (<>) = (+)
+
+        -- The identity element is the empty (zero-layer) Lasagne
+        instance Monoid Lasagne where
+            mempty = Lasagne 0
+
+        -- Stacking 5 and 6 layers gives 11 layers:
+        --
+        -- ghci> Lasagne 5 <> Lasagne 6
+        -- Lasagne 11
+    \end{minted}
+    \caption{A Haskell implementation of the Lasagne monoid, which is not an endofunctor.}
+    \label{}
+\end{code}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{example-image-a}
+    \caption{An example image.}
+    \label{}
+\end{figure}
+
+\begin{figure}[H]
+     \centering
+     \begin{subfigure}[b]{0.45\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{example-image-a}
+         \caption{Example image A.}
+         \label{}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.45\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{example-image-b}
+         \caption{Example image A.}
+         \label{}
+     \end{subfigure}
+     \caption{Two example images.}
+     \label{}
+\end{figure}
+
+\begin{equation}
+    S = \frac{1}{f + \frac{1-f}{P}}
+    \label{}
+\end{equation}
+
+\begin{align}
+    S &= s + p \times N \\
+      &= N + (1 - N) \times s \label{}
+\end{align}

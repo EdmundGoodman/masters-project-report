@@ -15,33 +15,31 @@
 
 \newif\ifsubmission % Boolean flag for distinguishing submitted/final version
 
-% Change the following lines to your own project title, name, college, course
-\title{Rewriting the Rewriter: Dynamic Optimizations of User-extensible Compiler Infrastructure}
-\author{Edmund Goodman}
-\date{\today}
-\newcommand{\candidatenumber}{1234N}
-\newcommand{\college}{Clare College}
-\newcommand{\course}{Master of Philosophy in Advanced Computer Science}
 
 % ============= %
 % Modifications %
 % ============= %
 
 %% Configure fonts
-% Text
-% \usepackage{libertine}
-% \usepackage{tgpagella} % text only
-% \usepackage[sfdefault]{biolinum}
-\usepackage{mathpazo}  % math & text
+% Default Serif
+% \usepackage{libertine}  % Linux Libertine
+\usepackage{mathpazo}  % Palatino math & text
+% Sans Serif
+\usepackage[sfdefault]{biolinum}
+\newenvironment{defaultsffamily}{%
+  \fontfamily{cmss}\selectfont
+}{}
 % Code
-\usepackage{FiraMono}
 
 %% Extra packages
-\usepackage[acronym]{glossaries}
 \usepackage{subcaption}
 \usepackage{amsmath}
-% \usepackage{lastpage}
-% \usepackage[nottoc,numbib]{tocbibind}
+\usepackage{lastpage}
+\usepackage[nottoc]{tocbibind}
+
+%% Glossaries
+\usepackage[acronym,shortcuts]{glossaries}
+\makeglossaries
 
 %% Caption configuration
 \usepackage{caption}
@@ -77,7 +75,6 @@
 % 	urlcolor=black,
 % 	citecolor=black
 % }
-
 
 %% Configure bibliography
 \usepackage[citestyle=ieee]{biblatex}

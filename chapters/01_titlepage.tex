@@ -1,11 +1,14 @@
-\begin{sffamily}
+\ifsubmission
+% ================================================ %
+% Submission proforma cover page for blind marking %
+% ================================================ %
+
+\begin{defaultsffamily}
 \begin{titlepage}
 \makeatletter
 
 % University logo with shield hanging in left margin
 \hspace*{-14mm}\includegraphics[width=65mm]{images/logo-dcst-colour}
-
-\ifsubmission
 
 % submission proforma cover page for blind marking
 \begin{Large}
@@ -20,30 +23,6 @@ Candidate \candidatenumber
 
 \end{Large}
 
-\else
-
-% regular cover page
-\begin{center}
-\Huge
-\vspace{\fill}
-
-\@title
-\vspace{\fill}
-
-\@author
-\vspace{10mm}
-
-\Large
-\college
-\vspace{\fill}
-
-\@date
-\vspace{\fill}
-
-\end{center}
-
-\fi
-
 \vspace{\fill}
 \begin{center}
 Submitted in partial fulfillment of the requirements for the\\
@@ -52,6 +31,149 @@ Submitted in partial fulfillment of the requirements for the\\
 
 \makeatother
 \end{titlepage}
-\end{sffamily}
+\end{defaultsffamily}
+\newpage
+
+\else
+% ================== %
+% Regular cover page %
+% ================== %
+
+\begin{titlepage}
+
+\makeatletter
+\begin{center}
+\vspace*{\stretch{1}}
+\noindent
+\huge
+\@title \\
+\end{center}
+
+\begin{center}
+\vspace*{\stretch{1}}
+\noindent
+\huge
+\@author \\
+\Large
+\college \\[24pt]
+\includegraphics{images/logo-notext-colour.pdf}
+\end{center}
+
+\vspace{24pt}
+
+\begin{center}
+\vspace*{\stretch{1}}
+\noindent
+\large
+{
+    \today \\
+    \vspace{0.5em}
+    \it A dissertation submitted to the University of Cambridge \\
+in partial fulfilment of the requirements for the degree of \\
+Master of Philosophy in Advanced Computer Science
+}
+\end{center}
+
+\end{titlepage}
+\makeatother
+
+
+
+% \begin{titlepage}
+% \makeatletter
+
+% % University logo with shield hanging in left margin
+% \hspace*{-14mm}\includegraphics[width=65mm]{images/logo-dcst-colour}
+
+% % regular cover page
+% \begin{center}
+% \Huge
+% \vspace{\fill}
+
+% \@title
+% \vspace{\fill}
+
+% \@author
+% \vspace{5mm}
+
+% \Large
+% \college
+% \vspace{\fill}
+
+% \@date
+% \vspace{\fill}
+% \end{center}
+
+% \vspace{\fill}
+% \begin{center}
+% Submitted in partial fulfillment of the requirements for the\\
+% \course
+% \end{center}
+
+% \makeatother
+% \end{titlepage}
+
+
 
 \newpage
+\fi
+% ================= %
+% Joined cover page %
+% ================= %
+
+% \begin{sffamily}
+% \begin{titlepage}
+% \makeatletter
+
+% % University logo with shield hanging in left margin
+% \hspace*{-14mm}\includegraphics[width=65mm]{images/logo-dcst-colour}
+
+% \ifsubmission
+% % submission proforma cover page for blind marking
+% \begin{Large}
+% \vspace{20mm}
+% Research project report title page
+
+% \vspace{35mm}
+% Candidate \candidatenumber
+
+% \vspace{42mm}
+% \textsl{``\@title''}
+
+% \end{Large}
+
+% \else
+
+% % regular cover page
+% \begin{center}
+% \Huge
+% \vspace{\fill}
+
+% \@title
+% \vspace{\fill}
+
+% \@author
+% \vspace{5mm}
+
+% \Large
+% \college
+% \vspace{\fill}
+
+% \@date
+% \vspace{\fill}
+
+% \end{center}
+
+% \fi
+
+% \vspace{\fill}
+% \begin{center}
+% Submitted in partial fulfillment of the requirements for the\\
+% \course
+% \end{center}
+
+% \makeatother
+% \end{titlepage}
+% \end{sffamily}
+
+% \newpage
