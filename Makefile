@@ -1,11 +1,13 @@
 # requires GNU make
 SHELL=/bin/bash
 
+LATEX_EXTRA_FLAGS ?= -shell-escape -synctex=1
+
 .DELETE_ON_ERROR:
 
 %.pdf %.aux %.idx: %.tex
-	pdflatex -halt-on-error -file-line-error $<
-	while grep 'Rerun to get ' $*.log ; do pdflatex -halt-on-error $< ; done
+	pdflatex -halt-on-error -file-line-error ${LATEX_EXTRA_FLAGS} $<
+	while grep 'Rerun to get ' $*.log ; do pdflatex -halt-on-error ${LATEX_EXTRA_FLAGS} $< ; done
 %.ind: %.idx
 	makeindex $*
 %.bbl: %.aux
@@ -27,11 +29,17 @@ FIRSTPAGE?=$(shell sed -ne 's/^\\newlabel{firstcontentpage}{{[0-9\.]*}{\([0-9]*\
 LASTPAGE ?=$(shell sed -ne 's/^\\newlabel{lastcontentpage}{{[0-9\.]*}{\([0-9]*\)}.*/\1/p' $(WORDCOUNT_FILE).aux)
 
 # requires ghostscript
+.PHONY: wordcount
 wordcount: $(WORDCOUNT_FILE).pdf
 	gs -q -dSAFER -sDEVICE=txtwrite -o - \
 	   -dFirstPage=$(FIRSTPAGE) -dLastPage=$(LASTPAGE) $< | \
 	egrep '[A-Za-z]{3}' | wc -w
 
+.PHONY: clean
 clean:
 	rm -f *.log *.aux *.toc *.bbl *.ind *.lot *.lof *.out *~
 	rm -f report-submission.tex
+
+.PHONY: clobber
+clobber:
+	rm -f report.pdf report-submission.pdf
