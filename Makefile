@@ -37,9 +37,10 @@ wordcount: $(WORDCOUNT_FILE).pdf
 
 .PHONY: clean
 clean:
-	rm -f *.log *.aux *.toc *.bbl *.ind *.lot *.lof *.out *~
+	rm -f *.log *.aux *.toc *.bbl *.ind *.lot *.lof *.out *.acn *.ist *.lol *~
+	rm -rf _minted-report _minted-report-submission
 	rm -f report-submission.tex
 
 .PHONY: clobber
-clobber:
+clobber: clean
 	rm -f report.pdf report-submission.pdf
