@@ -1,6 +1,129 @@
-@book{knuth1997art,
-  title={The Art of Computer Programming, Fundamental Algorithms: Volume 1},
-  author={Knuth, Donald E},
-  year={1997},
-  publisher={Addison Wesley Longman Publishing Co., Inc.}
+@misc{aminiHowSlowMLIR2024,
+  title = {How {{Slow}} Is {{MLIR}}?},
+  author = {Amini, Mehdi and Nui, Jeff},
+  year = {2024},
+  month = apr,
+  address = {Vienna, Austria}
+}
+
+@inproceedings{fehrIRDLIRDefinition2022a,
+  title = {{{IRDL}}: An {{IR}} Definition Language for {{SSA}} Compilers},
+  shorttitle = {{{IRDL}}},
+  booktitle = {Proceedings of the 43rd {{ACM SIGPLAN International Conference}} on {{Programming Language Design}} and {{Implementation}}},
+  author = {Fehr, Mathieu and Niu, Jeff and Riddle, River and Amini, Mehdi and Su, Zhendong and Grosser, Tobias},
+  year = {2022},
+  month = jun,
+  series = {{{PLDI}} 2022},
+  pages = {199--212},
+  publisher = {Association for Computing Machinery},
+  address = {New York, NY, USA},
+  doi = {10.1145/3519939.3523700},
+  urldate = {2025-04-11},
+  abstract = {Designing compiler intermediate representations (IRs) is often a manual process that makes exploration and innovation in this space costly. Developers typically use general-purpose programming languages to design IRs. As a result, IR implementations are verbose, manual modifications are expensive, and designing tooling for the inspection or generation of IRs is impractical. While compilers relied historically on a few slowly evolving IRs, domain-specific optimizations and specialized hardware motivate compilers to use and evolve many IRs. We facilitate the implementation of SSA-based IRs by introducing IRDL, a domain-specific language to define IRs. We analyze all 28 domain-specific IRs developed as part of LLVM's MLIR project over the last two years and demonstrate how to express these IRs exclusively in IRDL while only rarely falling back to IRDL's support for generic C++ extensions. By enabling the concise and explicit specification of IRs, we provide foundations for developing effective tooling to automate the compiler construction process.},
+  isbn = {978-1-4503-9265-5},
+  file = {/Users/edjg/Zotero/storage/VB4Z3UNB/Fehr et al. - 2022 - IRDL an IR definition language for SSA compilers.pdf}
+}
+
+@misc{fehrXdslprojectXdsl2024,
+  title = {Xdslproject/Xdsl},
+  author = {Fehr, Mathieu and Lopoukhine, Alexandre},
+  year = {2024},
+  month = oct,
+  urldate = {2024-10-21},
+  abstract = {A Python Compiler Design Toolkit},
+  howpublished = {xdslproject}
+}
+
+@inproceedings{fehrXDSLSidekickCompilation2025,
+  title = {{{xDSL}}: {{Sidekick Compilation}} for {{SSA-Based Compilers}}},
+  shorttitle = {{{xDSL}}},
+  booktitle = {Proceedings of the 23rd {{ACM}}/{{IEEE International Symposium}} on {{Code Generation}} and {{Optimization}}},
+  author = {Fehr, Mathieu and Weber, Michel and Ulmann, Christian and Lopoukhine, Alexandre and L{\"u}cke, Martin Paul and Degioanni, Th{\'e}o and Vasiladiotis, Christos and Steuwer, Michel and Grosser, Tobias},
+  year = {2025},
+  month = mar,
+  series = {{{CGO}} '25},
+  pages = {179--192},
+  publisher = {Association for Computing Machinery},
+  address = {New York, NY, USA},
+  doi = {10.1145/3696443.3708945},
+  urldate = {2025-04-11},
+  abstract = {Traditionally, compiler researchers either conduct experiments within an existing production compiler or develop their own prototype compiler; both options come with trade-offs.                                On one hand, prototyping in a production compiler can be cumbersome, as they are often optimized for program compilation speed at the expense of software simplicity and development speed.                                On the other hand, the transition from a prototype compiler to production requires significant engineering work.                                To bridge this gap, we introduce the concept of sidekick compiler frameworks, an approach that uses multiple frameworks that interoperate with each other by leveraging textual interchange formats and declarative descriptions of abstractions.                                Each such compiler framework is specialized for specific use cases, such as performance or prototyping.                                Abstractions are by design shared across frameworks, simplifying the transition from prototyping to production.                                We demonstrate this idea with xDSL, a sidekick for MLIR focused on prototyping and teaching.                                xDSL interoperates with MLIR through a shared textual IR and the exchange of IRs through an IR Definition Language.                                The benefits of sidekick compiler frameworks are evaluated by showing on three use cases how xDSL impacts their development: teaching, DSL compilation, and rewrite system prototyping.                                We also investigate the trade-offs that xDSL offers, and demonstrate how we simplify the transition between frameworks using the IRDL dialect.                                With sidekick compilation, we envision a future in which engineers minimize the cost of development by choosing a framework built for their immediate needs, and later transitioning to production with minimal overhead.},
+  isbn = {979-8-4007-1275-3},
+  file = {/Users/edjg/Zotero/storage/7YEB29W8/Fehr et al. - 2025 - xDSL Sidekick Compilation for SSA-Based Compilers.pdf}
+}
+
+@inproceedings{lattnerLLVMCompilationFramework2004,
+  title = {{{LLVM}}: A Compilation Framework for Lifelong Program Analysis \& Transformation},
+  shorttitle = {{{LLVM}}},
+  booktitle = {International {{Symposium}} on {{Code Generation}} and {{Optimization}}, 2004. {{CGO}} 2004.},
+  author = {Lattner, C. and Adve, V.},
+  year = {2004},
+  month = mar,
+  pages = {75--86},
+  doi = {10.1109/CGO.2004.1281665},
+  urldate = {2024-11-18},
+  abstract = {We describe LLVM (low level virtual machine), a compiler framework designed to support transparent, lifelong program analysis and transformation for arbitrary programs, by providing high-level information to compiler transformations at compile-time, link-time, run-time, and in idle time between runs. LLVM defines a common, low-level code representation in static single assignment (SSA) form, with several novel features: a simple, language-independent type-system that exposes the primitives commonly used to implement high-level language features; an instruction for typed address arithmetic; and a simple mechanism that can be used to implement the exception handling features of high-level languages (and setjmp/longjmp in C) uniformly and efficiently. The LLVM compiler framework and code representation together provide a combination of key capabilities that are important for practical, lifelong analysis and transformation of programs. To our knowledge, no existing compilation approach provides all these capabilities. We describe the design of the LLVM representation and compiler framework, and evaluate the design in three ways: (a) the size and effectiveness of the representation, including the type information it provides; (b) compiler performance for several interprocedural problems; and (c) illustrative examples of the benefits LLVM provides for several challenging compiler problems.},
+  keywords = {Algorithm design and analysis,Application software,Arithmetic,High level languages,Information analysis,Performance analysis,Program processors,Runtime,Software safety,Virtual machining},
+  file = {/Users/edjg/Zotero/storage/KPM23KWZ/Lattner and Adve - 2004 - LLVM a compilation framework for lifelong program analysis & transformation.pdf;/Users/edjg/Zotero/storage/W7FDUUG6/1281665.html}
+}
+
+@misc{lattnerLlvmLlvmproject2025,
+  title = {Llvm/Llvm-Project},
+  author = {Lattner, Chris},
+  year = {2025},
+  month = apr,
+  urldate = {2025-04-11},
+  abstract = {The LLVM Project is a collection of modular and reusable compiler and toolchain technologies.},
+  howpublished = {LLVM}
+}
+
+@inproceedings{lattnerMLIRScalingCompiler2021a,
+  title = {{{MLIR}}: {{Scaling Compiler Infrastructure}} for {{Domain Specific Computation}}},
+  shorttitle = {{{MLIR}}},
+  booktitle = {2021 {{IEEE}}/{{ACM International Symposium}} on {{Code Generation}} and {{Optimization}} ({{CGO}})},
+  author = {Lattner, Chris and Amini, Mehdi and Bondhugula, Uday and Cohen, Albert and Davis, Andy and Pienaar, Jacques and Riddle, River and Shpeisman, Tatiana and Vasilache, Nicolas and Zinenko, Oleksandr},
+  year = {2021},
+  month = feb,
+  pages = {2--14},
+  doi = {10.1109/CGO51591.2021.9370308},
+  urldate = {2025-04-11},
+  abstract = {This work presents MLIR, a novel approach to building reusable and extensible compiler infrastructure. MLIR addresses software fragmentation, compilation for heterogeneous hardware, significantly reducing the cost of building domain specific compilers, and connecting existing compilers together. MLIR facilitates the design and implementation of code generators, translators and optimizers at different levels of abstraction and across application domains, hardware targets and execution environments. The contribution of this work includes (1) discussion of MLIR as a research artifact, built for extension and evolution, while identifying the challenges and opportunities posed by this novel design, semantics, optimization specification, system, and engineering. (2) evaluation of MLIR as a generalized infrastructure that reduces the cost of building compilers-describing diverse use-cases to show research and educational opportunities for future programming languages, compilers, execution environments, and computer architecture. The paper also presents the rationale for MLIR, its original design principles, structures and semantics.},
+  keywords = {Buildings,Generators,Hardware,Optimization,Program processors,Semantics,Software},
+  file = {/Users/edjg/Zotero/storage/GW75VWA5/Lattner et al. - 2021 - MLIR Scaling Compiler Infrastructure for Domain Specific Computation.pdf}
+}
+
+@misc{mlirteamMLIRCodeDocumentation,
+  title = {{{MLIR Code Documentation}}},
+  author = {{MLIR Team}},
+  urldate = {2025-04-11},
+  howpublished = {https://mlir.llvm.org/docs/},
+  file = {/Users/edjg/Zotero/storage/F3EKI2E6/docs.html}
+}
+
+@article{saavedraPerformanceCharacterizationOptimizing1995,
+  title = {Performance Characterization of Optimizing Compilers},
+  author = {Saavedra, R.H. and Smith, A.J.},
+  year = {1995},
+  month = jul,
+  journal = {IEEE Transactions on Software Engineering},
+  volume = {21},
+  number = {7},
+  pages = {615--628},
+  issn = {1939-3520},
+  doi = {10.1109/32.392982},
+  urldate = {2025-04-24},
+  abstract = {Optimizing compilers have become an essential component in achieving high levels of performance. Various simple and sophisticated optimizations are implemented at different stages of compilation to yield significant improvements, but little work has been done in characterizing the effectiveness of optimizers, or in understanding where most of this improvement comes from. We study the performance impact of optimization in the context of our methodology for CPU performance characterization based on the abstract machine model. The model considers all machines to be different implementations of the same high level language abstract machine; in previous research, the model has been used as a basis to analyze machine and benchmark performance. We show that our model can be extended to characterize the performance improvement provided by optimizers and to predict the run time of optimized programs, and measure the effectiveness of several compilers in implementing different optimization techniques.{$<>$}},
+  keywords = {Application software,Central Processing Unit,Computer aided manufacturing,Computer science,Context modeling,High level languages,Optimizing compilers,Performance analysis,Predictive models,Time measurement},
+  file = {/Users/edjg/Zotero/storage/7CTJVHTF/Saavedra and Smith - 1995 - Performance characterization of optimizing compilers.pdf}
+}
+
+@misc{tomdaleAdventuresMicrobenchmarking2017,
+  title = {Adventures in {{Microbenchmarking}}},
+  author = {{Tom Dale}},
+  year = {2017},
+  month = jul,
+  journal = {tomdale.net},
+  urldate = {2025-04-24},
+  howpublished = {https://tomdale.net/2017/07/adventures-in-microbenchmarking/},
+  file = {/Users/edjg/Zotero/storage/LRBUXXIR/adventures-in-microbenchmarking.html}
 }

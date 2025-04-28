@@ -41,12 +41,14 @@ egrep '[A-Za-z]{3}' | wc -w
 
 
 
+
+
 \else
 % ================== %
 % Regular cover page %
 % ================== %
 
-
+\begin{sffamily}
 Total page count: \pageref{LastPage}
 
 % calculate number of pages from
@@ -105,5 +107,8 @@ Figure \ref{fig:compilers-lagging} was created by Anton Lydike, based on a slide
 % This dissertation is copyright \copyright \the\year{} \@author.
 % \\
 % All trademarks used in this dissertation are hereby acknowledged.
+\makeatother
 
-\makeatother\fi
+\end{sffamily}
+
+\fi

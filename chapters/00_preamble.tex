@@ -21,21 +21,31 @@
 % ============= %
 
 %% Configure fonts
+% \usepackage{fontspec}
 % Default Serif
-% \usepackage{libertine}  % Linux Libertine
-\usepackage{mathpazo}  % Palatino math & text
+% \setmainfont{Linux Libertine O}[Ligatures={Common}]
+\usepackage{libertine}  % Linux Libertine
+% \usepackage{mathpazo}  % Palatino serif and math
 % Sans Serif
-\usepackage[sfdefault]{biolinum}
+% \usepackage{biolinum}  % Linux biolinum sans serif
 \newenvironment{defaultsffamily}{%
   \fontfamily{cmss}\selectfont
 }{}
 % Code
+\usepackage{inconsolata}
+% \setmonofont{Fira Code}[Contextuals=Alternate,Scale=MatchLowercase]
 
 %% Extra packages
 \usepackage{subcaption}
-\usepackage{amsmath}
-\usepackage{lastpage}
+\usepackage{lastpage}       % get a reference to the last page
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage[nopatch=footnote]{microtype}      % microtypography
+\usepackage{xcolor}         % colors
+\usepackage{todonotes}      % todo notes
 \usepackage[nottoc]{tocbibind}
+\usepackage{changepage}
 
 %% Glossaries
 \usepackage[acronym,shortcuts]{glossaries}
@@ -48,12 +58,12 @@
     % textfont=it,%
     font=small,%
     skip=0pt,%
-    width=0.8\textwidth%
+    width=0.8\textwidth%,
 }
 % \captionsetup{textfont=it}
 % \renewcommand\fbox{\fcolorbox{white}{white}}
-% % \captionsetup[figure]{skip=0pt}
-% \captionsetup[table]{skip=5pt}
+\captionsetup[figure]{skip=5pt}
+\captionsetup[table]{skip=5pt}
 % \captionsetup[listing]{skip=0pt}
 
 %% Code highlighting
@@ -61,11 +71,12 @@
 \setminted{%
     linenos,%
     breaklines,%
-    autogobble%
+    autogobble,%
+    % frame=lines,%
     % escapeinside=||,
 }
 % https://tex.stackexchange.com/a/53540
-\newenvironment{code}{\captionsetup{type=listing}}{}
+\newenvironment{code}{\captionsetup{type=figure,name=Listing}}{}
 
 %% Configure urls
 \usepackage{url}
