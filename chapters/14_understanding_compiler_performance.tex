@@ -25,8 +25,40 @@
 % \end{enumerate}
 % }
 
-% \section{Methodology}
-% \label{sec:methodology}
+\section{Micro-benchmarking}
+\label{sec:ubenchmark}
+
+% Hook
+Micro-benchmarking refers measuring the performance of fast, granular, and isolated segments of code.
+% It contrasts traditional benchmarking approaches which instead examine the performance of larger code segments, typically representative of a real-world workload.
+% Argument
+The term was coined by Saavedra et al. in their 1995 paper \cite{saavedraPerformanceCharacterizationOptimizing1995} ``Performance Characterization of Optimizing Compilers'', so we are in good company in our application of micro-benchmarking approaches to this problem domain.
+Micro-benchmarks have many desirable properties. Since they run quickly, they can cheaply be repeated for statistical confidence.
+Furthermore, their fine granularity makes them tractable to reason about -- providing useful information to optimise the component of the system they measure.
+However, a key difficulty of micro-benchmarking is ensuring alignment with overall system performance. For example, the selection of code paths to micro-benchmark may introduce bias, making them less representative. In addition to this, their performance may be inflated as a consequence of warmed caches and JIT optimisation across repeats, which would not occur during normal operation.
+% Link
+As such, micro-benchmarking is a useful tool for deeply understanding the performance of software, but must be used carefully to ensure the validity of its results.
+
+%% Now the mlir community already disagree (cannot find source for this feeling, so elide), leading to talk
+% Hook
+At the 2024 European LLVM Developers' Meeting, Mehdi Amini and Jeff Nui
+presented their keynote talk ``How Slow is MLIR?'' \cite{aminiHowSlowMLIR2024}.
+% Argument
+In this talk, they discussed micro-benchmarks for key operations in the MLIR compiler, such as traversing the IR and creating operations. These micro-benchmarks were used to inform the optimisation of MLIR's data structures and for comparison with traditional LLVM-based compilers. The implementation of the micro-benchmarks allude to an underlying design goal in MLIR by their measurement of asymptotic scaling properties\footnote{\url{https://github.com/joker-eph/llvm-project/blob/6773f827b9ee8055063fcf6b2c6fcdc7f4f579d2/mlir/unittests/Benchmarks/Cloning.cpp\#L66}}. This design goal is asymptotically optimal performance for its underlying data structures. However, data structures with these characteristics often incur constant-time penalties. % TODO: \cite{}
+This causes overhead for small workloads, where, unlike the asymptotic case, the cost is not amortised. As such, micro-benchmarks may not be representative of the system's overall performance, revealing possibility for the optimisation of code co-designed using them.
+% Link
+Despite this, they can still provide useful insight into MLIR's performance characteristics. 
+
+
+We implement micro-benchmark workloads for the xDSL equivalent to those for MLIR presented in the keynote. % and hot paths identified in constant folding workloads.
+We then compare the results of these benchmarks between xDSL and MLIR, giving insights into their relative performance. We further leverage profiling tools to examine the execution of the two implementations. This allows us to distinguish between the cost incurred by the language runtime, and the cost incurred by the algorithmic approach of the implementation.
+
+
+
+
+
+\subsection{Methodology}
+\label{ssec:ubenchmark-methodology}
 
 % \textit{
 % \textbf{TODO:}
@@ -37,55 +69,21 @@
 % \end{enumerate}
 % }
 
-\section{Micro-benchmarking}
-\label{sec:ubenchmark}
-
 % Hook
-Micro-benchmarking refers measuring the performance of fast, granular, and isolated segments of code.
-% It contrasts traditional benchmarking approaches which instead examine the performance of larger code segments, typically representative of a real-world workload.
 % Argument
-The term was coined by Saavedra et al. in their 1995 paper \cite{saavedraPerformanceCharacterizationOptimizing1995} ``Performance Characterization of Optimizing Compilers'', suggesting we are in good company in our application of micro-benchmarking approaches to this problem domain.
-Micro-benchmarks have many desirable properties. Since they run quickly, they can cheaply be repeated for statistical confidence.
-Furthermore, their fine granularity makes them tractable to reason about -- providing useful information to optimise the component of the system they measure.
-However, a key difficulty of micro-benchmarking is ensuring its alignment with overall system performance. For example, the selection of code paths for micro-benchmarking may introduce bias, making them less representative. In addition to this, their results may be inflated as a consequence of warmed caches and JIT optimisation across repeats, which would not occur during normal operation.
+To best leverage the desirable properties of micro-benchmarks whilst minimising their corrollary difficulties, there are a number of considerations required of the experimental methodology.
 % Link
-Micro-benchmarking is a useful tool for deeply understanding the performance of software, but must be used carefully to ensure the validity of its results.
-
-%% Now the mlir community already disagree (cannot find source for this feeling, so elide), leading to talk
-% Hook
-At the 2024 European LLVM Developers' Meeting, Mehdi Amini and Jeff Nui
-presented their keynote talk ``How Slow is MLIR?'' \cite{aminiHowSlowMLIR2024}.
-% Argument
-In this talk, they presented micro-benchmarks for key operations in the MLIR compiler, such as traversing the IR and creating operations. The micro-benchmarks were used to inform the optimisation of MLIR's data structures and for comparison with traditional LLVM-based compilers. The implementation of the micro-benchmarks allude to an underlying design goal in MLIR by their measurement of asymptotic scaling properties\footnote{\url{https://github.com/joker-eph/llvm-project/blob/6773f827b9ee8055063fcf6b2c6fcdc7f4f579d2/mlir/unittests/Benchmarks/Cloning.cpp\#L66}}. This design goal is asymptotically optimal performance for its underlying data structures. However, such data structures often incur constant-time penalties. This causes overhead for small workloads, where, unlike the asymptotic case, the cost is not amortised.
-As such, micro-benchmarks may not be representative of the system's overall performance, revealing possibility for the optimisation of code co-designed using them.
-% Link
-Despite this, they can still provide useful insight into MLIR's performance characteristics. 
-
-We implement micro-benchmark workloads for the xDSL equivalent to those for MLIR presented in the keynote. % and hot paths identified in constant folding workloads.
-We then compare the results of these benchmarks between xDSL and MLIR, giving insights into their relative performance. We further leverage profiling tools to examine the call stacks of the two implementations. This allows us to distinguish between the cost incurred by the language runtime, and the cost incurred by the algorithmic approach of the implementation.
-
-
-
-
-
-\subsection{Methodology}
-\label{ssec:ubenchmark-methodology}
+We address these with custom infrastructure for running the micro-benchmarks, along with careful implementation of their logic to ensure results are aligned with overall performance and comparable between implementations.
 
 \subsubsection{Micro-benchmarking infrastructure}
 \label{sssec:ubenchmark-methodology-infra}
 
-% Link
-% Micro-benchmark results are sensitive to machine noise due to their short lengthm
-Due to their short length, micro-benchmark results are sensitive to machine noise and overhead incurred by their measurement instrumentation. As such, care must be taken constructing the methodology for these experiments.
-% Argument
-To minimise the impact of machine noise, experiments are repeated and averaged, with uncertainty calculated as their standard deviation. In addition to this, other mechanisms increase the variance of results.
-Python triggers a full garbage collection when the number of new objects exceeds $25\%$ of the existing objects, adding a slow but infrequent overhead. To mitigate this, we manually invoke a full collection before each measurement. This guarantees ensures that collection is repeatable, but does not hide overhead incurred in real-world applications
-% TODO: Add more
 % Hook
-Having constructed reliable infrastructure to run micro-benchmarks in Python, the next step in the methodology is to write implementations which are directly comparable to the existing MLIR versions. This is necessary to be able to draw conclusions about the differences between the Python and C++ runtimes for compiler framework workloads.
-
-% Rubric about what machines, python/clang versions/... are being used
-Furthermore, both the MLIR and xDSL microbenchmarks were run locally on the same experimental machine, whose hardware and software configuration is described in \autoref{tab:ubenchmark-experimental-config}. For all micro-benchmarks, the functions under test were measured $2^{15}$ times, reporting the mean value with an uncertainty given by the standard deviation.
+Due to their short length, micro-benchmark results are sensitive to machine noise.
+% Argument
+To minimise the impact of machine noise, the micro-benchmarks are repeated $2^{15}$ times and averaged, with uncertainty calculated as their standard deviation. To ensure comparability, both the MLIR and xDSL micro-benchmarks were run locally on the same experimental machine, whose hardware and software configuration is described in \autoref{tab:ubenchmark-experimental-config}
+% % Link
+% In addition to machine noise, other mechanisms may increase the variance of results, such as differences between runs due to cache warming or language runtime behaviour.
 
 \begin{table}[H]
   \caption{Experimental configuration used for micro-benchmarking.}
@@ -99,6 +97,10 @@ Furthermore, both the MLIR and xDSL microbenchmarks were run locally on the same
     \textit{xDSL commit SHA} & \texttt{0eda7fe} \\
     \textit{MLIR commit SHA} & \texttt{6516ae4} \\
     \midrule
+    % \midrule  % Build/run command here???
+    % `python3 benchmarks/microbenchmarks.py Extensibility.trait_check`
+    % `cmake ...`
+    % `./MLIR_IR_Benchmark --benchmark_filter="NAME/32768" --benchmark_repetitions=10
     \textit{Python interpreter} & CPython 3.12.9 \\
     \textit{C++ compiler} & clang 18.1.8 \\
     \textit{CMake version} & 3.31.3 \\
@@ -111,6 +113,25 @@ Furthermore, both the MLIR and xDSL microbenchmarks were run locally on the same
     \bottomrule
   \end{tabular}
 \end{table}
+
+%% TODO: Complete?
+% % Hook
+% % Argument
+% % Link
+% Python triggers a full garbage collection when the number of new objects exceeds $25\%$ of the existing objects, adding a slow but infrequent overhead. To mitigate this, we manually invoke a full collection before each measurement. This guarantees ensures that collection is repeatable, but does not hide overhead incurred in real-world applications
+
+%% TODO: This might move to end-to-end benchmarks section?
+% Hook
+In addition to their usefulness for understanding and optimising compiler performance, these benchmarks provide an opportunity to augment the development process of the xDSL project.
+% Argument
+Benchmarks can be used to characterise the performance impact of changes to the xDSL codebase, making it easier to avoid unnecessary performance regression.
+As such, we provide a command line interface for developers to run the benchmarks, with further functionality which supports a variety of profiling tools.
+Furthermore, our benchmarks are constructed to interface with air-speed velocity \cite{michaeldroettboomAirspeedvelocityAsv2025}, a tool which runs benchmarks across repository commits. This information is tracked on the xDSL website \url{https://xdsl.dev/xdsl-bench/}, providing a dashboard for the performance characteristics of xDSL over time.
+% Link
+
+% Hook
+Having constructed reliable infrastructure to run micro-benchmarks in Python, the next step in the methodology is to write implementations which are directly comparable to the existing MLIR versions. This is necessary to be able to draw conclusions about the differences between the Python and C++ runtimes for compiler framework workloads.
+
 
 \subsubsection{Micro-benchmarking implementation}
 \label{sssec:ubenchmark-methodology-impl}
@@ -125,12 +146,11 @@ This source code can then be used to construct comparable micro-benchmarks in Py
 
 % Design of our microbenchmarks
 % Hook
-A key design goal of our micro-benchmarks for xDSL is parity with those provided for MLIR, ensuring the validity their direct comparison. As such, their implementation was derived from the MLIR benchmarks, matching test data and function invocations as closely as possible.
+A key design goal of our micro-benchmarks for xDSL is parity with those provided for MLIR, ensuring the validity their direct comparison.
 % Argument
-
-
-
-
+As such, their implementation was derived from the MLIR benchmarks, matching test data and function invocations as closely as possible.
+% Link
+In the following sections, we discuss the implementations of a number of micro-benchmarks, and the insights they give into compiler performance across implementations and language runtimes.
 
 
 
@@ -164,11 +184,6 @@ Examining this micro-benchmark in detail allows us to decouple the performance c
                 OpTrait::SingleBlock
             >();
         \end{minted}
-        % \begin{minted}[breakanywhere,fontsize=\footnotesize]{bash}
-        %     $ MLIR_IR_Benchmark \
-        %         --benchmark_filter="IRWalk/vectorTraveralOpTraitSuccess/32768" \
-        %         --benchmark_repetitions=10
-        % \end{minted}
         \caption{``How Slow is MLIR?'' C++ implementation.}
         \label{listing:ubenchmark-trait-checks-bench-mlir}
     \end{subfigure}
@@ -183,17 +198,12 @@ Examining this micro-benchmark in detail allows us to decouple the performance c
             has_trait = op.has_trait(SingleBlock)
         \end{minted}
         \footnotesize\vspace{2em}
-        % \vspace{1em}
-        % \begin{minted}[breakanywhere,fontsize=\footnotesize]{bash}
-        %     $ python3 benchmarks/microbenchmarks.py \
-        %         Extensibility.trait_check timeit
-        % \end{minted}
         \caption{xDSL Python implementation.}
         \label{listing:ubenchmark-trait-checks-bench-xdsl}
     \end{subfigure}
     \vspace{1em}
     \captionsetup{name=Listing}
-    \caption{Benchmarks implementations for an operation with eight traits.} 
+    \caption{Micro-benchmark implementations for methods checking an operation has a trait.}
     \label{listing:ubenchmark-trait-checks-bench}
 \end{figure}
 
@@ -204,7 +214,7 @@ Examining this micro-benchmark in detail allows us to decouple the performance c
   \centering
   \begin{tabular}{ccc}
     \toprule
-    \textbf{MLIR [ns/op]} & \textbf{xDSL [ns/op]} & \textbf{Optimised xDSL [ns/op]} \\
+    \textbf{MLIR [ns]} & \textbf{xDSL [ns]} & \textbf{Optimised xDSL [ns]} \\
     \midrule
     $3.89 \pm 0.01$ & $504 \pm 76$ & $63.6 \pm 40$\\
     \bottomrule
@@ -291,18 +301,11 @@ This demonstrates that a significant proportion of the slow-down in xDSL's \mint
 By modifying xDSL's implementation to elide the extraneous code identified in the above traces (Listing \ref{listing:ubenchmark-trait-checks-both-xdsl}), we can improve its performance by a factor of eight (\autoref{tab:ubenchmark-trait-checks}).
 This gives a number of insights into writing performant Python code in cases where it is unsuitable to dispatch to a lower level languages.
 % Argument
-Firstly, even atomic operations such as function invocation and selection statements are slow in comparison to the runtime of C++ code.
-This is because \cite{}. This is substantiated by (Appendix)
-
-% Function inlining manually (from three levels down to one) 
-
-% Calling functions is slow! Inlining helps
-% Code not on the hot path should be aggressively minimised
-% Polymorphic APIs cost time in calling the isinstance function
-% Casting is not free!
-% This is further supported by bytecode profiling traces of these two implementations, included in the Appendix (\autoref{listing:bytecode-profiles-hastrait-original}, \autoref{listing:bytecode-profiles-hastrait-optimised}).
-Unfortunately, these optimisation approaches are in tension with writing expressive and terse code -- which are motivating factors for using Python in the first place.
+Firstly, even atomic operations such as function invocation and selection statements are slow in comparison to the runtime of the C++ implementation, coming as a result of the complexity of the evaluation loop of the CPython interpreter. % TODO: Consider \cite{}?
+This is substantiated by the bytecode profiles of the implementations (Appendix \ref{listing:bytecode-profiles-hastrait-original}, \ref{listing:bytecode-profiles-hastrait-optimised}), where each opcode represents in iteration of the evaluation loop.
+In the case of \mintinline{python}{has_trait}, we address this by manually applying function inlining, and narrowing the trait argument from supporting both types and instances to only supporting types, eliminating selection of implementation between the two arguments. This minimises the number of opcodes and hence the number of cycles of the evaluation loop, improving performance.
 % Link
+Unfortunately, these approaches are in tension with writing expressive and terse code -- which are motivating factors for using Python.
 
 \begin{figure}[H]
     \centering
@@ -351,14 +354,11 @@ Unfortunately, these optimisation approaches are in tension with writing express
 Having specialised xDSL's \mintinline{python}{has_trait} method to the most minimal implementation which expresses the desired functionality, we can draw comparisons between equivalent algorithms which predominantly measure the effect of the language runtime.
 % Argument
 Both implementations (Listing \ref{listing:ubenchmark-trait-checks-both}) share the same underlying algorithm: iteration over an operations traits, checking against each one. However, the mechanism used for this algorithm differs significantly between xDSL and MLIR.
-By leveraging Python's dynamic nature, xDSL can invoke the \mintinline{python}{isinstance} function to check each trait. In contrast, MLIR uses template metaprogramming instead of the class hierarchy to define traits. This depends on \mintinline{c++}{TypeID}\footnote{\url{https://mlir.llvm.org/doxygen/TypeID_8h_source.html}}, a custom data structure to encode dynamic run-time type information in C++.
-This
-However, this implementation incurs complexity in its implementation (\autoref{fig:ubenchmark-hastrait-dynamism}). Despite this, the C++ implementation 
-% More about MLIRs approach to dynamism
+By leveraging Python's dynamic nature, xDSL can invoke the \mintinline{python}{isinstance} function to check each trait. In contrast, MLIR uses template metaprogramming instead of the class hierarchy to define traits. This depends on \mintinline{c++}{TypeID}\footnote{\url{https://mlir.llvm.org/doxygen/TypeID_8h_source.html}}, a custom data structure to encode dynamic \ac{rtti} in C++.
+% TODO: Does this need more detail?
+Whilst this implementation incurs complexity (\autoref{fig:ubenchmark-hastrait-dynamism}), it remains performant, as the \mintinline{c++}{TypeID} data structure is constructed to remedy many of the issues of native C++ \ac{rtti}.
 % Link
-
-% Further examining xDSL's implementation, the \mintinline{python}{get_trait} method (\autoref{listing:ubenchmark-trait-checks-both-xdsl}) iterates over an operation's traits, invoking dynamic \mintinline{python}{isinstance} checks for each. This iterative approach is similar to MLIR's \mintinline{c++}{has_trait} method (\autoref{listing:ubenchmark-trait-checks-both-mlir}, \autoref{fig:ubenchmark-hastrait-xdsl-viztracer}). However, MLIR differs in implementation, using template metaprogramming instead of the class hierarchy to define traits. This relies on \mintinline{c++}{TypeID}, a custom data structure to encode dynamic run-time type information in C++. This is a concrete example of where C++ framework code dynamically depends on runtime user code. Dynamic languages such as Python with strong native support for run-time type introspection can express this functionality more succinctly with operations such as \mintinline{python}{isinstance}, motivating their use for this application.
-% But come at the cost of weird invariant typing craziness which kinda undermines the point....
+However, this dynamism impacts performance beyond just the runtime of the individual function, as it presents an optimisation boundary -- precluding other optimisations which could be applied if the result could be inferred at compile time. % TODO: This really needs to be substantiated somehow, but perhaps not here?
 
 \begin{figure}[H]
     \centering
@@ -380,10 +380,13 @@ However, this implementation incurs complexity in its implementation (\autoref{f
 % Hook
 The trait checking micro-benchmark yields two key insights.
 % Argument
-The first is % comparing MLIR and xDSL
-The second is % quantifying the cost of dynamism and MLIRs custom implementation
+The first is that the original implementation of xDSL makes significant tradeoffs of performance for expressivity. By eliminating these tradeoffs, we reveal the Python language runtime incurs a $16\times$ overhead with respect to C++, as a result of the complexity of its evaluation loop.
+The second is that whilst C++ can efficiently represent dynamic functionality, albeit at the cost of implementation complexity, dynamism incurs the cost of obscuring other optimisations that would further widen the performance gap between Python and C++.
 % Link
 However, whilst trait checking is a frequent operation, it alone is not representative of the overall performance of compiler frameworks. As such, further micro-benchmarks and examining representative workloads is required.
+
+
+
 
 
 \subsection{Operation instantiation}

@@ -21,33 +21,108 @@
 % much. The correct choice will depend on what you're writing up, and
 % your own personal preference.
 
-\section{Python performance}
-\label{sec:python-performance}
 
-% \subsection{Python performance matters}
-% \label{ssec:python-performance-matters}
 
-PyPI
 
-Numba
+\section{Static and dynamic languages}
+\label{sec:static-dynamic-languages}
 
-\subsection{Pyfaster}
-\label{ssec:pyfaster}
+% Hook
+% Argument
+% Link
+
+% Precisely define dynamism
+
+
+% An example of where C++ dynamism presents an optimisation boundary that would otherwise be found by the compiler (and possibly that a JIT can find it?)
+
+% Object orientated optimisations (virtual dispatch in C++/objective-C)
+% Why is JS faster than Python - more constrained
+
+
+
+
+
+
+\section{JIT Compilation}
+\label{sec:jit-compilation}
 
 \subsection{Copy-and-patch compilation}
 \label{ssec:copy-and-patch-compilation}
-
-\section{Understanding the performance of compiler frameworks}
-\label{sec:understanding-framework-performance}
-
-\subsection{How slow is MLIR?}
-\label{ssec:how-slow-is-mlir}
-
-\section{Code rewriting and JIT compilation}
-\label{sec:code-rewriting-jit}
 
 \subsection{Lua JIT}
 \label{ssec:lua-jit}
 
 \subsection{GraalVM}
 \label{ssec:graalvm}
+
+\subsection{PyPI}
+\label{ssec:graalvm}
+
+\subsection{Numba, JAX, and PyTorch}
+\label{ssec:number-jax-pytorch}
+
+
+
+% \section{Python performance}
+% \label{sec:python-performance}
+
+% % \subsection{Python performance matters}
+% % \label{ssec:python-performance-matters}
+
+% Typically, we want to bind into C as much as possible -- see things like Scalene to measure this. However, for our pattern rewriting workload, this is less suitable
+
+% \subsection{Python performance measurement}
+% \label{ssec:python-perf-measurement}
+% timeit/asv/pyperf and stuff maybe? Possibly not worth discussing
+
+
+\subsection{Faster CPython}
+\label{ssec:faster-cpython}
+
+% Timeline
+
+% Hook
+Python is a notoriously slow language \cite{}. The Faster CPython project is an attempt to remedy this fact.
+% Argument
+Over the course of the recent CPython major versions, new optimisations have been incrementally added as part of this project, resulting in incremental performance gains (\autoref{tab:faster-cpython}).
+% Link
+This section discusses these optimisations, and their effect on CPython's performance.
+
+% Hook
+% Argument
+% Link
+
+\begin{table}[H]
+  \caption{Incremental performance gains on the PyPerformance benchmark suite achieved by optimisations to the CPython interpreter.}
+  \label{tab:faster-cpython}
+  \centering
+  \begin{tabular}{lll}
+    \toprule
+    \textbf{Python version} & \textbf{Optimisation over previous} & \textbf{PyPerformance result} \\
+    \midrule
+    CPython 3.10.17 & Baseline & $x$ \\
+    CPython 3.11.12 & Specialising adaptive interpreter & $x$ \\
+    CPython 3.12.10 & Comprehension inlining & $x$ \\
+    CPython 3.13.3 & Version bump & $x$ \\
+    CPython 3.13.3 & Enabled experimental JIT & $x$ \\
+    CPython 3.14.0a7 & Version bump & $x$ \\
+    CPython 3.14.0a7 & Enabled tail call interpreter & $x$ \\
+    % \midrule
+    % PyPy 3.11.11 & JIT compilation & $x$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsubsection{Specialising adaptive interpreter}
+\label{sssec:graalvm}
+
+\subsubsection{Comprehension inlining}
+\label{sssec:graalvm}
+
+\subsubsection{Experimental JIT compiler}
+\label{sssec:graalvm}
+
+\subsubsection{Tail call interpreter}
+\label{sssec:graalvm}
+
