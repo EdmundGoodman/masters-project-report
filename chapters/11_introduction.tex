@@ -1,110 +1,94 @@
 \chapter{Introduction}
 \label{chap:introduction}
 
-% This is the introduction where you should introduce your work. In
-% general the thing to aim for here is to describe a little bit of the
-% context for your work -- why did you do it (motivation), what was the
-% hoped-for outcome (aims) -- as well as trying to give a brief overview
-% of what you actually did.
-%
-% It's often useful to bring forward some ``highlights'' into this
-% chapter (e.g.\ some particularly compelling results, or a particularly
+% This is the introduction where you should introduce your work. In general the thing to aim for here is to describe a little bit of the context for your work -- why did you do it (motivation), what was the hoped-for outcome (aims) -- as well as trying to give a brief overview of what you actually did.
+% It's often useful to bring forward some ``highlights'' into this chapter (e.g.\ some particularly compelling results, or a particularly
 % interesting finding).
-%
-% It's also traditional to give an outline of the rest of the document,
-% although without care this can appear formulaic and tedious. Your
-% call.
+% It's also traditional to give an outline of the rest of the document, although without care this can appear formulaic and tedious. Your call.
 
 
 
-% \section{Context}
-% \label{sec:context}
-% % "describe a little bit of the context for your work"
 
+%%% "describe a little bit of the context for your work"
 
-% Hook (Compilers and compiler frameworks)
+%% Context (~abstract sentence one: topic of compilers/MLIR)
 Compilers are a critical component of computing systems, providing an abstraction for expressivity, performance, and portability from high-level programming languages to the underlying machine ISA.
-% Argument
-Early compilers such as \texttt{gcc} and \texttt{gfortran} were hand-crafted for each language, implementing their own custom parsers and optimisation passes. However, the proliferation of new programming languages drove demand for shared compiler infrastructure to eliminate the duplication of effort between languages. The LLVM project addressed this demand, introducing a shared low-level \ac{ir} based on \ac{ssa}, facilitating the consolidation of code generation and many optimisation passes between languages. Recently, the scope of this infrastructure has been advanced by \ac{mlir}, a subproject of LLVM. \ac{mlir} leverages hierarchical dialects of \ac{ir}, empowering compiler designers to write more complex optimisations faster.
-% Link
-For real-world programs, the majority of the runtime of the compiler is dedicated to optimisation of the program, through approaches including pattern rewriting.
+Early compilers were hand-crafted, resulting in complex and language-specific implementations over their development.
+The LLVM compiler framework \cite{lattnerLLVMCompilationFramework2004} addressed these problems of complexity and re-usability with a novel and language-independent \ac{ir} in \ac{ssa} form, which could be analysed and transformed by a sequence of passes.
+Recently, \ac{mlir} \cite{lattnerMLIRScalingCompiler2021a}, has furthered these goals by enabling users to cheaply extend compilers with new abstractions, and automatically provides common infrastructure such as parsing and printing logic for them.
 
 
-% \section{Motivation}
-% \label{sec:motivation}
-% % "why did you do it (motivation)"
 
-% Hook
-The algorithms and data structures used for pattern rewriting differ from many other performance-sensitive workloads.
-% Argument
-For example, \ac{gemm} operations which underpin modern machine learning systems rely on streaming data in a statically known order, which can then be processed in parallel.
-In contrast, pattern rewriting in compilers relies on pointer chasing data structures with a high degree of dynamism.
-This is because the \ac{ssa} representation of the code being rewritten is structured as a doubly linked list, with the applications of the rewriting semantics to this list known only dynamically at runtime.
-% Link
-This dynamic, pointer-chasing workload incurs overhead and precludes many optimisations leveraged by ahead-of-time statically compiled languages such as C++ to accelerate their performance for other workloads.
 
-% Hook (MLIR vs xDSL)
-xDSL is a sidekick compilation framework for \ac{mlir} written in Python, matching \ac{mlir}'s functionality and using a shared textual \ac{ir} format.
-% Argument
-Its implementation in Python provides many benefits, including eliminating long build times, and a simple expressive syntax allowing compiler designers to focus on their task rather than wrangling the underlying framework.
-However, using Python also incurs a number of drawbacks, most notably in relation to performance.
-% Link
-This work examines the performance of program optimisation through pattern-rewriting in xDSL, focussing on the impact of dynamism inherent to the workload and contrasting with \ac{mlir}.
+%%% "why did you do it (motivation)"
 
-% \section{Aims}
-% \label{sec:aims}
-% % "what was the hoped-for outcome (aims)"
+%% Context/Motivation (~abstract sentence one/two/three: extensible compiler frameworks, how this impacts performance, and that MLIR accept it)
+Compiler extensibility is critical for handling the heterogenous hardware and exotic optisations of modern workloads.
+However, this extensibility comes at a cost, presenting an optimisation boundary between the user and framework code. This boundary arises from the dynamic dispatch of these extensions, precluding optimisations such as ahead-of-time code motion.
+This is compounded by the dynamic nature of the data structures and algorithms used by the compiler. For example, pattern rewriting in \ac{mlir} operates on a linked list representation of \ac{ssa} values -- a dynamic, pointer-chasing workload.
+This further inhibits optimisations, both as a result of dynamism and not being amenable to other transformations such as vectorisation.
+These factors motivate challenging the status quo of implementing user-extensible compiler frameworks in static, ahead-of-time compiled languages.
 
-\begin{figure}[H]
+
+
+
+
+
+%%% "what was the hoped-for outcome (aims)"
+
+%% Motivation/aim (~abstract sentence four: why not use dynamic languages/xDSL?)
+xDSL \cite{fehrXDSLSidekickCompilation2025} is a reimplementation of \ac{mlir}'s core data structures and \ac{ir} definitions in Python, a dynamically typed, interpreted language.
+xDSL's implementation in Python avoids the long build times of \ac{mlir} as a result of being interpreted. %, and its expressive syntax and minimal boilerplate allows compiler designers to focus on their task as opposed to the underlying language and framework.
+In addition to this, Python's dynamic typing matches the dynamic nature of the user-extensible compiler framework workload.
+However, using Python also has drawbacks, most notably in relation to runtime performance.
+This work examines the performance of program optimisation through pattern rewriting in xDSL, focussing on the impact of dynamism and contrasting the current state-of-the-art, \ac{mlir}.
+
+
+
+
+
+%%% "give a brief overview of what you actually did"
+
+
+\begin{figure}
     \centering
-    \includegraphics[width=0.75\textwidth]{images/11_introduction/narrative.drawio.pdf}
-    \caption{Shrinking the gap between xDSL (green) and \ac{mlir} (blue) pattern rewriting performance. xDSL's performance can be improved by changes to its implementation and language runtime. MLIR has less of a performance advantage due to the costs associated with dynamism.} % TODO: Rework diagram presentation and substantiate. Perhaps this could be a bar chart, or at least annotated with real performance figures.
+    \includegraphics[width=0.7\textwidth]{images/11_introduction/narrative.drawio.pdf}
+    \caption{\textit{(Sketch of figure: will be drawn properly with matplotlib and real data once finalised -- any general feedback appreciated!)} Closing the gap between xDSL (blue language runtime, orange implementation overhead) and \ac{mlir} (green) pattern rewriting performance. xDSL's performance can be improved by changes to both its implementation and language runtime. C++ has less of a performance advantage for \ac{mlir} than other workloads due to the costs associated with dynamism.}
+    % TODO: Further think about this to consider making it more conceptual/hooky
+    % TODO: If kept, this will have bars labelled with performance figures, but since not final have not done this yet
     \label{fig:narrative}
 \end{figure}
 
-% Hook (implementation details of Python)
-% The performance of a program is upper bounded by properties of its language runtime, but is also significantly affected by the details of its implementation.
-The performance of a program is constrained by both the details of its implementation and the runtime of its language.
-% Argument
-These two properties are deeply interlinked, making them difficult to independently measure. To mitigate this, we hand specialise (Label \texttt{(1)} of \autoref{fig:narrative}) xDSL's implementation for a specific workload such that its performance is constrained by the language runtime. The efficiency of this optimisation can then be examined through the dispatched bytecode for micro-benchmarks of this workload. Using this specialised implementation, we further quantify the impact of recent performance enhancements made to CPython including the specialising adaptive interpreter and baseline JIT (Label \texttt{(2)} of \autoref{fig:narrative}) for pattern rewriting workloads. In addition to this, the specialisation process and performance measurements provide insight into optimisations for the xDSL framework for general workloads.
-% Link
-The resultant specialised implementation leveraging recent CPython features can then be used as a baseline for best-case performance of pattern rewriting in xDSL in comparison with \ac{mlir}.
+%% Overview (~abstract sentence five, which needs re-writing: what we did part one -- specialisation and CPython stuff)
+The performance of a program is constrained both by the details of its implementation and the runtime of its language.
+These two properties are deeply interlinked, making them difficult to measure independently.
+To disentangle them, we manually optimise and specialise xDSL's implementation for a fixed algorithm on a specific workload (Label \texttt{(1)} of \autoref{fig:narrative}), resulting in an $5.5\times$ performance uplift. % TODO: align with finalised figure when re-measured
+We then confirm the performance of the specialisation is constrained only by the language runtime by examination of the dispatched bytecode of micro-benchmarks.
+Following this, we quantify the impact of recent performance enhancements made to CPython for this specialised implementation (Label \texttt{(2)} of \autoref{fig:narrative}). % as an increase of $xy\%$.
+This process provides an approximate best-case for the performance of pattern rewriting in xDSL, which can then be compared against \ac{mlir}.
 
 
-% Hook (cost of dynamism)
-One of the key differences between xDSL's Python runtime and \ac{mlir}'s C++ runtime is their degree of dynamism.
-% Argument
-Being ahead-of-time statically compiled, C++ excels at workloads where control flow is known ahead of time, allowing optimisation and avoiding runtime overhead. However, the dynamism of pattern rewriting workloads forces frequent resolution of virtual function calls, hiding these optimisation opportunities and incurring overhead (Label \texttt{(3)} of \autoref{fig:narrative}).
-CPython incurs this overhead of dynamism for almost all bytecode operations executed by its interpreter, irrespective of workload.
-% Link
-We examine the degree to which the dynamism in pattern rewriting workloads contributes to the differences in performance between language runtimes (Label \texttt{(4)} of \autoref{fig:narrative}), and critically assess the extent to which this motivates the use of Python for implementing user-extensible compiler frameworks.
-
-% Hook (further optimisations)
+%% Overview (~abstract sentence five, which needs re-writing: what we did part two -- custom CPython optimisations)
+% Hook
 % Argument
 % Link
 
-% \section{Contributions}
-% \label{sec:contributions}
-% % "give a brief overview of what you actually did"
 
+%% Overview (~abstract sentence five, which needs re-writing: what we did part three -- cost of dynamism)
+A key difference between the Python and C++ runtimes is their degree of dynamism.
+\ac{mlir}'s C++ runtime incurs overhead when dynamically dispatching functions (Label \texttt{(3)} of \autoref{fig:narrative}), which is worsened by prohibiting ahead-of-time performance optimisations. In contrast, almost every bytecode operation evaluated by the Python interpreter is dynamic, each incurring an overhead.
+As such, we expect the difference in performance between language runtimes (Label \texttt{(4)} of \autoref{fig:narrative}) to be smaller for more dynamic workloads.
+To corroborate this, we measure the difference in performance between pattern rewriting workloads using xDSL and \ac{mlir}, and assess the contribution of overheads incurred by dynamism.
+Finally, we critically evaluate the degree to which this motivates the use of Python for implementing user-extensible compiler frameworks.
+
+
+
+%% Contributions (~abstract sentence six: key impact of research)
 The contributions of our work are as follows:
 
 \begin{itemize}
-    \item An examination of the upper bound on performance for pattern-rewriting workloads in the CPython language runtime, including trade-offs in expressivity and the impact of performance optimisations made to the language runtime.
-    \item A tool to examine CPython bytecode dispatch in program runs, facilitating the analysis of costs incurred by dynamism 
-    \item A quantitative comparison of the performance and impact of dynamism between user-extensible compiler frameworks implemented in static and dynamic languages.
+    \item An examination of the best-case performance for pattern rewriting workloads in the CPython language runtime. %, including trade-offs in expressivity and the impact of performance optimisations made to the language runtime.
     \item An exploration of optimisation techniques to shrink the performance gap between dynamic and static languages for pattern rewriting workloads.
+    \item A tool to examine CPython bytecode dispatch in program runs, facilitating the analysis of costs incurred by dynamism.
+    \item A quantitative comparison of the performance of user-extensible compiler frameworks implemented in static and dynamic languages, focussing on the impact of dynamism.
 \end{itemize}
-
-
-% \textbf{xDSL benchmarks and benchmarking infrastructure.} We present a suite of benchmarks for the xDSL compiler framework. These examine end-to-end workloads, individual pipeline phases, and micro-benchmarks for frequent granular methods. These benchmarks are accompanied by infrastructure for their measurement and profiling. This includes supporting existing tooling such as air-speed velocity \cite{michaeldroettboomAirspeedvelocityAsv2025} for measuring performance regression, and hooks for profilers such as \texttt{viztracer} \cite{gaoVizTracer2025} and \texttt{cProfile}. In addition to this, we provide custom runtime measurement logic which minimises machine noise, and a novel tracing profiler which tracks the time taken to execute individual opcodes.
-
-% \textbf{Comparison of xDSL and MLIR performance.} A subset of the above suite of benchmarks are designed to be directly comparable with existing micro-benchmarks for MLIR presented in the talk ``How Slow is MLIR?'' \cite{aminiHowSlowMLIR2024}. We present a comparison between the xDSL and MLIR frameworks using these micro-benchmarks. This comparison identifies two main causes for the disparity in performance between xDSL and MLIR: implementation overhead and language runtime overhead. By specialising the implementation of the micro-benchmarked methods to eliminate implementation overhead, we quantify the performance difference between the Python and C++ language runtimes for user-extensible compiler framework workloads.
-
-% \textbf{Analysis of the suitability of dynamic languages for dynamic workloads.} User-extensible compiler frameworks are inherently dynamic, motivating the use of dynamic languages for their implementation. We identify examples of dynamism in our framework micro-benchmarks, and use them to evaluate whether dynamic language runtimes provide performance benefits for such dynamic workloads.
-% TODO: We find that...
-
-% \textbf{Optimisation of specialised xDSL pattern rewriter.}
-% TODO: Still a slightly open question...
-% Some benchmark informed changes are applicable wlog so can be/have been merged
-% + possibly some bytecode rewriting stuff?

@@ -21,73 +21,133 @@
 % much. The correct choice will depend on what you're writing up, and
 % your own personal preference.
 
-
+% Hook
+Our research builds on two existing bodies of work.
+% Argument
+The first is the long history of programming language research examining the difference between static and dynamic languages (\autoref{sec:static-dynamic-languages}), along with approaches to leverage runtime information of dynamic languages to optimise their performance (\autoref{sec:jit-optimisations})
+The second is the recent work applying these approaches to the CPython reference implementation, driven by the Faster CPython project (\autoref{sec:faster-cpython}).
+% Link
+We apply these previous developments to the novel field of examining and optimising the performance of dynamic interpreted languages for pattern rewriting in user-extensible compiler frameworks, a workload traditionally implemented in ahead-of-time statically compiled languages.
 
 
 \section{Static and dynamic languages}
 \label{sec:static-dynamic-languages}
 
+%% Define dynamism and dynamic/static languages
+% Hook
+Programming language design is a game of trade-offs, with a wide variety of design choices incurring differing benefits and costs, each of which impact a languages' suitability for a given task.
+% Argument
+One such choice is the degree of dynamism, defined by Williams et al. as ``allowing properties of programs to be defined at run-time'' \cite{williamsDynamicInterpretationDynamic2010}. As such, static languages fix properties ahead of time, whereas dynamic languages offer more flexibility at runtime.
+% Link
+
+%% Introduce mechanisms of dynamically/statically typed languages
+% Hook
+The most commonly discussed way programming languages can provide dynamism is dynamic typing. This refers to programming languages where type-checking is performed at runtime, and variables can change type during the course of execution.
+% Argument
+In their essay ``The next 7000 programming languages'' \cite{chatleyNext7000Programming2019}, Chatley et al. discuss how the landscape of programming languages has changed since Landin's seminal 1966 paper ``The next 700 programming languages'' \cite{landinNext700Programming1966}. At the time of Landin's paper, there was already a split between dynamically typed languages such as Lisp and statically languages such as C and Algol. Lisp's runtime type checks incurred performance overhead and unexpected runtime type errors, but provided much greater expressivity and hence more productive development than static languages of the time. These trade-offs between static and dynamic languages remain much the same today, with Chatley et al. arguing that dynamically typed languages' expressivity results in ``excellent library support'', as they are better equipped to express structured data without a fixed schema. %  (C++ RTTI/templates) ?
+% Link
+
+%% Introduce other mechanisms of dynamism
+% Hook
+Beyond dynamic typing, there are a wide variety of other mechanisms by which programming languages can provide dynamism.
+% Argument
+Runtime meta-programming, is where code can introspect and manipulate its own behaviour at runtime \cite{}. % Example, typically restricted to interpreters
+Late binding refers to resolving method calls at runtime when they are invoked, as opposed to being statically linked ahead of time. Interestingly, ahead-of-time compiled languages typically considered static such as C++ provide this dynamic behaviour in the case of polymorphism. When a method is invoked on an object in an inheritance hierarchy, the correct implementation to execute is resolved at runtime using C++'s vtable mechanism \cite{}.
+% Link
+This demonstrates that dynamism is not a binary property, and that it is only loosely coupled with the language implementation.
+
+%% Disentangling static/ahead-of-time compiled and interpreted/dynamic
+% Hook
+A programming language's degree of dynamism is orthogonal to, but correlated with, whether its language runtime is ahead-of-time compiled or interpreted.
+% Argument
+Languages providing many dynamic properties are typically interpreted. One reason for this is that the interpreter can change its behaviour based on its internal state with minimal overhead. Conversely, static languages are typically ahead-of-time compiled.
+% Link
+One reason for this is that ahead-of-time compilation facilitates program optimisation, and as such languages which are not precluded from it by their dynamic nature 
+
+%% Optimisation opportunities in dynamic and static languages
+% Hook
+% Argument
+% something something (\autoref{sec:jit-optimisations}) something something
+% Link
+
+%% Dynamism of workloads
+% Hook
+In addition to being a property of a programming language, it can be helpful to classify a workload as dynamic or static.
+% Argument
+For example, \ac{gemm} operations which underpin modern machine learning systems rely on streaming data in a statically known order. This is well-suited to ahead-of-time compilation, as it is amenable to optimisation passes requiring no runtime information, such as code motion or vectorisation.
+% TODO: Should this take my research domain as an example, or pick something else dynamic and can introduce my domain outside related work?
+In contrast, pattern rewriting in user-extensible compiler frameworks relies on pointer chasing data structures with a high degree of dynamism. This is because the \ac{ssa} representation of the code being rewritten is structured as a doubly linked list, with the applications of the rewriting semantics to this list known only dynamically at runtime.
+This dynamic, pointer-chasing workload incurs overhead and precludes many optimisations leveraged by ahead-of-time statically compiled languages such as C++ to accelerate their performance for other workloads.
+% Link
+One crux of our research is extending the academic basis surrounding static and dynamic languages to quantitatively examine the difference in their performance for highly dynamic workloads.
+
+% Existing work quantifying performance cost of dynamism of workloads, and signpost to our work quantifying this
 % Hook
 % Argument
 % Link
-
-% Precisely define dynamism
-
 
 % An example of where C++ dynamism presents an optimisation boundary that would otherwise be found by the compiler (and possibly that a JIT can find it?)
 
 % Object orientated optimisations (virtual dispatch in C++/objective-C)
 % Why is JS faster than Python - more constrained
 
+% Cranelift and arrays instead of linked lists for pattern rewriting (https://cfallin.org/blog/2020/09/18/cranelift-isel-1/)
 
 
 
+\section{JIT optimisations}
+\label{sec:jit-optimisations}
 
+% Hook
+% Argument
+% Link
 
-\section{JIT Compilation}
-\label{sec:jit-compilation}
+% Define JIT --> overloaded term broader than just JIT compilation!
+
+\subsection{JIT compilation}
+\label{ssec:jit-compilation}
+
+% \subsection{PyPy}
+% \label{ssec:pypy}
+
+% \subsection{Numba, JAX, and PyTorch}
+% \label{ssec:numba-jax-pytorch}
+
 
 \subsection{Copy-and-patch compilation}
 \label{ssec:copy-and-patch-compilation}
 
+% Hook
+% Argument
+% Link
+
+% Figure
+
+% Hook
+% Argument
+% Link
+
+
 \subsection{Lua JIT}
 \label{ssec:lua-jit}
 
-\subsection{GraalVM}
-\label{ssec:graalvm}
-
-\subsection{PyPI}
-\label{ssec:graalvm}
-
-\subsection{Numba, JAX, and PyTorch}
-\label{ssec:number-jax-pytorch}
+% \subsection{GraalVM}
+% \label{ssec:graalvm}
 
 
 
-% \section{Python performance}
-% \label{sec:python-performance}
 
-% % \subsection{Python performance matters}
-% % \label{ssec:python-performance-matters}
-
-% Typically, we want to bind into C as much as possible -- see things like Scalene to measure this. However, for our pattern rewriting workload, this is less suitable
-
-% \subsection{Python performance measurement}
-% \label{ssec:python-perf-measurement}
-% timeit/asv/pyperf and stuff maybe? Possibly not worth discussing
-
-
-\subsection{Faster CPython}
-\label{ssec:faster-cpython}
+\section{Faster CPython}
+\label{sec:faster-cpython}
 
 % Timeline
 
 % Hook
-Python is a notoriously slow language \cite{}. The Faster CPython project is an attempt to remedy this fact.
+\acf{pep} 659 states that ``Python widely acknowledged as slow'' \cite{pep659}.
 % Argument
-Over the course of the recent CPython major versions, new optimisations have been incrementally added as part of this project, resulting in incremental performance gains (\autoref{tab:faster-cpython}).
+This comes partially as an inherent trade-off from the benefits of its interpreted runtime and expressive dynamic semantics, meaning it cannot achieve the general-purpose performance of ahead-of-time compiled languages such as C++ or FORTRAN. However, it is feasible for Python implementations to be competitive with fast implementations of other scripting languages with similar trade-offs, such as Javascript's V8 or Lua's LuaJIT. The Faster CPython project is an attempt to achieve this goal in Python's reference implementation. Over the course of the recent CPython major versions, new optimisations have been gradually added as part of this project, resulting in incremental performance gains (\autoref{tab:faster-cpython}).
 % Link
-This section discusses these optimisations, and their effect on CPython's performance.
+This section discusses the details of these optimisations, and their effect on CPython's performance.
 
 % Hook
 % Argument
@@ -103,7 +163,7 @@ This section discusses these optimisations, and their effect on CPython's perfor
     \midrule
     CPython 3.10.17 & Baseline & $x$ \\
     CPython 3.11.12 & Specialising adaptive interpreter & $x$ \\
-    CPython 3.12.10 & Comprehension inlining & $x$ \\
+    % CPython 3.12.10 & Comprehension inlining & $x$ \\
     CPython 3.13.3 & Version bump & $x$ \\
     CPython 3.13.3 & Enabled experimental JIT & $x$ \\
     CPython 3.14.0a7 & Version bump & $x$ \\
@@ -115,14 +175,66 @@ This section discusses these optimisations, and their effect on CPython's perfor
 \end{table}
 
 \subsubsection{Specialising adaptive interpreter}
-\label{sssec:graalvm}
+\label{sssec:specialising-adaptive-interpreter}
 
-\subsubsection{Comprehension inlining}
-\label{sssec:graalvm}
+%% Motivation
+% Hook
+% Argument
+% Link
+
+%% How does it work?
+% Hook
+% Argument
+% Link
+
+%% How does it perform?
+% Hook
+CPython introduced its implementation of the specialising adaptive interpreter in 2022 with version 3.11.
+% Argument
+% Link
+
 
 \subsubsection{Experimental JIT compiler}
-\label{sssec:graalvm}
+\label{sssec:experimental-jit-compiler}
+
+%% Motivation
+% Hook
+% Argument
+% Link
+
+%% How does it work?
+% Hook
+% Argument
+% Link
+
+%% How does it perform?
+% Hook
+% Argument
+% Link
 
 \subsubsection{Tail call interpreter}
-\label{sssec:graalvm}
+\label{sssec:tail-call-interpreter}
 
+%% Motivation
+% Hook
+% Argument
+% Link
+
+%% How does it work?
+% Hook
+% Argument
+% Link
+
+%% How does it perform?
+% Hook
+% Argument
+% Link
+
+
+
+
+
+
+
+% \subsubsection{Comprehension inlining}
+% \label{sssec:comprehension-inlining}
