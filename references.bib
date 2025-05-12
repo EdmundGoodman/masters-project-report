@@ -32,6 +32,39 @@
   venue = {Vienna, Austria}
 }
 
+@article{aycockBriefHistoryJustintime2003,
+  title = {A Brief History of Just-in-Time},
+  author = {Aycock, John},
+  date = {2003-06-01},
+  journaltitle = {ACM Comput. Surv.},
+  volume = {35},
+  number = {2},
+  pages = {97--113},
+  issn = {0360-0300},
+  doi = {10.1145/857076.857077},
+  url = {https://dl.acm.org/doi/10.1145/857076.857077},
+  urldate = {2025-05-11},
+  abstract = {Software systems have been using "just-in-time" compilation (JIT) techniques since the 1960s. Broadly, JIT compilation includes any translation performed dynamically, after a program has started execution. We examine the motivation behind JIT compilation and constraints imposed on JIT compilation systems, and present a classification scheme for such systems. This classification emerges as we survey forty years of JIT work, from 1960--2000.},
+  file = {/Users/edjg/Zotero/storage/KFW9CF8P/Aycock - 2003 - A brief history of just-in-time.pdf}
+}
+
+@inproceedings{baconFastStaticAnalysis1996,
+  title = {Fast Static Analysis of {{C}}++ Virtual Function Calls},
+  booktitle = {Proceedings of the 11th {{ACM SIGPLAN}} Conference on {{Object-oriented}} Programming, Systems, Languages, and Applications},
+  author = {Bacon, David F. and Sweeney, Peter F.},
+  date = {1996-10-01},
+  series = {{{OOPSLA}} '96},
+  pages = {324--341},
+  publisher = {Association for Computing Machinery},
+  location = {New York, NY, USA},
+  doi = {10.1145/236337.236371},
+  url = {https://dl.acm.org/doi/10.1145/236337.236371},
+  urldate = {2025-05-11},
+  abstract = {Virtual functions make code easier for programmers to reuse but also make it harder for compilers to analyze. We investigate the ability of three static analysis algorithms to improve C++ programs by resolving virtual function calls, thereby reducing compiled code size and reducing program complexity so as to improve both human and automated program understanding and analysis. In measurements of seven programs of significant size (5000 to 20000 lines of code each) we found that on average the most precise of the three algorithms resolved 71\% of the virtual function calls and reduced compiled code size by 25\%. This algorithm is very fast: it analyzes 3300 source lines per second on an 80 MHz PowerPC 601. Because of its accuracy and speed, this algorithm is an excellent candidate for inclusion in production C++ compilers.},
+  isbn = {978-0-89791-788-9},
+  file = {/Users/edjg/Zotero/storage/LL8LCXSD/Bacon and Sweeney - 1996 - Fast static analysis of C++ virtual function calls.pdf}
+}
+
 @incollection{chatleyNext7000Programming2019,
   title = {The {{Next}} 7000 {{Programming Languages}}},
   booktitle = {Computing and {{Software Science}}: {{State}} of the {{Art}} and {{Perspectives}}},
@@ -118,6 +151,39 @@
   organization = {Python}
 }
 
+@inproceedings{holzleOptimizingDynamicallydispatchedCalls1994,
+  title = {Optimizing Dynamically-Dispatched Calls with Run-Time Type Feedback},
+  booktitle = {Proceedings of the {{ACM SIGPLAN}} 1994 Conference on {{Programming}} Language Design and Implementation},
+  author = {Hölzle, Urs and Ungar, David},
+  date = {1994-06-01},
+  series = {{{PLDI}} '94},
+  pages = {326--336},
+  publisher = {Association for Computing Machinery},
+  location = {New York, NY, USA},
+  doi = {10.1145/178243.178478},
+  url = {https://dl.acm.org/doi/10.1145/178243.178478},
+  urldate = {2025-05-12},
+  isbn = {978-0-89791-662-2},
+  file = {/Users/edjg/Zotero/storage/4AMQL6SQ/Hölzle and Ungar - 1994 - Optimizing dynamically-dispatched calls with run-time type feedback.pdf}
+}
+
+@online{kempenItsNotEasy2025,
+  title = {It's {{Not Easy Being Green}}: {{On}} the {{Energy Efficiency}} of {{Programming Languages}}},
+  shorttitle = {It's {{Not Easy Being Green}}},
+  author = {family=Kempen, given=Nicolas, prefix=van, useprefix=false and Kwon, Hyuk-Je and Nguyen, Dung Tuan and Berger, Emery D.},
+  date = {2025-03-28},
+  eprint = {2410.05460},
+  eprinttype = {arXiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2410.05460},
+  url = {http://arxiv.org/abs/2410.05460},
+  urldate = {2025-05-11},
+  abstract = {Does the choice of programming language affect energy consumption? Previous highly visible studies have established associations between certain programming languages and energy consumption. A causal misinterpretation of this work has led academics and industry leaders to use or support certain languages based on their claimed impact on energy consumption. This paper tackles this causal question directly. It first corrects and improves the measurement methodology used by prior work. It then develops a detailed causal model capturing the complex relationship between programming language choice and energy consumption. This model identifies and incorporates several critical but previously overlooked factors that affect energy usage. These factors, such as distinguishing programming languages from their implementations, the impact of the application implementations themselves, the number of active cores, and memory activity, can significantly skew energy consumption measurements if not accounted for. We show -- via empirical experiments, improved methodology, and careful examination of anomalies -- that when these factors are controlled for, notable discrepancies in prior work vanish. Our analysis suggests that the choice of programming language implementation has no significant impact on energy consumption beyond execution time.},
+  pubstate = {prepublished},
+  keywords = {Computer Science - Performance,Computer Science - Programming Languages},
+  file = {/Users/edjg/Zotero/storage/C65BSPZP/Kempen et al. - 2025 - It's Not Easy Being Green On the Energy Efficiency of Programming Languages.pdf;/Users/edjg/Zotero/storage/WLEKD4IA/2410.html}
+}
+
 @inproceedings{laaberEvaluationOpensourceSoftware2018,
   title = {An Evaluation of Open-Source Software Microbenchmark Suites for Continuous Performance Assessment},
   booktitle = {Proceedings of the 15th {{International Conference}} on {{Mining Software Repositories}}},
@@ -133,6 +199,24 @@
   abstract = {Continuous integration (CI) emphasizes quick feedback to developers. This is at odds with current practice of performance testing, which predominantely focuses on long-running tests against entire systems in production-like environments. Alternatively, software microbenchmarking attempts to establish a performance baseline for small code fragments in short time. This paper investigates the quality of microbenchmark suites with a focus on suitability to deliver quick performance feedback and CI integration. We study ten open-source libraries written in Java and Go with benchmark suite sizes ranging from 16 to 983 tests, and runtimes between 11 minutes and 8.75 hours. We show that our study subjects include benchmarks with result variability of 50\% or higher, indicating that not all benchmarks are useful for reliable discovery of slowdowns. We further artificially inject actual slowdowns into public API methods of the study subjects and test whether test suites are able to discover them. We introduce a performance-test quality metric called the API benchmarking score (ABS). ABS represents a benchmark suite's ability to find slowdowns among a set of defined core API methods. Resulting benchmarking scores (i.e., fraction of discovered slowdowns) vary between 10\% and 100\% for the study subjects. This paper's methodology and results can be used to (1) assess the quality of existing microbenchmark suites, (2) select a set of tests to be run as part of CI, and (3) suggest or generate benchmarks for currently untested parts of an API.},
   isbn = {978-1-4503-5716-6},
   file = {/Users/edjg/Zotero/storage/8MD74V8C/Laaber and Leitner - 2018 - An evaluation of open-source software microbenchmark suites for continuous performance assessment.pdf}
+}
+
+@inproceedings{lamNumbaLLVMbasedPython2015,
+  title = {Numba: A {{LLVM-based Python JIT}} Compiler},
+  shorttitle = {Numba},
+  booktitle = {Proceedings of the {{Second Workshop}} on the {{LLVM Compiler Infrastructure}} in {{HPC}}},
+  author = {Lam, Siu Kwan and Pitrou, Antoine and Seibert, Stanley},
+  date = {2015-11-15},
+  series = {{{LLVM}} '15},
+  pages = {1--6},
+  publisher = {Association for Computing Machinery},
+  location = {New York, NY, USA},
+  doi = {10.1145/2833157.2833162},
+  url = {https://dl.acm.org/doi/10.1145/2833157.2833162},
+  urldate = {2025-05-11},
+  abstract = {Dynamic, interpreted languages, like Python, are attractive for domain-experts and scientists experimenting with new ideas. However, the performance of the interpreter is often a barrier when scaling to larger data sets. This paper presents a just-in-time compiler for Python that focuses in scientific and array-oriented computing. Starting with the simple syntax of Python, Numba compiles a subset of the language into efficient machine code that is comparable in performance to a traditional compiled language. In addition, we share our experience in building a JIT compiler using LLVM[1].},
+  isbn = {978-1-4503-4005-2},
+  file = {/Users/edjg/Zotero/storage/YIM4DLPJ/Lam et al. - 2015 - Numba a LLVM-based Python JIT compiler.pdf}
 }
 
 @article{landinNext700Programming1966,
@@ -192,6 +276,19 @@
   eventtitle = {2021 {{IEEE}}/{{ACM International Symposium}} on {{Code Generation}} and {{Optimization}} ({{CGO}})},
   keywords = {Buildings,Generators,Hardware,Optimization,Program processors,Semantics,Software},
   file = {/Users/edjg/Zotero/storage/GW75VWA5/Lattner et al. - 2021 - MLIR Scaling Compiler Infrastructure for Domain Specific Computation.pdf}
+}
+
+@inproceedings{lionInvestigatingManagedLanguage2022,
+  title = {Investigating {{Managed Language Runtime Performance}}: {{Why}} \{\vphantom\}{{JavaScript}}\vphantom\{\} and {{Python}} Are 8x and 29x Slower than {{C}}++, yet {{Java}} and {{Go}} Can Be {{Faster}}?},
+  shorttitle = {Investigating {{Managed Language Runtime Performance}}},
+  author = {Lion, David and Chiu, Adrian and Stumm, Michael and Yuan, Ding},
+  date = {2022},
+  pages = {835--852},
+  url = {https://www.usenix.org/conference/atc22/presentation/lion},
+  urldate = {2025-05-11},
+  eventtitle = {2022 {{USENIX Annual Technical Conference}} ({{USENIX ATC}} 22)},
+  langid = {english},
+  file = {/Users/edjg/Zotero/storage/P3UA85XD/Lion et al. - 2022 - Investigating Managed Language Runtime Performance Why JavaScript and Python are 8x and 29x slowe.pdf}
 }
 
 @software{michaeldroettboomAirspeedvelocityAsv2025,

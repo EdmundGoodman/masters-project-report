@@ -1,0 +1,284 @@
+\chapter{Measuring compiler framework performance}
+\label{chap:measuring-compiler-performance}
+
+%% Introduction
+% Hook
+In this chapter, we measure the runtime performance of two user-extensible compiler frameworks: MLIR and xDSL.
+% Argument
+The use of these measurements are three-fold. First, we provide insight into the current relative performance of MLIR and xDSL. % interesting in its own right, and as an optimisation
+Second, we identify the components of the implementation which contribute most to the overall runtime, and as such are the best targets for optimisation (\autoref{chap:specialising-optimising-pattern-rewriting}) as a corrollary of Amdahl's law \cite{amdahlValiditySingleProcessor1967}.
+Finally, we isolate small, self-contained components of the implementation which are comparable between MLIR and xDSL, through which the impact of dynamism can be examined (\autoref{chap:dynamism-pattern-rewriting}).
+% Link
+
+\section{Methodology}
+\label{sec:methodology}
+
+%% Goals of experiments, levels of granularity
+% Hook
+% In complex systems
+% Argument
+% Link
+
+%% Steps for experimental accuracy/avoiding noise
+% Hook
+Accurate performance measurement is a fundamental and notoriously fickle discipline in systems research.
+% Argument
+% Link
+
+%% Reproducibility
+% Hook
+The reproducibility of experiments is critical for a robust scientific methodology.
+% Argument
+To aid in reproducibility, we provide a description of our experimental setup (\autoref{}, further detailed in \autoref{}).
+The choice to use an AWS EC2 instance for performance measurement was partially driven by practical limitations of the resources available to the authors.
+This choice incurs a cost
+However, there are also commensurate benefits to this choice with respect to reproducibility. This is because researchers aiming to replicate the work can simply create their own EC2 instance with the same configuration, obviating the issue of different hardware configurations affecting performance results.
+Furthermore, virtualised systems are representative of real-world workloads
+In addition to this, with cloud computing becoming ubiquitous over the past decade, their is a fair body of research into reliable performance measurements on virtualised systems
+% Link
+
+% % Hook
+% Our experimental methodology aims to maximize the effectiveness of micro-benchmarks while minimising their inherent limitations.
+% % Argument
+% To achieve this balance, we developed infrastructure for benchmark execution and carefully implemented measurement logic.
+% This approach ensures that our measurements accurately reflect overall system performance and ensure valid comparisons between implementations.
+% % Link
+
+% \subsubsection{Micro-benchmarking infrastructure}
+% \label{sssec:ubenchmark-methodology-infra}
+
+% % Hook
+% Due to their short length, micro-benchmark results are sensitive to machine noise.
+% % Argument
+% To minimise the impact of machine noise, the micro-benchmarks are repeated $2^{15}$ times and averaged, with uncertainty calculated as their standard deviation. To ensure comparability, both the MLIR and xDSL micro-benchmarks were run locally on the same experimental machine, whose hardware and software configuration is described in \autoref{tab:ubenchmark-experimental-config}
+% % % Link
+% % In addition to machine noise, other mechanisms may increase the variance of results, such as differences between runs due to cache warming or language runtime behaviour.
+
+\begin{table}[H]
+  \caption{Experimental configuration used for micro-benchmarking.}
+  % TODO: This might want to move to the top of the measurement section?
+  \label{tab:ubenchmark-experimental-config}
+  \centering
+  \begin{tabular}{lll}
+    \toprule
+    \textbf{Configurable} & \textbf{Configuration} \\
+    \midrule
+    \textit{xDSL commit SHA} & \texttt{0eda7fe} \\
+    \textit{MLIR commit SHA} & \texttt{6516ae4} \\
+    \midrule
+    % \midrule  % Build/run command here???
+    % `python3 benchmarks/microbenchmarks.py Extensibility.trait_check`
+    % `cmake ...`
+    % `./MLIR_IR_Benchmark --benchmark_filter="NAME/32768" --benchmark_repetitions=10
+    \textit{Python interpreter} & CPython 3.10.17 \\
+    \textit{C++ compiler} & clang 18.1.8 \\
+    \textit{CMake version} & 3.28.3 \\
+    \textit{Ninja version} & 1.11.1 \\
+    \textit{Operating system} & macOS Sequoia 15.4.1 \\
+    \midrule
+    % \textit{Clock frequency [GHz]} & \\
+    \textit{CPU} & AMD EPYC 7R32 \\
+    \textit{RAM [GB]} & 16 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+%% TODO: This might move to end-to-end benchmarks section?
+% Hook
+In addition to their usefulness for understanding and optimising compiler performance, these benchmarks provide an opportunity to augment the development process of the xDSL project.
+% Argument
+Benchmarks can be used to characterise the performance impact of changes to the xDSL codebase, making it easier to avoid unnecessary performance regression.
+As such, we provide a command line interface for developers to run the benchmarks, with further functionality which supports a variety of profiling tools.
+Furthermore, our benchmarks are constructed to interface with air-speed velocity \cite{michaeldroettboomAirspeedvelocityAsv2025}, a tool which runs benchmarks across repository commits. This information is tracked on the xDSL website \url{https://xdsl.dev/xdsl-bench/}, providing a dashboard for the performance characteristics of xDSL over time.
+% Link
+
+% Hook
+% After constructing reliable infrastructure for executing micro-benchmarks in Python, we proceeded to develop implementations that could be directly compared with existing MLIR versions. This was essential to draw valid conclusions about performance differences between Python and C++ runtimes for compiler framework workloads.
+
+
+
+
+
+% End-to-end/pipeline-phase-wise performance of xDSL as it stands
+% --> Why we pick pattern rewriting to focus on
+\section{Compiler pipeline phases}
+
+
+
+
+
+\section{Micro-benchmarks}
+\label{sec:ubenchmark}
+
+% Hook
+Micro-benchmarking refers measuring the performance of fast, granular, and isolated segments of code.
+% It contrasts traditional benchmarking approaches which instead examine the performance of larger code segments, typically representative of a real-world workload.
+% Argument
+The term was coined by Saavedra et al. in their 1995 paper \cite{saavedraPerformanceCharacterizationOptimizing1995} ``Performance Characterization of Optimizing Compilers''. As such, we are in good company in our application of micro-benchmarking approaches to this problem domain.
+Micro-benchmarks have many desirable properties. Since they run quickly, they can cheaply be repeated for statistical confidence.
+Furthermore, their fine granularity makes them tractable to reason about -- providing useful information to optimise the component of the system they measure.
+However, a key difficulty of micro-benchmarking is ensuring alignment with overall system performance. For example, the selection of code paths to micro-benchmark may introduce bias, making them less representative of the overall system. In addition to this, their performance may be inflated as a consequence of warmed caches and JIT optimisations across repeats, which would not occur during normal operation.
+% Link
+As such, micro-benchmarking is a useful tool for deeply understanding the performance of software, but must be used carefully to ensure the validity of its results.
+
+%% Now the mlir community already disagree (cannot find source for this feeling, so elide), leading to talk
+% Hook
+At the 2024 European LLVM Developers' Meeting, Mehdi Amini and Jeff Nui presented their keynote talk ``How Slow is MLIR?'' \cite{aminiHowSlowMLIR2024}.
+% Argument
+In this talk, they discussed micro-benchmarks for key operations in the MLIR compiler, such as traversing the IR and creating operations. These micro-benchmarks were used to inform the optimisation of MLIR's data structures and for comparison with traditional LLVM-based compilers. The implementation of the micro-benchmarks allude to an underlying design goal in MLIR by their measurement of asymptotic scaling properties\footnote{\url{https://github.com/joker-eph/llvm-project/blob/6773f827b9ee8055063fcf6b2c6fcdc7f4f579d2/mlir/unittests/Benchmarks/Cloning.cpp\#L66}}. This design goal is asymptotically optimal performance for its underlying data structures. However, data structures with these characteristics often incur constant-time penalties. % TODO: \cite{}
+This causes overhead for small workloads, where, unlike the asymptotic case, the cost is not amortised. As such, micro-benchmarks may not be representative of the system's overall performance, revealing possibility for the optimisation of code co-designed using them.
+Despite this, they can still provide useful insight into MLIR's performance characteristics. 
+% Link
+We implement micro-benchmark workloads for the xDSL equivalent to those for MLIR presented in the keynote, and compare the results of these benchmarks between the two implementations, giving insights into their relative performance.
+% We further leverage profiling tools to examine the execution of the two implementations. This allows us to distinguish the cost incurred by the language runtime from the cost incurred by the algorithmic approach of the implementation.
+
+\subsection{Implementation}
+\label{ssec:ubenchmark-implementation}
+
+%% Finding and building the MLIR microbenchmarks
+% Hook
+Unfortunately, the implementation and build instructions for the ``How Slow is MLIR?'' micro-benchmarks were not published with the talk.
+% Argument (too informal?)
+However, their source code can be found on a branch of the presenter's fork of LLVM\footnote{\url{https://github.com/joker-eph/llvm-project/tree/benchmarks}}. We provide a copy of this source code and instructions for running the benchmarks\footnote{\url{https://github.com/EdmundGoodman/llvm-project-benchmarks}} to enhance the replicability of our results and facilitate further performance experiments.
+% Link
+This source code can then be used to construct comparable micro-benchmarks in Python.
+
+% Design of our microbenchmarks
+% Hook
+A key design goal of our micro-benchmarks for xDSL is parity with those provided for MLIR, ensuring the validity their direct comparison.
+% Argument
+As such, their implementation was derived from the MLIR benchmarks, matching test data and function invocations as closely as possible.
+% Link
+In the following sections, we discuss the implementations of a number of micro-benchmarks, facilitating discussion of the insights they give into compiler performance across implementations and language runtimes in later chapters.
+
+
+\subsection{Operation trait checks}
+\label{ssec:ubenchmark-trait-checks}
+
+% Hook
+MLIR and xDSL both provide methods to check whether operations have traits.
+% Argument
+These methods are used very frequently in common tasks. For example, when pattern rewriting over a block of IR, the traits of the block's constituent operations are often used by the matching engine to identify valid rewrites.
+
+% There are two factors which contribute to this slow-down. The first is the inherent overhead incurred by the interpreter loop and data structures in Python's dynamic language runtime. The second is differences in implementation between xDSL and MLIR.
+% % Link
+% Examining this micro-benchmark in detail allows us to decouple the performance contributions of the implementation and language runtime, and provides insight into the impact of dynamism on user-extensible compiler framework workloads.
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth}
+       \centering
+        \begin{minted}[fontsize=\footnotesize]{c++}
+            // Setup
+            Operation op = b.create<OpWithRegion>(
+                unknownLoc
+            );
+            
+            // Benchmark
+            bool hasTrait = op->hasTrait<
+                OpTrait::SingleBlock
+            >();
+        \end{minted}
+        \caption{``How Slow is MLIR?'' C++ implementation.}
+        \label{listing:ubenchmark-trait-checks-bench-mlir}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \begin{minted}[breakanywhere,fontsize=\footnotesize]{python}
+            # Setup
+            op = OpWithRegion()
+            
+            # Benchmark
+            has_trait = op.has_trait(SingleBlock)
+        \end{minted}
+        \footnotesize\vspace{2em}
+        \caption{xDSL Python implementation.}
+        \label{listing:ubenchmark-trait-checks-bench-xdsl}
+    \end{subfigure}
+    \vspace{1em}
+    \captionsetup{name=Listing}
+    \caption{Micro-benchmark implementations for methods checking an operation has a trait.}
+    \label{listing:ubenchmark-trait-checks-bench}
+\end{figure}
+
+Micro-benchmarks of checking traits for both implementations (Listing \ref{listing:ubenchmark-trait-checks-bench}) show a slow-down of approximately $130\times$ from MLIR to xDSL (\autoref{tab:ubenchmark-trait-checks}).
+
+\begin{table}[H]
+  \caption{Trait checks in xDSL are approximately $130\times$ slower than in MLIR in the asymptotic case.} %, repeated ten times over $32768$ operations. Methodology is discussed in detail in Appendix \ref{} to facilitate replicability.}
+  \label{tab:ubenchmark-trait-checks}
+  \centering
+  \begin{tabular}{cc}
+    \toprule
+    \textbf{MLIR [ns]} & \textbf{xDSL [ns]}\\
+    \midrule
+    $3.89 \pm 0.01$ & $504 \pm 76$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+
+% % Hook
+% The trait checking micro-benchmark yields two key insights.
+% % Argument
+% The first is that the original implementation of xDSL makes significant tradeoffs of performance for expressivity. By eliminating these tradeoffs, we reveal the Python language runtime incurs a $16\times$ overhead with respect to C++, as a result of the complexity of its evaluation loop.
+% The second is that whilst C++ can efficiently represent dynamic functionality, albeit at the cost of implementation complexity, dynamism incurs the cost of obscuring other optimisations that would further widen the performance gap between Python and C++.
+% % Link
+% However, whilst trait checking is a frequent operation, it alone is not representative of the overall performance of compiler frameworks. As such, further micro-benchmarks and examining representative workloads is required.
+
+
+\subsection{Operation instantiation}
+
+\subsection{Summary of micro-benchmarks}
+
+% Hook
+In addition to the above micro-benchmarks which we examine in detail, we further provide a wider suite of micro-benchmarks discussed in lesser detail for brevity. % The implementations of all xDSL micro-benchmarks are provided in the Appendix (\autoref{}).
+% Argument
+This suite implements many of the remaining equivalent micro-benchmarks from ``How Slow is MLIR'' (\autoref{tab:ubenchmark-remaining-mlir}).
+From these, we can see the trend of a slow-down in the order of $xy\times$ holds 
+
+\begin{table}[H]
+  \caption{.}
+  \label{tab:ubenchmark-remaining-mlir}
+  \centering
+  \begin{tabular}{ccc}
+    \toprule
+    \textbf{Benchmark name} & \textbf{MLIR [ns]} & \textbf{xDSL [ns]}\\
+    \midrule
+    Trait checks & $3.89 \pm 0.01$ & $504 \pm 76$ \\
+    ... & ... & ... \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+
+% Hook
+In addition to the remaining ``How Slow is MLIR?'' micro-benchmarks, the suite provides further xDSL-only micro-benchmarks sampled from atomic functions invoked by pattern rewriting workloads (\autoref{tab:ubenchmark-xdsl-regression}).
+% Argument
+These have two-fold use: triaging functions to optimise by longest runtime following Amdhal's law \cite{amdahlValiditySingleProcessor1967}; and serving as a metric of performance to ensure optimisations don't inadvertently introduce regressions.
+% Link
+
+\begin{table}[H]
+  \caption{.}
+  \label{tab:ubenchmark-xdsl-regression}
+  \centering
+  \begin{tabular}{ccc}
+    \toprule
+    \textbf{Benchmark name} & \textbf{xDSL [ns]}\\
+    \midrule
+    Trait checks & $504 \pm 76$ \\
+    ... & ... & ... \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+
+
+\section{Pattern rewriting}
+
+
+
+
+
+
+
