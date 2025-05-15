@@ -164,7 +164,7 @@ def constant_folding_module(size: int) -> ModuleOp:
 }) : () -> ()
     \end{minted}
     \caption{``How Slow is MLIR?'' C++ implementation.}
-    \label{listing:ubenchmark-trait-checks-bench-mlir}
+    \label{listing:constant-folding-example}
 \end{code}
 
 
@@ -222,8 +222,8 @@ This allows us to break down end-to-end benchmarks into components of finer gran
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.75\textwidth]{images/14_measuring_compiler_performance/compiler_phases.drawio.pdf}
-    \caption{.}
+    \includegraphics[width=0.75\textwidth]{images/13_measuring_compiler_performance/compiler_phases.drawio.pdf}
+    \caption{Pipeline phases in LLVM-like compilers.}
     % TODO: Does this add value? Could the whole thing be wrapped in an outer box to better communicate the point?
     \label{fig:compiler-phases}
 \end{figure}
