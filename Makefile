@@ -35,9 +35,13 @@ wordcount: $(WORDCOUNT_FILE).pdf
 	   -dFirstPage=$(FIRSTPAGE) -dLastPage=$(LASTPAGE) $< | \
 	egrep '[A-Za-z]{3}' | wc -w
 
+.PHONY: lexers
+lexers: tools/generate_lexers_json.py
+	python3 tools/generate_lexers_json.py
+
 .PHONY: clean
 clean:
-	rm -f *.log *.aux *.toc *.bbl *.ind *.lot *.lof *.out *.acn *.ist *.lol *~ *.bcf *.fdb_latexmk *.fls *.glo *.flsdefs *.pyg *.run.xml *.glsdefs *.synctex.gz
+	rm -f *.log *.aux *.toc *.bbl *.ind *.lot *.lof *.out *.acn *.ist *.lol *~ *.bcf *.fdb_latexmk *.fls *.glo *.flsdefs *.pyg *.run.xml *.glsdefs *.synctex.gz *.bcf-SAVE-ERROR
 	rm -rf _minted-report _minted-report-submission
 	rm -f report-submission.tex
 

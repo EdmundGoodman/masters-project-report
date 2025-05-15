@@ -8,6 +8,7 @@
 \newcommand{\course}{Master of Philosophy in Advanced Computer Science}
 
 \input{chapters/00_preamble}
+\input{chapters/01_glossary}
 
 % Select which version this is:
 % For the (anonymous) submission (without your name or acknowledgements)
@@ -19,31 +20,31 @@
 
 %TC:ignore
 \pagenumbering{gobble}
-\include{chapters/01_titlepage}
-\include{chapters/02_coverpage}
-\include{chapters/03_abstract}
-\include{chapters/04_acknowledgements}
+\include{chapters/02_titlepage}
+\include{chapters/03_coverpage}
+\include{chapters/04_abstract}
+\include{chapters/05_acknowledgements}
 \pagenumbering{roman}
-\include{chapters/05_contents}
-\include{chapters/06_glossary}
-\include{chapters/07_elements}
+\include{chapters/06_frontmatter}
 \pagenumbering{arabic}
 %TC:endignore
 
 \label{firstcontentpage} % start page count here
-\include{chapters/11_introduction}
-\include{chapters/12_background}
-\include{chapters/13_related_work}
-\include{chapters/14_measuring_compiler_performance}
-\include{chapters/15_chapters}
-\include{chapters/18_evaluation}
-\include{chapters/19_summary_conclusions}
+\include{chapters/10_introduction}
+\include{chapters/11_background}
+\include{chapters/12_related_work}
+\include{chapters/13_measuring_compiler_performance}
+\include{chapters/14_profiling_python_bytecode}
+\include{chapters/15_specialising_optimising_xdsl_rewriting}
+\include{chapters/16_impact_cpython_optimisations}
+\include{chapters/17_impact_dynamism}
+\include{chapters/18_summary_conclusions}
 \label{lastcontentpage} % end page count here
 
 %TC:ignore
-\include{chapters/21_bibliography}
+\include{chapters/20_bibliography}
 % Use `input` for finer granularity `include`s whilst avoiding nesting
-\input{chapters/22_appendices}
+\input{chapters/21_appendices}
 %TC:endignore
 
 \end{document}

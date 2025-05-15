@@ -17,7 +17,7 @@
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{images/11_introduction/compilers_lagging.pdf}
+    \includegraphics[width=\textwidth]{images/11_background/compilers_lagging.pdf}
     \caption{Compilers are lagging behind the development of both machine learning hardware and workloads. Figure created by Anton Lydike based on a slide from Sean Silva's talk at the March 2025 Cambridge Compiler Social.}
     \label{fig:compilers-lagging}
 \end{figure}
@@ -226,7 +226,7 @@ A significant overhead in the performance of dynamically typed languages is chec
 % Argument
 Whilst this type information cannot be known ahead of time in dynamically typed languages, information collected at runtime can be used to optimised the type-checking process. This adaptive optimisation approach relies on the assumption that if a variable has had a fixed type for a sufficient span of time previously, it is likely that it will have the same type in future. For example, whilst a variable being used as an integer counter in a loop can take any value, if its type in the earlier iterations has always been an integer, it is likely to remain an integer throughout later iterations.
 % Link
-In an interpreted language, this assumption can be leveraged to replace general instructions with faster, specialised variants. A concrete implementation of this is Python's specialising adaptive interpreter, discussed in \autoref{sssec:specialising-adaptive-interpreter}.
+In an interpreted language, this assumption can be leveraged to replace general instructions with faster, specialised variants. A concrete implementation of this is Python's specialising adaptive interpreter, discussed in \autoref{ssec:specialising-adaptive-interpreter}.
 
 
 
@@ -293,7 +293,7 @@ The specialising adaptive interpreter is an implementation of \ac{jit} adaptive 
 
 %% Motivation
 % Hook
-CPython's experimental \ac{jit} compiler is an implementation of the copy-and-patch machine code generation approach (introduced in \autoref{ssec:copy-and-patch-compilation}), which was added to CPython in 3.13 in 2024.
+CPython's experimental \ac{jit} compiler is an implementation of the copy-and-patch machine code generation approach (introduced in \autoref{sssec:copy-and-patch-compilation}), which was added to CPython in 3.13 in 2024.
 % Argument
 % What did Python do?
 % Changes to facilitate this
