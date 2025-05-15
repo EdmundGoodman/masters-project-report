@@ -23,24 +23,37 @@
 \end{figure}
 
 
-\section{LLVM and SSA}
-\label{sec:llvm-ssa}
+\section{The LLVM compiler infrastructure}
+\label{sec:llvm}
+
+% SSA
+% Peephole optimisation
+
+
+% \subsection{User-extensible compiler infrastructure}
+% To some degree LLVM cna be extended with intrinsics, but want to be able to define out own abstractions and stuff -> segues into MLIR 
+
 
 \section{MLIR}
 \label{sec:mlir}
 
-\section{IRDL and PDL}
-\label{sec:irdl}
+\subsection{IRDL}
+\label{ssec:irdl}
+
+\subsection{Pattern rewriting optimisations}
+\label{ssec:pattern-rewriting}
+
+
 
 \section{xDSL}
 \label{sec:xdsl}
 
-\section{Pattern rewriting optimisations}
-\label{sec:pattern-rewriting}
 
 
-\section{Compiled and interpreted languages}
-\label{sec:compiled-interpreted-languages}
+
+
+
+
 
 
 \section{Python internals}
@@ -49,15 +62,266 @@
 % A brief overview of how Python works, talking about bytecode and stuff
 
 
-\section{Python performance}
-\label{sec:python-performance}
 
-% \subsection{Python performance measurement}
-% \label{ssec:python-perf-measurement}
-% % timeit/asv/pyperf and stuff maybe? Possibly not worth discussing, or could be related work?
 
-% \subsection{Python performance matters}
-% \label{ssec:python-performance-matters}
 
-% % Typically, we want to bind into C as much as possible -- see things like Scalene to measure this. However, for our pattern rewriting workload, this is less suitable
+
+
+
+
+\section{Static and dynamic languages}
+\label{sec:static-dynamic-languages}
+
+%% Define dynamism and dynamic/static languages
+% Hook
+Programming language design is a game of trade-offs, with a wide variety of design choices incurring differing benefits and costs, each of which impact a languages' suitability for a given task.
+% Argument
+One such choice is the degree of dynamism, defined by Williams et al. as ``allowing properties of programs to be defined at run-time'' \cite{williamsDynamicInterpretationDynamic2010}. As such, static languages fix properties ahead of time, whereas dynamic languages offer more flexibility at runtime.
+% Link
+
+%% Introduce mechanisms of dynamically/statically typed languages
+% Hook
+One common mechanism providing dynamism in programming languages is dynamic typing. This refers to programming languages where type-checking is performed at runtime, and variables can change type during the course of execution.
+% Argument
+In their essay ``The next 7000 programming languages'' \cite{chatleyNext7000Programming2019}, Chatley et al. discuss how the landscape of programming languages has changed since Landin's seminal 1966 paper ``The next 700 programming languages'' \cite{landinNext700Programming1966}. At the time of Landin's paper, there was already a split between dynamically typed languages such as Lisp and statically languages such as C and Algol. Lisp's runtime type checks incurred performance overhead and unexpected runtime type errors, but provided much greater expressivity and hence more productive development than static languages of the time. These trade-offs between static and dynamic languages remain much the same today, with Chatley et al. arguing that dynamically typed languages' expressivity results in ``excellent library support'', as they are better equipped to express structured data without a fixed schema.
+% Link
+
+%% Introduce other mechanisms of dynamism
+% Hook
+Beyond dynamic typing, there are a wide variety of other mechanisms by which programming languages can provide dynamism.
+% Argument
+One mechanism is runtime meta-programming, which refers to code which can introspect and manipulate its own behaviour at runtime. An example of this is monkey-patching in Python, which allows the programmatic modification of objects at runtime.
+Another mechanism is late binding, which refers to resolving method calls at runtime when they are invoked, as opposed to being statically linked ahead of time. Interestingly, ahead-of-time compiled languages typically considered static such as C++ provide this dynamic behaviour in the case of polymorphism. When a method is invoked on an object in an inheritance hierarchy, the correct implementation to execute is resolved at runtime using C++'s vtable mechanism.
+% Link
+These dynamic aspects of languages influence the details of their implementation, and the degree to which they can be optimised.
+
+%% Disentangling static/ahead-of-time compiled and interpreted/dynamic
+% Hook
+% Argument
+% Link
+
+%% Optimisation opportunities in dynamic and static languages
+% Hook
+Ahead-of-time compilers rely on static mechanisms such as data-flow analysis find valid optimisations.
+% Argument
+As they are run ahead of time, these static analyses have less information to reason about the dynamic runtime behaviour. In this dynamic case, some traditional optimisations cannot be guaranteed to be correct, and hence cannot be leveraged to improve program performance. For example, a function which is dynamically dispatched at runtime cannot be optimised through the code motion optimisation of function inlining, as the implementation which will be invoked is not known ahead of time.
+Earlier work aims to address this, for example H\"olze and Ungar's paper ``Optimizing dynamically-dispatched calls with run-time type feedback'' \cite{holzleOptimizingDynamicallydispatchedCalls1994}. The authors provide an experimental compiler implementing ``type feedback'', a profile-guided optimisation which inlines dynamically dispatched calls in object-orientated languages.
+However, such approaches are specific to individual aspects of the language runtime, and being ahead of time can only optimise for a prediction of the runtime behaviour.
+% Link
+Furthermore, runtime behaviour may differ significantly across inputs for some workloads, making this prediction less representative of real-world behaviour.
+
+%% Dynamism of workloads
+% Hook
+In addition to considering support for dynamism as a property of a programming language, it can be helpful to classify a workload as dynamic or static.
+% Argument
+For example, \ac{gemm} operations which underpin modern machine learning systems rely on streaming data in a statically known order. This is well-suited to ahead-of-time compilation, as it is amenable to optimisation passes requiring no runtime information, such as code motion or vectorisation.
+% TODO: Should this take my research domain as an example, or pick something else dynamic and can introduce my domain outside related work?
+In contrast, pattern rewriting in user-extensible compiler frameworks relies on pointer chasing data structures with a high degree of dynamism. This is because the \ac{ssa} representation of the code being rewritten is structured as a doubly linked list, with the applications of the rewriting semantics to this list known only dynamically at runtime.
+This dynamic, pointer-chasing workload incurs overhead and precludes many optimisations leveraged by ahead-of-time statically compiled languages such as C++ to accelerate their performance for other workloads.
+% Link
+% One crux of our research is extending the academic basis surrounding static and dynamic languages to quantitatively examine the difference in their performance for highly dynamic workloads.
+
+
+
+
+
+% Object orientated optimisations (virtual dispatch in C++/objective-C)
+% Why is JS faster than Python - more constrained
+
+% Cranelift and arrays instead of linked lists for pattern rewriting (https://cfallin.org/blog/2020/09/18/cranelift-isel-1/)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\section{JIT compilation}
+\label{sec:jit-compilation}
+
+% Hook
+In their paper ``A Brief History of Just-In-Time'', Aycock defines \acf{jit} compilation as ``translation that occurs after a program begins execution'' \cite{aycockBriefHistoryJustintime2003}.
+% Argument
+He goes on to argue that \ac{jit} compilation approaches aim to accrue the benefits of both ahead-of-time compilation and interpretation, combining the runtime performance traditionally associated with compilation with the portability and access to runtime information of interpretation.
+% Link
+
+\subsection{JIT compilation to machine code}
+\label{ssec:jit-compilation-machine-code}
+
+% Hook
+Whilst \acf{jit} compilation can refer to any program translation occuring at runtime, it is often overloaded to specifically refer to the dynamic generation of machine code.
+% Argument
+% Link
+
+% V8 or something?
+
+\subsubsection{PyPy}
+\label{sssec:pypy}
+
+% Hook
+% Argument
+% Link
+
+% \subsubsection{Numba, JAX, and PyTorch}
+% \label{sssec:numba-jax-pytorch}
+
+% Hook
+% Argument
+% Link
+
+\subsubsection{Copy-and-patch compilation}
+\label{sssec:copy-and-patch-compilation}
+
+%% Motivation
+% Hook
+\ac{jit} compilers 
+% A major bottleneck for traditional \ac{jit} compilation to machine code is the slow runtimes of optimising compilers.
+% Argument
+% Link
+In their paper ``Copy-and-Patch Compilation'', Kjolstad and Xu present a novel approach to avoid this runtime cost.
+
+%% Discuss
+% Hook
+Copy-and-patch compilation uses binary 
+% Argument
+% Link
+
+% Figure
+
+% \subsubsection{Lua JIT}
+% \label{sssec:lua-jit}
+
+% Hook
+% Argument
+% Link
+
+
+
+\subsection{Adaptive optimisation}
+\label{ssec:adaptive-optimisation}
+
+%% General case of using runtime information to change behaviour
+% Hook
+In addition to generating machine code on-the-fly, runtime information can be used to adapt program execution to the current workload.
+% Argument
+% Link
+
+%% Motivation/intuition for the optimisation
+% Hook
+A significant overhead in the performance of dynamically typed languages is checking types at runtime, which is required to select the matching operation implementation for the type.
+% Argument
+Whilst this type information cannot be known ahead of time in dynamically typed languages, information collected at runtime can be used to optimised the type-checking process. This adaptive optimisation approach relies on the assumption that if a variable has had a fixed type for a sufficient span of time previously, it is likely that it will have the same type in future. For example, whilst a variable being used as an integer counter in a loop can take any value, if its type in the earlier iterations has always been an integer, it is likely to remain an integer throughout later iterations.
+% Link
+In an interpreted language, this assumption can be leveraged to replace general instructions with faster, specialised variants. A concrete implementation of this is Python's specialising adaptive interpreter, discussed in \autoref{sssec:specialising-adaptive-interpreter}.
+
+
+
+
+
+
+
+
+
+
+
+
+\section{Faster CPython}
+\label{sec:faster-cpython}
+
+% Hook
+\acf{pep} 659 asserts that ``Python widely acknowledged as slow'' \cite{pep659}.
+% Argument
+This comes partially as an inherent trade-off from the benefits of its interpreted runtime and expressive dynamic semantics, meaning it cannot achieve the general-purpose performance of ahead-of-time compiled languages such as C++ or FORTRAN. However, it is feasible for Python implementations to be competitive with fast implementations of other scripting languages with similar trade-offs, such as Javascript's V8 or Lua's LuaJIT. The Faster CPython project is an attempt to achieve this goal in Python's reference implementation. Over the course of the recent CPython major versions, new optimisations have been gradually added as part of this project, resulting in incremental performance gains (\autoref{tab:faster-cpython}).
+% Link
+This section discusses the details of these optimisations, and their effect on CPython's performance. % TODO: Change link to be in context of how we extend stuff...
+
+
+\begin{table}[H]
+  \caption{Incremental improvements of the geometric mean of speedups across the PyPerformance benchmark suite (full results \autoref{chap:pyperformance-version-comparison}), achieved by optimisations to the CPython interpreter.}
+  \label{tab:faster-cpython}
+  % TODO: The rows/columns in this table should probably be rethought -- N/A is not a good thing to have!
+  \centering
+  \begin{tabular}{lll}
+    \toprule
+    \textbf{Python version} & \textbf{Optimisation over previous} & \textbf{PyPerformance speedup} \\
+    \midrule
+    CPython 3.10.17 & N/A & N/A \\
+    CPython 3.11.12 & Specialising adaptive interpreter & $1.26$ \\
+    % CPython 3.12.10 & Comprehension inlining & $x$ \\
+    CPython 3.13.3 & Version bump & $1.17$ \\
+    CPython 3.13.3 & Enabled experimental JIT & $1.05$ \\
+    CPython 3.14.0a7 & Version bump & $x$ \\
+    CPython 3.14.0a7 & Enabled tail call interpreter & $x$ \\
+    % \midrule
+    % PyPy 3.11.11 & JIT compilation & $x$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Specialising adaptive interpreter}
+\label{ssec:specialising-adaptive-interpreter}
+
+
+%% How is it implemented?
+% Hook
+The specialising adaptive interpreter is an implementation of \ac{jit} adaptive optimisation (introduced in \autoref{ssec:adaptive-optimisation}) which was added to CPython version 3.11 in 2022.
+% Argument
+% Link
+
+%% How does it perform?
+% Hook
+% Argument
+% Link
+
+
+\subsection{Experimental JIT compiler}
+\label{ssec:experimental-jit-compiler}
+
+%% Motivation
+% Hook
+CPython's experimental \ac{jit} compiler is an implementation of the copy-and-patch machine code generation approach (introduced in \autoref{ssec:copy-and-patch-compilation}), which was added to CPython in 3.13 in 2024.
+% Argument
+% What did Python do?
+% Changes to facilitate this
+% Actual changes
+% Link
+
+%% How does it perform?
+% Hook
+% Argument
+% Link
+
+\subsection{Tail call interpreter}
+\label{ssec:tail-call-interpreter}
+
+%% Motivation
+% Hook
+In addition to \ac{jit} optimisations leveraging runtime information, there are also other opportunities for improving the implementation of interpreted runtimes.
+% Argument
+Interpreters can be modelled as a loop which iterates through a sequence of bytecode instructions, with a switch statement selecting the evaluation logic at each iteration for the current instruction.
+% Link
+
+%% How does it work?
+% Hook
+% Argument
+% Link
+
+%% How does it perform?
+% Hook
+% Argument
+% Link
 

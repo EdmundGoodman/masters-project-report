@@ -1,0 +1,45 @@
+\chapter{xDSL benchmark results}
+\label{chap:xdsl-benchmark-results}
+
+\section{Pipeline phase micro-benchmark results}
+% Commands to run
+% Table of results
+
+\section{Micro-benchmark results}
+
+% Hook
+The following section describes the procedure and provides the raw results from the xDSL micro-benchmarks derived from ``How Slow is MLIR's''.
+% Argument
+% Link
+
+\vspace{2em}
+
+\begin{code}
+    \begin{minted}{bash}
+        git clone https://github.com/xdslproject/xdsl
+        make venv
+        python3 benchmarks/microbenchmarks all timeit
+    \end{minted}
+    \caption{Bash commands to download, setup the environment for, and run the benchmarks for xDSL derived from from ``How Slow is MLIR''.}
+    \label{listing:bash-xdsl-ubench-run}
+\end{code}
+
+\vspace{2em}
+
+\begin{code}
+    \begin{minted}[fontsize=\scriptsize]{text}
+Test IRTraversal.iterate_ops ran in: 5.02e-08 ± 4.34e-08s
+Test IRTraversal.iterate_block_ops ran in: 0.000219 ± 9.82e-06s
+Test IRTraversal.walk_block_ops ran in: 0.000552 ± 8.5e-06s
+Test Extensibility.interface_check_trait ran in: 8.43e-08 ± 2.34e-08s
+Test Extensibility.interface_check ran in: 8.31e-08 ± 1.77e-08s
+Test Extensibility.trait_check ran in: 8.39e-07 ± 3.85e-08s
+Test Extensibility.trait_check_many ran in: 1.18e-05 ± 1.39e-06s
+Test Extensibility.trait_check_neg ran in: 8.71e-07 ± 3.98e-08s
+Test OpCreation.operation_create ran in: 3.55e-06 ± 5.48e-07s
+Test OpCreation.operation_build ran in: 1.36e-05 ± 2.3e-06s
+Test OpCreation.operation_clone ran in: 5.86e-06 ± 1.71e-07s
+    \end{minted}
+    \caption{Results for the xDSL micro-benchmarks derived from ``How Slow is MLIR?'', for CPython version 3.10.17.}
+    \label{listing:how-slow-is-mlir-xdsl-microbenchmark-results}
+\end{code}

@@ -1,0 +1,579 @@
+\chapter{MLIR benchmark results}
+\label{chap:mlir-benchmark-results}
+
+\section{Pipeline phase micro-benchmark results}
+% Commands to run
+% Table of results
+
+\section{How Slow is MLIR micro-benchmark results}
+
+% Hook
+The following section describes the procedure and provides the raw results from ``How Slow is MLIR's'' micro-benchmarks.
+% Argument
+% Link
+
+\vspace{2em}
+
+\begin{code}
+    \begin{minted}{bash}
+        git clone https://github.com/EdmundGoodman/llvm-project-benchmarks --depth 1
+        mkdir -p llvm-project-benchmarks/build/
+        cd llvm-project-benchmarks/build
+        cmake -G Ninja ../llvm \
+           -DLLVM_ENABLE_PROJECTS=mlir \
+           -DLLVM_TARGETS_TO_BUILD="host" \
+           -DLLVM_ENABLE_BENCHMARKS=ON \
+           -DCMAKE_BUILD_TYPE=Release \
+           -DCMAKE_C_COMPILER=clang-18 -DCMAKE_CXX_COMPILER=clang++-18
+       ./tools/mlir/unittests/Benchmarks/MLIR_IR_Benchmark
+    \end{minted}
+    \caption{Bash commands to downloads, compiler, and run the benchmarks from ``How Slow is MLIR''.}
+    \label{listing:bash-xdsl-ubench-run}
+\end{code}
+
+\vspace{2em}
+
+\begin{code}
+    \begin{minted}[fontsize=\scriptsize]{text}
+2025-05-14T12:19:17+00:00
+Running ./tools/mlir/unittests/Benchmarks/MLIR_IR_Benchmark
+Run on (16 X 2799.99 MHz CPU s)
+CPU Caches:
+  L1 Data 32 KiB (x8)
+  L1 Instruction 32 KiB (x8)
+  L2 Unified 512 KiB (x8)
+  L3 Unified 16384 KiB (x2)
+Load Average: 0.02, 0.06, 0.02
+------------------------------------------------------------------------------------------------------
+Benchmark                                                            Time             CPU   Iterations
+------------------------------------------------------------------------------------------------------
+Analysis/symbolTable/10                                            258 ns          258 ns      2695939
+Analysis/symbolTable/64                                           1280 ns         1280 ns       543255
+Analysis/symbolTable/512                                         11790 ns        11788 ns        60690
+Analysis/symbolTable/4096                                       224244 ns       224225 ns         3104
+Analysis/symbolTable/32768                                     2313859 ns      2313755 ns          301
+Analysis/symbolTable/262144                                   20582734 ns     20580290 ns           34
+Analysis/symbolTable/2097152                                 207555204 ns    207544488 ns            3
+Analysis/symbolTable/10000000                               1111381830 ns   1111329506 ns            1
+Analysis/symbolTable_BigO                                       110.60 N        110.60 N
+Analysis/symbolTable_RMS                                             6 %             6 %
+AttributesBench/sameString/10                                    25400 ns        25395 ns        27578
+AttributesBench/sameString/64                                    29777 ns        29770 ns        23165
+AttributesBench/sameString/512                                   67519 ns        67508 ns        10391
+AttributesBench/sameString/4096                                 368952 ns       368882 ns         1901
+AttributesBench/sameString/32768                               2616887 ns      2616441 ns          268
+AttributesBench/sameString/262144                             20386755 ns     20382261 ns           35
+AttributesBench/sameString/2097152                           160800051 ns    160770866 ns            4
+AttributesBench/sameString/10000000                          789746984 ns    789711748 ns            1
+AttributesBench/sameString_BigO                                  78.88 N         78.87 N
+AttributesBench/sameString_RMS                                       1 %             1 %
+AttributesBench/newString/10                                     26939 ns        26938 ns        26077
+AttributesBench/newString/64                                     38844 ns        38835 ns        18031
+AttributesBench/newString/512                                   176931 ns       176919 ns         3973
+AttributesBench/newString/4096                                 1362397 ns      1362302 ns          509
+AttributesBench/newString/32768                               11228015 ns     11227408 ns           62
+AttributesBench/newString/262144                             111172923 ns    111167549 ns            6
+AttributesBench/newString/2097152                           1591535825 ns   1591347447 ns            1
+AttributesBench/newString/10000000                          8887091339 ns   8886357582 ns            1
+AttributesBench/newString_BigO                                  882.93 N        882.86 N
+AttributesBench/newString_RMS                                        8 %             8 %
+AttributesBench/sameStringNoThreading/10                         25093 ns        25091 ns        27714
+AttributesBench/sameStringNoThreading/64                         29761 ns        29759 ns        23732
+AttributesBench/sameStringNoThreading/512                        67391 ns        67385 ns        10772
+AttributesBench/sameStringNoThreading/4096                      362256 ns       362239 ns         1985
+AttributesBench/sameStringNoThreading/32768                    2653860 ns      2653773 ns          263
+AttributesBench/sameStringNoThreading/262144                  20414147 ns     20412688 ns           34
+AttributesBench/sameStringNoThreading/2097152                161449035 ns    161410387 ns            4
+AttributesBench/sameStringNoThreading/10000000               812195579 ns    812055621 ns            1
+AttributesBench/sameStringNoThreading_BigO                       81.04 N         81.02 N
+AttributesBench/sameStringNoThreading_RMS                            2 %             2 %
+AttributesBench/newStringNoThreading/10                          25899 ns        25894 ns        26880
+AttributesBench/newStringNoThreading/64                          33426 ns        33420 ns        20941
+AttributesBench/newStringNoThreading/512                        111491 ns       111464 ns         6322
+AttributesBench/newStringNoThreading/4096                       799421 ns       799274 ns          871
+AttributesBench/newStringNoThreading/32768                     6615350 ns      6615040 ns          107
+AttributesBench/newStringNoThreading/262144                   60571886 ns     60568929 ns           10
+AttributesBench/newStringNoThreading/2097152                1011572721 ns   1011488998 ns            1
+AttributesBench/newStringNoThreading/10000000               5860333524 ns   5859865437 ns            1
+AttributesBench/newStringNoThreading_BigO                       581.43 N        581.38 N
+AttributesBench/newStringNoThreading_RMS                             9 %             9 %
+AttributesBench/sameStringMultithreaded/1                       177082 ns       132487 ns         5349
+AttributesBench/sameStringMultithreaded/8                       188428 ns       138520 ns         4991
+AttributesBench/sameStringMultithreaded/64                      217087 ns       158959 ns         4453
+AttributesBench/sameStringMultithreaded/512                     401011 ns       186276 ns         3759
+AttributesBench/sameStringMultithreaded/4096                   1692038 ns       197919 ns         3654
+AttributesBench/sameStringMultithreaded/10000                  3872841 ns       204502 ns         1000
+AttributesBench/sameStringMultithreaded_BigO                    391.99 N         25.31 N
+AttributesBench/sameStringMultithreaded_RMS                         15 %            77 %
+AttributesBench/newStringMultithreaded/1                        176590 ns       131450 ns         5397
+AttributesBench/newStringMultithreaded/8                        225039 ns       158980 ns         4537
+AttributesBench/newStringMultithreaded/64                       270241 ns       185683 ns         3781
+AttributesBench/newStringMultithreaded/512                     1787474 ns       206312 ns         3342
+AttributesBench/newStringMultithreaded/4096                   13267092 ns       219467 ns         1000
+AttributesBench/newStringMultithreaded/10000                  31691415 ns       228920 ns          100
+AttributesBench/newStringMultithreaded_BigO                    3179.93 N         28.25 N
+AttributesBench/newStringMultithreaded_RMS                           2 %            77 %
+AttributesBench/newStringEachMultithreaded/1                    181078 ns       134121 ns         5180
+AttributesBench/newStringEachMultithreaded/8                    217968 ns       159165 ns         4343
+AttributesBench/newStringEachMultithreaded/64                   393130 ns       197247 ns         3421
+AttributesBench/newStringEachMultithreaded/512                 2220815 ns       212651 ns         3259
+AttributesBench/newStringEachMultithreaded/4096               15542558 ns       238015 ns         1000
+AttributesBench/newStringEachMultithreaded/10000              37028639 ns       262253 ns          100
+AttributesBench/newStringEachMultithreaded_BigO                3717.53 N         31.79 N
+AttributesBench/newStringEachMultithreaded_RMS                       2 %            75 %
+AttributesBench/setAttrRaw/1                                       352 ns          352 ns      1894864
+AttributesBench/setAttrRaw/8                                      1935 ns         1934 ns       362435
+AttributesBench/setAttrRaw/64                                    14422 ns        14422 ns        48335
+AttributesBench/setAttrRaw/512                                  114092 ns       114079 ns         6155
+AttributesBench/setAttrRaw/4096                                 917976 ns       917885 ns          768
+AttributesBench/setAttrRaw/32768                               7267919 ns      7267427 ns           96
+AttributesBench/setAttrRaw/100000                             22257550 ns     22255369 ns           31
+AttributesBench/setAttrRaw_BigO                                 222.50 N        222.48 N
+AttributesBench/setAttrRaw_RMS                                       0 %             0 %
+AttributesBench/setAttrProp/1                                     1.27 ns         1.27 ns    552856899
+AttributesBench/setAttrProp/8                                     5.57 ns         5.57 ns    125431956
+AttributesBench/setAttrProp/64                                    40.4 ns         40.3 ns     17349876
+AttributesBench/setAttrProp/512                                    326 ns          326 ns      2139325
+AttributesBench/setAttrProp/4096                                  2589 ns         2588 ns       270117
+AttributesBench/setAttrProp/32768                                20657 ns        20655 ns        33859
+AttributesBench/setAttrProp/100000                               62989 ns        62984 ns        11150
+AttributesBench/setAttrProp_BigO                                  0.63 N          0.63 N
+AttributesBench/setAttrProp_RMS                                      0 %             0 %
+AttributesBench/setProp/1                                         1.27 ns         1.27 ns    527999624
+AttributesBench/setProp/8                                         6.43 ns         6.43 ns    106786484
+AttributesBench/setProp/64                                        41.7 ns         41.7 ns     16801887
+AttributesBench/setProp/512                                        332 ns          332 ns      2105804
+AttributesBench/setProp/4096                                      2591 ns         2591 ns       270559
+AttributesBench/setProp/32768                                    20664 ns        20663 ns        33868
+AttributesBench/setProp/262144                                  165411 ns       165400 ns         4230
+AttributesBench/setProp/1000000                                 631175 ns       631128 ns         1109
+AttributesBench/setProp_BigO                                      0.63 N          0.63 N
+AttributesBench/setProp_RMS                                          0 %             0 %
+AttributesBench/setPropHoist/1                                   0.947 ns        0.947 ns    740202993
+AttributesBench/setPropHoist/8                                    5.05 ns         5.05 ns    138881195
+AttributesBench/setPropHoist/64                                   40.3 ns         40.3 ns     17345436
+AttributesBench/setPropHoist/512                                   325 ns          325 ns      2153624
+AttributesBench/setPropHoist/4096                                 2586 ns         2585 ns       270515
+AttributesBench/setPropHoist/32768                               20703 ns        20702 ns        33857
+AttributesBench/setPropHoist/262144                             165570 ns       165564 ns         4225
+AttributesBench/setPropHoist/1000000                            631529 ns       631485 ns         1112
+AttributesBench/setPropHoist_BigO                                 0.63 N          0.63 N
+AttributesBench/setPropHoist_RMS                                     0 %             0 %
+ConstantFolding/folding/1                                         3895 ns         3832 ns       182475
+ConstantFolding/folding/8                                        15109 ns        15069 ns        46046
+ConstantFolding/folding/64                                      114518 ns       114466 ns         6091
+ConstantFolding/folding/512                                     508223 ns       508155 ns         1390
+ConstantFolding/folding/4096                                   3223717 ns      3223398 ns          214
+ConstantFolding/folding/10000                                  7825265 ns      7824889 ns           90
+ConstantFolding/folding_BigO                                    783.68 N        783.64 N
+ConstantFolding/folding_RMS                                          3 %             3 %
+ConstantFolding/opFolder/1                                        5910 ns         5866 ns       119213
+ConstantFolding/opFolder/8                                       20958 ns        20932 ns        33807
+ConstantFolding/opFolder/64                                     153989 ns       153958 ns         4553
+ConstantFolding/opFolder/512                                    742573 ns       742498 ns          953
+ConstantFolding/opFolder/4096                                  4734908 ns      4734590 ns          145
+ConstantFolding/opFolder/10000                                11462842 ns     11462018 ns           63
+ConstantFolding/opFolder_BigO                                  1148.40 N       1148.32 N
+ConstantFolding/opFolder_RMS                                         3 %             3 %
+ConstantFolding/llvm_folding/1                                    1456 ns         1381 ns       507760
+ConstantFolding/llvm_folding/8                                    4257 ns         4180 ns       168245
+ConstantFolding/llvm_folding/64                                  26929 ns        26840 ns        26297
+ConstantFolding/llvm_folding/512                                156498 ns       156342 ns         4432
+ConstantFolding/llvm_folding/1000                               289457 ns       289321 ns         2429
+ConstantFolding/llvm_folding_BigO                               293.25 N        293.07 N
+ConstantFolding/llvm_folding_RMS                                     5 %             5 %
+Cloning/cloneOps/10                                               2220 ns         2220 ns       318436
+Cloning/cloneOps/64                                              14691 ns        14690 ns        46549
+Cloning/cloneOps/512                                            136508 ns       136502 ns         5122
+Cloning/cloneOps/4096                                          1242184 ns      1242098 ns          565
+Cloning/cloneOps/32768                                        10503352 ns     10502102 ns           66
+Cloning/cloneOps/262144                                      108813716 ns    108810122 ns            5
+Cloning/cloneOps/2097152                                    1521077252 ns   1521011265 ns            1
+Cloning/cloneOps/10000000                                   7660330775 ns   7659616760 ns            1
+Cloning/cloneOps_BigO                                           764.08 N        764.01 N
+Cloning/cloneOps_RMS                                                 4 %             4 %
+CreateOps/simple/10                                               1536 ns         1536 ns       460046
+CreateOps/simple/64                                               9646 ns         9644 ns        72357
+CreateOps/simple/512                                             78018 ns        78000 ns         9087
+CreateOps/simple/4096                                           633086 ns       633009 ns         1105
+CreateOps/simple/32768                                         5075687 ns      5074757 ns          141
+CreateOps/simple/262144                                       39982401 ns     39974803 ns           17
+CreateOps/simple/2097152                                     360437464 ns    360353166 ns            2
+CreateOps/simple/10000000                                   2086232311 ns   2086075480 ns            1
+CreateOps/simple_BigO                                           207.04 N        207.02 N
+CreateOps/simple_RMS                                                 9 %             9 %
+CreateOps/hoistedOpState/10                                       1428 ns         1428 ns       493202
+CreateOps/hoistedOpState/64                                       9086 ns         9086 ns        76665
+CreateOps/hoistedOpState/512                                     72140 ns        72131 ns         9599
+CreateOps/hoistedOpState/4096                                   578253 ns       578227 ns         1203
+CreateOps/hoistedOpState/32768                                 4646163 ns      4645889 ns          152
+CreateOps/hoistedOpState/262144                               37132617 ns     37129104 ns           19
+CreateOps/hoistedOpState/2097152                             294337820 ns    294303042 ns            2
+CreateOps/hoistedOpState/10000000                           1415526483 ns   1415445417 ns            1
+CreateOps/hoistedOpState_BigO                                   141.50 N        141.49 N
+CreateOps/hoistedOpState_RMS                                         0 %             0 %
+CreateOps/withInsert/10                                           1438 ns         1438 ns       457959
+CreateOps/withInsert/64                                           7362 ns         7362 ns       109665
+CreateOps/withInsert/512                                         48655 ns        48653 ns        13639
+CreateOps/withInsert/4096                                       399650 ns       399628 ns         1781
+CreateOps/withInsert/32768                                     3183901 ns      3183579 ns          220
+CreateOps/withInsert/262144                                   25701754 ns     25699965 ns           28
+CreateOps/withInsert/2097152                                 203392387 ns    203380240 ns            3
+CreateOps/withInsert/10000000                               1091894863 ns   1091801688 ns            1
+CreateOps/withInsert_BigO                                       108.67 N        108.66 N
+CreateOps/withInsert_RMS                                             5 %             5 %
+CreateOps/simpleRegistered/10                                     1071 ns         1070 ns       637199
+CreateOps/simpleRegistered/64                                     7944 ns         7943 ns       100889
+CreateOps/simpleRegistered/512                                   75907 ns        75901 ns         9140
+CreateOps/simpleRegistered/4096                                 602203 ns       602160 ns         1171
+CreateOps/simpleRegistered/32768                               5002004 ns      5001232 ns          100
+CreateOps/simpleRegistered/262144                             38527344 ns     38525541 ns           18
+CreateOps/simpleRegistered/2097152                           314170408 ns    314147116 ns            2
+CreateOps/simpleRegistered/10000000                         1486016787 ns   1485892910 ns            1
+CreateOps/simpleRegistered_BigO                                 148.65 N        148.64 N
+CreateOps/simpleRegistered_RMS                                       0 %             0 %
+CreateOps/withInsertRegistered/10                                 1529 ns         1529 ns       446050
+CreateOps/withInsertRegistered/64                                 8186 ns         8186 ns        92710
+CreateOps/withInsertRegistered/512                               60538 ns        60532 ns        11322
+CreateOps/withInsertRegistered/4096                             469575 ns       469520 ns         1447
+CreateOps/withInsertRegistered/32768                           3768329 ns      3768200 ns          183
+CreateOps/withInsertRegistered/262144                         30147703 ns     30146259 ns           23
+CreateOps/withInsertRegistered/2097152                       240048733 ns    240016824 ns            3
+CreateOps/withInsertRegistered/10000000                     1287778683 ns   1287710159 ns            1
+CreateOps/withInsertRegistered_BigO                             128.17 N        128.16 N
+CreateOps/withInsertRegistered_RMS                                   5 %             5 %
+CreateOps/llvm_withInsertRegistered/10                             621 ns          621 ns      1310205
+CreateOps/llvm_withInsertRegistered/64                            3399 ns         3399 ns       208887
+CreateOps/llvm_withInsertRegistered/512                          26754 ns        26751 ns        26019
+CreateOps/llvm_withInsertRegistered/4096                        214032 ns       214024 ns         3267
+CreateOps/llvm_withInsertRegistered/32768                      1740016 ns      1739836 ns          409
+CreateOps/llvm_withInsertRegistered/262144                    13703840 ns     13703383 ns           51
+CreateOps/llvm_withInsertRegistered/2097152                  116423890 ns    116413778 ns            7
+CreateOps/llvm_withInsertRegistered/10000000                 508718534 ns    508690844 ns            1
+CreateOps/llvm_withInsertRegistered_BigO                         51.07 N         51.07 N
+CreateOps/llvm_withInsertRegistered_RMS                              4 %             4 %
+DialectConversion/noPatterns/1                                    2114 ns         2058 ns       341049
+DialectConversion/noPatterns/8                                    3206 ns         3144 ns       223480
+DialectConversion/noPatterns/64                                  10719 ns        10667 ns        67748
+DialectConversion/noPatterns/512                                 67336 ns        67225 ns        10457
+DialectConversion/noPatterns/4096                               522999 ns       522861 ns         1337
+DialectConversion/noPatterns/32768                             4157336 ns      4156524 ns          168
+DialectConversion/noPatterns/262144                           34530702 ns     34527365 ns           20
+DialectConversion/noPatterns/1000000                         141217638 ns    141213232 ns            5
+DialectConversion/noPatterns_BigO                               140.59 N        140.59 N
+DialectConversion/noPatterns_RMS                                     4 %             4 %
+DialectConversion/toLLVM/1                                       26222 ns        26240 ns        26347
+DialectConversion/toLLVM/8                                       52543 ns        52546 ns        13238
+DialectConversion/toLLVM/64                                     270734 ns       270727 ns         2555
+DialectConversion/toLLVM/512                                   1942653 ns      1942429 ns          355
+DialectConversion/toLLVM/4096                                 15547873 ns     15547373 ns           45
+DialectConversion/toLLVM/32768                               135306178 ns    135301871 ns            5
+DialectConversion/toLLVM/262144                             1349905322 ns   1349700436 ns            1
+DialectConversion/toLLVM/1000000                            6221941548 ns   6221300959 ns            1
+DialectConversion/toLLVM_BigO                                  6150.91 N       6150.26 N
+DialectConversion/toLLVM_RMS                                        10 %            10 %
+GreedyRewriter/empty/1                                             160 ns          160 ns      4317770
+GreedyRewriter/empty/8                                             310 ns          310 ns      2242470
+GreedyRewriter/empty/64                                           1999 ns         1998 ns       344037
+GreedyRewriter/empty/512                                         18588 ns        18584 ns        37692
+GreedyRewriter/empty/4096                                       196155 ns       196116 ns         3571
+GreedyRewriter/empty/32768                                     1562059 ns      1561765 ns          453
+GreedyRewriter/empty/262144                                   14990618 ns     14987106 ns           47
+GreedyRewriter/empty/2097152                                 161013784 ns    160978620 ns            4
+GreedyRewriter/empty/10000000                               1160105739 ns   1159997571 ns            1
+GreedyRewriter/empty_BigO                                       114.32 N        114.31 N
+GreedyRewriter/empty_RMS                                            18 %            18 %
+GreedyRewriter/withCanonicalizationPatterns/10                   40997 ns        40995 ns        16619
+GreedyRewriter/withCanonicalizationPatterns/64                   43101 ns        43100 ns        16070
+GreedyRewriter/withCanonicalizationPatterns/512                  61193 ns        61189 ns        11507
+GreedyRewriter/withCanonicalizationPatterns/4096                229037 ns       229017 ns         2960
+GreedyRewriter/withCanonicalizationPatterns/32768              1687291 ns      1686925 ns          430
+GreedyRewriter/withCanonicalizationPatterns/262144            15046323 ns     15042271 ns           47
+GreedyRewriter/withCanonicalizationPatterns/2097152          166651302 ns    166609746 ns            4
+GreedyRewriter/withCanonicalizationPatterns/10000000        1205316641 ns   1205235646 ns            1
+GreedyRewriter/withCanonicalizationPatterns_BigO                118.76 N        118.75 N
+GreedyRewriter/withCanonicalizationPatterns_RMS                     17 %            17 %
+GreedyRewriter/withPatterns/100                                  48255 ns        48244 ns        14615
+GreedyRewriter/withPatterns/512                                  86790 ns        86771 ns         7815
+GreedyRewriter/withPatterns/4096                                630096 ns       630079 ns         1172
+GreedyRewriter/withPatterns/10000                              1454875 ns      1454797 ns          480
+GreedyRewriter/withPatterns_BigO                                146.77 N        146.76 N
+GreedyRewriter/withPatterns_RMS                                      4 %             4 %
+InterfaceBench/vectorTraveralCallInterfaceMethod/10               99.8 ns         99.8 ns      7047449
+InterfaceBench/vectorTraveralCallInterfaceMethod/64                591 ns          591 ns      1183230
+InterfaceBench/vectorTraveralCallInterfaceMethod/512              4638 ns         4638 ns       150472
+InterfaceBench/vectorTraveralCallInterfaceMethod/4096            37237 ns        37229 ns        18789
+InterfaceBench/vectorTraveralCallInterfaceMethod/32768          300670 ns       300651 ns         2333
+InterfaceBench/vectorTraveralCallInterfaceMethod/262144        2643092 ns      2642860 ns          263
+InterfaceBench/vectorTraveralCallInterfaceMethod/2097152      20712952 ns     20708857 ns           34
+InterfaceBench/vectorTraveralCallInterfaceMethod/10000000     98550537 ns     98542763 ns            7
+InterfaceBench/vectorTraveralCallInterfaceMethod_BigO             9.86 N          9.86 N
+InterfaceBench/vectorTraveralCallInterfaceMethod_RMS                 0 %             0 %
+InterfaceBench/llvm_vectorTraveralCallInterfaceMethod/10          15.0 ns         15.0 ns     46612990
+InterfaceBench/llvm_vectorTraveralCallInterfaceMethod/64          93.3 ns         93.3 ns      7470909
+InterfaceBench/llvm_vectorTraveralCallInterfaceMethod/512          699 ns          699 ns       995669
+InterfaceBench/llvm_vectorTraveralCallInterfaceMethod/4096        5522 ns         5521 ns       126964
+InterfaceBench/llvm_vectorTraveralCallInterfaceMethod/10000      15494 ns        15493 ns        45167
+InterfaceBench/llvm_vectorTraveralCallInterfaceMethod_BigO        1.52 N          1.52 N
+InterfaceBench/llvm_vectorTraveralCallInterfaceMethod_RMS            8 %             8 %
+LoopUnrolling/unroll/1                                            4502 ns         4410 ns       158967
+LoopUnrolling/unroll/8                                           23767 ns        23618 ns        29563
+LoopUnrolling/unroll/64                                         172746 ns       172507 ns         4052
+LoopUnrolling/unroll/512                                       1322454 ns      1321995 ns          534
+LoopUnrolling/unroll/1000                                      2545860 ns      2545325 ns          276
+LoopUnrolling/unroll_BigO                                      2554.05 N       2553.43 N
+LoopUnrolling/unroll_RMS                                             1 %             1 %
+LoopUnrolling/llvm_unroll/1                                      36144 ns        36123 ns        19441
+LoopUnrolling/llvm_unroll/8                                     255243 ns       255368 ns         2735
+LoopUnrolling/llvm_unroll/64                                   2700037 ns      2700070 ns          259
+LoopUnrolling/llvm_unroll/512                                 73407469 ns     73402333 ns           10
+LoopUnrolling/llvm_unroll/1000                               260718746 ns    260696177 ns            3
+LoopUnrolling/llvm_unroll_BigO                               235708.03 N     235688.13 N
+LoopUnrolling/llvm_unroll_RMS                                       36 %            36 %
+ParserPrinter/parseTextualIR/10                                  61549 ns        61546 ns        11338
+ParserPrinter/parseTextualIR/64                                 179556 ns       179544 ns         3894
+ParserPrinter/parseTextualIR/512                               1220245 ns      1220158 ns          573
+ParserPrinter/parseTextualIR/4096                              9856960 ns      9855832 ns           71
+ParserPrinter/parseTextualIR/32768                            82664124 ns     82658142 ns            8
+ParserPrinter/parseTextualIR/262144                          995924502 ns    995851929 ns            1
+ParserPrinter/parseTextualIR/1000000                        4324001717 ns   4323683749 ns            1
+ParserPrinter/parseTextualIR_BigO                              4288.45 N       4288.13 N
+ParserPrinter/parseTextualIR_RMS                                     7 %             7 %
+ParserPrinter/parseBytecodeIR/10                                 47988 ns        47984 ns        14588
+ParserPrinter/parseBytecodeIR/64                                100307 ns       100281 ns         6952
+ParserPrinter/parseBytecodeIR/512                               573133 ns       573025 ns         1218
+ParserPrinter/parseBytecodeIR/4096                             4586582 ns      4585625 ns          153
+ParserPrinter/parseBytecodeIR/32768                           37373868 ns     37371286 ns           19
+ParserPrinter/parseBytecodeIR/262144                         420982484 ns    420959945 ns            2
+ParserPrinter/parseBytecodeIR/1000000                       2034472944 ns   2034323491 ns            1
+ParserPrinter/parseBytecodeIR_BigO                             2006.03 N       2005.89 N
+ParserPrinter/parseBytecodeIR_RMS                                   12 %            12 %
+ParserPrinter/printTextualIR/10                                  14484 ns        14482 ns        48128
+ParserPrinter/printTextualIR/64                                  62662 ns        62660 ns        11078
+ParserPrinter/printTextualIR/512                                463614 ns       463600 ns         1507
+ParserPrinter/printTextualIR/4096                              3802635 ns      3802384 ns          184
+ParserPrinter/printTextualIR/32768                            31159720 ns     31152274 ns           22
+ParserPrinter/printTextualIR/262144                          298570499 ns    298498153 ns            2
+ParserPrinter/printTextualIR/1000000                        1246963499 ns   1246833554 ns            1
+ParserPrinter/printTextualIR_BigO                              1239.72 N       1239.58 N
+ParserPrinter/printTextualIR_RMS                                     5 %             5 %
+ParserPrinter/printBytecodeIR/10                                 12809 ns        12805 ns        53762
+ParserPrinter/printBytecodeIR/64                                 49801 ns        49790 ns        13943
+ParserPrinter/printBytecodeIR/512                               408265 ns       408185 ns         1735
+ParserPrinter/printBytecodeIR/4096                             3312854 ns      3312253 ns          209
+ParserPrinter/printBytecodeIR/32768                           28967742 ns     28958923 ns           23
+ParserPrinter/printBytecodeIR/262144                         299572774 ns    299555963 ns            2
+ParserPrinter/printBytecodeIR/1000000                       1386730152 ns   1386637183 ns            1
+ParserPrinter/printBytecodeIR_BigO                             1370.55 N       1370.45 N
+ParserPrinter/printBytecodeIR_RMS                                   10 %            10 %
+IRWalk/blockTraveral/10                                           17.5 ns         17.5 ns     39881680
+IRWalk/blockTraveral/64                                            110 ns          110 ns      6379697
+IRWalk/blockTraveral/512                                          1596 ns         1595 ns       439735
+IRWalk/blockTraveral/4096                                        10195 ns        10194 ns        68860
+IRWalk/blockTraveral/32768                                       81073 ns        81055 ns         8650
+IRWalk/blockTraveral/262144                                    1841230 ns      1840690 ns          381
+IRWalk/blockTraveral/2097152                                  16323138 ns     16319776 ns           43
+IRWalk/blockTraveral/10000000                                 80215734 ns     80210678 ns            9
+IRWalk/blockTraveral_BigO                                         8.01 N          8.01 N
+IRWalk/blockTraveral_RMS                                             2 %             2 %
+IRWalk/vectorTraveral/10                                          4.06 ns         4.06 ns    171981038
+IRWalk/vectorTraveral/64                                          26.4 ns         26.4 ns     26457066
+IRWalk/vectorTraveral/512                                          232 ns          232 ns      3020721
+IRWalk/vectorTraveral/4096                                        1849 ns         1849 ns       379201
+IRWalk/vectorTraveral/32768                                      14762 ns        14759 ns        47414
+IRWalk/vectorTraveral/262144                                    114403 ns       114397 ns         6116
+IRWalk/vectorTraveral/2097152                                  1028901 ns      1028851 ns          685
+IRWalk/vectorTraveral/10000000                                 6133232 ns      6132622 ns          114
+IRWalk/vectorTraveral_BigO                                        0.61 N          0.61 N
+IRWalk/vectorTraveral_RMS                                           10 %            10 %
+IRWalk/simpleWalk/10                                              62.6 ns         62.6 ns     11116850
+IRWalk/simpleWalk/64                                               350 ns          350 ns      1999507
+IRWalk/simpleWalk/512                                             2729 ns         2729 ns       256518
+IRWalk/simpleWalk/4096                                           21833 ns        21831 ns        32038
+IRWalk/simpleWalk/32768                                         176236 ns       176223 ns         3985
+IRWalk/simpleWalk/262144                                       1742919 ns      1742834 ns          404
+IRWalk/simpleWalk/2097152                                     14132705 ns     14131555 ns           49
+IRWalk/simpleWalk/10000000                                    67449778 ns     67445037 ns           10
+IRWalk/simpleWalk_BigO                                            6.74 N          6.74 N
+IRWalk/simpleWalk_RMS                                                0 %             0 %
+IRWalk/filteredOps/10                                             17.1 ns         17.1 ns     40873782
+IRWalk/filteredOps/64                                              113 ns          113 ns      6174719
+IRWalk/filteredOps/512                                            1603 ns         1603 ns       431125
+IRWalk/filteredOps/4096                                           9621 ns         9620 ns        72549
+IRWalk/filteredOps/32768                                         76871 ns        76866 ns         9082
+IRWalk/filteredOps/262144                                      1558707 ns      1558516 ns          452
+IRWalk/filteredOps/2097152                                    13222558 ns     13221336 ns           53
+IRWalk/filteredOps/10000000                                   62731864 ns     62725928 ns           11
+IRWalk/filteredOps_BigO                                           6.27 N          6.27 N
+IRWalk/filteredOps_RMS                                               1 %             1 %
+IRWalk/nestedRegion/10                                            84.7 ns         84.7 ns      8264952
+IRWalk/nestedRegion/16                                             125 ns          125 ns      5587643
+IRWalk/nestedRegion/64                                             454 ns          454 ns      1531392
+IRWalk/nestedRegion/256                                           1828 ns         1828 ns       384758
+IRWalk/nestedRegion/1024                                          7129 ns         7129 ns        91981
+IRWalk/nestedRegion/4096                                         30161 ns        30159 ns        23193
+IRWalk/nestedRegion/8000                                         57663 ns        57658 ns        12012
+IRWalk/nestedRegion_BigO                                          7.24 N          7.24 N
+IRWalk/nestedRegion_RMS                                              2 %             2 %
+IRWalk/llvm_blockTraversal/10                                     7.48 ns         7.48 ns     93670794
+IRWalk/llvm_blockTraversal/64                                     69.4 ns         69.4 ns     10072389
+IRWalk/llvm_blockTraversal/512                                    1476 ns         1476 ns       469258
+IRWalk/llvm_blockTraversal/4096                                   9975 ns         9975 ns        70587
+IRWalk/llvm_blockTraversal/32768                                 80465 ns        80459 ns         8673
+IRWalk/llvm_blockTraversal/262144                              1803648 ns      1803592 ns          390
+IRWalk/llvm_blockTraversal/2097152                            16225756 ns     16225254 ns           43
+IRWalk/llvm_blockTraversal/10000000                           78978276 ns     78975659 ns            9
+IRWalk/llvm_blockTraversal_BigO                                   7.89 N          7.89 N
+IRWalk/llvm_blockTraversal_RMS                                       1 %             1 %
+IRWalk/vectorTraveralOpCastFail/10                                7.36 ns         7.36 ns     95088104
+IRWalk/vectorTraveralOpCastFail/64                                45.7 ns         45.7 ns     15317168
+IRWalk/vectorTraveralOpCastFail/512                                476 ns          476 ns      1450136
+IRWalk/vectorTraveralOpCastFail/4096                              3790 ns         3790 ns       184584
+IRWalk/vectorTraveralOpCastFail/32768                            39812 ns        39809 ns        17634
+IRWalk/vectorTraveralOpCastFail/262144                          975434 ns       975405 ns          720
+IRWalk/vectorTraveralOpCastFail/2097152                        8580938 ns      8580456 ns           81
+IRWalk/vectorTraveralOpCastFail/10000000                      40768999 ns     40764746 ns           17
+IRWalk/vectorTraveralOpCastFail_BigO                              4.08 N          4.08 N
+IRWalk/vectorTraveralOpCastFail_RMS                                  1 %             1 %
+IRWalk/vectorTraveralOpCastSuccess/10                             7.39 ns         7.39 ns     93692158
+IRWalk/vectorTraveralOpCastSuccess/64                             45.7 ns         45.7 ns     15323919
+IRWalk/vectorTraveralOpCastSuccess/512                             523 ns          523 ns      1294067
+IRWalk/vectorTraveralOpCastSuccess/4096                           3785 ns         3785 ns       186404
+IRWalk/vectorTraveralOpCastSuccess/32768                         39972 ns        39970 ns        17502
+IRWalk/vectorTraveralOpCastSuccess/262144                       977336 ns       977306 ns          720
+IRWalk/vectorTraveralOpCastSuccess/2097152                     8450122 ns      8447973 ns           81
+IRWalk/vectorTraveralOpCastSuccess/10000000                   40680953 ns     40678330 ns           17
+IRWalk/vectorTraveralOpCastSuccess_BigO                           4.07 N          4.07 N
+IRWalk/vectorTraveralOpCastSuccess_RMS                               1 %             1 %
+IRWalk/vectorTraveralWithoutInterfaceCastFail/10                  39.2 ns         39.2 ns     17857367
+IRWalk/vectorTraveralWithoutInterfaceCastFail/64                   254 ns          254 ns      2761824
+IRWalk/vectorTraveralWithoutInterfaceCastFail/512                 2132 ns         2131 ns       328156
+IRWalk/vectorTraveralWithoutInterfaceCastFail/4096               16273 ns        16272 ns        42906
+IRWalk/vectorTraveralWithoutInterfaceCastFail/32768             131320 ns       131283 ns         5341
+IRWalk/vectorTraveralWithoutInterfaceCastFail/262144           1665353 ns      1664450 ns          422
+IRWalk/vectorTraveralWithoutInterfaceCastFail/2097152         13372446 ns     13369410 ns           52
+IRWalk/vectorTraveralWithoutInterfaceCastFail/10000000        63311417 ns     63307361 ns           11
+IRWalk/vectorTraveralWithoutInterfaceCastFail_BigO                6.33 N          6.33 N
+IRWalk/vectorTraveralWithoutInterfaceCastFail_RMS                    0 %             0 %
+IRWalk/vectorTraveralWithInterfaceCastFail/10                     47.3 ns         47.3 ns     14787937
+IRWalk/vectorTraveralWithInterfaceCastFail/64                      308 ns          308 ns      2278677
+IRWalk/vectorTraveralWithInterfaceCastFail/512                    2458 ns         2458 ns       285080
+IRWalk/vectorTraveralWithInterfaceCastFail/4096                  19516 ns        19515 ns        35921
+IRWalk/vectorTraveralWithInterfaceCastFail/32768                156901 ns       156861 ns         4470
+IRWalk/vectorTraveralWithInterfaceCastFail/262144              2045579 ns      2045320 ns          338
+IRWalk/vectorTraveralWithInterfaceCastFail/2097152            16461268 ns     16455022 ns           43
+IRWalk/vectorTraveralWithInterfaceCastFail/10000000           78230340 ns     78221750 ns            9
+IRWalk/vectorTraveralWithInterfaceCastFail_BigO                   7.82 N          7.82 N
+IRWalk/vectorTraveralWithInterfaceCastFail_RMS                       0 %             0 %
+IRWalk/vectorTraveralWithInterfaceCastSuccess/10                  85.7 ns         85.7 ns      8214303
+IRWalk/vectorTraveralWithInterfaceCastSuccess/64                   489 ns          489 ns      1431791
+IRWalk/vectorTraveralWithInterfaceCastSuccess/512                 3933 ns         3933 ns       179271
+IRWalk/vectorTraveralWithInterfaceCastSuccess/4096               30951 ns        30949 ns        22630
+IRWalk/vectorTraveralWithInterfaceCastSuccess/32768             248877 ns       248870 ns         2805
+IRWalk/vectorTraveralWithInterfaceCastSuccess/262144           2338713 ns      2337678 ns          300
+IRWalk/vectorTraveralWithInterfaceCastSuccess/2097152         18149006 ns     18146236 ns           38
+IRWalk/vectorTraveralWithInterfaceCastSuccess/10000000        88021965 ns     88009654 ns            8
+IRWalk/vectorTraveralWithInterfaceCastSuccess_BigO                8.80 N          8.79 N
+IRWalk/vectorTraveralWithInterfaceCastSuccess_RMS                    1 %             1 %
+IRWalk/vectorTraveralOpTraitFail/10                               83.6 ns         83.6 ns      8404678
+IRWalk/vectorTraveralOpTraitFail/64                                543 ns          543 ns      1292619
+IRWalk/vectorTraveralOpTraitFail/512                              4284 ns         4284 ns       163011
+IRWalk/vectorTraveralOpTraitFail/4096                            34317 ns        34315 ns        20364
+IRWalk/vectorTraveralOpTraitFail/32768                          278203 ns       278124 ns         2511
+IRWalk/vectorTraveralOpTraitFail/262144                        2520282 ns      2519074 ns          281
+IRWalk/vectorTraveralOpTraitFail/2097152                      19620514 ns     19610789 ns           36
+IRWalk/vectorTraveralOpTraitFail/10000000                     93801856 ns     93792653 ns            7
+IRWalk/vectorTraveralOpTraitFail_BigO                             9.38 N          9.38 N
+IRWalk/vectorTraveralOpTraitFail_RMS                                 0 %             0 %
+IRWalk/vectorTraveralOpTraitSuccess/10                             117 ns          117 ns      5977891
+IRWalk/vectorTraveralOpTraitSuccess/64                             749 ns          749 ns       935541
+IRWalk/vectorTraveralOpTraitSuccess/512                           5927 ns         5927 ns       118265
+IRWalk/vectorTraveralOpTraitSuccess/4096                         47596 ns        47592 ns        14704
+IRWalk/vectorTraveralOpTraitSuccess/32768                       383662 ns       383566 ns         1826
+IRWalk/vectorTraveralOpTraitSuccess/262144                     3441962 ns      3440234 ns          202
+IRWalk/vectorTraveralOpTraitSuccess/2097152                   27770850 ns     27769434 ns           25
+IRWalk/vectorTraveralOpTraitSuccess/10000000                 133148747 ns    133141848 ns            5
+IRWalk/vectorTraveralOpTraitSuccess_BigO                         13.31 N         13.31 N
+IRWalk/vectorTraveralOpTraitSuccess_RMS                              0 %             0 %
+SimpleConstantFolding/folding/1                                   3284 ns         3229 ns       214241
+SimpleConstantFolding/folding/8                                   5500 ns         5439 ns       125579
+SimpleConstantFolding/folding/64                                 31642 ns        31536 ns        22195
+SimpleConstantFolding/folding/512                               241229 ns       241095 ns         2918
+SimpleConstantFolding/folding/4096                             1900878 ns      1900565 ns          370
+SimpleConstantFolding/folding/10000                            4635365 ns      4634964 ns          151
+SimpleConstantFolding/folding_BigO                              463.63 N        463.59 N
+SimpleConstantFolding/folding_RMS                                    0 %             0 %
+Dynamism/staticCall/10                                            6.26 ns         6.26 ns    112124571
+Dynamism/staticCall/64                                            40.1 ns         40.1 ns     17466028
+Dynamism/staticCall/512                                            322 ns          321 ns      2175745
+Dynamism/staticCall/4096                                          2557 ns         2557 ns       273963
+Dynamism/staticCall/32768                                        20471 ns        20470 ns        34165
+Dynamism/staticCall/262144                                      163609 ns       163594 ns         4269
+Dynamism/staticCall/2097152                                    1312188 ns      1312113 ns          533
+Dynamism/staticCall/10000000                                   6262595 ns      6262255 ns          112
+Dynamism/staticCall_BigO                                          0.63 N          0.63 N
+Dynamism/staticCall_RMS                                              0 %             0 %
+Dynamism/regularCall/10                                           6.26 ns         6.26 ns    111764395
+Dynamism/regularCall/64                                           40.0 ns         40.0 ns     17470002
+Dynamism/regularCall/512                                           321 ns          321 ns      2179870
+Dynamism/regularCall/4096                                         2561 ns         2560 ns       273400
+Dynamism/regularCall/32768                                       20455 ns        20454 ns        34053
+Dynamism/regularCall/262144                                     163783 ns       163770 ns         4263
+Dynamism/regularCall/2097152                                   1310995 ns      1310931 ns          535
+Dynamism/regularCall/10000000                                  6253406 ns      6253148 ns          112
+Dynamism/regularCall_BigO                                         0.63 N          0.63 N
+Dynamism/regularCall_RMS                                             0 %             0 %
+Dynamism/monomorphicCall/10                                       6.25 ns         6.25 ns    111854530
+Dynamism/monomorphicCall/64                                       40.0 ns         40.0 ns     17499177
+Dynamism/monomorphicCall/512                                       321 ns          321 ns      2183542
+Dynamism/monomorphicCall/4096                                     2559 ns         2559 ns       273615
+Dynamism/monomorphicCall/32768                                   20525 ns        20524 ns        34149
+Dynamism/monomorphicCall/262144                                 163929 ns       163922 ns         4266
+Dynamism/monomorphicCall/2097152                               1311524 ns      1311421 ns          533
+Dynamism/monomorphicCall/10000000                              6250365 ns      6250010 ns          112
+Dynamism/monomorphicCall_BigO                                     0.63 N          0.63 N
+Dynamism/monomorphicCall_RMS                                         0 %             0 %
+Dynamism/polymorphicCall/10                                       6.25 ns         6.24 ns    112007004
+Dynamism/polymorphicCall/64                                       40.0 ns         40.0 ns     17488901
+Dynamism/polymorphicCall/512                                       321 ns          321 ns      2180507
+Dynamism/polymorphicCall/4096                                     2561 ns         2561 ns       273383
+Dynamism/polymorphicCall/32768                                   20489 ns        20488 ns        34229
+Dynamism/polymorphicCall/262144                                 163874 ns       163866 ns         4275
+Dynamism/polymorphicCall/2097152                               1310244 ns      1310168 ns          533
+Dynamism/polymorphicCall/10000000                              6253030 ns      6252564 ns          112
+Dynamism/polymorphicCall_BigO                                     0.63 N          0.63 N
+Dynamism/polymorphicCall_RMS                                         0 %             0 %
+Dynamism/monomorphicPointerCall/10                                20.0 ns         20.0 ns     34899795
+Dynamism/monomorphicPointerCall/64                                 135 ns          135 ns      5160311
+Dynamism/monomorphicPointerCall/512                                976 ns          976 ns       718018
+Dynamism/monomorphicPointerCall/4096                              7695 ns         7694 ns        90986
+Dynamism/monomorphicPointerCall/32768                            61474 ns        61471 ns        11403
+Dynamism/monomorphicPointerCall/262144                          491416 ns       491398 ns         1424
+Dynamism/monomorphicPointerCall/2097152                        3934594 ns      3934387 ns          178
+Dynamism/monomorphicPointerCall/10000000                      18742210 ns     18740882 ns           37
+Dynamism/monomorphicPointerCall_BigO                              1.87 N          1.87 N
+Dynamism/monomorphicPointerCall_RMS                                  0 %             0 %
+Dynamism/polymorphicPointerCall/10                                22.0 ns         22.0 ns     31675166
+Dynamism/polymorphicPointerCall/64                                 137 ns          137 ns      5091049
+Dynamism/polymorphicPointerCall/512                                976 ns          976 ns       717356
+Dynamism/polymorphicPointerCall/4096                              7691 ns         7691 ns        90940
+Dynamism/polymorphicPointerCall/32768                            61518 ns        61514 ns        11392
+Dynamism/polymorphicPointerCall/262144                          492450 ns       492430 ns         1422
+Dynamism/polymorphicPointerCall/2097152                        3935077 ns      3934911 ns          178
+Dynamism/polymorphicPointerCall/10000000                      18776569 ns     18775592 ns           37
+Dynamism/polymorphicPointerCall_BigO                              1.88 N          1.88 N
+Dynamism/polymorphicPointerCall_RMS                                  0 %             0 %
+Dynamism/hasTrait/10                                               120 ns          120 ns      5842524
+Dynamism/hasTrait/64                                               778 ns          778 ns       903406
+Dynamism/hasTrait/512                                             6150 ns         6150 ns       113278
+Dynamism/hasTrait/4096                                           49506 ns        49501 ns        14140
+Dynamism/hasTrait/32768                                         397000 ns       396948 ns         1763
+Dynamism/hasTrait/262144                                       3490670 ns      3490570 ns          200
+Dynamism/hasTrait/2097152                                     28636495 ns     28634484 ns           25
+Dynamism/hasTrait/10000000                                   140535854 ns    140523393 ns            5
+Dynamism/hasTrait_BigO                                           14.04 N         14.04 N
+Dynamism/hasTrait_RMS                                                1 %             1 %
+    \end{minted}
+    \caption{Results for the ``How Slow is MLIR?'' micro-benchmarks.}
+    \label{listing:how-slow-is-mlir-microbenchmark-results}
+\end{code}

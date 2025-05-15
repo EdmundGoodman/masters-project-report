@@ -65,6 +65,52 @@
   file = {/Users/edjg/Zotero/storage/LL8LCXSD/Bacon and Sweeney - 1996 - Fast static analysis of C++ virtual function calls.pdf}
 }
 
+@article{barrettVirtualMachineWarmup2017,
+  title = {Virtual {{Machine Warmup Blows Hot}} and {{Cold}}},
+  author = {Barrett, Edd and Bolz-Tereick, Carl Friedrich and Killick, Rebecca and Mount, Sarah and Tratt, Laurence},
+  date = {2017-10-12},
+  journaltitle = {Proceedings of the ACM on Programming Languages},
+  shortjournal = {Proc. ACM Program. Lang.},
+  volume = {1},
+  eprint = {1602.00602},
+  eprinttype = {arXiv},
+  eprintclass = {cs},
+  pages = {1--27},
+  issn = {2475-1421},
+  doi = {10.1145/3133876},
+  url = {http://arxiv.org/abs/1602.00602},
+  urldate = {2025-05-14},
+  abstract = {Virtual Machines (VMs) with Just-In-Time (JIT) compilers are traditionally thought to execute programs in two phases: the initial warmup phase determines which parts of a program would most benefit from dynamic compilation, before JIT compiling those parts into machine code; subsequently the program is said to be at a steady state of peak performance. Measurement methodologies almost always discard data collected during the warmup phase such that reported measurements focus entirely on peak performance. We introduce a fully automated statistical approach, based on changepoint analysis, which allows us to determine if a program has reached a steady state and, if so, whether that represents peak performance or not. Using this, we show that even when run in the most controlled of circumstances, small, deterministic, widely studied microbenchmarks often fail to reach a steady state of peak performance on a variety of common VMs. Repeating our experiment on 3 different machines, we found that at most 43.5\% of {$<$}VM, benchmark{$>$} pairs consistently reach a steady state of peak performance.},
+  issue = {OOPSLA},
+  keywords = {Computer Science - Programming Languages},
+  file = {/Users/edjg/Zotero/storage/MR6M8M8V/Barrett et al. - 2017 - Virtual Machine Warmup Blows Hot and Cold.pdf;/Users/edjg/Zotero/storage/U9VBGS8S/1602.html}
+}
+
+@online{bastienabadieEngineeringCodeQuality,
+  title = {Engineering Code Quality in the {{Firefox}} Browser: {{A}} Look at Our Tools and Challenges},
+  shorttitle = {Engineering Code Quality in the {{Firefox}} Browser},
+  author = {{Bastien Abadie} and {Sylvestre Ledru}},
+  url = {https://hacks.mozilla.org/2020/04/code-quality-tools-at-mozilla},
+  urldate = {2025-05-13},
+  abstract = {Here's an insider's look at Firefox's code quality toolchain that's been designed to manage the ongoing development and monthly releases of our desktop browser. This post explores the architecture, challenges, ...},
+  langid = {american},
+  organization = {Mozilla Hacks – the Web developer blog},
+  file = {/Users/edjg/Zotero/storage/PS3AQWI2/code-quality-tools-at-mozilla.html}
+}
+
+@inproceedings{bergerTriangulatingPythonPerformance2023a,
+  title = {Triangulating {{Python Performance Issues}} with {{SCALENE}}},
+  author = {Berger, Emery D. and Stern, Sam and Pizzorno, Juan Altmayer},
+  date = {2023},
+  pages = {51--64},
+  url = {https://www.usenix.org/conference/osdi23/presentation/berger},
+  urldate = {2025-05-14},
+  eventtitle = {17th {{USENIX Symposium}} on {{Operating Systems Design}} and {{Implementation}} ({{OSDI}} 23)},
+  isbn = {978-1-939133-34-2},
+  langid = {english},
+  file = {/Users/edjg/Zotero/storage/2PSMWKHJ/Berger et al. - 2023 - Triangulating Python Performance Issues with SCALENE .pdf}
+}
+
 @incollection{chatleyNext7000Programming2019,
   title = {The {{Next}} 7000 {{Programming Languages}}},
   booktitle = {Computing and {{Software Science}}: {{State}} of the {{Art}} and {{Perspectives}}},
@@ -81,6 +127,60 @@
   isbn = {978-3-319-91908-9},
   langid = {english},
   file = {/Users/edjg/Zotero/storage/8ZWWCKTL/Chatley et al. - 2019 - The Next 7000 Programming Languages.pdf}
+}
+
+@software{collinwinterPythonPyperformance2025,
+  title = {Python/Pyperformance},
+  author = {{Collin Winter} and {Jeffrey Yasskin}},
+  date = {2025-05-06T16:31:43Z},
+  origdate = {2016-08-17T23:43:22Z},
+  url = {https://github.com/python/pyperformance},
+  urldate = {2025-05-15},
+  abstract = {Python Performance Benchmark Suite},
+  organization = {Python},
+  keywords = {benchmark,performance,python}
+}
+
+@article{cooperAdaptiveOptimizingCompilers2002,
+  title = {Adaptive {{Optimizing Compilers}} for the 21st {{Century}}},
+  author = {Cooper, Keith D. and Subramanian, Devika and Torczon, Linda},
+  date = {2002-08-01},
+  journaltitle = {The Journal of Supercomputing},
+  shortjournal = {The Journal of Supercomputing},
+  volume = {23},
+  number = {1},
+  pages = {7--22},
+  issn = {1573-0484},
+  doi = {10.1023/A:1015729001611},
+  url = {https://doi.org/10.1023/A:1015729001611},
+  urldate = {2025-05-12},
+  abstract = {Historically, compilers have operated by applying a fixed set of optimizations in a predetermined order. We call such an ordered list of optimizations a compilation sequence. This paper describes a prototype system that uses biased random search to discover a program-specific compilation sequence that minimizes an explicit, external objective function. The result is a compiler framework that adapts its behavior to the application being compiled, to the pool of available transformations, to the objective function, and to the target machine.},
+  langid = {english},
+  keywords = {biased random search,configurable compilers,optimizing compilers,order of optimization},
+  file = {/Users/edjg/Zotero/storage/YHJIJZQ4/Cooper et al. - 2002 - Adaptive Optimizing Compilers for the 21st Century.pdf}
+}
+
+@thesis{crapeperformance,
+  type = {Master's dissertation},
+  title = {Performance Analysis and Benchmarking of {{Python}}},
+  author = {Crapé, Arthur},
+  date = {2020},
+  institution = {Ghent University},
+  location = {Ghent, Belgium},
+  pagetotal = {105},
+  file = {/Users/edjg/Zotero/storage/W2EIY5QW/Crapé - Performance analysis and benchmarking of python.pdf}
+}
+
+@video{emerybergerPythonPerformanceMatters2022,
+  entrysubtype = {video},
+  title = {"{{Python Performance Matters}}" by {{Emery Berger}} ({{Strange Loop}} 2022)},
+  editor = {{Emery Berger}},
+  editortype = {director},
+  date = {2022-10-06},
+  location = {Strange Loop Conference},
+  url = {https://www.youtube.com/watch?v=vVUnCXKuNOg},
+  urldate = {2024-10-21},
+  abstract = {It's 2022. Moore's Law and Dennard scaling have run out of steam, making it harder than ever to achieve high performance - especially in Python. This talk first explains in detail the unique challenges that Python poses to programmers. It then presents Scalene, a novel high-performance CPU, GPU and memory profiler for Python that does many things that past Python profilers do not and cannot do. Scalene both runs orders of magnitude faster than other profilers while delivering more accurate and more actionable information that's especially valuable to Python programmers. Emery Berger Professor, University of Massachusetts Amherst @emeryberger Emery Berger is a Professor of Computer Sciences at the University of Massachusetts Amherst, the flagship campus of the UMass system. Professor Berger and his collaborators have built numerous widely adopted software systems including Hoard, a fast and scalable memory manager that accelerates multithreaded applications (on which the Mac OS X memory manager is based); DieHard/DieHarder, error-avoiding and secure memory managers that influenced Windows, and Coz, a "causal profiler" that ships with modern Linux distros. He is also the developer and maintainer of CSrankings.org. His honors include an NSF CAREER Award, Most Influential Paper Awards at OOPSLA, at PLDI, and ASPLOS; five CACM Research Highlights, and Best Paper Awards at FAST, OOPSLA, and SOSP; he is an ACM Fellow. Professor Berger served six years as an elected member of the SIGPLAN Executive Committee; a decade as Associate Editor of TOPLAS; he was Program Chair for PLDI 2016 and co-Program Chair of ASPLOS 2021. ------- Sponsored by: ------- Stream is the \# 1 Chat API for custom messaging apps. Activate your free 30-day trial to explore Stream Chat. https://gstrm.io/tsl}
 }
 
 @inproceedings{fehrIRDLIRDefinition2022a,
@@ -151,6 +251,16 @@
   organization = {Python}
 }
 
+@incollection{harris2021understanding,
+  title = {Understanding Computation Time: A Critical Discussion of Time as a Computational Performance Metric},
+  booktitle = {Time in Variance},
+  author = {Harris-Birtill, David and Harris-Birtill, Rose},
+  date = {2021},
+  pages = {220--248},
+  publisher = {Brill},
+  file = {/Users/edjg/Zotero/storage/S7HA4J9C/Harris-Birtill and Harris-Birtill - 2021 - Understanding computation time a critical discussion of time as a computational performance metric.pdf}
+}
+
 @inproceedings{holzleOptimizingDynamicallydispatchedCalls1994,
   title = {Optimizing Dynamically-Dispatched Calls with Run-Time Type Feedback},
   booktitle = {Proceedings of the {{ACM SIGPLAN}} 1994 Conference on {{Programming}} Language Design and Implementation},
@@ -165,6 +275,15 @@
   urldate = {2025-05-12},
   isbn = {978-0-89791-662-2},
   file = {/Users/edjg/Zotero/storage/4AMQL6SQ/Hölzle and Ungar - 1994 - Optimizing dynamically-dispatched calls with run-time type feedback.pdf}
+}
+
+@online{joshhabermanTailCallingInterpreter2025,
+  title = {A {{Tail Calling Interpreter For Python}} ({{And Other Updates}})},
+  author = {{Josh Haberman}},
+  date = {2025-10-02},
+  url = {https://blog.reverberate.org/2025/02/10/tail-call-updates.html},
+  urldate = {2025-05-14},
+  file = {/Users/edjg/Zotero/storage/LGPDYQWY/tail-call-updates.html}
 }
 
 @online{kempenItsNotEasy2025,
@@ -355,6 +474,24 @@
   file = {/Users/edjg/Zotero/storage/AUBRPYLN/Saeed and Saeed - 2008 - Systematic review of verification & validation in dynamic languages.pdf}
 }
 
+@inproceedings{steeleDebunkingExpensiveProcedure1977,
+  title = {Debunking the “Expensive Procedure Call” Myth or, Procedure Call Implementations Considered Harmful or, {{LAMBDA}}: {{The Ultimate GOTO}}},
+  shorttitle = {Debunking the “Expensive Procedure Call” Myth or, Procedure Call Implementations Considered Harmful or, {{LAMBDA}}},
+  booktitle = {Proceedings of the 1977 Annual Conference},
+  author = {Steele, Guy Lewis},
+  date = {1977-01-01},
+  series = {{{ACM}} '77},
+  pages = {153--162},
+  publisher = {Association for Computing Machinery},
+  location = {New York, NY, USA},
+  doi = {10.1145/800179.810196},
+  url = {https://dl.acm.org/doi/10.1145/800179.810196},
+  urldate = {2025-05-13},
+  abstract = {Folklore states that GOTO statements are “cheap”, while procedure calls are “expensive”. This myth is largely a result of poorly designed language implementations. The historical growth of this myth is considered. Both theoretical ideas and an existing implementation are discussed which debunk this myth. It is shown that the unrestricted use of procedure calls permits great stylistic freedom. In particular, any flowchart can be written as a “structured” program without introducing extra variables. The difficulty with the GOTO statement and the procedure call is characterized as a conflict between abstract programming concepts and concrete language constructs.},
+  isbn = {978-1-4503-3921-6},
+  file = {/Users/edjg/Zotero/storage/CDD4PU2J/Steele - 1977 - Debunking the “expensive procedure call” myth or, procedure call implementations considered harmful.pdf}
+}
+
 @online{tomdaleAdventuresMicrobenchmarking2017,
   title = {Adventures in {{Microbenchmarking}}},
   author = {{Tom Dale}},
@@ -363,6 +500,45 @@
   urldate = {2025-04-24},
   organization = {tomdale.net},
   file = {/Users/edjg/Zotero/storage/LRBUXXIR/adventures-in-microbenchmarking.html}
+}
+
+@online{victorstinnerMyJourneyStable2016,
+  title = {My Journey to Stable Benchmark, Part 1 (System)},
+  author = {{Victor Stinner}},
+  date = {2016-05-21},
+  url = {https://vstinner.github.io/journey-to-stable-benchmark-system.html},
+  urldate = {2025-05-14},
+  file = {/Users/edjg/Zotero/storage/YMUXNYS7/journey-to-stable-benchmark-system.html}
+}
+
+@online{victorstinnerMyJourneyStable2016a,
+  title = {My Journey to Stable Benchmark, Part 2 (Deadcode)},
+  author = {{Victor Stinner}},
+  date = {2016-05-22},
+  url = {https://vstinner.github.io/journey-to-stable-benchmark-deadcode.html},
+  urldate = {2025-05-14},
+  file = {/Users/edjg/Zotero/storage/KLNBNB74/journey-to-stable-benchmark-deadcode.html}
+}
+
+@online{victorstinnerMyJourneyStable2016b,
+  title = {My Journey to Stable Benchmark, Part 3 (Average)},
+  author = {{Victor Stinner}},
+  date = {2016-05-23},
+  url = {https://vstinner.github.io/journey-to-stable-benchmark-average.html},
+  urldate = {2025-05-14},
+  file = {/Users/edjg/Zotero/storage/QLH6WL6M/journey-to-stable-benchmark-average.html}
+}
+
+@software{victorstinnerPsfPyperf2025,
+  title = {Psf/Pyperf},
+  author = {{Victor Stinner}},
+  date = {2025-05-12T15:01:45Z},
+  origdate = {2016-06-01T13:25:17Z},
+  url = {https://github.com/psf/pyperf},
+  urldate = {2025-05-15},
+  abstract = {Toolkit to run Python benchmarks},
+  organization = {Python Software Foundation},
+  keywords = {benchmarking,python}
 }
 
 @online{whatsNewPython311,
@@ -413,4 +589,24 @@
   abstract = {Dynamic scripting languages offer programmers increased flexibility by allowing properties of programs to be defined at run-time. Typically, program execution begins with an interpreter where type checks are implemented using conditional statements. Recent JIT compilers have begun removing run-time checks by specializing native code to program properties discovered at JIT time.This paper presents a novel intermediate representation for scripting languages that explicitly encodes types of variables. The dynamic representation is a flow graph, where each node is a specialized virtual instruction and each edge directs program flow based on control and type changes in the program. The interpreter thus performs specialized execution of whole programs. We present techniques for the efficient interpretation of our representation showing speed-ups of greater than 2x over static interpretation, with an average speed-up of approximately 1.3x.},
   isbn = {978-1-60558-635-9},
   file = {/Users/edjg/Zotero/storage/FW38FJTP/Williams et al. - 2010 - Dynamic interpretation for dynamic scripting languages.pdf}
+}
+
+@online{xuBuildingBaselineJIT2023a,
+  title = {Building a Baseline {{JIT}} for {{Lua}} Automatically},
+  author = {Xu, Haoran},
+  date = {2023-05-12T00:00:00},
+  url = {https://sillycross.github.io/2023/05/12/2023-05-12/index.html},
+  urldate = {2025-05-14},
+  abstract = {This is the Part 2 of a series. Feel free to read the prequel for more context: Building the fastest Lua interpreter automatically  Building a good VM for a dynamic language takes a ton of engineerin},
+  file = {/Users/edjg/Zotero/storage/SUVYS5UP/2023-05-12.html}
+}
+
+@online{xuBuildingFastestLua2022a,
+  title = {Building the Fastest {{Lua}} Interpreter.. Automatically!},
+  author = {Xu, Haoran},
+  date = {2022-11-22T00:00:00},
+  url = {https://sillycross.github.io/2022/11/22/2022-11-22/index.html},
+  urldate = {2025-05-14},
+  abstract = {This is Part 1 of a series of posts. Part 2 is available here: Building a baseline JIT for Lua automatically  It is well-known that writing a good VM for a dynamic language is never an easy job. High},
+  file = {/Users/edjg/Zotero/storage/L5FXCLMQ/2022-11-22.html}
 }

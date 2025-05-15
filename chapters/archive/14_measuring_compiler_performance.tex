@@ -1,37 +1,27 @@
 \chapter{Measuring compiler framework performance}
 \label{chap:measuring-compiler-performance}
 
-%% Introduction
-% Hook
-In this chapter, we measure the runtime performance of two user-extensible compiler frameworks: MLIR and xDSL.
-% Argument
-The usefulness of these measurements are three-fold. First, we provide insight into the current relative performance of MLIR and xDSL. % interesting in its own right, and as a baseline for optimisation
-Second, we identify the components of the implementation which contribute most to the overall runtime, and as such are the best targets for optimisation (\autoref{chap:specialising-optimising-pattern-rewriting}) as a corrollary of Amdahl's law \cite{amdahlValiditySingleProcessor1967}.
-Finally, we isolate small, self-contained components of the implementation which are comparable between MLIR and xDSL, through which the impact of dynamism can be examined (\autoref{chap:dynamism-pattern-rewriting}).
-% Link
-
-
-
-
 
 \section{Methodology}
 \label{sec:methodology}
 
-%% Short intro
+%% Goals of experiments, levels of granularity
 % Hook
-Accurate performance measurement is a fundamental and notoriously fickle discipline in systems research \cite{}.
+% In complex systems
 % Argument
 % Link
-In this section, we discuss our methodology for performance measurement, aiming to justify design decisions and facilitate reproducibility
 
-\subsection{Experimental setup}
-\label{ssec:experimental-setup}
+%% Steps for experimental accuracy/avoiding noise
+% Hook
+Accurate performance measurement is a fundamental and notoriously fickle discipline in systems research.
+% Argument
+% Link
 
 %% Reproducibility
 % Hook
 The reproducibility of experiments is critical for a robust scientific methodology.
 % Argument
-To aid in reproducibility, we provide a description of our experimental setup (\autoref{tab:experimental-setup}).
+To aid in reproducibility, we provide a description of our experimental setup (\autoref{}, further detailed in \autoref{}).
 The choice to use an AWS EC2 instance for performance measurement was partially driven by practical limitations of the resources available to the authors.
 This choice incurs a cost
 However, there are also commensurate benefits to this choice with respect to reproducibility. This is because researchers aiming to replicate the work can simply create their own EC2 instance with the same configuration, obviating the issue of different hardware configurations affecting performance results.
@@ -39,41 +29,27 @@ Furthermore, virtualised systems are representative of real-world workloads
 In addition to this, with cloud computing becoming ubiquitous over the past decade, their is a fair body of research into reliable performance measurements on virtualised systems
 % Link
 
-\begin{table}[H]
-  \caption{Summary of experimental setup configuration used for performance measurement.}
-  \label{tab:experimental-setup}
-  \centering
-  \begin{tabular}{lll}
-    \toprule
-    \textbf{Configurable} & \textbf{Configuration} \\
-    \midrule
-    \textit{AWS instance type} & c5a.4xlarge EC2 \\
-    \textit{Operating system} & Debian 24.04 (Noble) \\
-    \textit{CPU name} & AMD EPYC 7R32 \\
-    \textit{Logical CPU cores} & $16$ \\
-    \textit{Clock frequency [MHz]} & $2799.99$ \\
-    \textit{L1 Data Cache [KiB]} & $32$ \\
-    \textit{L1 Instruction Cache [KiB]} & $32$ \\
-    \textit{L2 Unified Cache [KiB]} & $512$ \\
-    \textit{L3 Unified Cache [KiB]} & $16384$ \\
-    \textit{RAM [GB]} & 16 \\
-    \bottomrule
-  \end{tabular}
-\end{table}
+% % Hook
+% Our experimental methodology aims to maximize the effectiveness of micro-benchmarks while minimising their inherent limitations.
+% % Argument
+% To achieve this balance, we developed infrastructure for benchmark execution and carefully implemented measurement logic.
+% This approach ensures that our measurements accurately reflect overall system performance and ensure valid comparisons between implementations.
+% % Link
 
+% \subsubsection{Micro-benchmarking infrastructure}
+% \label{sssec:ubenchmark-methodology-infra}
 
-
-
-\subsection{Experimental configuration}
-\label{ssec:experimental-workloads}
-
-% Hook
-% Argument
-% Link
+% % Hook
+% Due to their short length, micro-benchmark results are sensitive to machine noise.
+% % Argument
+% To minimise the impact of machine noise, the micro-benchmarks are repeated $2^{15}$ times and averaged, with uncertainty calculated as their standard deviation. To ensure comparability, both the MLIR and xDSL micro-benchmarks were run locally on the same experimental machine, whose hardware and software configuration is described in \autoref{tab:ubenchmark-experimental-config}
+% % % Link
+% % In addition to machine noise, other mechanisms may increase the variance of results, such as differences between runs due to cache warming or language runtime behaviour.
 
 \begin{table}[H]
-  \caption{Summary of experimental setup configuration used for performance measurement.}
-  \label{tab:experimental-setup}
+  \caption{Experimental configuration used for micro-benchmarking.}
+  % TODO: This might want to move to the top of the measurement section?
+  \label{tab:ubenchmark-experimental-config}
   \centering
   \begin{tabular}{lll}
     \toprule
@@ -82,101 +58,24 @@ In addition to this, with cloud computing becoming ubiquitous over the past deca
     \textit{xDSL commit SHA} & \texttt{0eda7fe} \\
     \textit{MLIR commit SHA} & \texttt{6516ae4} \\
     \midrule
+    % \midrule  % Build/run command here???
+    % `python3 benchmarks/microbenchmarks.py Extensibility.trait_check`
+    % `cmake ...`
+    % `./MLIR_IR_Benchmark --benchmark_filter="NAME/32768" --benchmark_repetitions=10
     \textit{Python interpreter} & CPython 3.10.17 \\
     \textit{C++ compiler} & clang 18.1.8 \\
     \textit{CMake version} & 3.28.3 \\
     \textit{Ninja version} & 1.11.1 \\
+    \textit{Operating system} & macOS Sequoia 15.4.1 \\
+    \midrule
+    % \textit{Clock frequency [GHz]} & \\
+    \textit{CPU} & AMD EPYC 7R32 \\
+    \textit{RAM [GB]} & 16 \\
     \bottomrule
   \end{tabular}
 \end{table}
 
-
-
-\subsection{Experimental workloads}
-\label{ssec:experimental-workloads}
-
-% Constant folding
-% Hook
-% Argument
-% Link
-
-
-\vspace{2em}
-
-\begin{code}
-    \begin{minted}{python}
-import random
-
-from xdsl.dialects.arith import AddiOp, ConstantOp
-from xdsl.dialects.builtin import IntegerAttr, ModuleOp, i32
-from xdsl.dialects.test import TestOp
-from xdsl.ir import Operation
-
-RANDOM_SEED = 0
-
-
-def constant_folding_module(size: int) -> ModuleOp:
-    """Generate a constant folding workload of a given size."""
-    assert size >= 0
-    random.seed(RANDOM_SEED)
-    ops: list[Operation] = []
-    ops.append(ConstantOp(IntegerAttr(random.randint(1, 1000), i32)))
-    for i in range(1, size + 1):
-        if i % 2 == 0:
-            ops.append(AddiOp(ops[i - 1], ops[i - 2]))
-        else:
-            ops.append(ConstantOp(IntegerAttr(random.randint(1, 1000), i32)))
-    ops.append(TestOp([ops[(size // 2) * 2]]))
-    return ModuleOp(ops)
-    \end{minted}
-    \caption{.}
-    \label{listing:constant-folding-workload}
-\end{code}
-
-\vspace{2em}
-
-\begin{code}
-   \centering
-    \begin{minted}[fontsize=\footnotesize]{mlir}
-"builtin.module"() ({
-  %0 = "arith.constant"() {"value" = 1 : i32} : () -> i32
-  %1 = "arith.constant"() {"value" = 1 : i32} : () -> i32
-  %2 = "arith.addi"(%1, %0) : (i32, i32) -> i32
-  %3 = "arith.constant"() {"value" = 1 : i32} : () -> i32
-  %4 = "arith.addi"(%3, %2) : (i32, i32) -> i32
-  %5 = "arith.constant"() {"value" = 1 : i32} : () -> i32
-  %6 = "arith.addi"(%5, %4) : (i32, i32) -> i32
-  %7 = "arith.constant"() {"value" = 1 : i32} : () -> i32
-  %8 = "arith.addi"(%7, %6) : (i32, i32) -> i32
-  %9 = "arith.constant"() {"value" = 1 : i32} : () -> i32
-  %10 = "arith.addi"(%9, %8) : (i32, i32) -> i32
-  %11 = "arith.constant"() {"value" = 1 : i32} : () -> i32
-  %12 = "arith.addi"(%11, %10) : (i32, i32) -> i32
-  %13 = "arith.constant"() {"value" = 1 : i32} : () -> i32
-  %14 = "arith.addi"(%13, %12) : (i32, i32) -> i32
-  %15 = "arith.constant"() {"value" = 1 : i32} : () -> i32
-  %16 = "arith.addi"(%15, %14) : (i32, i32) -> i32
-  %17 = "arith.constant"() {"value" = 1 : i32} : () -> i32
-  %18 = "arith.addi"(%17, %16) : (i32, i32) -> i32
-  %19 = "arith.constant"() {"value" = 1 : i32} : () -> i32
-  %20 = "arith.addi"(%19, %18) : (i32, i32) -> i32
-  "test.op"(%20) : (i32) -> ()
-}) : () -> ()
-    \end{minted}
-    \caption{``How Slow is MLIR?'' C++ implementation.}
-    \label{listing:ubenchmark-trait-checks-bench-mlir}
-\end{code}
-
-
-
-\subsection{Procedure and infrastructure}
-\label{ssec:procedure-infrastructure}
-
-% Steps actually taken
-
-% Stuff we built
-
-%% Corrollary benefits
+%% TODO: This might move to end-to-end benchmarks section?
 % Hook
 In addition to their usefulness for understanding and optimising compiler performance, these benchmarks provide an opportunity to augment the development process of the xDSL project.
 % Argument
@@ -185,81 +84,16 @@ As such, we provide a command line interface for developers to run the benchmark
 Furthermore, our benchmarks are constructed to interface with air-speed velocity \cite{michaeldroettboomAirspeedvelocityAsv2025}, a tool which runs benchmarks across repository commits. This information is tracked on the xDSL website \url{https://xdsl.dev/xdsl-bench/}, providing a dashboard for the performance characteristics of xDSL over time.
 % Link
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-\section{End-to-end benchmarks}
-
-%% Introduction, goals
 % Hook
-The simplest metric for the performance of a system is its overall runtime.
-% Argument
-% Link
-
-%% How is MLIR/xDSL split up into pipeline phases
-% Hook
-One of LLVM's key insights was that compilation can be split into a sequence of discrete steps, avoiding the complex control logic of previous state-of-the-art compilers.
-% Argument
-As such, compilers having LLVM's pedigree, such as MLIR and xDSL, can be modelled as a pipeline -- parsing the input, applying optimisation transformations, and generating a lowered output (\autoref{}).
-This allows us to break down end-to-end benchmarks into components of finer granularity for free.
-% Link
-
-%% Figure: pipeline phases
-
-\begin{figure}
-    \centering
-    \includegraphics[width=0.75\textwidth]{images/14_measuring_compiler_performance/compiler_phases.drawio.pdf}
-    \caption{.}
-    % TODO: Does this add value? Could the whole thing be wrapped in an outer box to better communicate the point?
-    \label{fig:}
-\end{figure}
-
-%% Performance results
-% Hook
-% Argument
-% Link
-
-% Figure: relative performance bar chart
-%% Constant folding example. Short but complex example with lots of rewrites?
-
-%% Why pick pattern rewriting?
-% Hook
-% Argument
-% Link
+% After constructing reliable infrastructure for executing micro-benchmarks in Python, we proceeded to develop implementations that could be directly compared with existing MLIR versions. This was essential to draw valid conclusions about performance differences between Python and C++ runtimes for compiler framework workloads.
 
 
 
 
 
-
-
-\section{Pattern rewriting}
-
-%% Introduction
-% Hook
-Having selected pattern rewriting as the compilation phase to examine in detail, we can modify our benchmarks to drive only 
-
-
-% Figure: MLIR vs xDSL across workloads?
-
-% Figure: Trace of MLIR and xDSL overall?
-
-
-
+% End-to-end/pipeline-phase-wise performance of xDSL as it stands
+% --> Why we pick pattern rewriting to focus on
+\section{Compiler pipeline phases}
 
 
 
@@ -270,6 +104,7 @@ Having selected pattern rewriting as the compilation phase to examine in detail,
 
 % Hook
 Micro-benchmarking refers measuring the performance of fast, granular, and isolated segments of code.
+% It contrasts traditional benchmarking approaches which instead examine the performance of larger code segments, typically representative of a real-world workload.
 % Argument
 The term was coined by Saavedra et al. in their 1995 paper \cite{saavedraPerformanceCharacterizationOptimizing1995} ``Performance Characterization of Optimizing Compilers''. As such, we are in good company in our application of micro-benchmarking approaches to this problem domain.
 Micro-benchmarks have many desirable properties. Since they run quickly, they can cheaply be repeated for statistical confidence.
@@ -278,10 +113,11 @@ However, a key difficulty of micro-benchmarking is ensuring alignment with overa
 % Link
 As such, micro-benchmarking is a useful tool for deeply understanding the performance of software, but must be used carefully to ensure the validity of its results.
 
+%% Now the mlir community already disagree (cannot find source for this feeling, so elide), leading to talk
 % Hook
-As discussed in our related work (Section \ref{sec:perf-user-extensible-frameworks}), Amini and Nui's talk ``How Slow is MLIR'' \cite{aminiHowSlowMLIR2024} discusses a set of micro-benchmarks for key operations in the MLIR compiler, such as traversing the IR and creating operations.
+At the 2024 European LLVM Developers' Meeting, Mehdi Amini and Jeff Nui presented their keynote talk ``How Slow is MLIR?'' \cite{aminiHowSlowMLIR2024}.
 % Argument
-These micro-benchmarks were used to inform the optimisation of MLIR's data structures and for comparison with traditional LLVM-based compilers. The implementation of the micro-benchmarks allude to an underlying design goal in MLIR by their measurement of asymptotic scaling properties\footnote{\url{https://github.com/joker-eph/llvm-project/blob/6773f827b9ee8055063fcf6b2c6fcdc7f4f579d2/mlir/unittests/Benchmarks/Cloning.cpp\#L66}}. This design goal is asymptotically optimal performance for its underlying data structures. However, data structures with these characteristics often incur constant-time penalties.
+In this talk, they discussed micro-benchmarks for key operations in the MLIR compiler, such as traversing the IR and creating operations. These micro-benchmarks were used to inform the optimisation of MLIR's data structures and for comparison with traditional LLVM-based compilers. The implementation of the micro-benchmarks allude to an underlying design goal in MLIR by their measurement of asymptotic scaling properties\footnote{\url{https://github.com/joker-eph/llvm-project/blob/6773f827b9ee8055063fcf6b2c6fcdc7f4f579d2/mlir/unittests/Benchmarks/Cloning.cpp\#L66}}. This design goal is asymptotically optimal performance for its underlying data structures. However, data structures with these characteristics often incur constant-time penalties. % TODO: \cite{}
 This causes overhead for small workloads, where, unlike the asymptotic case, the cost is not amortised. As such, micro-benchmarks may not be representative of the system's overall performance, revealing possibility for the optimisation of code co-designed using them.
 Despite this, they can still provide useful insight into MLIR's performance characteristics. 
 % Link
@@ -304,7 +140,7 @@ This source code can then be used to construct comparable micro-benchmarks in Py
 A key design goal of our micro-benchmarks for xDSL is parity with those provided for MLIR, ensuring the validity their direct comparison.
 % Argument
 As such, their implementation was derived from the MLIR benchmarks, matching test data and function invocations as closely as possible.
-% Link3
+% Link
 In the following sections, we discuss the implementations of a number of micro-benchmarks, facilitating discussion of the insights they give into compiler performance across implementations and language runtimes in later chapters.
 
 
@@ -414,20 +250,23 @@ In addition to the remaining ``How Slow is MLIR?'' micro-benchmarks, the suite p
 These have two-fold use: triaging functions to optimise by longest runtime following Amdhal's law \cite{amdahlValiditySingleProcessor1967}; and serving as a metric of performance to ensure optimisations don't inadvertently introduce regressions.
 % Link
 
-% Do a bar chart instead of a table!!!!
-% \begin{table}[H]
-%   \caption{.}
-%   \label{tab:ubenchmark-xdsl-regression}
-%   \centering
-%   \begin{tabular}{ccc}
-%     \toprule
-%     \textbf{Benchmark name} & \textbf{xDSL [ns]}\\
-%     \midrule
-%     Trait checks & $504 \pm 76$ \\
-%     ... & ... & ... \\
-%     \bottomrule
-%   \end{tabular}
-% \end{table}
+\begin{table}[H]
+  \caption{.}
+  \label{tab:ubenchmark-xdsl-regression}
+  \centering
+  \begin{tabular}{ccc}
+    \toprule
+    \textbf{Benchmark name} & \textbf{xDSL [ns]}\\
+    \midrule
+    Trait checks & $504 \pm 76$ \\
+    ... & ... & ... \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+
+
+\section{Pattern rewriting}
 
 
 
