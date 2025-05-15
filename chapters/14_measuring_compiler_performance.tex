@@ -135,37 +135,37 @@ def constant_folding_module(size: int) -> ModuleOp:
 
 \vspace{2em}
 
-\begin{code}
-   \centering
-    \begin{minted}[fontsize=\footnotesize]{mlir}
-"builtin.module"() ({
-  %0 = "arith.constant"() {"value" = 1 : i32} : () -> i32
-  %1 = "arith.constant"() {"value" = 1 : i32} : () -> i32
-  %2 = "arith.addi"(%1, %0) : (i32, i32) -> i32
-  %3 = "arith.constant"() {"value" = 1 : i32} : () -> i32
-  %4 = "arith.addi"(%3, %2) : (i32, i32) -> i32
-  %5 = "arith.constant"() {"value" = 1 : i32} : () -> i32
-  %6 = "arith.addi"(%5, %4) : (i32, i32) -> i32
-  %7 = "arith.constant"() {"value" = 1 : i32} : () -> i32
-  %8 = "arith.addi"(%7, %6) : (i32, i32) -> i32
-  %9 = "arith.constant"() {"value" = 1 : i32} : () -> i32
-  %10 = "arith.addi"(%9, %8) : (i32, i32) -> i32
-  %11 = "arith.constant"() {"value" = 1 : i32} : () -> i32
-  %12 = "arith.addi"(%11, %10) : (i32, i32) -> i32
-  %13 = "arith.constant"() {"value" = 1 : i32} : () -> i32
-  %14 = "arith.addi"(%13, %12) : (i32, i32) -> i32
-  %15 = "arith.constant"() {"value" = 1 : i32} : () -> i32
-  %16 = "arith.addi"(%15, %14) : (i32, i32) -> i32
-  %17 = "arith.constant"() {"value" = 1 : i32} : () -> i32
-  %18 = "arith.addi"(%17, %16) : (i32, i32) -> i32
-  %19 = "arith.constant"() {"value" = 1 : i32} : () -> i32
-  %20 = "arith.addi"(%19, %18) : (i32, i32) -> i32
-  "test.op"(%20) : (i32) -> ()
-}) : () -> ()
-    \end{minted}
-    \caption{``How Slow is MLIR?'' C++ implementation.}
-    \label{listing:ubenchmark-trait-checks-bench-mlir}
-\end{code}
+% \begin{code}
+%    \centering
+%     \begin{minted}[fontsize=\footnotesize]{mlir}
+% "builtin.module"() ({
+%   %0 = "arith.constant"() {"value" = 1 : i32} : () -> i32
+%   %1 = "arith.constant"() {"value" = 1 : i32} : () -> i32
+%   %2 = "arith.addi"(%1, %0) : (i32, i32) -> i32
+%   %3 = "arith.constant"() {"value" = 1 : i32} : () -> i32
+%   %4 = "arith.addi"(%3, %2) : (i32, i32) -> i32
+%   %5 = "arith.constant"() {"value" = 1 : i32} : () -> i32
+%   %6 = "arith.addi"(%5, %4) : (i32, i32) -> i32
+%   %7 = "arith.constant"() {"value" = 1 : i32} : () -> i32
+%   %8 = "arith.addi"(%7, %6) : (i32, i32) -> i32
+%   %9 = "arith.constant"() {"value" = 1 : i32} : () -> i32
+%   %10 = "arith.addi"(%9, %8) : (i32, i32) -> i32
+%   %11 = "arith.constant"() {"value" = 1 : i32} : () -> i32
+%   %12 = "arith.addi"(%11, %10) : (i32, i32) -> i32
+%   %13 = "arith.constant"() {"value" = 1 : i32} : () -> i32
+%   %14 = "arith.addi"(%13, %12) : (i32, i32) -> i32
+%   %15 = "arith.constant"() {"value" = 1 : i32} : () -> i32
+%   %16 = "arith.addi"(%15, %14) : (i32, i32) -> i32
+%   %17 = "arith.constant"() {"value" = 1 : i32} : () -> i32
+%   %18 = "arith.addi"(%17, %16) : (i32, i32) -> i32
+%   %19 = "arith.constant"() {"value" = 1 : i32} : () -> i32
+%   %20 = "arith.addi"(%19, %18) : (i32, i32) -> i32
+%   "test.op"(%20) : (i32) -> ()
+% }) : () -> ()
+%     \end{minted}
+%     \caption{``How Slow is MLIR?'' C++ implementation.}
+%     \label{listing:ubenchmark-trait-checks-bench-mlir}
+% \end{code}
 
 
 
@@ -251,7 +251,7 @@ This allows us to break down end-to-end benchmarks into components of finer gran
 
 %% Introduction
 % Hook
-Having selected pattern rewriting as the compilation phase to examine in detail, we can modify our benchmarks to drive only 
+Having selected pattern rewriting as the compilation phase to examine in detail, we can modify our benchmarks to drive only
 
 
 % Figure: MLIR vs xDSL across workloads?
@@ -283,7 +283,7 @@ As discussed in our related work (Section \ref{sec:perf-user-extensible-framewor
 % Argument
 These micro-benchmarks were used to inform the optimisation of MLIR's data structures and for comparison with traditional LLVM-based compilers. The implementation of the micro-benchmarks allude to an underlying design goal in MLIR by their measurement of asymptotic scaling properties\footnote{\url{https://github.com/joker-eph/llvm-project/blob/6773f827b9ee8055063fcf6b2c6fcdc7f4f579d2/mlir/unittests/Benchmarks/Cloning.cpp\#L66}}. This design goal is asymptotically optimal performance for its underlying data structures. However, data structures with these characteristics often incur constant-time penalties.
 This causes overhead for small workloads, where, unlike the asymptotic case, the cost is not amortised. As such, micro-benchmarks may not be representative of the system's overall performance, revealing possibility for the optimisation of code co-designed using them.
-Despite this, they can still provide useful insight into MLIR's performance characteristics. 
+Despite this, they can still provide useful insight into MLIR's performance characteristics.
 % Link
 We implement micro-benchmark workloads for the xDSL equivalent to those for MLIR presented in the keynote, and compare the results of these benchmarks between the two implementations, giving insights into their relative performance.
 % We further leverage profiling tools to examine the execution of the two implementations. This allows us to distinguish the cost incurred by the language runtime from the cost incurred by the algorithmic approach of the implementation.
@@ -329,7 +329,7 @@ These methods are used very frequently in common tasks. For example, when patter
             Operation op = b.create<OpWithRegion>(
                 unknownLoc
             );
-            
+
             // Benchmark
             bool hasTrait = op->hasTrait<
                 OpTrait::SingleBlock
@@ -344,7 +344,7 @@ These methods are used very frequently in common tasks. For example, when patter
         \begin{minted}[breakanywhere,fontsize=\footnotesize]{python}
             # Setup
             op = OpWithRegion()
-            
+
             # Benchmark
             has_trait = op.has_trait(SingleBlock)
         \end{minted}
@@ -391,7 +391,7 @@ Micro-benchmarks of checking traits for both implementations (Listing \ref{listi
 In addition to the above micro-benchmarks which we examine in detail, we further provide a wider suite of micro-benchmarks discussed in lesser detail for brevity. % The implementations of all xDSL micro-benchmarks are provided in the Appendix (\autoref{}).
 % Argument
 This suite implements many of the remaining equivalent micro-benchmarks from ``How Slow is MLIR'' (\autoref{tab:ubenchmark-remaining-mlir}).
-From these, we can see the trend of a slow-down in the order of $xy\times$ holds 
+From these, we can see the trend of a slow-down in the order of $xy\times$ holds
 
 \begin{table}[H]
   \caption{.}
@@ -428,10 +428,3 @@ These have two-fold use: triaging functions to optimise by longest runtime follo
 %     \bottomrule
 %   \end{tabular}
 % \end{table}
-
-
-
-
-
-
-

@@ -93,3 +93,139 @@
 % Avoid overflowing URLs (https://stackoverflow.com/a/43593557)
 \setcounter{biburllcpenalty}{7000}
 \setcounter{biburlucpenalty}{8000}
+
+
+
+% ======================================================================= %
+% OpenCompl modifications                                                 %
+% - <https://github.com/opencompl/paper-template/blob/main/tex/setup.tex> %
+% - <https://github.com/opencompl/paper-template/blob/main/paper.tex>     %
+% ======================================================================= %
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% % Add minted and support custom lexers
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \usepackage{etoolbox}
+
+% \makeatletter
+% \ifcsdef{minted@optlistcl@quote}
+% {
+% \ifwindows
+%   \renewcommand{\minted@optlistcl@quote}[2]{%
+%     \ifstrempty{#2}{\detokenize{#1}}{\detokenize{#1="#2"}}}
+% \else
+%   \renewcommand{\minted@optlistcl@quote}[2]{%
+%     \ifstrempty{#2}{\detokenize{#1}}{\detokenize{#1='#2'}}}
+% \fi
+
+% % similar to \minted@def@optcl@switch
+% \newcommand{\minted@def@optcl@novalue}[2]{%
+%   \define@booleankey{minted@opt@g}{#1}%
+%     {\minted@addto@optlistcl{\minted@optlistcl@g}{#2}{}%
+%      \@namedef{minted@opt@g:#1}{true}}
+%     {\@namedef{minted@opt@g:#1}{false}}
+%   \define@booleankey{minted@opt@g@i}{#1}%
+%     {\minted@addto@optlistcl{\minted@optlistcl@g@i}{#2}{}%
+%      \@namedef{minted@opt@g@i:#1}{true}}
+%     {\@namedef{minted@opt@g@i:#1}{false}}
+%   \define@booleankey{minted@opt@lang}{#1}%
+%     {\minted@addto@optlistcl@lang{minted@optlistcl@lang\minted@lang}{#2}{}%
+%      \@namedef{minted@opt@lang\minted@lang:#1}{true}}
+%     {\@namedef{minted@opt@lang\minted@lang:#1}{false}}
+%   \define@booleankey{minted@opt@lang@i}{#1}%
+%     {\minted@addto@optlistcl@lang{minted@optlistcl@lang\minted@lang @i}{#2}{}%
+%      \@namedef{minted@opt@lang\minted@lang @i:#1}{true}}
+%     {\@namedef{minted@opt@lang\minted@lang @i:#1}{false}}
+%   \define@booleankey{minted@opt@cmd}{#1}%
+%       {\minted@addto@optlistcl{\minted@optlistcl@cmd}{#2}{}%
+%         \@namedef{minted@opt@cmd:#1}{true}}
+%       {\@namedef{minted@opt@cmd:#1}{false}}
+% }
+% \minted@def@optcl@novalue{customlexer}{-x}
+% }
+% {
+% }
+% \makeatother
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% % Base style and command for \circled to print a colored circle
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% % Width is assured to be the same across all characters using the typewriter font which is monospaced
+% % Zeroing out the inner separator removes padding between content and node (inner sep).
+% % Zeroing out the outer separator removes space between the node border and its anchors (e.g., east).
+% % Minimum size was derived on experimentation and it may need adjustment when changing font style/size.
+% %
+% % There is no guarantee for the letter ascenders/descenders to baseline when set to char.base, hence adding \strut.
+% % which is an invisible vertical rule with the height and depth of the parentheses ( and ).
+% % It ensures that the line height in a line of text is at least as large as if it contained parentheses.
+
+% \usepackage{tikz}
+% \usetikzlibrary{arrows}
+% \usetikzlibrary{shapes}
+
+% \tikzset{
+%   circledstyle/.style={
+%     shape=circle,
+%     #1,
+%     font=\tt\small,
+%     inner sep=0pt,
+%     outer sep=0pt,
+%     minimum size=1.2em,
+%     text=black
+%   }
+% }
+
+% % define a base tikz node for circled commands accepting a fill colour and the node text as arguments
+% \DeclareRobustCommand{\circledbase}[3][]{%
+%     \tikz[baseline=(char.base)]{\node[circledstyle, fill=#2] (char) {#3\strut};}%
+% }
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% % Add minted aliases
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% \usemintedstyle{colorful}
+
+% % Newer versions of minted require the 'customlexer' argument for custom lexers
+% % whereas older versions require the '-x' to be passed via the command line.
+% \makeatletter
+% \ifcsdef{MintedExecutable}
+% {
+%   % minted v3
+%   \newminted[mlir]{tools/lexers/MLIRLexer.py:MLIRLexerOnlyOps}{mathescape}
+%   \newminted[xdsl]{tools/lexers/MLIRLexer.py:MLIRLexer}{mathescape, style=murphy}
+% }
+% {
+%   \ifcsdef{minted@optlistcl@quote}
+%   {
+%     \newminted[mlir]{tools/lexers/MLIRLexer.py:MLIRLexerOnlyOps}{customlexer, mathescape}
+%     \newminted[xdsl]{tools/lexers/MLIRLexer.py:MLIRLexer}{customlexer, mathescape, style=murphy}
+%   }
+%   {
+%     \newminted[mlir]{tools/lexers/MLIRLexer.py:MLIRLexerOnlyOps -x}{mathescape}
+%     \newminted[xdsl]{tools/lexers/MLIRLexer.py:MLIRLexer -x}{mathescape, style=murphy}
+%   }
+% }
+% \makeatother
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% % Add colour scheme
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% % We use the following color scheme
+% %
+% % This scheme is both print-friendly and colorblind safe for
+% % up to four colors (including the red tones makes it not
+% % colorblind safe any more)
+% %
+% % https://colorbrewer2.org/#type=qualitative&scheme=Paired&n=4
+
+% \definecolor{pairedNegOneLightGray}{HTML}{cacaca}
+% \definecolor{pairedNegTwoDarkGray}{HTML}{827b7b}
+% \definecolor{pairedOneLightBlue}{HTML}{a6cee3}
+% \definecolor{pairedTwoDarkBlue}{HTML}{1f78b4}
+% \definecolor{pairedThreeLightGreen}{HTML}{b2df8a}
+% \definecolor{pairedFourDarkGreen}{HTML}{33a02c}
+% \definecolor{pairedFiveLightRed}{HTML}{fb9a99}
+% \definecolor{pairedSixDarkRed}{HTML}{e31a1c}
