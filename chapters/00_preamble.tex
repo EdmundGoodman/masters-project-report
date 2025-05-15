@@ -96,6 +96,8 @@
 
 
 
+
+
 % ======================================================================= %
 % OpenCompl modifications                                                 %
 % - <https://github.com/opencompl/paper-template/blob/main/tex/setup.tex> %
@@ -147,45 +149,45 @@
 % }
 % \makeatother
 
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% % Base style and command for \circled to print a colored circle
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% % Width is assured to be the same across all characters using the typewriter font which is monospaced
-% % Zeroing out the inner separator removes padding between content and node (inner sep).
-% % Zeroing out the outer separator removes space between the node border and its anchors (e.g., east).
-% % Minimum size was derived on experimentation and it may need adjustment when changing font style/size.
-% %
-% % There is no guarantee for the letter ascenders/descenders to baseline when set to char.base, hence adding \strut.
-% % which is an invisible vertical rule with the height and depth of the parentheses ( and ).
-% % It ensures that the line height in a line of text is at least as large as if it contained parentheses.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Base style and command for \circled to print a colored circle
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Width is assured to be the same across all characters using the typewriter font which is monospaced
+% Zeroing out the inner separator removes padding between content and node (inner sep).
+% Zeroing out the outer separator removes space between the node border and its anchors (e.g., east).
+% Minimum size was derived on experimentation and it may need adjustment when changing font style/size.
+%
+% There is no guarantee for the letter ascenders/descenders to baseline when set to char.base, hence adding \strut.
+% which is an invisible vertical rule with the height and depth of the parentheses ( and ).
+% It ensures that the line height in a line of text is at least as large as if it contained parentheses.
 
-% \usepackage{tikz}
-% \usetikzlibrary{arrows}
-% \usetikzlibrary{shapes}
+\usepackage{tikz}
+\usetikzlibrary{arrows}
+\usetikzlibrary{shapes}
 
-% \tikzset{
-%   circledstyle/.style={
-%     shape=circle,
-%     #1,
-%     font=\tt\small,
-%     inner sep=0pt,
-%     outer sep=0pt,
-%     minimum size=1.2em,
-%     text=black
-%   }
-% }
+\tikzset{
+  circledstyle/.style={
+    shape=circle,
+    #1,
+    font=\tt\small,
+    inner sep=0pt,
+    outer sep=0pt,
+    minimum size=1.2em,
+    text=black
+  }
+}
 
-% % define a base tikz node for circled commands accepting a fill colour and the node text as arguments
-% \DeclareRobustCommand{\circledbase}[3][]{%
-%     \tikz[baseline=(char.base)]{\node[circledstyle, fill=#2] (char) {#3\strut};}%
-% }
+% define a base tikz node for circled commands accepting a fill colour and the node text as arguments
+\DeclareRobustCommand{\circledbase}[3][]{%
+    \tikz[baseline=(char.base)]{\node[circledstyle, fill=#2] (char) {#3\strut};}%
+}
 
 
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% % Add minted aliases
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Add minted aliases
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% \usemintedstyle{colorful}
+\usemintedstyle{colorful}
 
 % % Newer versions of minted require the 'customlexer' argument for custom lexers
 % % whereas older versions require the '-x' to be passed via the command line.
@@ -208,24 +210,26 @@
 %   }
 % }
 % \makeatother
+% \newminted[mlir]{tools/lexers/MLIRLexer.py:MLIRLexerOnlyOps}{customlexer, mathescape}
+% \newminted[xdsl]{tools/lexers/MLIRLexer.py:MLIRLexer}{customlexer, mathescape, style=murphy}
 
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% % Add colour scheme
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Add colour scheme
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% % We use the following color scheme
-% %
-% % This scheme is both print-friendly and colorblind safe for
-% % up to four colors (including the red tones makes it not
-% % colorblind safe any more)
-% %
-% % https://colorbrewer2.org/#type=qualitative&scheme=Paired&n=4
+% We use the following color scheme
+%
+% This scheme is both print-friendly and colorblind safe for
+% up to four colors (including the red tones makes it not
+% colorblind safe any more)
+%
+% https://colorbrewer2.org/#type=qualitative&scheme=Paired&n=4
 
-% \definecolor{pairedNegOneLightGray}{HTML}{cacaca}
-% \definecolor{pairedNegTwoDarkGray}{HTML}{827b7b}
-% \definecolor{pairedOneLightBlue}{HTML}{a6cee3}
-% \definecolor{pairedTwoDarkBlue}{HTML}{1f78b4}
-% \definecolor{pairedThreeLightGreen}{HTML}{b2df8a}
-% \definecolor{pairedFourDarkGreen}{HTML}{33a02c}
-% \definecolor{pairedFiveLightRed}{HTML}{fb9a99}
-% \definecolor{pairedSixDarkRed}{HTML}{e31a1c}
+\definecolor{pairedNegOneLightGray}{HTML}{cacaca}
+\definecolor{pairedNegTwoDarkGray}{HTML}{827b7b}
+\definecolor{pairedOneLightBlue}{HTML}{a6cee3}
+\definecolor{pairedTwoDarkBlue}{HTML}{1f78b4}
+\definecolor{pairedThreeLightGreen}{HTML}{b2df8a}
+\definecolor{pairedFourDarkGreen}{HTML}{33a02c}
+\definecolor{pairedFiveLightRed}{HTML}{fb9a99}
+\definecolor{pairedSixDarkRed}{HTML}{e31a1c}

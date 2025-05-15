@@ -1,5 +1,5 @@
 {
   "custom_lexers": {
-    "mlir.py": "00fa67e6689c3e63f09c93f7841e03b112689b191e9d3e933c7f8599108d15e9"
+    "MLIRLexer.py": "00fa67e6689c3e63f09c93f7841e03b112689b191e9d3e933c7f8599108d15e9"
   }
 }
