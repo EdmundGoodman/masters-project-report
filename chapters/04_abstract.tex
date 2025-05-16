@@ -20,6 +20,22 @@
 % //  6. As a single sentence, what's the key impact of your research?
 % Our approach unblocks the use of Python for previously performance-bounded workloads whilst retaining its desirable dynamic properties.
 
+% % == Rewriting the Rewriter: Dynamic Optimizations of User-extensible Compiler Infrastructure
+% % //  1. Introduction. In one sentence, what's the topic?
+% MLIR is a modular compiler framework that provides core infrastructure to be leveraged and extended by users implementing their own compilers, an inherently dynamic design that bypasses its implementation language's type system as it relies on verification of invariants for user-provided abstractions.
+% % //  2. State the problem you tackle.
+% This user-extensible approach presents an inherent optimization boundary, as the data structures and transformations provided by users cannot be specialized ahead of time, meaning static ahead-of-time compilation provides fewer benefits.
+% % //  3. Summarize (in one sentence) why nobody else has adequately answered the research question yet.
+% Previous compiler frameworks accept the limitations of this optimization boundary, leveraging only the remaining optimizations offered by static ahead-of-time compilation, yet still incurring the costs of long build times and reduced flexibility, suggesting dynamic languages might be more suitable.
+% % //  4. Explain, in one sentence, how you tackled the research question.
+% We identify and mitigate the bottlenecks incurred by dynamic languages for code rewriting tasks in xDSL, a Python-native compiler framework inspired by MLIR.
+% % //  5. In one sentence, how did you go about doing the research that follows from your big idea.
+% These mitigations include adding new bytecode operations to replace bottlenecking logic, and rewriting optimisations on xDSL's own bytecode informed by domain-specific knowledge.
+% % //  6. As a single sentence, what's the key impact of your research?
+% Our research motivates the use of dynamic languages for building user-extensible compiler infrastructure, balancing performance with flexibility and fast build times.
+
+
+
 % == Rewriting the Rewriter: Dynamic Optimizations of User-extensible Compiler Infrastructure
 % //  1. Introduction. In one sentence, what's the topic?
 MLIR is a modular compiler framework that provides core infrastructure to be leveraged and extended by users implementing their own compilers, an inherently dynamic design that bypasses its implementation language's type system as it relies on verification of invariants for user-provided abstractions.
@@ -28,11 +44,12 @@ This user-extensible approach presents an inherent optimization boundary, as the
 % //  3. Summarize (in one sentence) why nobody else has adequately answered the research question yet.
 Previous compiler frameworks accept the limitations of this optimization boundary, leveraging only the remaining optimizations offered by static ahead-of-time compilation, yet still incurring the costs of long build times and reduced flexibility, suggesting dynamic languages might be more suitable.
 % //  4. Explain, in one sentence, how you tackled the research question.
-We identify and mitigate the bottlenecks incurred by dynamic languages for code rewriting tasks in xDSL, a Python-native compiler framework inspired by MLIR.
+We examine performance bottlenecks incurred by dynamic languages for code rewriting tasks in xDSL, a Python-native compiler framework inspired by MLIR.
 % //  5. In one sentence, how did you go about doing the research that follows from your big idea.
-These mitigations include adding new bytecode operations to replace bottlenecking logic, and rewriting optimisations on xDSL's own bytecode informed by domain-specific knowledge.
+We find that both the inherent dynamism of these rewriting tasks and modern interpreter optimisations narrow the performance gap between static and dynamic languages, challenging the status quo of implementing user-extensible compiler frameworks in static, ahead-of-time compiled languages.
+% These mitigations include adding new bytecode operations to replace bottlenecking logic, and rewriting optimisations on xDSL's own bytecode informed by domain-specific knowledge.
 % //  6. As a single sentence, what's the key impact of your research?
 Our research motivates the use of dynamic languages for building user-extensible compiler infrastructure, balancing performance with flexibility and fast build times.
 
 
-% \textbf{Keywords: } LLVM, MLIR, compilers
+\textbf{Keywords: } xDSL, MLIR, LLVM, Dynamic Programming Languages, Python, Compilation

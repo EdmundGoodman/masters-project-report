@@ -5,8 +5,8 @@
 % Hook
 In this chapter, we measure the runtime performance of two user-extensible compiler frameworks: MLIR and xDSL.
 % Argument
-The usefulness of these measurements are three-fold. First, we provide insight into the current relative performance of MLIR and xDSL. % interesting in its own right, and as a baseline for optimisation
-Second, we identify the components of the implementation which contribute most to the overall runtime, and as such are the best targets for optimisation (\autoref{chap:specialising-optimising-pattern-rewriting}) as a corrollary of Amdahl's law \cite{amdahlValiditySingleProcessor1967}.
+The usefulness of these measurements are three-fold. First, we provide insight into the performance of the current versions MLIR and xDSL in relation to each other. % interesting in its own right, and as a baseline for optimisation
+Second, we identify the components of xDSL's implementation which contribute most to its overall runtime, and as such are the best targets for optimisation (\autoref{chap:specialising-optimising-pattern-rewriting}) as a corrollary of Amdahl's law \cite{amdahlValiditySingleProcessor1967}.
 Finally, we isolate small, self-contained components of the implementation which are comparable between MLIR and xDSL, through which the impact of dynamism can be examined (\autoref{chap:dynamism-pattern-rewriting}).
 % Link
 
@@ -19,170 +19,152 @@ Finally, we isolate small, self-contained components of the implementation which
 
 %% Short intro
 % Hook
-Accurate performance measurement is a fundamental and notoriously fickle discipline in systems research. % \cite{}.
+Accurate performance measurement is a fundamental and notoriously fickle discipline in systems research.
 % Argument
 % Link
-In this section, we discuss our methodology for performance measurement, aiming to justify design decisions and facilitate reproducibility
+In this section, we discuss our experimental methodology, aiming to justify design decisions and facilitate reproducibility
 
 \subsection{Experimental setup}
 \label{ssec:experimental-setup}
 
-%% Reproducibility
 % Hook
-The reproducibility of experiments is critical for a robust scientific methodology.
+All experimental results for this work were measured with the same experimental setup: an AWS EC2 virtual machine (\autoref{tab:experimental-setup}).
 % Argument
-To aid in reproducibility, we provide a description of our experimental setup (\autoref{tab:experimental-setup}).
-The choice to use an AWS EC2 instance for performance measurement was partially driven by practical limitations of the resources available to the authors.
-This choice incurs a cost
-However, there are also commensurate benefits to this choice with respect to reproducibility. This is because researchers aiming to replicate the work can simply create their own EC2 instance with the same configuration, obviating the issue of different hardware configurations affecting performance results.
-Furthermore, virtualised systems are representative of real-world workloads
-In addition to this, with cloud computing becoming ubiquitous over the past decade, their is a fair body of research into reliable performance measurements on virtualised systems
+This choice has the benefit of experimental reproducibility, making it easy for future researchers to provision their own AWS EC2 instance with a similar machine configuration, and hence performance characteristics.
+However, there are also drawbacks associated with using virtualised cloud infrastructure for performance measurements.
+Unlike bare-metal machines, the added layer of indirection of the hypervisor adds noise and confounding effects to the performance measurements.
+To partially mitigate this, we further configure the machine, for example pinning workloads to invididual virtual cores and disabling address space randomisation. % Things done by pyperf
+Following these mitigations, the experimental setup is a fair compromise of leveraging available resources and empowering reproducibility for slightly reduced experimental precision.
+Finally, the ubiqitous use of cloud resources, especially for compilation workloads in build servers, makes this choice and its associated properties representative of real-world applications.
 % Link
 
 \begin{table}[H]
-  \caption{Summary of experimental setup configuration used for performance measurement.}
+  \caption{Summary of the experimental setup used for performance measurement.}
   \label{tab:experimental-setup}
   \centering
   \begin{tabular}{lll}
     \toprule
     \textbf{Configurable} & \textbf{Configuration} \\
     \midrule
-    \textit{AWS instance type} & c5a.4xlarge EC2 \\
-    \textit{Operating system} & Debian 24.04 (Noble) \\
-    \textit{CPU name} & AMD EPYC 7R32 \\
-    \textit{Logical CPU cores} & $16$ \\
-    \textit{Clock frequency [MHz]} & $2799.99$ \\
-    \textit{L1 Data Cache [KiB]} & $32$ \\
-    \textit{L1 Instruction Cache [KiB]} & $32$ \\
-    \textit{L2 Unified Cache [KiB]} & $512$ \\
-    \textit{L3 Unified Cache [KiB]} & $16384$ \\
-    \textit{RAM [GB]} & 16 \\
+    AWS instance type & c5a.4xlarge EC2 \\
+    Operating system & Debian 24.04 (Noble) \\
+    Linux kernel version &  \\
+    \midrule
+    CPU name & AMD EPYC 7R32 \\
+    Logical CPU cores & $16$ \\
+    Clock frequency [MHz] & $2799.99$ \\
+    L1 Data Cache [KiB] & $32$ \\
+    L1 Instruction Cache [KiB] & $32$ \\
+    L2 Unified Cache [KiB] & $512$ \\
+    L3 Unified Cache [KiB] & $16384$ \\
+    RAM [GB] & 16 \\
     \bottomrule
   \end{tabular}
 \end{table}
 
-
-
-
-\subsection{Experimental configuration}
-\label{ssec:experimental-configuration}
-
 % Hook
+In addition to the underlying experimental hardware, the software configuration of the machine significantly contributes to its performance characteristics.
 % Argument
+As such, we similarly provide a description of the language versions and build tools, along with the exact \texttt{git} SHAs of the compilation frameworks being compared in this chapter (\autoref{tab:experimental-configuration}).
 % Link
+Experiments in later chapters ablate across both language and framework versions, with these versions being noted explicitly when changed.
 
 \begin{table}[H]
-  \caption{Summary of experimental setup configuration used for performance measurement.}
+  \caption{Summary of experimental software configuration used for performance measurement.}
   \label{tab:experimental-configuration}
   \centering
   \begin{tabular}{lll}
     \toprule
     \textbf{Configurable} & \textbf{Configuration} \\
     \midrule
-    \textit{xDSL commit SHA} & \texttt{0eda7fe} \\
-    \textit{MLIR commit SHA} & \texttt{6516ae4} \\
+    CMake version & 3.28.3 \\
+    Ninja version & 1.11.1 \\
     \midrule
-    \textit{Python interpreter} & CPython 3.10.17 \\
-    \textit{C++ compiler} & clang 18.1.8 \\
-    \textit{CMake version} & 3.28.3 \\
-    \textit{Ninja version} & 1.11.1 \\
+    Python interpreter & CPython 3.10.17 \\
+    C++ compiler & clang 18.1.8 \\
+    \midrule
+    xDSL commit SHA & \texttt{0eda7fe} \\
+    MLIR commit SHA & \texttt{6516ae4} \\
     \bottomrule
   \end{tabular}
 \end{table}
 
 
-
 \subsection{Experimental workloads}
 \label{ssec:experimental-workloads}
 
-% Constant folding
-% Hook
+%% Hook
 % Argument
 % Link
 
+\subsubsection{Constant folding}
+\label{sssec:experimental-workload-constant-folding}
+
+% Hook
+Constant folding is a simple and ubiquitous compiler optimisation.
+% Argument
+Optimising compilers using \ac{mlir}'s textual \ac{ir}, such as \texttt{mlir-opt} and \texttt{xdsl-opt}, typically provide this functionality in the form of a canonicalisation pass (\autoref{listing:constant-folding-workload-example}). % TODO: Rewrite this
+% TODO: Why do we focus on constant folding? Simple enough to reason deeply about, but exercises common pattern rewriting dependencies like replacing ops, checking traits, ... (all quite dynamic)
+% Link
+For our testing, we use xDSL to implement a generator for constant folding workload using \ac{mlir}'s textual \ac{ir} and parameterised by number of constants (\autoref{sec:constant-folding-workload}).
+
+% \vspace{2em}
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth}
+       \centering
+        \begin{minted}[fontsize=\footnotesize]{text}
+            builtin.module {
+              %0 = arith.constant 865 : i32
+              %1 = arith.constant 395 : i32
+              %2 = arith.addi %1, %0 : i32
+              %3 = arith.constant 777 : i32
+              %4 = arith.addi %3, %2 : i32
+              "test.op"(%4) : (i32) -> ()
+            }
+        \end{minted}
+        \caption{Unfolded \ac{ir}.}
+        \label{listing:constant-folding-workload-initial}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \begin{minted}[breakanywhere,fontsize=\footnotesize]{text}
+            builtin.module {
+              %0 = arith.constant 2037 : i32
+              "test.op"(%0) : (i32) -> ()
+            }
+        \end{minted}
+        \footnotesize\vspace{2.5em}
+        \caption{Folded \ac{ir}.}
+        \label{listing:constant-folding-workload-folded}
+    \end{subfigure}
+    \vspace{1em}
+    \captionsetup{name=Listing}
+    \caption{Example \ac{mlir} constant folding workload.}
+    \label{listing:constant-folding-workload-example}
+\end{figure}
 
 \vspace{2em}
 
-\begin{code}
-    \begin{minted}{python}
-import random
 
-from xdsl.dialects.arith import AddiOp, ConstantOp
-from xdsl.dialects.builtin import IntegerAttr, ModuleOp, i32
-from xdsl.dialects.test import TestOp
-from xdsl.ir import Operation
+\subsection{Measurement infrastructure}
+\label{ssec:infrastructure}
 
-RANDOM_SEED = 0
-
-
-def constant_folding_module(size: int) -> ModuleOp:
-    """Generate a constant folding workload of a given size."""
-    assert size >= 0
-    random.seed(RANDOM_SEED)
-    ops: list[Operation] = []
-    ops.append(ConstantOp(IntegerAttr(random.randint(1, 1000), i32)))
-    for i in range(1, size + 1):
-        if i % 2 == 0:
-            ops.append(AddiOp(ops[i - 1], ops[i - 2]))
-        else:
-            ops.append(ConstantOp(IntegerAttr(random.randint(1, 1000), i32)))
-    ops.append(TestOp([ops[(size // 2) * 2]]))
-    return ModuleOp(ops)
-    \end{minted}
-    \caption{.}
-    \label{listing:constant-folding-workload}
-\end{code}
-
-\vspace{2em}
-
-\begin{code}
-   \centering
-    \begin{minted}[fontsize=\footnotesize]{text}
-"builtin.module"() ({
-  %0 = "arith.constant"() {"value" = 1 : i32} : () -> i32
-  %1 = "arith.constant"() {"value" = 1 : i32} : () -> i32
-  %2 = "arith.addi"(%1, %0) : (i32, i32) -> i32
-  %3 = "arith.constant"() {"value" = 1 : i32} : () -> i32
-  %4 = "arith.addi"(%3, %2) : (i32, i32) -> i32
-  %5 = "arith.constant"() {"value" = 1 : i32} : () -> i32
-  %6 = "arith.addi"(%5, %4) : (i32, i32) -> i32
-  %7 = "arith.constant"() {"value" = 1 : i32} : () -> i32
-  %8 = "arith.addi"(%7, %6) : (i32, i32) -> i32
-  %9 = "arith.constant"() {"value" = 1 : i32} : () -> i32
-  %10 = "arith.addi"(%9, %8) : (i32, i32) -> i32
-  %11 = "arith.constant"() {"value" = 1 : i32} : () -> i32
-  %12 = "arith.addi"(%11, %10) : (i32, i32) -> i32
-  %13 = "arith.constant"() {"value" = 1 : i32} : () -> i32
-  %14 = "arith.addi"(%13, %12) : (i32, i32) -> i32
-  %15 = "arith.constant"() {"value" = 1 : i32} : () -> i32
-  %16 = "arith.addi"(%15, %14) : (i32, i32) -> i32
-  %17 = "arith.constant"() {"value" = 1 : i32} : () -> i32
-  %18 = "arith.addi"(%17, %16) : (i32, i32) -> i32
-  %19 = "arith.constant"() {"value" = 1 : i32} : () -> i32
-  %20 = "arith.addi"(%19, %18) : (i32, i32) -> i32
-  "test.op"(%20) : (i32) -> ()
-}) : () -> ()
-    \end{minted}
-    \caption{``How Slow is MLIR?'' C++ implementation.}
-    \label{listing:constant-folding-example}
-\end{code}
-
-
-
-\subsection{Procedure and infrastructure}
-\label{ssec:procedure-infrastructure}
-
-% Steps actually taken
-
-% Stuff we built
+%% Warmed timeit and stuff
+% Hook
+In order to facilitate the efficient and reproducible measurement of xDSL's performance characteristics, we developed infrastructure to drive our benchmarks with a variety of measurement tools and profilers.
+% Argument
+% Link
 
 %% Corrollary benefits
 % Hook
-In addition to their usefulness for understanding and optimising compiler performance, these benchmarks provide an opportunity to augment the development process of the xDSL project.
+In addition to their usefulness for understanding and optimising compiler performance, the benchmarks composing the performance experiments provide an opportunity to augment the development process of the xDSL project.
 % Argument
 Benchmarks can be used to characterise the performance impact of changes to the xDSL codebase, making it easier to avoid unnecessary performance regression.
-As such, we provide a command line interface for developers to run the benchmarks, with further functionality which supports a variety of profiling tools.
-Furthermore, our benchmarks are constructed to interface with air-speed velocity \cite{michaeldroettboomAirspeedvelocityAsv2025}, a tool which runs benchmarks across repository commits. This information is tracked on the xDSL website \url{https://xdsl.dev/xdsl-bench/}, providing a dashboard for the performance characteristics of xDSL over time.
+As such, we provide a command line interface for developers to run the benchmarks, with further functionality which supports a variety of profiling tools. % TODO: Does this get moved up a paragraph?
+Furthermore, our benchmarks are constructed to interface with Airspeed Velocity \cite{michaeldroettboomAirspeedvelocityAsv2025}, a tool which runs benchmarks across repository commits. This information is tracked on the xDSL website \url{https://xdsl.dev/xdsl-bench/}, providing a dashboard for the performance characteristics of xDSL over time.
 % Link
 
 
@@ -203,43 +185,69 @@ Furthermore, our benchmarks are constructed to interface with air-speed velocity
 
 
 \section{End-to-end benchmarks}
+\label{sec:e2e-benchmarks}
 
 %% Introduction, goals
 % Hook
 The simplest metric for the performance of a system is its overall runtime.
 % Argument
+As such, a good place to start comparing the performance characteristics of MLIR and xDSL is their end-to-end performance .
 % Link
+Whilst end-to-end measurements are well-aligned metrics of performance for real-world workloads, they are limited by their coarse granularity. Conveniently, modern compiler frameworks are structured in a way that facilitates more detailed metrics even for end-to-end runs.
 
 %% How is MLIR/xDSL split up into pipeline phases
 % Hook
-One of LLVM's key insights was that compilation can be split into a sequence of discrete steps, avoiding the complex control logic of previous state-of-the-art compilers.
+One of LLVM's key insights was that compilation can be split into a sequence of discrete steps, avoiding the complex interleaved control logic of previous state-of-the-art compilers.
 % Argument
-As such, compilers having LLVM's pedigree, such as MLIR and xDSL, can be modelled as a pipeline -- parsing the input, applying optimisation transformations, and generating a lowered output (\autoref{fig:compiler-phases}).
+As such, compilers having LLVM's pedigree, such as MLIR and xDSL, can be modelled as a pipeline -- parsing the input, applying optimisation transformations, and generating a lowered output.
 This allows us to break down end-to-end benchmarks into components of finer granularity for free.
 % Link
 
-%% Figure: pipeline phases
-
-\begin{figure}
-    \centering
-    \includegraphics[width=0.75\textwidth]{images/13_measuring_compiler_performance/compiler_phases.drawio.pdf}
-    \caption{Pipeline phases in LLVM-like compilers.}
-    % TODO: Does this add value? Could the whole thing be wrapped in an outer box to better communicate the point?
-    \label{fig:compiler-phases}
-\end{figure}
-
-%% Performance results
+%% Methodology
 % Hook
+% Use canonicalisation pass...
+% We measure the time taken for each of these components of end-to-end benchmarks for both MLIR and xDSL constant folding $1000$ addition operations, as previously described (\autoref{sssec:experimental-workload-constant-folding}).
 % Argument
+For MLIR, we invoke \texttt{mlir-opt constant\_folding.mlir --canonicalize --mlir-timing}.
+By default, this prints results to four decimal places, which is insufficiently granular to time printing very short \ac{ir} segments. As such, we modify MLIR's implementation to print more decimal places. In order to guarantee statistical significance following this change, we measure ten times, taking the mean with an uncertainty of the standard deviation
+For xDSL, we leverage our custom benchmarking infrastructure (\autoref{ssec:infrastructure}), which drives each phase and records precise timings including statistical uncertainty
 % Link
+The wall times of each framework and the slowdown between them can then be plotted (\autoref{fig:end-to-end-constant-folding-walltime}).
 
 % Figure: relative performance bar chart
 %% Constant folding example. Short but complex example with lots of rewrites?
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{images/13_measuring_compiler_performance/walltimes.pdf}
+        \caption{All pipeline phases of MLIR are faster than xDSL.}
+        \label{fig:end-to-end-constant-folding-walltime}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{images/13_measuring_compiler_performance/speedup.pdf}
+        \caption{.}
+        \label{fig:end-to-end-constant-folding-speedup}
+    \end{subfigure}
+    \caption{.}
+    \label{fig:end-to-end-constant-folding}
+\end{figure}
 
-%% Why pick pattern rewriting?
+
+%% Discuss results
 % Hook
+Despite its simplicity, this initial experiment reveals a number of interesting insights.
 % Argument
+Firstly, the current version of MLIR is much more performant than xDSL, with the pipeline phases having at best a $55\times$ slowdown, and at worst a $167\times$ slowdown.
+Secondly, different pipeline phases constitute different proportions of the workloads, with the parser dominating both the xDSL and MLIR implementations runtime.
+This motivates examining the parser as low-hanging fruit for optimisation, as by Amdahl's law, improving it by a fixed proportion would result in the greatest runtime reduction than any other pipeline phase.
+However, this line of reasoning has two flaws. Firstly, the parser is disproportionately represented in constant folding workloads, which have few optimisation passes and very small outputted \acs{ir}. Secondly, it has the smallest slowdown of the pipeline phases (\autoref{fig:end-to-end-constant-folding-speedup}), suggesting other phases may have more opportunities for optimisation before being bounded by properties of the language runtime.
 % Link
+As such, we select the pattern rewriting phase, which implements the canonicalizer, for optimisation. This choice is motivated by its moderate contribution to runtime and slowdown over MLIR, combined with the technical interest of optimisation logic over parsing or printing.
+
+%% Discuss why to pick pattern rewriter
+
+% TODO: Parser/printer is for debug purposes, its not actually used in the real world for like nn tasks
 
 
 
@@ -247,16 +255,14 @@ This allows us to break down end-to-end benchmarks into components of finer gran
 
 
 
-\section{Pattern rewriting}
+% TODO: Do we even need this section? What does it add -- nothing since repeats less well what we do in specialisation. Just need to segue effectively to micro-benchmarks
 
-%% Introduction
-% Hook
-Having selected pattern rewriting as the compilation phase to examine in detail, we can modify our benchmarks to drive only
-
-
-% Figure: MLIR vs xDSL across workloads?
-
-% Figure: Trace of MLIR and xDSL overall?
+% \section{Pattern rewriting}
+% %% Introduction
+% % Hook
+% Having selected pattern rewriting as the compilation phase to examine in detail, we can modify our benchmarks to drive only
+% % Figure: MLIR vs xDSL scaling across workloads?
+% % Figure: Trace of MLIR and xDSL overall?
 
 
 
@@ -299,18 +305,26 @@ However, their source code can be found on a branch of the presenter's fork of L
 % Link
 This source code can then be used to construct comparable micro-benchmarks in Python.
 
-% Design of our microbenchmarks
+%% Design of our microbenchmarks
 % Hook
 A key design goal of our micro-benchmarks for xDSL is parity with those provided for MLIR, ensuring the validity their direct comparison.
 % Argument
 As such, their implementation was derived from the MLIR benchmarks, matching test data and function invocations as closely as possible.
-% Link3
+% Link
 In the following sections, we discuss the implementations of a number of micro-benchmarks, facilitating discussion of the insights they give into compiler performance across implementations and language runtimes in later chapters.
+
+
+%% Experimental procedure: Repeat 32768 times, and uncertainty as standard deviation
+% Hook
+Due to their inherently short length, we repeated meas
+% Argument
+% Link
 
 
 \subsection{Operation trait checks}
 \label{ssec:ubenchmark-trait-checks}
 
+%% Micro-benchmark motivation and details
 % Hook
 MLIR and xDSL both provide methods to check whether operations have traits.
 % Argument
@@ -384,47 +398,89 @@ Micro-benchmarks of checking traits for both implementations (Listing \ref{listi
 
 
 \subsection{Operation instantiation}
-
-\subsection{Summary of micro-benchmarks}
+\label{ssec:ubenchmark-operation-instantiation}
 
 % Hook
-In addition to the above micro-benchmarks which we examine in detail, we further provide a wider suite of micro-benchmarks discussed in lesser detail for brevity. % The implementations of all xDSL micro-benchmarks are provided in the Appendix (\autoref{}).
+Operations are a central data structure in MLIR and xDSL's \ac{ir} representation, constituting dialects and composing together into programs. As such, the methods to instantiate operations a very frequently invoked.
 % Argument
-This suite implements many of the remaining equivalent micro-benchmarks from ``How Slow is MLIR'' (\autoref{tab:ubenchmark-remaining-mlir}).
-From these, we can see the trend of a slow-down in the order of $xy\times$ holds
+% Link
+
 
 \begin{table}[H]
-  \caption{.}
-  \label{tab:ubenchmark-remaining-mlir}
+  \caption{Operation instantiation in xDSL is approximately $xyz\times$ slower than in MLIR in the asymptotic case.} %, repeated ten times over $32768$ operations. Methodology is discussed in detail in Appendix \ref{} to facilitate replicability.}
+  \label{tab:ubenchmark-trait-checks}
   \centering
-  \begin{tabular}{ccc}
+  \begin{tabular}{cc}
     \toprule
-    \textbf{Benchmark name} & \textbf{MLIR [ns]} & \textbf{xDSL [ns]}\\
+    \textbf{MLIR [ns]} & \textbf{xDSL [ns]}\\
     \midrule
-    Trait checks & $3.89 \pm 0.01$ & $504 \pm 76$ \\
-    ... & ... & ... \\
+    $3.89 \pm 0.01$ & $504 \pm 76$ \\
     \bottomrule
   \end{tabular}
 \end{table}
 
 
+
+\subsection{Operation traversal}
+\label{ssec:ubenchmark-operation-traversal}
+
 % Hook
-In addition to the remaining ``How Slow is MLIR?'' micro-benchmarks, the suite provides further xDSL-only micro-benchmarks sampled from atomic functions invoked by pattern rewriting workloads. % (\autoref{tab:ubenchmark-xdsl-regression}).
+Operations are a central data structure in MLIR and xDSL's \ac{ir} representation, constituting dialects and composing together into programs. As such, the methods to instantiate operations a very frequently invoked.
 % Argument
-These have two-fold use: triaging functions to optimise by longest runtime following Amdhal's law \cite{amdahlValiditySingleProcessor1967}; and serving as a metric of performance to ensure optimisations don't inadvertently introduce regressions.
 % Link
 
-% Do a bar chart instead of a table!!!!
+
+\subsection{Summary of micro-benchmarks}
+% \label{ssec:ubenchmark-summary}
+
+
+%% Perhaps don't talk about remaining ones so concretely? Could move stuff to appendix?
+% Hook
+% Argument
+% Link
+
+
+
+
+% % Hook
+% In addition to the above micro-benchmarks which we examine in detail, we further provide a wider suite of micro-benchmarks discussed in lesser detail for brevity. % The implementations of all xDSL micro-benchmarks are provided in the Appendix (\autoref{}).
+% % Argument
+% This suite implements many of the remaining equivalent micro-benchmarks from ``How Slow is MLIR'' (\autoref{tab:ubenchmark-remaining-mlir}).
+% From these, we can see the trend of a slow-down in the order of $xy\times$ holds
+
 % \begin{table}[H]
 %   \caption{.}
-%   \label{tab:ubenchmark-xdsl-regression}
+%   \label{tab:ubenchmark-remaining-mlir}
 %   \centering
 %   \begin{tabular}{ccc}
 %     \toprule
-%     \textbf{Benchmark name} & \textbf{xDSL [ns]}\\
+%     \textbf{Benchmark name} & \textbf{MLIR [ns]} & \textbf{xDSL [ns]}\\
 %     \midrule
-%     Trait checks & $504 \pm 76$ \\
+%     Trait checks & $3.89 \pm 0.01$ & $504 \pm 76$ \\
 %     ... & ... & ... \\
 %     \bottomrule
 %   \end{tabular}
 % \end{table}
+
+
+% % Hook
+% In addition to the remaining ``How Slow is MLIR?'' micro-benchmarks, the suite provides further xDSL-only micro-benchmarks sampled from atomic functions invoked by pattern rewriting workloads. % (\autoref{tab:ubenchmark-xdsl-regression}).
+% % Argument
+% These have two-fold use: triaging functions to optimise by longest runtime following Amdhal's law \cite{amdahlValiditySingleProcessor1967}; and serving as a metric of performance to ensure optimisations don't inadvertently introduce regressions.
+% % Link
+
+% %% Do a bar chart instead of a table!!!!
+% %% Might want table for raw values and bar chart of speedups? Very big differences don't plot neatly...
+% % \begin{table}[H]
+% %   \caption{.}
+% %   \label{tab:ubenchmark-xdsl-regression}
+% %   \centering
+% %   \begin{tabular}{ccc}
+% %     \toprule
+% %     \textbf{Benchmark name} & \textbf{xDSL [ns]}\\
+% %     \midrule
+% %     Trait checks & $504 \pm 76$ \\
+% %     ... & ... & ... \\
+% %     \bottomrule
+% %   \end{tabular}
+% % \end{table}

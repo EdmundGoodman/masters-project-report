@@ -64,7 +64,7 @@ Main chapters (excluding front-matter, references and appendix):
 \contentpages~pages
 (pp~\pageref{firstcontentpage}--\pageref{lastcontentpage})
 
-Main chapters word count: 467
+Main chapters word count: 7132
 
 \vspace*{2em}
 \begin{code}
@@ -73,7 +73,7 @@ Main chapters word count: 467
         gs -q -dSAFER -sDEVICE=txtwrite -o - \
            -dFirstPage=6 -dLastPage=11 report-submission.pdf | \
         egrep '[A-Za-z]{3}' | wc -w
-        467
+        7132
     \end{minted}
     \captionsetup{textfont=sf}
     \caption*{\textbf{Listing:} Methodology used to generate that word count.}

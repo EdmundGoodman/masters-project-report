@@ -1,82 +1,111 @@
-% \chapter{MLIR workloads}
-% \label{chap:mlir-workloads}
+\chapter{MLIR workloads}
+\label{chap:mlir-workloads}
 
-% \section{Constant folding}
+\section{Constant folding}
+\label{sec:constant-folding-workload}
 
-% % Hook
-% % Argument
-% % Link
+% Hook
+% Argument
+% Link
+
+\vspace{2em}
+
+\begin{code}
+    \begin{minted}{python}
+def constant_folding_module(size: int) -> ModuleOp:
+    """Generate a constant folding workload of a given size.
+
+    The output of running the command
+    `print(WorkloadBuilder().constant_folding_module(size=5))` is shown
+    below:
+
+    ```mlir
+    "builtin.module"() ({
+        %0 = "arith.constant"() {"value" = 865 : i32} : () -> i32
+        %1 = "arith.constant"() {"value" = 395 : i32} : () -> i32
+        %2 = "arith.addi"(%1, %0) : (i32, i32) -> i32
+        %3 = "arith.constant"() {"value" = 777 : i32} : () -> i32
+        %4 = "arith.addi"(%3, %2) : (i32, i32) -> i32
+        %5 = "arith.constant"() {"value" = 912 : i32} : () -> i32
+        "test.op"(%4) : (i32) -> ()
+    }) : () -> ()
+    ```
+    """
+    assert size >= 0
+    random.seed(RANDOM_SEED)
+    ops: list[Operation] = []
+    ops.append(ConstantOp(IntegerAttr(random.randint(1, 1000), i32)))
+    for i in range(1, size + 1):
+        if i % 2 == 0:
+            ops.append(AddiOp(ops[i - 1], ops[i - 2]))
+        else:
+            ops.append(ConstantOp(IntegerAttr(random.randint(1, 1000), i32)))
+    ops.append(TestOp([ops[(size // 2) * 2]]))
+    return ModuleOp(ops)
+    \end{minted}
+    \caption{.}
+    \label{listing:constant-folding-workload}
+\end{code}
+
+
+
+
+
+
+
+
+
+
+% \subsubsection{Loop unrolling}
+% \label{sssec:experimental-workload-loop-unrolling}
+
+% \begin{figure}[H]
+%     \centering
+%     \begin{subfigure}[b]{0.45\textwidth}
+%        \centering
+%         \begin{minted}[fontsize=\footnotesize]{text}
+%             builtin.module {
+%               %0 = arith.constant 0 : index
+%               %1 = arith.constant 32 : index
+%               %2 = arith.constant 1 : index
+%               %3 = scf.for %4 = %0 to %1 step %2 iter_args(%5 = %0) -> (index) {
+%                 %6 = arith.addi %4, %5 : index
+%                 scf.yield %6 : index
+%               }
+%               "test.op"(%3) : (index) -> ()
+%             }
+%         \end{minted}
+%         \footnotesize\vspace{2em}
+%         \caption{Original \ac{ir}.}
+%         \label{listing:loop-unrolling-workload-initial}
+%     \end{subfigure}
+%     \hfill
+%     \begin{subfigure}[b]{0.45\textwidth}
+%         \centering
+%         \begin{minted}[breakanywhere,fontsize=\footnotesize]{text}
+%             builtin.module {
+%               %0 = arith.constant 0 : index
+%               %1 = arith.constant 32 : index
+%               %2 = arith.constant 4 : index
+%               %3 = scf.for %4 = %0 to %1 step %2 iter_args(%5 = %0) -> (index) {
+%                 %6 = arith.addi %4, %5 : index
+%                 %7 = arith.addi %4, %6 : index
+%                 %8 = arith.addi %4, %7 : index
+%                 %9 = arith.addi %4, %8 : index
+%                 scf.yield %9 : index
+%               }
+%               "test.op"(%3) : (index) -> ()
+%             }
+%         \end{minted}
+%         \caption{\ac{ir} unrolled by a factor of four.}
+%         \label{listing:loop-unrolling-workload-unrolled}
+%     \end{subfigure}
+%     \vspace{1em}
+%     \captionsetup{name=Listing}
+%     \caption{Example \ac{mlir} constant folding workload.}
+%     \label{listing:loop-unrolling-workload-example}
+% \end{figure}
 
 % \vspace{2em}
 
-% \begin{code}
-%     \begin{minted}{python}
-% def constant_folding_module(size: int) -> ModuleOp:
-%     """Generate a constant folding workload of a given size.
-
-%     The output of running the command
-%     `print(WorkloadBuilder().constant_folding_module(size=5))` is shown
-%     below:
-
-%     ```mlir
-%     "builtin.module"() ({
-%         %0 = "arith.constant"() {"value" = 865 : i32} : () -> i32
-%         %1 = "arith.constant"() {"value" = 395 : i32} : () -> i32
-%         %2 = "arith.addi"(%1, %0) : (i32, i32) -> i32
-%         %3 = "arith.constant"() {"value" = 777 : i32} : () -> i32
-%         %4 = "arith.addi"(%3, %2) : (i32, i32) -> i32
-%         %5 = "arith.constant"() {"value" = 912 : i32} : () -> i32
-%         "test.op"(%4) : (i32) -> ()
-%     }) : () -> ()
-%     ```
-%     """
-%     assert size >= 0
-%     random.seed(RANDOM_SEED)
-%     ops: list[Operation] = []
-%     ops.append(ConstantOp(IntegerAttr(random.randint(1, 1000), i32)))
-%     for i in range(1, size + 1):
-%         if i % 2 == 0:
-%             ops.append(AddiOp(ops[i - 1], ops[i - 2]))
-%         else:
-%             ops.append(ConstantOp(IntegerAttr(random.randint(1, 1000), i32)))
-%     ops.append(TestOp([ops[(size // 2) * 2]]))
-%     return ModuleOp(ops)
-%     \end{minted}
-%     \caption{.}
-%     \label{listing:constant-folding-workload}
-% \end{code}
-
-% \vspace{2em}
-
-% % \begin{code}
-% %     \begin{minted}{mlir}
-% % builtin.module {
-% %   %0 = arith.constant 865 : i32
-% %   %1 = arith.constant 395 : i32
-% %   %2 = arith.addi %1, %0 : i32
-% %   %3 = arith.constant 777 : i32
-% %   %4 = arith.addi %3, %2 : i32
-% %   %5 = arith.constant 912 : i32
-% %   %6 = arith.addi %5, %4 : i32
-% %   %7 = arith.constant 431 : i32
-% %   %8 = arith.addi %7, %6 : i32
-% %   %9 = arith.constant 42 : i32
-% %   %10 = arith.addi %9, %8 : i32
-% %   %11 = arith.constant 266 : i32
-% %   %12 = arith.addi %11, %10 : i32
-% %   %13 = arith.constant 989 : i32
-% %   %14 = arith.addi %13, %12 : i32
-% %   %15 = arith.constant 524 : i32
-% %   %16 = arith.addi %15, %14 : i32
-% %   %17 = arith.constant 498 : i32
-% %   %18 = arith.addi %17, %16 : i32
-% %   %19 = arith.constant 415 : i32
-% %   %20 = arith.addi %19, %18 : i32
-% %   "test.op"(%20) : (i32) -> ()
-% % }
-% %     \end{minted}
-% %     \caption{.}
-% %     \label{listing:bash-xdsl-ubench-run}
-% % \end{code}
-
-% % \vspace{2em}
+%% TODO: If any more hero workloads like CIRCT or PDL are added, put them here!
