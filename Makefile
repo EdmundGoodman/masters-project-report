@@ -25,8 +25,11 @@ report.pdf: images/logo-dcst-colour.pdf
 
 # extract number of first and last page of the main chapters from the AUX file
 WORDCOUNT_FILE=report-submission
-FIRSTPAGE?=$(shell sed -ne 's/^\\newlabel{firstcontentpage}{{[0-9\.]*}{\([0-9]*\)}.*/\1/p' $(WORDCOUNT_FILE).aux)
-LASTPAGE ?=$(shell sed -ne 's/^\\newlabel{lastcontentpage}{{[0-9\.]*}{\([0-9]*\)}.*/\1/p' $(WORDCOUNT_FILE).aux)
+# FIRSTPAGE?=$(shell sed -ne 's/^\\newlabel{firstcontentpage}{{[0-9\.]*}{\([0-9]*\)}.*/\1/p' $(WORDCOUNT_FILE).aux)
+# LASTPAGE ?=$(shell sed -ne 's/^\\newlabel{lastcontentpage}{{[0-9\.]*}{\([0-9]*\)}.*/\1/p' $(WORDCOUNT_FILE).aux)
+FIRSTPAGE?=$(shell sed -ne 's/.*\\zref@newlabel{firstpdfcontentpage}{.*\\abspage{\([0-9]*\)}}.*/\1/p' $(WORDCOUNT_FILE).aux)
+AFTERLASTPAGE:=$(shell sed -ne 's/.*\\zref@newlabel{lastpdfcontentpage}{.*\\abspage{\([0-9]*\)}}.*/\1/p' $(WORDCOUNT_FILE).aux)
+LASTPAGE?=$(shell expr $(AFTERLASTPAGE) - 1)
 
 # requires ghostscript
 .PHONY: wordcount
@@ -34,6 +37,10 @@ wordcount: $(WORDCOUNT_FILE).pdf
 	gs -q -dSAFER -sDEVICE=txtwrite -o - \
 	   -dFirstPage=$(FIRSTPAGE) -dLastPage=$(LASTPAGE) $< | \
 	egrep '[A-Za-z]{3}' | wc -w
+
+.PHONY: texwordcount
+texwordcount: report-submission.tex
+	texcount -inc report-submission.tex | grep "Words in text:" | tail -n 1
 
 .PHONY: lexers
 lexers: tools/generate_lexers_json.py
