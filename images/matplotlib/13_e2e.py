@@ -14,6 +14,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 import math
+import statistics
 
 from pathlib import Path
 
@@ -190,12 +191,6 @@ def autolabel_ms(ax, rects, **kwargs):
 
 
 def plot_walltimes():
-    labels = ["Parser", "Canonicalizer", "Printer"]
-    mlir_means = [0.003, 0.0005, 0.0002]
-    _mlir_errors = [0, 0, 0]
-    xdsl_means = [0.166, 0.0688, 0.0334]
-    xdsl_errors = [0.00246, 0.000552, 0.000634]
-
     x = np.arange(len(labels))  # the label locations
     width = 0.35  # the width of the bars
 
@@ -206,6 +201,9 @@ def plot_walltimes():
         width,
         label="MLIR",
         color=light_blue,
+        yerr=mlir_errors,
+        capsize=5,
+        error_kw={"ecolor": "black", "linewidth": 1},
     )
     rects2 = ax.bar(
         x + width / 2,
@@ -245,12 +243,6 @@ def plot_walltimes():
 
 
 def plot_speedup():
-    labels = ["Parser", "Canonicalizer", "Printer"]
-    mlir_means = [0.003, 0.0005, 0.0002]
-    mlir_errors = [0, 0, 0]
-    xdsl_means = [0.166, 0.0688, 0.0334]
-    xdsl_errors = [0.00246, 0.000552, 0.000634]
-
     # Calculate speedup ratios (improved/baseline)
     speedup_ratios = [v2 / v1 for v1, v2 in zip(mlir_means, xdsl_means)]
 
@@ -306,4 +298,60 @@ def main():
 
 
 if __name__ == "__main__":
+    labels = ["Parser", "Canonicalizer", "Printer"]
+    # Measurements collected with:
+    #
+    # for i in $(seq 1 10);
+    #   do ~/Desktop/llvm-project-benchmarks/build-original/bin/mlir-opt benchmarks/workloads/constant_folding.mlir --canonicalize --mlir-timing 2>&1 | grep Out | awk '{print $1}';
+    # done
+    mlir_parser_samples = [
+        0.00333555,
+        0.00336460,
+        0.00323819,
+        0.00332298,
+        0.00333224,
+        0.00331455,
+        0.00336338,
+        0.00333786,
+        0.00334095,
+        0.00332713,
+    ]
+    mlir_canonicalizer_samples = [
+        0.00115298,
+        0.00120432,
+        0.00115359,
+        0.00117100,
+        0.00113390,
+        0.00116652,
+        0.00114619,
+        0.00119074,
+        0.00114308,
+        0.00116006,
+    ]
+    mlir_printer_samples = [
+        0.00004236,
+        0.00003738,
+        0.00003861,
+        0.00003775,
+        0.00003798,
+        0.00003831,
+        0.00004052,
+        0.00003741,
+        0.00004203,
+        0.00003713,
+    ]
+    mlir_means = [
+        statistics.mean(mlir_parser_samples),
+        statistics.mean(mlir_canonicalizer_samples),
+        statistics.mean(mlir_printer_samples)
+    ]
+    mlir_errors = [
+        statistics.stdev(mlir_parser_samples),
+        statistics.stdev(mlir_canonicalizer_samples),
+        statistics.stdev(mlir_printer_samples)
+    ]
+    xdsl_means = [0.162, 0.0682, 8.04e-05]
+    xdsl_errors = [0.00112, 0.00116, 7.41e-06]
+
+
     main()
