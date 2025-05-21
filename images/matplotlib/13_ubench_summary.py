@@ -7,18 +7,18 @@
 # ///
 """Template plotting script.
 
-Derived from <https://github.com/opencompl/paper-template/blob/main/plots/plot.py>.
+Derived from <https://github.com/opencompl/paper-template/blob/main/plots/plot.py>,
+with the following changes.
+
+- Apply `ruff` linter
+- Remove argparse code
+- Increase output figure dpi
 """
 
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 import math
-import statistics
-
-from pathlib import Path
-
-PARENT_DIRECTORY = Path(__file__).parent
 
 from typing import Callable
 
@@ -54,7 +54,7 @@ def setGlobalDefaults():
     matplotlib.rcParams["axes.spines.top"] = False
 
 
-matplotlib.rcParams["figure.figsize"] = 5, 2.5
+matplotlib.rcParams["figure.figsize"] = 5, 2
 
 # Color palette
 light_gray = "#cacaca"
@@ -69,7 +69,7 @@ black = "#000000"
 white = "#ffffff"
 
 
-def save(figure: Path, name: str):
+def save(figure, name):
     # Do not emit a creation date, creator name, or producer. This will make the
     # content of the pdfs we generate more deterministic.
     metadata = {"CreationDate": None, "Creator": None, "Producer": None}
@@ -159,8 +159,8 @@ def autolabel(
 
 
 # utility to print times as 1h4m, 1d15h, 143.2ms, 10.3s etc.
-def str_from_ms(ms: float | int):
-    def maybe_val_with_unit(val: float | int, unit: str):
+def str_from_ms(ms):
+    def maybe_val_with_unit(val, unit):
         return f"{val}{unit}" if val != 0 else ""
 
     if ms < 1000:
@@ -190,40 +190,24 @@ def autolabel_ms(ax, rects, **kwargs):
     autolabel(ax, rects, label_from_height=str_from_ms, **kwargs)
 
 
-def plot_walltimes():
+# Plot an example speedup plot
+def plot_speedup():
+    labels = ["G1", "G2", "G3", "G4", "G5"]
+    men_means = [1.5, 1.2, 1.3, 1.1, 1.0]
+    women_means = [1.8, 1.5, 1.1, 1.3, 0.9]
+
     x = np.arange(len(labels))  # the label locations
     width = 0.35  # the width of the bars
 
     fig, ax = plt.subplots()
-    rects1 = ax.bar(
-        x - width / 2,
-        mlir_means,
-        width,
-        label="MLIR",
-        color=light_blue,
-        yerr=mlir_errors,
-        capsize=5,
-        error_kw={"ecolor": "black", "linewidth": 1},
-    )
-    rects2 = ax.bar(
-        x + width / 2,
-        xdsl_means,
-        width,
-        label="xDSL",
-        color=dark_blue,
-        yerr=xdsl_errors,
-        capsize=5,
-        error_kw={"ecolor": "black", "linewidth": 1},
-    )
-
-    # Logarithmic Y-Axis
-    ax.set_yscale("log")
+    rects1 = ax.bar(x - width / 2, men_means, width, label="Men", color=light_blue)
+    rects2 = ax.bar(x + width / 2, women_means, width, label="Women", color=dark_blue)
 
     # Y-Axis Label
     #
     # Use a horizontal label for improved readability.
     ax.set_ylabel(
-        "Wall time [s]",
+        "Speedup",
         rotation="horizontal",
         position=(1, 1.05),
         horizontalalignment="left",
@@ -239,119 +223,12 @@ def plot_walltimes():
     autolabel(ax, rects1)
     autolabel(ax, rects2)
 
-    save(fig, PARENT_DIRECTORY / "../13_measuring_compiler_performance/walltimes.pdf")
-
-
-def plot_speedup():
-    # Calculate speedup ratios (improved/baseline)
-    speedup_ratios = [v2 / v1 for v1, v2 in zip(mlir_means, xdsl_means)]
-
-    # Calculate propagated errors for the speedup ratios
-    # Using error propagation formula for division: δ(A/B) = (A/B) * sqrt((δA/A)^2 + (δB/B)^2)
-    # Since error1 is all zeros, we simplify to: δ(A/B) = (A/B) * (δA/A)
-    propagated_errors = [
-        ratio * (xdsl_errors[i] / xdsl_means[i]) if xdsl_means[i] > 0 else 0
-        for i, ratio in enumerate(speedup_ratios)
-    ]
-
-    x = np.arange(len(labels))  # the label locations
-    width = 0.35  # the width of the bars
-
-    fig, ax = plt.subplots()
-    rects1 = ax.bar(
-        x,
-        speedup_ratios,
-        width,
-        color=light_blue,
-        yerr=propagated_errors,
-        capsize=5,
-        error_kw={"ecolor": "black", "linewidth": 1},
-    )
-
-    # Y-Axis Label
-    #
-    # Use a horizontal label for improved readability.
-    ax.set_ylabel(
-        "xDSL slowdown",
-        rotation="horizontal",
-        position=(1, 1.05),
-        horizontalalignment="left",
-        verticalalignment="bottom",
-    )
-
-    # Add some text for labels, title and custom x-axis tick labels, etc.
-    ax.set_xticks(x)
-    ax.set_xticklabels(labels)
-
-    ax.legend(ncol=100, loc="lower right", bbox_to_anchor=(0, 1, 1, 0))
-
-    autolabel(ax, rects1)
-
-    save(fig, PARENT_DIRECTORY / "../13_measuring_compiler_performance/speedup.pdf")
+    save(fig, "speedup.pdf")
 
 
 def main():
-    setGlobalDefaults()
-
-    plot_walltimes()
     plot_speedup()
 
 
 if __name__ == "__main__":
-    labels = ["Parser", "Canonicalizer", "Printer"]
-    # Measurements collected with:
-    #
-    # for i in $(seq 1 10);
-    #   do ~/Desktop/llvm-project-benchmarks/build-original/bin/mlir-opt benchmarks/workloads/constant_folding.mlir --canonicalize --mlir-timing 2>&1 | grep Out | awk '{print $1}';
-    # done
-    mlir_parser_samples = [
-        0.00333555,
-        0.00336460,
-        0.00323819,
-        0.00332298,
-        0.00333224,
-        0.00331455,
-        0.00336338,
-        0.00333786,
-        0.00334095,
-        0.00332713,
-    ]
-    mlir_canonicalizer_samples = [
-        0.00115298,
-        0.00120432,
-        0.00115359,
-        0.00117100,
-        0.00113390,
-        0.00116652,
-        0.00114619,
-        0.00119074,
-        0.00114308,
-        0.00116006,
-    ]
-    mlir_printer_samples = [
-        0.00004236,
-        0.00003738,
-        0.00003861,
-        0.00003775,
-        0.00003798,
-        0.00003831,
-        0.00004052,
-        0.00003741,
-        0.00004203,
-        0.00003713,
-    ]
-    mlir_means = [
-        statistics.mean(mlir_parser_samples),
-        statistics.mean(mlir_canonicalizer_samples),
-        statistics.mean(mlir_printer_samples)
-    ]
-    mlir_errors = [
-        statistics.stdev(mlir_parser_samples),
-        statistics.stdev(mlir_canonicalizer_samples),
-        statistics.stdev(mlir_printer_samples)
-    ]
-    xdsl_means = [0.162, 0.0682, 0.000125] # without stdout: 8.04e-05]
-    xdsl_errors = [0.00112, 0.00116, 8.18e-06] # without stdout:  7.41e-06]
-
-
     main()
