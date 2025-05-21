@@ -12,8 +12,9 @@
 %%% "describe a little bit of the context for your work"
 
 %% Context (~abstract sentence one: topic of compilers/MLIR)
-Compilers are a critical component of computing systems, providing an abstraction for expressivity, performance, and portability from high-level programming languages to the underlying machine ISA.
-Early compilers were hand-crafted, resulting in complex and language-specific implementations over their development.
+Compilers are a critical component of computing systems, providing an abstraction % for expressivity, performance, and portability (review: first sentence too long)
+from high-level programming languages to the underlying machine ISA.
+Early compilers were hand-crafted, resulting in complex and language-specific implementations.
 The LLVM compiler framework \cite{lattnerLLVMCompilationFramework2004} addressed these problems of complexity and re-usability with a novel and language-independent \ac{ir} in \ac{ssa} form, which could be analysed and transformed by a sequence of passes.
 Recently, \ac{mlir} \cite{lattnerMLIRScalingCompiler2021a}, has furthered these goals by enabling users to cheaply extend compilers with new abstractions, and automatically provides common infrastructure such as parsing and printing logic for them.
 
@@ -23,11 +24,11 @@ Recently, \ac{mlir} \cite{lattnerMLIRScalingCompiler2021a}, has furthered these 
 %%% "why did you do it (motivation)"
 
 %% Context/Motivation (~abstract sentence one/two/three: extensible compiler frameworks, how this impacts performance, and that MLIR accept it)
-Compiler extensibility is critical for handling the heterogenous hardware and exotic optisations of modern workloads.
+Compiler extensibility is critical for handling the heterogenous hardware and exotic optimisations of modern workloads.
 However, this extensibility comes at a cost, presenting an optimisation boundary between the user and framework code. This boundary arises from the dynamic dispatch of these extensions, precluding optimisations such as ahead-of-time code motion.
 This is compounded by the dynamic nature of the data structures and algorithms used by the compiler. For example, pattern rewriting in \ac{mlir} operates on a linked list representation of \ac{ssa} values -- a dynamic, pointer-chasing workload.
 This further inhibits optimisations, both as a result of dynamism and not being amenable to other transformations such as vectorisation.
-These factors motivate challenging the status quo of implementing user-extensible compiler frameworks in static, ahead-of-time compiled languages.
+These factors motivate challenging the status quo of LLVM and MLIR implementing user-extensible compiler frameworks in static, ahead-of-time compiled languages.
 
 
 
@@ -52,7 +53,7 @@ This work examines the performance of program optimisation through pattern rewri
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.7\textwidth]{images/10_introduction/narrative.drawio.pdf}
+    \includegraphics[width=0.6\textwidth]{images/10_introduction/narrative.drawio.pdf}
     \caption{\textit{(Sketch of figure: will be drawn properly with matplotlib and real data once finalised -- any general feedback appreciated!)} Closing the gap between xDSL (blue language runtime, orange implementation overhead) and \ac{mlir} (green) pattern rewriting performance. xDSL's performance can be improved by changes to both its implementation and language runtime. C++ has less of a performance advantage for \ac{mlir} than other workloads due to the costs associated with dynamism.}
     % TODO: Further think about this to consider making it more conceptual/hooky
     % TODO: If kept, this will have bars labelled with performance figures, but since not final have not done this yet
@@ -62,7 +63,7 @@ This work examines the performance of program optimisation through pattern rewri
 %% Overview (~abstract sentence five, which needs re-writing: what we did part one -- specialisation and CPython stuff)
 The performance of a program is constrained both by the details of its implementation and the runtime of its language.
 These two properties are deeply interlinked, making them difficult to measure independently.
-To disentangle them, we manually optimise and specialise xDSL's implementation for a fixed algorithm on a specific workload (Label \texttt{(1)} of \autoref{fig:narrative}), resulting in an $5.5\times$ performance uplift. % TODO: align with finalised figure when re-measured
+To disentangle them, we manually optimise and specialise xDSL's implementation of pattern rewriting (Label \texttt{(1)} of \autoref{fig:narrative}), resulting in an $5.5\times$ performance uplift. % TODO: align with finalised figure when re-measured
 We then confirm the performance of the specialisation is constrained only by the language runtime by examination of the dispatched bytecode of micro-benchmarks.
 Following this, we quantify the impact of recent performance enhancements made to CPython for this specialised implementation (Label \texttt{(2)} of \autoref{fig:narrative}). % as an increase of $xy\%$.
 This process provides an approximate best-case for the performance of pattern rewriting in xDSL, which can then be compared against \ac{mlir}.
@@ -79,6 +80,7 @@ A key difference between the Python and C++ runtimes is their degree of dynamism
 \ac{mlir}'s C++ runtime incurs overhead when dynamically dispatching functions (Label \texttt{(3)} of \autoref{fig:narrative}), which is worsened by prohibiting ahead-of-time performance optimisations. In contrast, almost every bytecode operation evaluated by the Python interpreter is dynamic, each incurring an overhead.
 As such, we expect the difference in performance between language runtimes (Label \texttt{(4)} of \autoref{fig:narrative}) to be smaller for more dynamic workloads.
 To corroborate this, we measure the difference in performance between pattern rewriting workloads using xDSL and \ac{mlir}, and assess the contribution of overheads incurred by dynamism.
+This measurement procedure uniquely leverages xDSL's sidekick compilation functionality to ensure the comparability of performance measurements by driving them with the same textual \ac{ir}, even for implementation details internal to each framework.
 Finally, we critically evaluate the degree to which this motivates the use of Python for implementing user-extensible compiler frameworks.
 
 
@@ -90,5 +92,5 @@ The contributions of our work are as follows:
     \item An examination of the best-case performance for pattern rewriting workloads in the CPython language runtime. %, including trade-offs in expressivity and the impact of performance optimisations made to the language runtime.
     \item An exploration of optimisation techniques to shrink the performance gap between dynamic and static languages for pattern rewriting workloads.
     \item A tool to examine CPython bytecode dispatch in program runs, facilitating the analysis of costs incurred by dynamism.
-    \item A quantitative comparison of the performance of user-extensible compiler frameworks implemented in static and dynamic languages, focussing on the impact of dynamism.
+    \item A quantitative comparison of the performance of user-extensible compiler frameworks implemented in static and dynamic languages, focussing on the impact of dynamism. % leveraging sidekick compilation for fine-grained analysis of the impact of dynamism
 \end{itemize}

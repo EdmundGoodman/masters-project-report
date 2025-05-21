@@ -28,17 +28,19 @@ The following section describes the procedure and provides the raw results from 
 
 \begin{code}
     \begin{minted}[fontsize=\scriptsize]{text}
-Test IRTraversal.iterate_ops ran in: 5.02e-08 ± 4.34e-08s
-Test IRTraversal.iterate_block_ops ran in: 0.000219 ± 9.82e-06s
-Test IRTraversal.walk_block_ops ran in: 0.000552 ± 8.5e-06s
-Test Extensibility.interface_check_trait ran in: 8.43e-08 ± 2.34e-08s
-Test Extensibility.interface_check ran in: 8.31e-08 ± 1.77e-08s
-Test Extensibility.trait_check ran in: 8.39e-07 ± 3.85e-08s
-Test Extensibility.trait_check_many ran in: 1.18e-05 ± 1.39e-06s
-Test Extensibility.trait_check_neg ran in: 8.71e-07 ± 3.98e-08s
-Test OpCreation.operation_create ran in: 3.55e-06 ± 5.48e-07s
-Test OpCreation.operation_build ran in: 1.36e-05 ± 2.3e-06s
-Test OpCreation.operation_clone ran in: 5.86e-06 ± 1.71e-07s
+Test IRTraversal.iterate_ops ran in: 0.000326 ± 5.92e-06s // ÷ 32768
+Test IRTraversal.iterate_block_ops ran in: 0.00675 ± 4.5e-05s // ÷ 32768
+Test IRTraversal.walk_block_ops ran in: 0.0172 ± 9.31e-05s // ÷ 32768
+Test Extensibility.interface_check_trait ran in: 4.72e-08 ± 4.27e-07s
+Test Extensibility.interface_check ran in: 4.38e-08 ± 3.09e-07s
+Test Extensibility.trait_check ran in: 9.24e-07 ± 5.13e-07s
+Test Extensibility.trait_check_optimised ran in: 2.66e-07 ± 3.4e-07s
+Test Extensibility.trait_check_single ran in: 6.72e-07 ± 5.11e-07s
+Test Extensibility.trait_check_neg ran in: 2.04e-06 ± 7.99e-07s
+Test OpCreation.operation_create ran in: 3.6e-06 ± 1.49e-06s
+Test OpCreation.operation_build ran in: 1.21e-05 ± 1.85e-06s
+Test OpCreation.operation_clone ran in: 0.000924 ± 9.57e-06s
+Test OpCreation.operation_clone_single ran in: 6.4e-06 ± 1.5e-06s
     \end{minted}
     \caption{Results for the xDSL micro-benchmarks derived from ``How Slow is MLIR?'', for CPython version 3.10.17.}
     \label{listing:how-slow-is-mlir-xdsl-microbenchmark-results}
