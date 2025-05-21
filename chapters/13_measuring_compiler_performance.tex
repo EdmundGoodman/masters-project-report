@@ -19,7 +19,7 @@ Finally, we isolate small, self-contained components of the implementation which
 % Hook
 Accurate performance measurement is a fundamental yet notoriously fickle discipline in systems research.
 % Argument
-In this section, we discuss our experimental methodology, including: the hardware and software setup; the selection of workloads examined; and additional infrastructure constructed. 
+In this section, we discuss our experimental methodology, including: the hardware and software setup; the selection of workloads examined; and additional infrastructure constructed.
 % Link
 Through this, we aim to justify our experimental procedure and facilitate reproducibilty of results.
 
@@ -101,7 +101,7 @@ This guarantess directly comparable performance measurements at the pipeline pha
 Without sidekick compilation, for example comparing two more disparate user-extensible compiler frameworks such as MLIR and Pliron \cite{vaivaswathanagarajVaivaswathaPliron2025}, this comparison would be constrained to only end-to-end measurement, obscuring the impact of variables such as dynamism on the performance properties.
 % Link
 
-%% Want to pick things which are simple enough to examine in detail but complex enough to exercise interesting properties of the machine. 
+%% Want to pick things which are simple enough to examine in detail but complex enough to exercise interesting properties of the machine.
 % Hook
 \ac{mlir}'s textual \ac{ir} is incredibly expressive, facilitating representation of algorithms of varying complexity across a wide range of abstraction levels.
 % Argument
@@ -229,7 +229,7 @@ These wall times for each framework and the slowdown between them can then be pl
 \begin{figure}[H]
     \centering
     \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=\textwidth]{images/13_measuring_compiler_performance/walltimes.pdf}
+        \includegraphics[width=\textwidth]{images/measuring_compiler_performance/walltimes.pdf}
         \vspace{0.5em}
         \caption{All pipeline phases of MLIR are faster than xDSL.}
         \vspace{0.5em}
@@ -237,7 +237,7 @@ These wall times for each framework and the slowdown between them can then be pl
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=\textwidth]{images/13_measuring_compiler_performance/speedup.pdf}
+        \includegraphics[width=\textwidth]{images/measuring_compiler_performance/speedup.pdf}
         \caption{xDSL's parser and canonicalizer incur around $50\times$ slowdown, whereas the printer slows down only $2\times$ for small workloads.}
         \label{fig:end-to-end-constant-folding-speedup}
     \end{subfigure}
@@ -342,7 +342,7 @@ In the following sections, we discuss the implementations of a number of micro-b
 \label{ssec:ubenchmark-operation-instantiation}
 
 % Hook
-Operations are a central data structure in MLIR and xDSL's \ac{ir} representation, constituting dialects and composing together into programs. 
+Operations are a central data structure in MLIR and xDSL's \ac{ir} representation, constituting dialects and composing together into programs.
 % Argument
 As such, the methods to instantiate operations a very frequently invoked, making them a good candidate for micro-benchmarking.
 % Link

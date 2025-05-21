@@ -43,10 +43,10 @@ Chapter \ref{chap:measuring-compiler-performance} measured a slow-down of approx
                 value_if_unregistered: bool = True,
             ) -> bool:
                 from xdsl.dialects.builtin import UnregisteredOp
-        
+
                 if issubclass(cls, UnregisteredOp):
                     return value_if_unregistered
-        
+
                 return cls.get_trait(trait) is not None
         \end{minted}
         \footnotesize\vspace{1.5em}
@@ -95,13 +95,13 @@ This demonstrates that a significant proportion of the slow-down in xDSL's \mint
     \centering
     \begin{subfigure}[b]{\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{images/15_specialising_optimising_xdsl_rewriting/hastrait_xdsl_viztracer.png}
+        \includegraphics[width=\textwidth]{images/specialising_optimising_xdsl_rewriting/hastrait_xdsl_viztracer.png}
         \caption{Checking for \mintinline{python}{UnregisteredOp}s constitutes around half of \mintinline{python}{has_trait}s runtime.}
         \label{fig:ubenchmark-hastrait-xdsl-viztracer}
     \end{subfigure}
     \begin{subfigure}[b]{\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{images/15_specialising_optimising_xdsl_rewriting/gettrait_xdsl_viztracer.png}
+        \includegraphics[width=\textwidth]{images/specialising_optimising_xdsl_rewriting/gettrait_xdsl_viztracer.png}
         \caption{\mintinline{python}{isinstance} checks, \mintinline{python}{cast}ing and constructing iterators constitutes around half of \mintinline{python}{get_trait}s runtime.}
         \label{fig:ubenchmark-gettrait-xdsl-viztracer}
     \end{subfigure}
@@ -202,7 +202,7 @@ Unfortunately, these approaches are in tension with writing expressive and terse
 
 \section{Constant folding workload}
 
-%% 
+%%
 % Hook
 Having demonstrated specialisation as a technique to examine the underlying language runtime performance for micro-benchmarks, we can further apply it to real-world workloads such as constant folding.
 % Argument
@@ -217,7 +217,7 @@ These specialised implementations can then be taken as performance baselines for
 @dataclass
 class ConstantFoldingIntegerAdditionPattern(RewritePattern):
     """Rewrite pattern that constant folds addition of integer types."""
-    
+
     def match_and_rewrite(self, op: Operation, rewriter: PatternRewriter, /):
         # Only rewrite integer add operations
         if not isinstance(op, AddiOp):
@@ -292,4 +292,3 @@ Since this functionality was not used by the target workload, this could be elid
 %% Removing implicit builders
 
 %% `__slots__` (stretch dataclasses stuff -> custom dataclass like thing without most of the overhead as a helper, replaces frozen dataclasses (what functionality is used here: https://github.com/python/cpython/blob/main/Lib/dataclasses.py and what can we rip out???))
-
