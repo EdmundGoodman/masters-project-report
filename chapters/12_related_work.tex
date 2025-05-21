@@ -24,10 +24,14 @@
 % Hook
 Our research builds on top of two existing bodies of work.
 % Argument
-The first is characterisation of the performance of user-extensible compiler frameworks. Existing work in this domain is limited to examining frameworks written in ahead-of-time compiled languages, such as MLIR in C++. We extend this by measuring the performance of xDSL, a framework written in Python -- an interpreted dynamic language. Using this measurement, we contrast the performance characteristics of static and dynamic implementations for this workload.
-The second body of work is the performance measurement of the Python programming language. Existing work in this domain provides a wide variety of performance measurement and profiling tools for Python programs. However, the granularity of profiling is typically at the function or the line level. We extend this by profiling at the bytecode level, allowing examination of the impact of dynamism on workload performance. Furthermore, existing work examines the aggregate improvements across a wide variety of workloads. We deepen this by investigating the impact for specific, dynamic workloads.
+The first is characterisation of the performance of user-extensible compiler frameworks. Existing work in this domain is limited to examining frameworks written in ahead-of-time compiled languages, such as MLIR in C++.
+We extend this by measuring the performance of xDSL, a framework written in Python -- an interpreted dynamic language. Using this measurement, we contrast the performance characteristics of static and dynamic implementations for this workload.
+The second body of work is the performance measurement of the Python programming language. Existing work in this domain provides a wide variety of performance measurement and profiling tools for Python programs. However, the granularity of profiling is typically at the function or the line level.
+We extend this by profiling at the bytecode level, allowing examination of the impact of dynamism on workload performance.
+Furthermore, existing work examines the aggregate improvements across a wide variety of workloads.
+We deepen this by investigating the impact for specific, dynamic workloads.
 % Link
-Our research provides furthers existing knowledge by providing novel insights into the suitability of dynamic languages for user-extensible compiler frameworks, and the impact of modern optimisations upon this suitability.
+Our research furthers existing knowledge by providing novel insights into the suitability of dynamic languages for user-extensible compiler frameworks, and the impact of modern optimisations upon this suitability.
 
 
 
@@ -147,7 +151,9 @@ For some applications, such as examining the properties of the language runtime,
 Bytecode is the fundamental unit of Python's interpreted execution loop. As such, tooling to examine bytecode provides deep insight into its underlying operation.
 % Argument
 A further variation on Python's theme of being ``batteries-included'', the \texttt{dis} standard library module provides functionality to disassemble static code objects. Unfortunately, this tool is limited to outputting only the compiled bytecode for functions, as opposed to the actual bytecodes dispatched at runtime. As such, it cannot capture the control flow followed during execution, nor runtime specialisations made to the bytecode.
-Our work proposes a novel tool at the intersection of profiling and bytecode tooling.
+Beyond this, members of the Python community have proposed small proofs of concept for tracing and rewriting bytecode sequences \cite{0xecCodingReversingHacking2017} \cite{clementrouaultUnderstandingPythonExecution}, and leveraged it for improved coverage metrics \cite{nedbatchelderWickedHackPython2008}.
+However, none of this work examines the performance of this traced bytecode.
+Our work proposes a novel tool at the intersection of performance profiling and bytecode tooling.
 % Link
 This tool traces and times the bytecodes dispatched at runtime, facilitating the examination of performance optimisations made to the CPython reference implementation at the bytecode granularity.
 

@@ -1,59 +1,183 @@
-\chapter{Profiling Python bytecode} % for fun and profit
+\chapter{Performance profiling at the bytecode level} % for fun and profit
 \label{chap:profiling-bytecode}
-
 
 %% Motivation
 % Hook
+Performance profilers are powerful tools, providing useful information about program control flow and hotspots -- facilitating performance optimisation.
 % Argument
+Existing profilers for Python operate at the function or line level.
+However, recent developments to CPython's runtime strongly motivate collecting more fine-grained information. For example, the specialising adaptive interpreter rewrites bytecode at runtime into quickened forms, and the baseline JIT substitutes bytecode for tier two micro-operations -- both yielding performance characteristics which cannot be reasoned about with function or line level instrumentation.
+% TODO: Add specialist to related work?
+In addition to this, bytecode performance profiling information helps provide a key missing data point when examining the impact of program dynamism.
+One reason for this conspicuous absence of bytecode level profilers is the difficulty of measuring their very short execution times (in the order of highest resolution system counter), deeply interleaved within the interpreter's execution loop.
 % Link
+To address this gap in the field, we present a novel tool for the performance profiling of CPython bytecode, discussing its implementation approach and challenges, along with providing examples of its use.
 
-\section{Implementation}
-\label{sec:profiling-bytecode-implementation}
 
-%% sys.settrace + where is this in ceval.c
+% \section{Implementation}
+% \label{sec:profiling-bytecode-implementation}
+
+% Focus on Python 3.10, stuff has moved around in more recent versions, but still in legacy_tracing with backwards compatability so all OK. LLTrace is a thing but doesn't give us the timing information we want
+
+%% sys.settrace
+% Hook
+By virtue of the flexibility of its interpreter's implementation, CPython provides a wide variety of opportunities for instrumenting and introspecting running code.
+% Argument
+One example of this is the standard library function \mintinline{python}{sys.settrace}, which associates dynamic, user-defined callback functions with the dispatch of key virtual machine events. These include function calls, line execution, handling exceptions, and even individual opcodes.
+% Link
+This callback function receives the event type along with the CPython frame and code objects currently being evaluated by the interpreter, facilitating precise instrumentation of the internal operation of the interpreter.
+
+% Hook
+Our tool captures bytecode level profiling information through a custom callback function which records a sequence of timestamps associated with traced events.
+% Argument
+However, this approach sketch has a significant obstacle. Since the tracing callback function is implemented in native Python, the time taken to execute it is orders of magnitude higher than that of the single bytecode operation being instrumented.
+% Link
+To navigate this obstacle, we carefully co-design our tracing function with CPython's interpretation loop and tracing infrastructure in mind.
+
+\section{CPython internals}
+\label{sec:profiling-bytecode-cpython-internals}
+
+%% Interpreter loop and stuff
 % Hook
 % Argument
 % Link
 
-%% Serialises dispatched events (table of which?)
+%% Registering a trace function
+% Hook
+The first step in the tracing process is registering the callback function.
+% Argument
+To do this, Python users can invoke \mintinline{python}{sys.settrace}, a standard library function binding to the C implementation \texttt{sysmodule.c:sys\_settrace}. This in turn invokes \texttt{ceval.c:\_PyEval\_SetTrace}, which updates two values on of the Python \ac{gil} thread state: \texttt{c\_tracefunc} and \texttt{c\_traceobj}. The former points to a ``trampoline'' function which collects the information required by the callback function, and the latter is a callable python code object for the callback function.
+% Link
+
+%% Using a trace function
+% Hook
+% Argument
+% Link
+
+% %% How is sys.settrace implemented
+% % Hook
+% In order to 
+% % Argument
+% % Link
+% For the CPython, this is concretely implemented in two phases: registering the trace function; and dispatching it within the interpreter loop.
+% % TODO: This is super tedious but also painful to draw
+% % For the first phase, \texttt{sysmodule.c:sys\_settrace} is invoked by the \mintinline{python}{sys.settrace} standard library function. This in turn invokes \texttt{ceval.c:\_PyEval\_SetTrace}, which checks the \ac{gil} and for existing traces, then sets two properties of the thread state: \mintinline{c}{tstate->c_tracefunc} ; and \mintinline{c}{tstate->c_traceobj}
+% % Link
+
+
+
+
+%% Listing of our tracing function
+
+
+
+% TODO: Could interleave this??
+% \section{Challenges}
+% \label{sec:profiling-bytecode-challenges}
+
+%% Timer granularity + other tricks
+% Hook
+Beyond the careful co-design of the tracing measurement logic with CPython's implementation, there are a number of confounding effects which must be mitigated to ensure accurate measurement.
+% Argument
+Firstly, for the profiling information to be useful, the resolution of the most accurate system clock must be sufficient to resolve differences bytecode execution time. On our experimental hardware (\autoref{ssec:experimental-setup}) this was true, having a $1$ns timer able to resolve bytecode taking around $10$ns to execute. However, this is not the case for modern Apple Silicon devices, having only a $40$ns and hence unable to resolve individual bytecode instruction durations. This is a physical limitation on measuring such necessarily fast operations such as bytecode, and as such can only be resolved by selecting appropriate hardware.
+Secondly, the CPython language runtime periodically runs housekeeping tasks such as garbage collection, disrupting the flow of bytecode execution and hence adding random noise to our measurements. These can effects can be minimised using techniques from existing performance measurement work such as \texttt{timeit} or \texttt{pyperf}, for example by disabling garbage collection for the duration of profiling.
+% Link
+
+%% Figure
+
+%% Warmups + Statistical confidence 
+% Hook
+% Argument
+% Link
+
+%% (Optional) Specialising instructions
 % Hook
 % Argument
 % Link
 
 
-\section{Challenges}
-\label{sec:profiling-bytecode-challenges}
-
-%% Timer granularity
-% Hook
-% Argument
-% Link
-
-%% Specialising instructions
-% Hook
-% Argument
-% Link
-
-%% Statistical confidence 
-% Hook
-% Argument
-% Link
-
-
-\section{Examples}
+\section{Profiler examples}
 \label{sec:profiling-bytecode-examples}
 
 %% Simple
 % Hook
+Having implemented our profiler, we can demonstrate its capabilities on an example workload (Listing \ref{listing:profiler-example}).
 % Argument
+Each traced event is displayed on its own line, in combination showing the exact sequence of instructions performed by the interpreter when evaluating the function. Function invocations, such as calling \texttt{inner\_function} \circledbase{pairedOneLightBlue}{a}, are indented by their call stack depth for easy readability. In addition to this, bytecode instructions are formatted following the convention of the standard library, but are annotated with their duration in a comment on the right-hand side of the trace.
 % Link
 
-%% Specialising
+
+%% Listing function vs profiled bytecode
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[b]{0.3\textwidth}
+       \centering
+        \begin{minted}[fontsize=\scriptsize,escapeinside=$$]{python}
+def inner_function(
+    x: int | str | float
+) -> None:
+    assert x
+
+def example_function() -> None:
+    inner_function(1)
+    pass
+    _x = perf_counter()
+        \end{minted}
+        \footnotesize\vspace{8em}
+        \caption{Python program.}
+        \label{listing:profiler-example-python}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.65\textwidth}
+        \centering
+        \begin{minted}[fontsize=\scriptsize,escapeinside=$$]{text}
+// ======= example:6 `example_function` ===-====
+// >>> inner_function(1)
+7           0   LOAD_GLOBAL          0   (inner_function)    // 15   ns
+            2   LOAD_CONST           1   (1)                 // 15   ns
+            4   CALL_FUNCTION        1   ()                  // 31   ns
+
+    // ======== example:1 `inner_function` ========= $\scriptsize\circledbase{pairedOneLightBlue}{a}$
+    // >>> assert x
+    4           0   LOAD_FAST            0   (x)             // 13   ns
+                2   POP_JUMP_IF_TRUE     4   (to 8)          // 13   ns
+            >>  8   LOAD_CONST           0   (None)          // 12   ns
+                10  RETURN_VALUE             ()              // 31   ns
+    // =============================================
+
+            6   POP_TOP                  ()                  // 16   ns
+// >>> pass                                                     $\scriptsize\circledbase{pairedTwoDarkBlue}{b}$
+8           8   NOP                      ()                  // 15   ns
+// >>> _x = perf_counter()
+9           10  LOAD_GLOBAL          1   (perf_counter)      // 15   ns
+            12  CALL_FUNCTION        0   ()                  // 17   ns
+            14  STORE_FAST           0   (_x)                // 14   ns
+            16  LOAD_CONST           0   (None)              // 13   ns
+            18  RETURN_VALUE             ()                  // 28   ns
+// =============================================
+        \end{minted}
+        \caption{Profiler output.}
+        \label{listing:profiler-example-bytecode}
+    \end{subfigure}
+    \vspace{1em}
+    \captionsetup{name=Listing}
+    \caption{Output of the bytecode profiling tool for a simple Python program, showing the sequence of dispatched bytecode and their individual execution times.}
+    \label{listing:profiler-example}
+\end{figure}
+
+
+%% Summary/why should I care?
 % Hook
 % Argument
 % Link
 
-%% Big
+
+
+
+
+
+%% (Optional) Specialising
 % Hook
 % Argument
 % Link
+
