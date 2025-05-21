@@ -1,0 +1,164 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Ensure comments aren't lost by re-arranging files %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+\chapter{Related work}
+\label{chap:related-work}
+
+% This chapter covers relevant (and typically, recent) research
+% which you build upon (or improve upon). There are two complementary
+% goals for this chapter:
+% \begin{enumerate}
+%   \item to show that you know and understand the state of the art; and
+%   \item to put your work in context
+% \end{enumerate}
+%
+% Ideally you can tackle both together by providing a critique of
+% related work, and describing what is insufficient (and how you do
+% better!)
+%
+% The related work chapter should usually come either near the front or
+% near the back of the dissertation. The advantage of the former is that
+% you get to build the argument for why your work is important before
+% presenting your solution(s) in later chapters; the advantage of the
+% latter is that don't have to forward reference to your solution too
+% much. The correct choice will depend on what you're writing up, and
+% your own personal preference.
+
+% Hook
+Our research builds on top of two existing bodies of work.
+% Argument
+The first is characterisation of the performance of user-extensible compiler frameworks. Existing work in this domain is limited to examining frameworks written in ahead-of-time compiled languages, such as MLIR in C++.
+We extend this by measuring the performance of xDSL, a framework written in Python -- an interpreted dynamic language. Using this measurement, we contrast the performance characteristics of static and dynamic implementations for this workload.
+The second body of work is the performance measurement of the Python programming language. Existing work in this domain provides a wide variety of performance measurement and profiling tools for Python programs. However, the granularity of profiling is typically at the function or the line level.
+We extend this by profiling at the bytecode level, allowing examination of the impact of dynamism on workload performance.
+Furthermore, existing work examines the aggregate improvements across a wide variety of workloads.
+We deepen this by investigating the impact for specific, dynamic workloads.
+% Link
+Our research furthers existing knowledge by providing novel insights into the suitability of dynamic languages for user-extensible compiler frameworks, and the impact of modern optimisations upon this suitability.
+
+
+
+
+
+\section{Performance of user-extensible compiler frameworks}
+\label{sec:perf-user-extensible-frameworks}
+
+%% General vibe of the community?
+% Hook
+A main focus of compiler designers is the performance of executing the output lowered representation. However, this is not the only important metric in compiler design.
+% Argument
+In real-world use cases, the execution time of the compiler itself (henceforth referred to as compiler performance) is essential for the productivity of its users. For very large projects such as Firefox, which contains over twenty million lines of code \cite{bastienabadieEngineeringCodeQuality}, small changes to compiler performance can result in minutes gained or lost for each compilation -- significantly impacting developer productivity.
+Despite the real-world importance of compiler performance, and the engineering effort expended to improve it, the majority of research is focussed only on improving the compiled output. % TODO: Is it fair to assert this without citation?
+% Link
+As such, the field is under-researched, with only a few academic explorations of the performance of compiler frameworks, the most salient of which we discuss below.
+
+%% Performance of LLVM
+% Hook
+Lattner and Adve's original paper proposing LLVM contains a short evaluation of the framework's performance \cite[Section 4.1.4]{lattnerLLVMCompilationFramework2004}.
+% Argument
+In this evaluation, the authors compare the runtime of individual transformation passes against \texttt{gcc} optimisation level \texttt{-O3} across a variety of workloads.
+The results of this experiment \cite[Table 2]{lattnerLLVMCompilationFramework2004} report each of LLVM's transformation passes is at least two orders of magnitude faster than \texttt{gcc}'s end-to-end compilation across the tested workloads. Whilst this demonstrates that analysis and transformations can be performed efficiently, it has a critical flaw. By using end-to-end compilation time for \texttt{gcc}, the time taken by non-transformation phases such as parsing, printing, and code generation are included in the measurement, making it incomparable with the measurements of the transformation passes only for LLVM.
+Furthermore, in the twenty years since the paper was published, LLVM has evolved significantly. This evolution brings new complexity, new performance enhancements, and even new frameworks such as MLIR -- changing the calculus of its performance.
+% Link
+This motivated later research to further investigate the performance characteristics of such compiler frameworks.
+
+%% How slow is MLIR?
+% Hook
+At the 2024 European LLVM Developers' Meeting, Mehdi Amini and Jeff Nui presented their keynote talk ``How Slow is MLIR?'' \cite{aminiHowSlowMLIR2024}.
+% Argument
+This talk aimed to quantify the feeling in the LLVM community that MLIR incurred a significant performance cost over LLVM alone, and produce metrics against which MLIR could be optimised.
+The presenters first discuss the implementation details of MLIR, including the design choices made to match common workloads.
+Next, they provide a set of micro-benchmarks for key functionality provided by MLIR, along with traditional benchmarks for constant folding and loop unrolling workloads. For the micro-benchmarks and constant folding workloads, MLIR is approximately four times slower than traditional LLVM. However, MLIR's more expressive \ac{ir} representation yields an eighty-eight times speed up over LLVM for loop unrolling.
+% Link
+These results help characterise MLIR's performance, and assuaged the community's belief that MLIR incurs a high performance cost over LLVM for real-world applications.
+
+
+%% Lack of other works/our differentiation
+% Hook
+Our work differentiates itself from existing research in two ways.
+% Argument
+Firstly, existing research focusses only on the performance characteristics of LLVM and MLIR. We extend this to also examine xDSL's performance.
+Secondly, having performance measurements and instrumentation for both MLIR and xDSL, we further extend the domain by contrasting the two frameworks through the lens of dynamism and its impact on performance.
+% Link
+
+
+
+
+
+
+\section{Performance of the Python programming language}
+\label{sec:python-performance}
+
+%% Introduction
+% Hook
+Driven by Python's immense popularity, significant research effort has been expended developing tools and techniques to characterise its performance.
+% Argument
+% Link
+This section discusses a relevant subset of these tools and techniques, and contrasts them with our novel contributions.
+
+\subsection{Python performance matters}
+\label{ssec:python-performance-matters}
+
+%% Summarise talk
+% Hook
+In his talk ``Python Performance Matters'' \cite{emerybergerPythonPerformanceMatters2022}, Emery Berger argues that whilst Python is a critical language for writing ``glue code'', its performance is bounded by the overhead of its virtual machine, making it necessarily slower than languages compiled to native machine code.
+% Argument
+As such, he asserts a maximally performant Python program is one which executes as few Python instructions as possible, instead heavily leveraging code written in more performant languages such as C or FORTRAN through \ac{ffi} bindings.
+As these \ac{ffi} bindings incur an overhead, particularly when copying large data structures, instances of switching between the two languages should be minimised.
+This approach is applicable to many applications, for example libraries such as NumPy and TensorFlow providing useful abstractions for compiled code over common tasks.
+% TODO: Could split paragraph here?
+Unfortunately, this approach cannot easily be applied to user-extensible compiler frameworks. This is because user defined extensions make frequent interactions across a wide API surface, and operate on large data structures -- resulting in a disproportionate cost from crossing \ac{ffi} boundaries.
+In addition to this, compiler optimisation workloads are less amenable to ahead-of-time compiled optimisations such as vectorisations, further reducing the benefit of leveraging such languages.
+% Link
+As such, our research extends the state-of-the-art by examining cases where existing best practices are not applicable.
+
+
+\subsection{Python performance measurement}
+\label{ssec:python-perf-measurement}
+
+%% Difficulty measuring python
+% Hook
+Reliable and accurate performance measurement is notoriously difficult, having literature discussing procedures for it \cite{harris2021understanding}, and constituting the main contribution of systems papers and theses \cite{crapeperformance}.
+% Argument
+This difficulty comes from both sides of the hardware-software interface.
+For example, hardware optimisations such as hierarchical caches, branch predictors, and power management schemes introduce noise, making performance measurements less predictable and consistent. Similar confounding effects come from software, from process scheduling in the operating system to garbage collection in language runtimes.
+Beyond this, advanced interpreters leverage runtime performance information for adaptive specialisation and JIT compilation, further muddling measurements. This phenomenon is explored by Barrett et al.'s ``Virtual Machine Warmup Blows Hot and Cold'' \cite{barrettVirtualMachineWarmup2017}, where interpreter virtual machine warmup is shown to be highly variable, with benchmarks taking over 2000 iterations to reach a steady state.
+% Link
+As such, accurate measurement of the performance characteristics of a Python program is more involved than the na\"ive approach of taking the wall time it takes to execute -- requiring additional tools and techniques to guarantee reliable results.
+
+%% Tools to measure python (timeit/asv/pyperf/pyperformance)
+% Hook
+Fortunately, Python's strong ecosystem provides a wide variety of tools to achieve this goal.
+% Argument
+As a result of the ``batteries-included'' ethos of Python, the standard library includes the \texttt{timeit} utility, which measures the wall clock time to execute code snippets. However, \texttt{timeit} is fairly simplistic, and does not account for all of the complexities of modern interpreted runtimes. The \texttt{pyperf} \cite{victorstinnerPsfPyperf2025} package aims to address these issues, with more complex control over confounding effects such as warm-ups and CPU isolation.
+Other tools provide more specialised functionality, for example Airspeed Velocity \cite{michaeldroettboomAirspeedvelocityAsv2025} visualising performance regressions across repository commits, and \texttt{pyperformance} \cite{collinwinterPythonPyperformance2025} benchmarking the performance of the Python language implementation itself across a variety of workloads.
+% Link
+These tools are powerful for reliably measuring the time taken by a piece of code. However, sometimes measurements with finer than end-to-end granularity are required to characterise performance properties more deeply.
+
+\subsection{Profiling and bytecode tooling}
+\label{ssec:profiling-bytecode-tooling}
+
+%% Existing profilers
+% Hook
+Profiling tools are a critical for understanding the performance characteristics of a program at a finer granularity than end-to-end execution.
+% Argument
+Again following Python's ``batteries-included'' ethos, the standard library includes \texttt{cProfile}, a deterministic, function-level profiler.
+% cProfile/scalene
+For many applications, finer granularity than function-level is required.
+One such example is \texttt{scalene} \cite{bergerTriangulatingPythonPerformance2023a}, a modern profiler which supports low overhead function and line level profiling of CPU, GPU, and memory usage.
+% Link
+For some applications, such as examining the properties of the language runtime, even finer granularity is needed. This motivates the development of profilers below the line level, instead tracing the bytecode instructions dispatched by each line.
+
+%% Existing bytecode
+% Hook
+Bytecode is the fundamental unit of Python's interpreted execution loop. As such, tooling to examine bytecode provides deep insight into its underlying operation.
+% Argument
+A further variation on Python's theme of being ``batteries-included'', the \texttt{dis} standard library module provides functionality to disassemble static code objects. Unfortunately, this tool is limited to outputting only the compiled bytecode for functions, as opposed to the actual bytecodes dispatched at runtime. As such, it cannot capture the control flow followed during execution, nor runtime specialisations made to the bytecode.
+Beyond this, members of the Python community have proposed small proofs of concept for tracing and rewriting bytecode sequences \cite{0xecCodingReversingHacking2017} \cite{clementrouaultUnderstandingPythonExecution}, and leveraged it for improved coverage metrics \cite{nedbatchelderWickedHackPython2008}.
+However, none of this work examines the performance of this traced bytecode.
+Our work proposes a novel tool at the intersection of performance profiling and bytecode tooling.
+% Link
+This tool traces and times the bytecodes dispatched at runtime, facilitating the examination of performance optimisations made to the CPython reference implementation at the bytecode granularity.
