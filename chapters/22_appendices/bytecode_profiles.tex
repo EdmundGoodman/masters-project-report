@@ -3,116 +3,139 @@
 
 \begin{code}
     \begin{minted}[fontsize=\footnotesize]{text}
-//// Trace of `has_trait_function` :
+//// Trace of `Extensibility.time_trait_check` :
 
-// ====== trace:403 `has_trait_function` =======                                == 61.537us
-// >>> assert OP_WITH_REGION.has_trait(                                         ## 5.624us
-404         2   LOAD_GLOBAL          0   (OP_WITH_REGION)                       // 1.250us
-404         12  LOAD_ATTR            3   (NULL|self + has_trait)                // 583.008ns
-// >>> Trait0                                                                   ## 4.500us
-405         32  LOAD_GLOBAL          4   (Trait0)                               // 500.004ns
-// >>> assert OP_WITH_REGION.has_trait(                                         ## 4.000us
-404         42  CALL                 1   ()                                     // 291.970ns
+// == microbenchmarks:176 `time_trait_check` ===
+// >>> assert Extensibility.OP_WITH_REGION.has_trait(Extensibility.TRAIT_4)
+204         0   LOAD_GLOBAL          0   (Extensibility)                                            // 17   ns
+            2   LOAD_ATTR            1   (OP_WITH_REGION)                                           // 18   ns
+            4   LOAD_METHOD          2   (has_trait)                                                // 18   ns
+            6   LOAD_GLOBAL          0   (Extensibility)                                            // 17   ns
+            8   LOAD_ATTR            3   (TRAIT_4)                                                  // 18   ns
+            10  CALL_METHOD          1   ()                                                         // 54   ns
 
-    // ====== core:1164 `Operation.has_trait` ======                            == 45.370us
-    // >>> from xdsl.dialects.builtin import UnregisteredOp                     ## 8.707us
-    1176         2   LOAD_CONST           1   (0)                               // 500.004ns
-    1176         4   LOAD_CONST           2   (('UnregisteredOp',))             // 333.006ns
-    1176         6   IMPORT_NAME          0   (xdsl.dialects.builtin)           // 250.002ns
-    1176         8   IMPORT_FROM          1   (UnregisteredOp)                  // 3.166us
-    1176         10  STORE_FAST           3   (UnregisteredOp)                  // 458.967ns
-    1176         12  POP_TOP                  ()                                // 208.034ns
-    // >>> if issubclass(cls, UnregisteredOp):                                  ## 5.834us
-    1178         14  LOAD_GLOBAL          5   (NULL + issubclass)               // 291.970ns
-    1178         24  LOAD_FAST            0   (cls)                             // 250.002ns
-    1178         26  LOAD_FAST            3   (UnregisteredOp)                  // 1.000us
-    1178         28  CALL                 2   ()                                // 250.002ns
+    // =========== core:1192 `has_trait` ===========
+    // >>> from xdsl.dialects.builtin import UnregisteredOp
+    1204         0   LOAD_CONST           1   (0)                                                   // 26   ns
+                2   LOAD_CONST           2   (('UnregisteredOp',))                                  // 25   ns
+                4   IMPORT_NAME          0   (xdsl.dialects.builtin)                                // 72   ns
+                6   IMPORT_FROM          1   (UnregisteredOp)                                       // 28   ns
+                8   STORE_FAST           3   (UnregisteredOp)                                       // 23   ns
+                10  POP_TOP                  ()                                                     // 21   ns
+    // >>> if issubclass(cls, UnregisteredOp):
+    1206         12  LOAD_GLOBAL          2   (issubclass)                                          // 21   ns
+                14  LOAD_FAST            0   (cls)                                                  // 21   ns
+                16  LOAD_FAST            3   (UnregisteredOp)                                       // 19   ns
+                18  CALL_FUNCTION        2   ()                                                     // 46   ns
 
-        //  <frozen abc>:121 `ABCMeta.__subclasscheck__`                        == 4.499us
-        // >>> <source not available>                                           ## 2.750us
-        123         2   LOAD_GLOBAL          1   (NULL + _abc_subclasscheck)    // 374.974ns
-        123         12  LOAD_FAST            0   (cls)                          // 375.032ns
-        123         14  LOAD_FAST            1   (subclass)                     // 209.024ns
-        123         16  CALL                 2   ()                             // 250.002ns
-        123         24  RETURN_VALUE             ()                             // 1.250us
+        // ======== abc:121 `__subclasscheck__` ========
+        // >>> return _abc_subclasscheck(cls, subclass)
+        123         0   LOAD_GLOBAL          0   (_abc_subclasscheck)                               // 19   ns
+                    2   LOAD_FAST            0   (cls)                                              // 18   ns
+                    4   LOAD_FAST            1   (subclass)                                         // 17   ns
+                    6   CALL_FUNCTION        2   ()                                                 // 26   ns
+                    8   RETURN_VALUE             ()                                                 // 44   ns
         // =============================================
 
-    1178         36  POP_JUMP_IF_FALSE    2   (to 42)                           // 459.026ns
-    // >>> return cls.get_trait(trait) is not None                              ## 5.955us
-    1181     >>  42  LOAD_FAST            0   (cls)                             // 291.038ns
-    1181         44  LOAD_ATTR            7   (NULL|self + get_trait)           // 290.980ns
-    1181         64  LOAD_FAST            1   (trait)                           // 790.984ns
-    1181         66  CALL                 1   ()                                // 915.956ns
+                20  POP_JUMP_IF_FALSE    13  (to 26)                                                // 22   ns
+    // >>> return cls.get_trait(trait) is not None
+    1209     >>  26  LOAD_FAST            0   (cls)                                                 // 21   ns
+                28  LOAD_METHOD          3   (get_trait)                                            // 23   ns
+                30  LOAD_FAST            1   (trait)                                                // 21   ns
+                32  CALL_METHOD          1   ()                                                     // 52   ns
 
-        // ====== core:1183 `Operation.get_trait` ======                        == 27.540us
-        // >>> if isinstance(trait, type):                                      ## 5.250us
-        1188         2   LOAD_GLOBAL          1   (NULL + isinstance)           // 250.002ns
-        1188         12  LOAD_FAST            1   (trait)                       // 541.972ns
-        1188         14  LOAD_GLOBAL          2   (type)                        // 250.002ns
-        1188         24  CALL                 2   ()                            // 333.006ns
-        1188         32  POP_JUMP_IF_FALSE    55  (to 144)                      // 250.002ns
-        // >>> for t in cls.traits:                                             ## 4.832us
-        1189         34  LOAD_FAST            0   (cls)                         // 290.980ns
-        1189         36  LOAD_ATTR            4   (traits)                      // 291.038ns
-        1189         56  GET_ITER                 ()                            // 624.976ns
+        // =========== core:1211 `get_trait` ===========
+        // >>> if isinstance(trait, type):
+        1216         0   LOAD_GLOBAL          0   (isinstance)                                      // 24   ns
+                    2   LOAD_FAST            1   (trait)                                            // 23   ns
+                    4   LOAD_GLOBAL          1   (type)                                             // 25   ns
+                    6   CALL_FUNCTION        2   ()                                                 // 25   ns
+                    8   POP_JUMP_IF_FALSE    27  (to 54)                                            // 23   ns
+        // >>> for t in cls.traits:
+        1217         10  LOAD_FAST            0   (cls)                                             // 22   ns
+                    12  LOAD_ATTR            2   (traits)                                           // 24   ns
+                    14  GET_ITER                 ()                                                 // 43   ns
 
-            // ======= core:747 `OpTraits.__iter__` ========                    == 9.832us
-            // >>> return iter(self.traits)                                     ## 4.668us
-            748         2   LOAD_GLOBAL          1   (NULL + iter)              // 291.970ns
-            748         12  LOAD_FAST            0   (self)                     // 500.004ns
-            748         14  LOAD_ATTR            2   (traits)                   // 250.002ns
+            // ============ core:758 `__iter__` ============
+            // >>> return iter(self.traits)
+            759         0   LOAD_GLOBAL          0   (iter)                                         // 17   ns
+                        2   LOAD_FAST            0   (self)                                         // 16   ns
+                        4   LOAD_ATTR            1   (traits)                                       // 38   ns
 
-                // ======== core:736 `OpTraits.traits` =========                == 6.331us
-                // >>> if callable(self._traits):                               ## 4.458us
-                739         2   LOAD_GLOBAL          1   (NULL + callable)      // 250.002ns
-                739         12  LOAD_FAST            0   (self)                 // 333.006ns
-                739         14  LOAD_ATTR            2   (_traits)              // 208.034ns
-                739         34  CALL                 1   ()                     // 2.167us
-                739         42  POP_JUMP_IF_FALSE    30  (to 104)               // 458.036ns
-                // >>> return self._traits                                      ## 957.050ns
-                741     >>  104 LOAD_FAST            0   (self)                 // 208.034ns
-                741         106 LOAD_ATTR            2   (_traits)              // 208.034ns
-                741         126 RETURN_VALUE             ()                     // 290.980ns
+                // ============= core:747 `traits` =============
+                // >>> if callable(self._traits):
+                750         0   LOAD_GLOBAL          0   (callable)                                 // 17   ns
+                            2   LOAD_FAST            0   (self)                                     // 15   ns
+                            4   LOAD_ATTR            1   (_traits)                                  // 17   ns
+                            6   CALL_FUNCTION        1   ()                                         // 18   ns
+                            8   POP_JUMP_IF_FALSE    12  (to 24)                                    // 17   ns
+                // >>> return self._traits
+                752     >>  24  LOAD_FAST            0   (self)                                     // 16   ns
+                            26  LOAD_ATTR            1   (_traits)                                  // 16   ns
+                            28  RETURN_VALUE             ()                                         // 38   ns
                 // =============================================
 
-            748         34  CALL                 1   ()                         // 292.028ns
-            748         42  RETURN_VALUE             ()                         // 499.946ns
+                        6   CALL_FUNCTION        1   ()                                             // 22   ns
+                        8   RETURN_VALUE             ()                                             // 42   ns
             // =============================================
 
-        1189     >>  58  FOR_ITER             39  (to 140)                      // 500.004ns
-        1189         62  STORE_FAST           2   (t)                           // 1.917us
-        // >>> if isinstance(t, cast(type[OpTraitInvT], trait)):                ## 5.415us
-        1190         64  LOAD_GLOBAL          1   (NULL + isinstance)           // 374.974ns
-        1190         74  LOAD_FAST            2   (t)                           // 416.010ns
-        1190         76  LOAD_GLOBAL          7   (NULL + cast)                 // 250.002ns
-        1190         86  LOAD_GLOBAL          2   (type)                        // 416.010ns
-        1190         96  LOAD_GLOBAL          8   (OpTraitInvT)                 // 250.002ns
-        1190         106 BINARY_SUBSCR            ()                            // 374.974ns
-        1190         110 LOAD_FAST            1   (trait)                       // 707.980ns
-        1190         112 CALL                 2   ()                            // 250.002ns
+                >>  16  FOR_ITER             16  (to 50)                                            // 25   ns
+                    18  STORE_FAST           2   (t)                                                // 22   ns
+        // >>> if isinstance(t, cast(type[OpTraitInvT], trait)):
+        1218         20  LOAD_GLOBAL          0   (isinstance)                                      // 21   ns
+                    22  LOAD_FAST            2   (t)                                                // 21   ns
+                    24  LOAD_GLOBAL          3   (cast)                                             // 21   ns
+                    26  LOAD_GLOBAL          1   (type)                                             // 19   ns
+                    28  LOAD_GLOBAL          4   (OpTraitInvT)                                      // 18   ns
+                    30  BINARY_SUBSCR            ()                                                 // 22   ns
+                    32  LOAD_FAST            1   (trait)                                            // 19   ns
+                    34  CALL_FUNCTION        2   ()                                                 // 41   ns
 
-            // ============ typing:2187 `cast` =============                    == 2.668us
-            // >>> return val                                                   ## 1.251us
-            2195         2   LOAD_FAST            1   (val)                     // 667.002ns
-            2195         4   RETURN_VALUE             ()                        // 291.970ns
+            // ============ typing:1737 `cast` =============
+            // >>> return val
+            1745         0   LOAD_FAST            1   (val)                                         // 18   ns
+                        2   RETURN_VALUE             ()                                             // 43   ns
             // =============================================
 
-        1190         120 CALL                 2   ()                            // 667.002ns
-        1190         128 POP_JUMP_IF_TRUE     1   (to 132)                      // 250.002ns
-        // >>> return t                                                         ## 1.750us
-        1191     >>  132 LOAD_FAST            2   (t)                           // 333.006ns
-        1191         134 SWAP                 2   ()                            // 250.002ns
-        1191         136 POP_TOP                  ()                            // 249.944ns
-        1191         138 RETURN_VALUE             ()                            // 583.008ns
+                    36  CALL_FUNCTION        2   ()                                                 // 23   ns
+                    38  POP_JUMP_IF_FALSE    24  (to 48)                                            // 20   ns
+        1218     >>  48  JUMP_ABSOLUTE        8   (to 16)                                           // 20   ns
+        // >>> for t in cls.traits:
+                >>  16  FOR_ITER             16  (to 50)                                            // 19   ns
+                    18  STORE_FAST           2   (t)                                                // 19   ns
+        // >>> if isinstance(t, cast(type[OpTraitInvT], trait)):
+        1218         20  LOAD_GLOBAL          0   (isinstance)                                      // 19   ns
+                    22  LOAD_FAST            2   (t)                                                // 19   ns
+                    24  LOAD_GLOBAL          3   (cast)                                             // 19   ns
+                    26  LOAD_GLOBAL          1   (type)                                             // 18   ns
+                    28  LOAD_GLOBAL          4   (OpTraitInvT)                                      // 18   ns
+                    30  BINARY_SUBSCR            ()                                                 // 21   ns
+                    32  LOAD_FAST            1   (trait)                                            // 19   ns
+                    34  CALL_FUNCTION        2   ()                                                 // 40   ns
+
+            // ============ typing:1737 `cast` =============
+            // >>> return val
+            1745         0   LOAD_FAST            1   (val)                                         // 18   ns
+                        2   RETURN_VALUE             ()                                             // 43   ns
+            // =============================================
+
+                    36  CALL_FUNCTION        2   ()                                                 // 21   ns
+                    38  POP_JUMP_IF_FALSE    24  (to 48)                                            // 20   ns
+        // >>> return t
+        1219         40  LOAD_FAST            2   (t)                                               // 19   ns
+                    42  ROT_TWO                  ()                                                 // 19   ns
+                    44  POP_TOP                  ()                                                 // 20   ns
+                    46  RETURN_VALUE             ()                                                 // 47   ns
         // =============================================
 
-    1181         74  LOAD_CONST           3   (None)                            // 624.976ns
-    1181         76  IS_OP                1   ()                                // 292.028ns
-    1181         78  RETURN_VALUE             ()                                // 290.980ns
+                34  LOAD_CONST           3   (None)                                                 // 21   ns
+                36  IS_OP                1   ()                                                     // 21   ns
+                38  RETURN_VALUE             ()                                                     // 47   ns
     // =============================================
 
-404         50  POP_JUMP_IF_TRUE     2   (to 56)                                // 624.976ns
-404     >>  56  RETURN_CONST         0   (None)                                 // 333.996ns
+            12  POP_JUMP_IF_TRUE     9   (to 18)                                                    // 16   ns
+        >>  18  LOAD_CONST           1   (None)                                                     // 16   ns
+            20  RETURN_VALUE             ()                                                         // 39   ns
 // =============================================
     \end{minted}
     \caption{Bytecode profile trace of the original implementation of \mintinline{python}{has_trait}.}
@@ -123,35 +146,49 @@
 
 \begin{code}
     \begin{minted}[fontsize=\footnotesize]{text}
-//// Trace of `has_trait_function_optimised` :
+//// Trace of `Extensibility.time_trait_check_optimised` :
 
-// = trace:408 `has_trait_function_optimised` ==                      == 18.708us
-// >>> has_trait = False                                              ## 2.083us
-409         2   LOAD_CONST           1   (False)                      // 666.012ns
-409         4   STORE_FAST           0   (has_trait)                  // 459.026ns
-// >>> for t in OP_WITH_REGION.traits._traits:                        ## 2.708us
-410         6   LOAD_GLOBAL          0   (OP_WITH_REGION)             // 250.002ns
-410         16  LOAD_ATTR            2   (traits)                     // 291.970ns
-410         36  LOAD_ATTR            4   (_traits)                    // 291.970ns
-410         56  GET_ITER                 ()                           // 292.028ns
-410     >>  58  FOR_ITER             22  (to 106)                     // 333.006ns
-410         62  STORE_FAST           1   (t)                          // 333.006ns
-// >>> if isinstance(t, Trait0):                                      ## 2.167us
-411         64  LOAD_GLOBAL          7   (NULL + isinstance)          // 292.028ns
-411         74  LOAD_FAST            1   (t)                          // 250.002ns
-411         76  LOAD_GLOBAL          8   (Trait0)                     // 250.002ns
-411         86  CALL                 2   ()                           // 250.002ns
-411         94  POP_JUMP_IF_TRUE     1   (to 98)                      // 292.028ns
-// >>> has_trait = True                                               ## 1.374us
-412     >>  98  LOAD_CONST           2   (True)                       // 290.980ns
-412         100 STORE_FAST           0   (has_trait)                  // 250.002ns
-// >>> break                                                          ## 1.415us
-413         102 POP_TOP                  ()                           // 290.980ns
-413         104 JUMP_FORWARD         1   (to 108)                     // 290.980ns
-// >>> assert has_trait                                               ## 1.042us
-414     >>  108 LOAD_FAST            0   (has_trait)                  // 291.038ns
-414         110 POP_JUMP_IF_TRUE     2   (to 116)                     // 209.024ns
-414     >>  116 RETURN_CONST         0   (None)                       // 291.970ns
+// == microbenchmarks:206 `time_trait_check_optimised` ==
+// >>> has_trait = False
+208         0   LOAD_CONST           1   (False)                                                    // 14   ns
+            2   STORE_FAST           1   (has_trait)                                                // 14   ns
+// >>> for t in Extensibility.OP_WITH_REGION.traits._traits:
+209         4   LOAD_GLOBAL          0   (Extensibility)                                            // 13   ns
+            6   LOAD_ATTR            1   (OP_WITH_REGION)                                           // 13   ns
+            8   LOAD_ATTR            2   (traits)                                                   // 13   ns
+            10  LOAD_ATTR            3   (_traits)                                                  // 13   ns
+            12  GET_ITER                 ()                                                         // 13   ns
+        >>  14  FOR_ITER             12  (to 40)                                                    // 13   ns
+            16  STORE_FAST           2   (t)                                                        // 11   ns
+// >>> if isinstance(t, Extensibility.TRAIT_4):
+210         18  LOAD_GLOBAL          4   (isinstance)                                               // 11   ns
+            20  LOAD_FAST            2   (t)                                                        // 11   ns
+            22  LOAD_GLOBAL          0   (Extensibility)                                            // 11   ns
+            24  LOAD_ATTR            5   (TRAIT_4)                                                  // 11   ns
+            26  CALL_FUNCTION        2   ()                                                         // 12   ns
+            28  POP_JUMP_IF_FALSE    19  (to 38)                                                    // 11   ns
+210     >>  38  JUMP_ABSOLUTE        7   (to 14)                                                    // 11   ns
+// >>> for t in Extensibility.OP_WITH_REGION.traits._traits:
+        >>  14  FOR_ITER             12  (to 40)                                                    // 11   ns
+            16  STORE_FAST           2   (t)                                                        // 11   ns
+// >>> if isinstance(t, Extensibility.TRAIT_4):
+210         18  LOAD_GLOBAL          4   (isinstance)                                               // 11   ns
+            20  LOAD_FAST            2   (t)                                                        // 10   ns
+            22  LOAD_GLOBAL          0   (Extensibility)                                            // 11   ns
+            24  LOAD_ATTR            5   (TRAIT_4)                                                  // 11   ns
+            26  CALL_FUNCTION        2   ()                                                         // 11   ns
+            28  POP_JUMP_IF_FALSE    19  (to 38)                                                    // 11   ns
+// >>> has_trait = True
+211         30  LOAD_CONST           2   (True)                                                     // 11   ns
+            32  STORE_FAST           1   (has_trait)                                                // 11   ns
+// >>> break
+212         34  POP_TOP                  ()                                                         // 11   ns
+            36  JUMP_FORWARD         1   (to 40)                                                    // 11   ns
+// >>> assert has_trait
+213     >>  40  LOAD_FAST            1   (has_trait)                                                // 11   ns
+            42  POP_JUMP_IF_TRUE     24  (to 48)                                                    // 11   ns
+        >>  48  LOAD_CONST           3   (None)                                                     // 11   ns
+            50  RETURN_VALUE             ()                                                         // 23   ns
 // =============================================
     \end{minted}
     \caption{Bytecode profile trace of the optimised implementation of \mintinline{python}{has_trait}.}
