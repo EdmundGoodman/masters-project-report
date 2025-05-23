@@ -16,9 +16,14 @@ with the following changes.
 """
 
 import matplotlib
+import matplotlib.figure
 import matplotlib.pyplot as plt
 import numpy as np
 import math
+
+from pathlib import Path
+
+PARENT_DIRECTORY = Path(__file__).parent
 
 from typing import Callable
 
@@ -54,7 +59,7 @@ def setGlobalDefaults():
     matplotlib.rcParams["axes.spines.top"] = False
 
 
-matplotlib.rcParams["figure.figsize"] = 5, 2
+matplotlib.rcParams["figure.figsize"] = 5, 2.75
 
 # Color palette
 light_gray = "#cacaca"
@@ -69,7 +74,7 @@ black = "#000000"
 white = "#ffffff"
 
 
-def save(figure, name):
+def save(figure: matplotlib.figure.Figure, name: Path):
     # Do not emit a creation date, creator name, or producer. This will make the
     # content of the pdfs we generate more deterministic.
     metadata = {"CreationDate": None, "Creator": None, "Producer": None}
@@ -191,23 +196,27 @@ def autolabel_ms(ax, rects, **kwargs):
 
 
 # Plot an example speedup plot
-def plot_speedup():
-    labels = ["G1", "G2", "G3", "G4", "G5"]
-    men_means = [1.5, 1.2, 1.3, 1.1, 1.0]
-    women_means = [1.8, 1.5, 1.1, 1.3, 0.9]
+def plot_performance():
+    labels = ["Current\nxDSL", "Specialised\nxDSL", "MLIR"]
+    perf_means = [504, 63.6, 3.89]
+    perf_errors = [76, 40, 0.01]
 
     x = np.arange(len(labels))  # the label locations
     width = 0.35  # the width of the bars
 
     fig, ax = plt.subplots()
-    rects1 = ax.bar(x - width / 2, men_means, width, label="Men", color=light_blue)
-    rects2 = ax.bar(x + width / 2, women_means, width, label="Women", color=dark_blue)
+    rects1 = ax.bar(x, perf_means, width, color=light_blue,yerr=perf_errors,
+        capsize=5,
+        error_kw={"ecolor": "black", "linewidth": 1},)
+
+    # Logarithmic Y-Axis
+    ax.set_yscale("log")
 
     # Y-Axis Label
     #
     # Use a horizontal label for improved readability.
     ax.set_ylabel(
-        "Speedup",
+        "Wall time [s]",
         rotation="horizontal",
         position=(1, 1.05),
         horizontalalignment="left",
@@ -221,13 +230,14 @@ def plot_speedup():
     ax.legend(ncol=100, loc="lower right", bbox_to_anchor=(0, 1, 1, 0))
 
     autolabel(ax, rects1)
-    autolabel(ax, rects2)
 
-    save(fig, "speedup.pdf")
+    fig.tight_layout()
+    # plt.show()
+    save(fig, PARENT_DIRECTORY / "../specialising_optimising_xdsl_rewriting/instantiate.pdf")
 
 
 def main():
-    plot_speedup()
+    plot_performance()
 
 
 if __name__ == "__main__":

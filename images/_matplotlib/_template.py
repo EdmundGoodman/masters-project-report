@@ -16,14 +16,19 @@ with the following changes.
 """
 
 import matplotlib
+import matplotlib.figure
 import matplotlib.pyplot as plt
 import numpy as np
 import math
 
+from pathlib import Path
+
+PARENT_DIRECTORY = Path(__file__).parent
+
 from typing import Callable
 
 
-def setGlobalDefaults():
+def setGlobalDefaults() -> None:
     ## Use TrueType fonts instead of Type 3 fonts
     #
     # Type 3 fonts embed bitmaps and are not allowed in camera-ready submissions
@@ -69,7 +74,7 @@ black = "#000000"
 white = "#ffffff"
 
 
-def save(figure, name):
+def save(figure: matplotlib.figure.Figure, name: Path) -> None:
     # Do not emit a creation date, creator name, or producer. This will make the
     # content of the pdfs we generate more deterministic.
     metadata = {"CreationDate": None, "Creator": None, "Producer": None}
@@ -88,7 +93,7 @@ def save(figure, name):
 # precision of the mantissa will be reduced as necessary,
 # as much as possible to get it within *digits*, but this
 # can't be guaranteed for very large numbers.
-def get_scientific(x: float, digits: int):
+def get_scientific(x: float, digits: int) -> None:
     # get scientific without leading zeros or + in exp
     def get(x: float, prec: int) -> str:
         result = f"{x:.{prec}e}"
@@ -137,7 +142,7 @@ def autolabel(
     xoffset=0,
     yoffset=1,
     **kwargs,
-):
+) -> None:
     # kwargs is directly passed to ax.annotate and overrides defaults below
     assert "xytext" not in kwargs, "use xoffset and yoffset instead of xytext"
     default_kwargs = dict(
@@ -159,8 +164,8 @@ def autolabel(
 
 
 # utility to print times as 1h4m, 1d15h, 143.2ms, 10.3s etc.
-def str_from_ms(ms):
-    def maybe_val_with_unit(val, unit):
+def str_from_ms(ms: float) -> None:
+    def maybe_val_with_unit(val: float, unit: str) -> str:
         return f"{val}{unit}" if val != 0 else ""
 
     if ms < 1000:
@@ -186,7 +191,7 @@ def str_from_ms(ms):
     return f"{d}d{maybe_val_with_unit(h, 'h')}"
 
 
-def autolabel_ms(ax, rects, **kwargs):
+def autolabel_ms(ax, rects, **kwargs) -> None:
     autolabel(ax, rects, label_from_height=str_from_ms, **kwargs)
 
 
@@ -223,7 +228,8 @@ def plot_speedup():
     autolabel(ax, rects1)
     autolabel(ax, rects2)
 
-    save(fig, "speedup.pdf")
+    # plt.show()
+    save(fig, PARENT_DIRECTORY / "_template.pdf")
 
 
 def main():
