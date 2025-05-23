@@ -14,9 +14,9 @@
 %% Context (~abstract sentence one: topic of compilers/MLIR)
 Compilers are a critical component of computing systems, providing an abstraction % for expressivity, performance, and portability (review: first sentence too long)
 from high-level programming languages to the underlying machine ISA.
-Early compilers were hand-crafted, resulting in complex and language-specific implementations.
-The LLVM compiler framework \cite{lattnerLLVMCompilationFramework2004} addressed these problems of complexity and re-usability with a novel and language-independent \ac{ir} in \ac{ssa} form, which could be analysed and transformed by a sequence of passes.
-Recently, \ac{mlir} \cite{lattnerMLIRScalingCompiler2021a}, has furthered these goals by enabling users to cheaply extend compilers with new abstractions, and automatically provides common infrastructure such as parsing and printing logic for them.
+Early compilers were hand-crafted, resulting in complex and language-specific implementations. % TODO: This needs to be rephrased!!! No early and no hand-crafted, focus on lack of modularity
+The LLVM compiler framework \cite{lattnerLLVMCompilationFramework2004} addressed these problems of complexity and re-usability with a novel and language-independent textual \ac{ir} in \ac{ssa} form, which could be analysed and transformed by a sequence of passes.
+Recently, \ac{mlir} \cite{lattnerMLIRScalingCompiler2021a}, has furthered these goals by enabling users to cheaply extend compilers with their own abstractions. %, and automatically provides common infrastructure such as parsing and printing logic for them.
 
 
 
@@ -38,11 +38,13 @@ These factors motivate challenging the status quo of LLVM and MLIR implementing 
 %%% "what was the hoped-for outcome (aims)"
 
 %% Motivation/aim (~abstract sentence four: why not use dynamic languages/xDSL?)
-xDSL \cite{fehrXDSLSidekickCompilation2025} is a reimplementation of \ac{mlir}'s core data structures and \ac{ir} definitions in Python, a dynamically typed, interpreted language.
-xDSL's implementation in Python avoids the long build times of \ac{mlir} as a result of being interpreted. %, and its expressive syntax and minimal boilerplate allows compiler designers to focus on their task as opposed to the underlying language and framework.
-In addition to this, Python's dynamic typing matches the dynamic nature of the user-extensible compiler framework workload.
+This challenge takes the form of xDSL \cite{fehrXDSLSidekickCompilation2025}, a reimplementation of \ac{mlir}'s core data structures and \ac{ir} definitions in Python, a dynamically typed, interpreted language.
+Using Python allows xDSL to take \ac{mlir}'s goal of user extensibility to even further extremes by leveraging its dynamic features such as runtime meta-programming.
+In addition to this, xDSL's interpreted nature avoiding \ac{mlir}'s infamously long build times, and its dynamic typing matching the dynamic nature of the user-extensible compiler framework workload.
+% xDSL's implementation in Python avoids the long build times of \ac{mlir} as a result of being interpreted. %, and its expressive syntax and minimal boilerplate allows compiler designers to focus on their task as opposed to the underlying language and framework.
+% In addition to this, Python's dynamic typing matches the dynamic nature of the user-extensible compiler framework workload.
 However, using Python also has drawbacks, most notably in relation to runtime performance.
-This work examines the performance of program optimisation through pattern rewriting in xDSL, focussing on the impact of dynamism and contrasting the current state-of-the-art, \ac{mlir}.
+This work examines the performance of the pattern rewriting component of the xDSL compiler framework, focussing on the impact of dynamism and contrasting against the current state-of-the-art, \ac{mlir}.
 
 
 
@@ -50,6 +52,7 @@ This work examines the performance of program optimisation through pattern rewri
 
 %%% "give a brief overview of what you actually did"
 
+%% Pareto curve of performance and dynamism of workload?
 
 \begin{figure}
     \centering
@@ -65,8 +68,9 @@ The performance of a program is constrained both by the details of its implement
 These two properties are deeply interlinked, making them difficult to measure independently.
 To disentangle them, we manually optimise and specialise xDSL's implementation of pattern rewriting (Label \texttt{(1)} of \autoref{fig:narrative}), resulting in an $5.5\times$ performance uplift. % TODO: align with finalised figure when re-measured
 We then confirm the performance of the specialisation is constrained only by the language runtime by examination of the dispatched bytecode of micro-benchmarks.
+% TODO: Add further discussion of profiler!!!
 Following this, we quantify the impact of recent performance enhancements made to CPython for this specialised implementation (Label \texttt{(2)} of \autoref{fig:narrative}). % as an increase of $xy\%$.
-This process provides an approximate best-case for the performance of pattern rewriting in xDSL, which can then be compared against \ac{mlir}.
+This describes the best-case for the performance of pattern rewriting in xDSL, which can then be compared against \ac{mlir}.
 
 
 %% Overview (~abstract sentence five, which needs re-writing: what we did part two -- custom CPython optimisations)
@@ -90,7 +94,7 @@ The contributions of our work are as follows:
 
 \begin{itemize}
     \item An examination of the best-case performance for pattern rewriting workloads in the CPython language runtime. %, including trade-offs in expressivity and the impact of performance optimisations made to the language runtime.
-    \item An exploration of optimisation techniques to shrink the performance gap between dynamic and static languages for pattern rewriting workloads.
     \item A tool to examine CPython bytecode dispatch in program runs, facilitating the analysis of costs incurred by dynamism.
+    \item An exploration of optimisation techniques to shrink the performance gap between dynamic and static languages for pattern rewriting workloads.
     \item A quantitative comparison of the performance of user-extensible compiler frameworks implemented in static and dynamic languages, focussing on the impact of dynamism. % leveraging sidekick compilation for fine-grained analysis of the impact of dynamism
 \end{itemize}
