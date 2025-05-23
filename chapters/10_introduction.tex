@@ -66,7 +66,7 @@ These two properties are deeply interlinked, making them difficult to measure in
 To disentangle them, we manually optimise and specialise xDSL's implementation of pattern rewriting (Label \texttt{(1)} of \autoref{fig:narrative}), resulting in an $5.5\times$ performance uplift. % TODO: align with finalised figure when re-measured
 We then confirm the performance of the specialisation is constrained only by the language runtime by examination of the dispatched bytecode of micro-benchmarks.
 Following this, we quantify the impact of recent performance enhancements made to CPython for this specialised implementation (Label \texttt{(2)} of \autoref{fig:narrative}). % as an increase of $xy\%$.
-This process provides an approximate best-case for the performance of pattern rewriting in xDSL, which can then be compared against \ac{mlir}.
+This describes the best-case for the performance of pattern rewriting in xDSL, which can then be compared against \ac{mlir}.
 
 
 %% Overview (~abstract sentence five, which needs re-writing: what we did part two -- custom CPython optimisations)
