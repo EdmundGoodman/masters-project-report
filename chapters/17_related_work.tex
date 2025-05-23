@@ -25,13 +25,16 @@
 Our research builds on top of two existing bodies of work.
 % Argument
 The first is characterisation of the performance of user-extensible compiler frameworks. Existing work in this domain is limited to examining frameworks written in ahead-of-time compiled languages, such as MLIR in C++.
-We extend this by measuring the performance of xDSL, a framework written in Python -- an interpreted dynamic language. Using this measurement, we contrast the performance characteristics of static and dynamic implementations for this workload.
-The second body of work is the performance measurement of the Python programming language. Existing work in this domain provides a wide variety of performance measurement and profiling tools for Python programs. However, the granularity of profiling is typically at the function or the line level.
-We extend this by profiling at the bytecode level, allowing examination of the impact of dynamism on workload performance.
-Furthermore, existing work examines the aggregate improvements across a wide variety of workloads.
-We deepen this by investigating the impact for specific, dynamic workloads.
+Our work extends this by measuring the performance of xDSL, a framework written in Python -- an interpreted dynamic language. This measurement then allows us to contrast the performance characteristics of static and dynamic implementations for this workload.
+% We extend this by measuring the performance of xDSL, a framework written in Python -- an interpreted dynamic language. Using this measurement, we contrast the performance characteristics of static and dynamic implementations for this workload.
+The second body of work is the performance measurement of the Python programming language. Existing work in this domain provides a wide variety of performance measurement and profiling tools for Python programs. However, the finest granularity of profiling information provided by these tools is at the line level. Our need for even finer granularity measurements to characterise the performance of dynamic workload demonstrates a gap in this existing provision.
+% However, the granularity of this profiling is at the function or the line level.
+% We extend this by profiling at the bytecode level, allowing examination of the impact of dynamism on workload performance.
+Our novel bytecode profiling tool fills this gap by recording highly granular timing information for the bytecodes dispatched to interpret native Python code. This facilites deep performance analysis of workloads which benefit from remaining in Python natively.
+% Furthermore, existing work examines the aggregate improvements across a wide variety of workloads.
+% We deepen this by investigating the impact for specific, dynamic workloads.
 % Link
-Our research furthers existing knowledge by providing novel insights into the suitability of dynamic languages for user-extensible compiler frameworks, and the impact of modern optimisations upon this suitability.
+% Our research furthers existing knowledge by providing novel insights into the suitability of dynamic languages for user-extensible compiler frameworks, and the impact of modern optimisations upon this suitability.
 
 
 
@@ -67,7 +70,8 @@ This talk aimed to quantify the feeling in the LLVM community that MLIR incurred
 The presenters first discuss the implementation details of MLIR, including the design choices made to match common workloads.
 Next, they provide a set of micro-benchmarks for key functionality provided by MLIR, along with traditional benchmarks for constant folding and loop unrolling workloads. For the micro-benchmarks and constant folding workloads, MLIR is approximately four times slower than traditional LLVM. However, MLIR's more expressive \ac{ir} representation yields an eighty-eight times speed up over LLVM for loop unrolling.
 % Link
-These results help characterise MLIR's performance, and assuaged the community's belief that MLIR incurs a high performance cost over LLVM for real-world applications.
+While these results provides valuable insights into MLIR's performance characteristics, further research is needed to fully understand the trade-offs between expressiveness and efficiency.
+% These results help characterise MLIR's performance, and assuaged the community's belief that MLIR incurs a high performance cost over LLVM for real-world applications.
 
 
 %% Lack of other works/our differentiation
@@ -102,7 +106,7 @@ In his talk ``Python Performance Matters'' \cite{emerybergerPythonPerformanceMat
 % Argument
 As such, he asserts a maximally performant Python program is one which executes as few Python instructions as possible, instead heavily leveraging code written in more performant languages such as C or FORTRAN through \ac{ffi} bindings.
 As these \ac{ffi} bindings incur an overhead, particularly when copying large data structures, instances of switching between the two languages should be minimised.
-This approach is applicable to many applications, for example libraries such as NumPy and TensorFlow providing useful abstractions for compiled code over common tasks.
+This approach is applicable to many applications, for example libraries such as NumPy and TensorFlow, providing useful abstractions for compiled code over common tasks.
 % TODO: Could split paragraph here?
 Unfortunately, this approach cannot easily be applied to user-extensible compiler frameworks. This is because user defined extensions make frequent interactions across a wide API surface, and operate on large data structures -- resulting in a disproportionate cost from crossing \ac{ffi} boundaries.
 In addition to this, compiler optimisation workloads are less amenable to ahead-of-time compiled optimisations such as vectorisations, further reducing the benefit of leveraging such languages.
@@ -115,7 +119,8 @@ As such, our research extends the state-of-the-art by examining cases where exis
 
 %% Difficulty measuring python
 % Hook
-Reliable and accurate performance measurement is notoriously difficult, having literature discussing procedures for it \cite{harris2021understanding}, and constituting the main contribution of systems papers and theses \cite{crapeperformance}.
+Reliable and accurate performance measurement is notoriously difficult.
+% , having literature discussing procedures for it \cite{harris2021understanding}, and constituting the main contribution of systems papers and theses \cite{crapeperformance}.
 % Argument
 This difficulty comes from both sides of the hardware-software interface.
 For example, hardware optimisations such as hierarchical caches, branch predictors, and power management schemes introduce noise, making performance measurements less predictable and consistent. Similar confounding effects come from software, from process scheduling in the operating system to garbage collection in language runtimes.
