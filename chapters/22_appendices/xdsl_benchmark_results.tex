@@ -31,16 +31,19 @@ The following section describes the procedure and provides the raw results from 
 Test IRTraversal.iterate_ops ran in: 0.000326 ± 5.92e-06s // ÷ 32768
 Test IRTraversal.iterate_block_ops ran in: 0.00675 ± 4.5e-05s // ÷ 32768
 Test IRTraversal.walk_block_ops ran in: 0.0172 ± 9.31e-05s // ÷ 32768
-Test Extensibility.interface_check_trait ran in: 4.72e-08 ± 4.27e-07s
-Test Extensibility.interface_check ran in: 4.38e-08 ± 3.09e-07s
+Test Extensibility.interface_check_trait ran in: 4.72e-08 ± 4.27e-08s
+Test Extensibility.interface_check ran in: 4.38e-08 ± 3.09e-08s
 Test Extensibility.trait_check ran in: 9.24e-07 ± 5.13e-07s
-Test Extensibility.trait_check_optimised ran in: 2.66e-07 ± 3.4e-07s
+Test Extensibility.trait_check_optimised ran in: 2.66e-07 ± 3.4e-08s
 Test Extensibility.trait_check_single ran in: 6.72e-07 ± 5.11e-07s
 Test Extensibility.trait_check_neg ran in: 2.04e-06 ± 7.99e-07s
-Test OpCreation.operation_create ran in: 3.6e-06 ± 1.49e-06s
-Test OpCreation.operation_build ran in: 1.21e-05 ± 1.85e-06s
-Test OpCreation.operation_clone ran in: 0.000924 ± 9.57e-06s
-Test OpCreation.operation_clone_single ran in: 6.4e-06 ± 1.5e-06s
+Test OpCreation.operation_create ran in: 3.77e-06 ± 9.16e-07s
+Test OpCreation.operation_build ran in: 1.27e-05 ± 1.81e-06s
+Test OpCreation.operation_create_optimised ran in: 4.77e-07 ± 3.85e-07s
+Test OpCreation.operation_clone ran in: 0.000962 ± 1.15e-05s
+Test OpCreation.operation_clone_single ran in: 6.96e-06 ± 1.55e-06s
+Test OpCreation.operation_constant_init ran in: 3.34e-05 ± 3.68e-06s
+Test OpCreation.operation_constant_create ran in: 1.83e-06 ± 7.74e-07s
     \end{minted}
     \caption{Results for the xDSL micro-benchmarks derived from ``How Slow is MLIR?'', for CPython version 3.10.17.}
     \label{listing:how-slow-is-mlir-xdsl-microbenchmark-results}

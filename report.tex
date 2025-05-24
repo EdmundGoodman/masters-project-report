@@ -70,61 +70,61 @@
 
 
 
-\begin{code}
-    \begin{minted}{haskell}
-        newtype Lasagne = Lasagne Int
-            deriving (Show, Num)
+% \begin{code}
+%     \begin{minted}{haskell}
+%         newtype Lasagne = Lasagne Int
+%             deriving (Show, Num)
 
-        -- The stacking operating can be considered integer
-        -- addition of the number of layers
-        instance Semigroup Lasagne where
-            (<>) = (+)
+%         -- The stacking operating can be considered integer
+%         -- addition of the number of layers
+%         instance Semigroup Lasagne where
+%             (<>) = (+)
 
-        -- The identity element is the empty (zero-layer) Lasagne
-        instance Monoid Lasagne where
-            mempty = Lasagne 0
+%         -- The identity element is the empty (zero-layer) Lasagne
+%         instance Monoid Lasagne where
+%             mempty = Lasagne 0
 
-        -- Stacking 5 and 6 layers gives 11 layers:
-        --
-        -- ghci> Lasagne 5 <> Lasagne 6
-        -- Lasagne 11
-    \end{minted}
-    \caption{A Haskell implementation of the Lasagne monoid, which is not an endofunctor.}
-    \label{}
-\end{code}
+%         -- Stacking 5 and 6 layers gives 11 layers:
+%         --
+%         -- ghci> Lasagne 5 <> Lasagne 6
+%         -- Lasagne 11
+%     \end{minted}
+%     \caption{A Haskell implementation of the Lasagne monoid, which is not an endofunctor.}
+%     \label{}
+% \end{code}
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.5\textwidth]{example-image-a}
-    \caption{An example image.}
-    \label{}
-\end{figure}
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=0.5\textwidth]{example-image-a}
+%     \caption{An example image.}
+%     \label{}
+% \end{figure}
 
-\begin{figure}[H]
-     \centering
-     \begin{subfigure}[b]{0.45\textwidth}
-         \centering
-         \includegraphics[width=\textwidth]{example-image-a}
-         \caption{Example image A.}
-         \label{}
-     \end{subfigure}
-     \hfill
-     \begin{subfigure}[b]{0.45\textwidth}
-         \centering
-         \includegraphics[width=\textwidth]{example-image-b}
-         \caption{Example image A.}
-         \label{}
-     \end{subfigure}
-     \caption{Two example images.}
-     \label{}
-\end{figure}
+% \begin{figure}[H]
+%      \centering
+%      \begin{subfigure}[b]{0.45\textwidth}
+%          \centering
+%          \includegraphics[width=\textwidth]{example-image-a}
+%          \caption{Example image A.}
+%          \label{}
+%      \end{subfigure}
+%      \hfill
+%      \begin{subfigure}[b]{0.45\textwidth}
+%          \centering
+%          \includegraphics[width=\textwidth]{example-image-b}
+%          \caption{Example image A.}
+%          \label{}
+%      \end{subfigure}
+%      \caption{Two example images.}
+%      \label{}
+% \end{figure}
 
-\begin{equation}
-    S = \frac{1}{f + \frac{1-f}{P}}
-    \label{}
-\end{equation}
+% \begin{equation}
+%     S = \frac{1}{f + \frac{1-f}{P}}
+%     \label{}
+% \end{equation}
 
-\begin{align}
-    S &= s + p \times N \\
-      &= N + (1 - N) \times s \label{}
-\end{align}
+% \begin{align}
+%     S &= s + p \times N \\
+%       &= N + (1 - N) \times s \label{}
+% \end{align}

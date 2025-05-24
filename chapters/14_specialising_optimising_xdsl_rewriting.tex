@@ -5,14 +5,19 @@
 % Hook
 In \autoref{chap:measuring-compiler-performance}, we constructed a set of experiments to empirically compare the current performance of the xDSL and MLIR compiler frameworks.
 % Argument
-The goal of these experiments is to use xDSL and MLIR as proxies to characterise the performance of static and dynamic languages for the implementation of user-extensible compiler frameworks.
-However, these experiments do not exactly capture this goal. We argue this is because they are measuring both the implementation details of the framework in addition to the runtime of the language, with the former obscuring our goal of measuring the latter.
-% The results of these experiments showed that two factors contributed to the slow-down between the MLIR and xDSL frameworks: overhead incurred by the Python language runtime, and design choices made when implementing xDSL.
-% In order to use the xDSL and MLIR frameworks to understand the performance of static and dynamic languages for the implementation of user-extensible compiler frameworks, our measurements must be as independent of implementation details as possible.
-In this chapter, we mitigate this by specialising the xDSL framework to implement only a single workload. This elides aspects of the implementation which provide expressivity at the cost of performance, and is representative of the best-case performance of Python for this workload.
+Our overall aim is to use these experiments to contrast the performance of static and dynamic languages for the implementation of user-extensible compiler frameworks, using MLIR and xDSL as proxies for these two categories respectively.
+However, the experiments so far measure a combination of the effects of dynamism in the language runtime and implementation details of the framework, with the former obscuring our goal of measuring the latter.
+% Link
+In order to use the frameworks for our aims, our measurements must be as independent of implementation details as possible.
+
+% Hook
+In this chapter, we meet this requirement by specialising the xDSL framework to implement only a single workload.
+% Argument
+In this process, we manually identify and remove computation performed by the framework which is unnecessary to its execution of this workload. This computation broadly falls into two categories. The first is functionality which. % TODO: Fill in
+The second is calculating and checking values which are known as runtime invariants for the selected workload. % TODO: Fill in
+By eliminating both of these performance overheads, we reach an implementation representative of the best-case performance of Python for this workload.
 % Link
 The benefits of this specialisation are twofold. Firstly it reveals inefficiencies in xDSL which can be optimised to improve the general performance of the framework. Secondly, it provides a true performance baseline for dynamic languages irrespective of implementation details which can be used to quantify the impact of dynamism in \autoref{chap:dynamism-pattern-rewriting}.
-
 
 
 \section{Micro-benchmarks}
@@ -20,11 +25,13 @@ The benefits of this specialisation are twofold. Firstly it reveals inefficienci
 
 %% Link back to micro-benchmarks and summarise section
 % Hook
-An important component of our experimental suite is micro-benchmarks, measuring the performance of operations fundamental to xDSL and MLIR.
+An important component of our experimental suite is micro-benchmarks, measuring the performance of procedures fundamental to xDSL and MLIR.
 % Argument
-The small size of these micro-benchmarked fundamental operations makes them tractable first targets for manual specialisation and optimisation, with the performance impact of this process easily characterised by repeating the micro-benchmark.
+The small size of these micro-benchmarked procedures makes them tractable first targets for manual specialisation and optimisation, with the performance impact of this process easily characterised by repeating the micro-benchmark.
+By manually examining the traces of their execution, we can identify and eliminate any unnecessary computation in the current implementation.
 % Link
-In this section, we examine the specialisation process for these micro-benchmarks in detail. % TODO: Add more stuff here!!
+Having done this, we re-run the micro-benchmarks to quantify the performance of the specialised implementation, facilitating comparison of the language runtime only for user-extensible compiler framework workloads.
+% In this section, we examine the specialisation process for these micro-benchmarks in detail. % TODO: Add more stuff here!!
 
 
 \subsection{Operation instantiation}
@@ -36,8 +43,8 @@ The first micro-benchmark discussed was instantiating operations, one of the cen
 % Argument
 The idiomatic way to do this in xDSL is directly instantiating a new Python object.
 This invokes the \mintinline{python3}{__new__} method to construct an empty class, then the \mintinline{python3}{__init__} method to initialise it, and optionally \mintinline{python3}{__post_init__} following initialisation.
-In xDSL, this instantiation process includes a large amount of logic (\autoref{fig:ubenchmark-hastrait-xdsl-viztracer}), including verifying attributes and .
-However, in many instances this verification is unneeded as it is already known as a runtime invariant.
+In xDSL, this instantiation process includes a large amount of logic (\autoref{fig:ubenchmark-hastrait-xdsl-viztracer}), including verifying attributes and building properties of the operation.
+However, in many instances this verification is unneeded as it is already known as a runtime invariant, and the building process can similarly be simplified as the structure can be inferred.
 % Link
 As such, specialisation to remove this overhead can vastly reduce the complexity and hence improve performance (\autoref{fig:ubenchmark-gettrait-xdsl-viztracer}).
 
@@ -45,64 +52,74 @@ As such, specialisation to remove this overhead can vastly reduce the complexity
     \centering
     \begin{subfigure}[b]{\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{images/specialising_optimising_xdsl_rewriting/original_constant_create.png}
+        \includegraphics[width=\textwidth]{images/specialising_optimising_xdsl_rewriting/original_empty_create}
         \captionsetup{width=0.8\textwidth}
-        \caption{.}
+        \caption{The default constructor has a high overhead, calculating known invariants and .}
         \label{fig:ubenchmark-hastrait-xdsl-viztracer}
     \end{subfigure}
     \begin{subfigure}[b]{\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{images/specialising_optimising_xdsl_rewriting/optimised_constant_create.png}
+        \includegraphics[width=\textwidth]{images/specialising_optimising_xdsl_rewriting/optimised_empty_create}
         \captionsetup{width=0.8\textwidth}
-        \caption{.}
+        \caption{The same object can be constructed with significantly less logic.}
         \label{fig:ubenchmark-gettrait-xdsl-viztracer}
     \end{subfigure}
-    \caption{.}
+    \caption{\texttt{viztracer} traces of xDSL instantiating an \texttt{EmptyOp} before (top) and after (bottom) specialisation.}
     \label{fig:ubenchmark-hasgettrait-xdsl-viztracer}
 \end{figure}
 
 %% Describe specialisation/optimisation
 % Hook
+Examining the above trace, we can
 % Argument
+
 % Link
 
 
 \begin{figure}[H]
-    \begin{subfigure}[b]{0.4\textwidth}
+    \begin{subfigure}[b]{0.5\textwidth}
        \centering
         \begin{minted}[fontsize=\footnotesize]{text}
-            ConstantOp(
-                IntegerAttr(
-                    100,
-                    i32
-                )
-            )
+            EmptyOp()
         \end{minted}
+        % ConstantOp(
+        %         IntegerAttr(
+        %             100,
+        %             i32
+        %         )
+        %     )
         \footnotesize\vspace{3em}
         \caption{Instantiation with constructors.}
         \label{listing:ubenchmark-xdsl-constant-constructor}
     \end{subfigure}
     \hfill
-    \begin{subfigure}[b]{0.6\textwidth}
+    \begin{subfigure}[b]{0.5\textwidth}
         \centering
         \begin{minted}[breakanywhere,fontsize=\footnotesize]{text}
-            int_attr = IntAttr.__new__(IntAttr)
-            object.__setattr__(int_attr, "data", 100)
-            integer_attr = IntegerAttr.__new__(IntegerAttr)
-            object.__setattr__(integer_attr, "parameters", (int_attr, i32))
-            constant_op = ConstantOp.__new__(ConstantOp)
-            constant_op._operands = tuple()
-            constant_op.results = (OpResult(i32, constant_op, 0),)
-            constant_op.properties = {"value": integer_attr}
-            constant_op.attributes = {}
-            constant_op._successors = []
-            constant_op.regions = tuple()
+            empty_op = EmptyOp.__new__(EmptyOp)
+            empty_op._operands = tuple()
+            empty_op.results = tuple()
+            empty_op.properties = {}
+            empty_op.attributes = {}
+            empty_op._successors = tuple()
+            empty_op.regions = tuple()
         \end{minted}
+            % int_attr = IntAttr.__new__(IntAttr)
+            % object.__setattr__(int_attr, "data", 100)
+            % integer_attr = IntegerAttr.__new__(IntegerAttr)
+            % object.__setattr__(integer_attr, "parameters", (int_attr, i32))
+            % constant_op = ConstantOp.__new__(ConstantOp)
+            % constant_op._operands = tuple()
+            % constant_op.results = (OpResult(i32, constant_op, 0),)
+            % constant_op.properties = {"value": integer_attr}
+            % constant_op.attributes = {}
+            % constant_op._successors = []
+            % constant_op.regions = tuple()
         \caption{Instantiation by direct manipulation of xDSL's data structures.}
         \label{listing:ubenchmark-xdsl-constant-direct}
     \end{subfigure}
     \captionsetup{name=Listing}
-    \caption{Approaches to instantiating an arithmetic constant.}
+    \caption{Approaches to instantiating an empty operation.}
     \label{listing:ubenchmark-xdsl-constant}
 \end{figure}
 
@@ -113,14 +130,15 @@ As such, specialisation to remove this overhead can vastly reduce the complexity
 From this example, we can see that xDSL's design goal of a simple, expressive API is antagonistic with the performance of its implementation. By specialising the implementation to the workload, directly invoking only the required instructions, we can achieve significant performance improvements. We argue that this specialisation approaches the upper bound of performance for this workload as a result of the constraints of the language runtime.
 
 \begin{table}[H]
-  \caption{.}
+  \caption{Specialisation improves xDSL's operation instantiation performance by $26\times$, lifting it from $83\times$ to $3\times$ slower than MLIR.}
   \label{tab:ubenchmark-instantiation-optimised}
   \centering
   \begin{tabular}{ccc}
     \toprule
     \textbf{MLIR [ns]} & \textbf{xDSL [ns]} & \textbf{Optimised xDSL [ns]} \\
     \midrule
-    $3.89 \pm 0.01$ & $504 \pm 76$ & $63.6 \pm 40$\\
+    $153 \pm 0.5$ & $12700 \pm 1810$ & $477 \pm 385$ \\
+    % $357 \pm 0.5$ & $33400 \pm 3680$ & $1830 \pm 774$ \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -264,14 +282,15 @@ Similarly to the operation instantiation micro-benchmark, this slow-down results
 
 
 \begin{table}[H]
-  \caption{Trait checks in xDSL are approximately $130\times$ slower than in MLIR in the asymptotic case, but can be accelerated to $16\times$ slower with only algorithmic changes.} %, repeated ten times over $32768$ operations. Methodology is discussed in detail in Appendix \ref{} to facilitate replicability.}
+  \caption{Specialisation improves xDSL's trait checking performance by $3.5\times$, lifting it from $79\times$ to $23\times$ slower than MLIR.}
+%   \caption{Trait checks in xDSL are approximately $130\times$ slower than in MLIR in the asymptotic case, but can be accelerated to $16\times$ slower with only algorithmic changes.}
   \label{tab:ubenchmark-trait-checks-optimised}
   \centering
   \begin{tabular}{ccc}
     \toprule
     \textbf{MLIR [ns]} & \textbf{xDSL [ns]} & \textbf{Optimised xDSL [ns]} \\
     \midrule
-    $3.89 \pm 0.01$ & $504 \pm 76$ & $63.6 \pm 40$\\
+    $11.7 \pm 0.5$ & $924 \pm 513$ & $266 \pm 34$\\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -288,6 +307,8 @@ The mechanism for this is simple: specialisation uses extra information in the f
 % Relate into JIT compilation and stuff
 % Link
 Having demonstrated and understood the effectiveness of specialisation for small workloads, we can now leverage it for a non-trivial example of pattern rewriting.
+
+
 
 
 \section{Pattern rewriting}
@@ -390,6 +411,21 @@ Having demonstrated and understood the effectiveness of specialisation for small
     \bottomrule
   \end{tabular}
 \end{table}
+% Test ConstantFoldingSimple.20(unspecialised) ran in: 0.00115 ± 3e-05s
+% Test ConstantFoldingSimple.20(unspecialised) ran in: 0.000142 ± 2.92e-05s
+% TODO: This looks wrong...
+% SimpleConstantFolding/folding/1           3226 ns         3181 ns       223707
+% SimpleConstantFolding/folding/8           5473 ns         5424 ns       131733
+% SimpleConstantFolding/folding/64         30174 ns        30110 ns        23037
+% SimpleConstantFolding/folding/512       237039 ns       236957 ns         2991
+% SimpleConstantFolding/folding/4096     1854095 ns      1853693 ns          379
+% SimpleConstantFolding/folding/10000    4584451 ns      4583852 ns          154
+% SimpleConstantFolding/folding_BigO      457.63 N        457.56 N
+% SimpleConstantFolding/folding_RMS            1 %             1 %
+
+
+% 7897500000 events in
+% mlir::applyPatternsAndFoldGreedily(mlir::Region&, mlir::FrozenRewritePatternSet const&, mlir::GreedyRewriteConfig, bool*)
 
 %% What did we lose from this?
 % Link

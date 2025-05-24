@@ -368,14 +368,11 @@ In both MLIR and xDSL, there are two main ways an operation can be constructed: 
     \begin{subfigure}[b]{0.45\textwidth}
         \centering
         \begin{minted}[fontsize=\footnotesize,escapeinside=$$]{text}
-            # Setup
-            EMPTY_OP = EmptyOp()
-
             # Benchmarks
             EmptyOp.create() $\circledbase{pairedOneLightBlue}{1}$
-            EmptyOp.build()  $\circledbase{pairedTwoDarkBlue}{2}$
+            EmptyOp()  $\circledbase{pairedTwoDarkBlue}{2}$
         \end{minted}
-        \footnotesize\vspace{2em}
+        \footnotesize\vspace{3.5em}
         \caption{xDSL Python implementation.}
         \label{listing:ubenchmark-op-creation-bench-xdsl}
     \end{subfigure}
@@ -393,15 +390,18 @@ In MLIR, the creation and building mechanisms have approximately the same perfor
 
 
 \begin{table}[H]
-  \caption{Operation instantiation in xDSL is approximately $20\times$ slower than in MLIR when creating instructions in the asymptotic case, but is up to $80\times$ slower when using the builder API.} %, repeated ten times over $32768$ operations. Methodology is discussed in detail in Appendix \ref{} to facilitate replicability.}
+  \caption{Operation instantiation in xDSL is approximately $25\times$ slower than in MLIR when creating instructions in the asymptotic case, but is up to $90\times$ slower when using the builder API.}
   \label{tab:ubenchmark-op-creation}
   \centering
   \begin{tabular}{lcc}
     \toprule
     \textbf{Mechanism} & \textbf{MLIR [ns]} & \textbf{xDSL [ns]}\\
     \midrule
-    $\circledbase{pairedOneLightBlue}{1}$ Create & $155 \pm 14$ & $3600 \pm 1500$ \\
-    $\circledbase{pairedTwoDarkBlue}{2}$ Build & $153 \pm 0.5$ & $12100 \pm 1900$ \\
+    $\circledbase{pairedOneLightBlue}{1}$ Create & $155 \pm 14$ & $3770 \pm 916$ \\
+    $\circledbase{pairedTwoDarkBlue}{2}$ Build & $153 \pm 0.5$ & $12700 \pm 1810$ \\
+    % And for the constant op...
+    % $\circledbase{pairedOneLightBlue}{1}$ Create & $413 \pm 0.5$ & $1830 \pm 774$ \\
+    % $\circledbase{pairedTwoDarkBlue}{2}$ Build & $357 \pm 0.5$ & $33400 \pm 3680$ \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -467,14 +467,14 @@ If this is not true, one implementation may require fewer iterations to perform 
 Micro-benchmarks of checking traits for both implementations show a slow-down of approximately $240\times$ from MLIR to xDSL (\autoref{tab:ubenchmark-trait-checks}).
 
 \begin{table}[H]
-  \caption{Trait checks in xDSL are approximately $240\times$ slower than in MLIR in the asymptotic case.} %, repeated ten times over $32768$ operations. Methodology is discussed in detail in Appendix \ref{} to facilitate replicability.}
+  \caption{Trait checks in xDSL are approximately $80\times$ slower than in MLIR in the asymptotic case.}
   \label{tab:ubenchmark-trait-checks}
   \centering
   \begin{tabular}{cc}
     \toprule
     \textbf{MLIR [ns]} & \textbf{xDSL [ns]}\\
     \midrule
-    $3.89 \pm 0.01$ & $924 \pm 513$ \\
+    $11.7 \pm 0.5$ & $924 \pm 513$ \\
     \bottomrule
   \end{tabular}
 \end{table}
