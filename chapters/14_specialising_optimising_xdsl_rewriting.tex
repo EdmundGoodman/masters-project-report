@@ -3,9 +3,9 @@
 
 %% Introduction and goals (make faster and only constrained by language runtime)
 % Hook
-In \autoref{chap:measuring-compiler-performance}, we constructed a set of experiments to empirically compare the current performance of the xDSL and MLIR compiler frameworks.
+In \autoref{chap:measuring-compiler-performance}, we constructed a set of experiments to empirically compare the current performance of the xDSL and \ac{mlir} compiler frameworks.
 % Argument
-Our overall aim is to use these experiments to contrast the performance of static and dynamic languages for the implementation of user-extensible compiler frameworks, using MLIR and xDSL as proxies for these two categories respectively.
+Our overall aim is to use these experiments to contrast the performance of static and dynamic languages for the implementation of user-extensible compiler frameworks, using \ac{mlir} and xDSL as proxies for these two categories respectively.
 However, the experiments so far measure a combination of the effects of dynamism in the language runtime and implementation details of the framework, with the former obscuring our goal of measuring the latter.
 % Link
 In order to use the frameworks for our aims, our measurements must be as independent of implementation details as possible.
@@ -25,7 +25,7 @@ The benefits of this specialisation are twofold. Firstly it reveals inefficienci
 
 %% Link back to micro-benchmarks and summarise section
 % Hook
-An important component of our experimental suite is micro-benchmarks, measuring the performance of procedures fundamental to xDSL and MLIR.
+An important component of our experimental suite is micro-benchmarks, measuring the performance of procedures fundamental to xDSL and \ac{mlir}.
 % Argument
 The small size of these micro-benchmarked procedures makes them tractable first targets for manual specialisation and optimisation, with the performance impact of this process easily characterised by repeating the micro-benchmark.
 By manually examining the traces of their execution, we can identify and eliminate any unnecessary computation in the current implementation.
@@ -39,7 +39,7 @@ Having done this, we re-run the micro-benchmarks to quantify the performance of 
 
 %% Re-introduce microbenchmark
 % Hook
-The first micro-benchmark discussed was instantiating operations, one of the central data structures in both xDSL and MLIR.
+The first micro-benchmark discussed was instantiating operations, one of the central data structures in both xDSL and \ac{mlir}.
 % Argument
 The idiomatic way to do this in xDSL is directly instantiating a new Python object.
 This invokes the \mintinline{python3}{__new__} method to construct an empty class, then the \mintinline{python3}{__init__} method to initialise it, and optionally \mintinline{python3}{__post_init__} following initialisation.
@@ -52,7 +52,15 @@ As such, specialisation to remove this overhead can vastly reduce the complexity
     \centering
     \begin{subfigure}[b]{\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{images/specialising_optimising_xdsl_rewriting/original_empty_create}
+        \begin{tikzpicture}
+            \node[anchor=south west,inner sep=0] (image) at (0,0) {\includegraphics[width=\textwidth]{images/specialising_optimising_xdsl_rewriting/original_empty_create}};
+            \node[circledstyle, fill=pairedOneLightBlue] at (6.25,1.25) {A};
+            \node[circledstyle, fill=pairedTwoDarkBlue] at (14,0.75) {B};
+        \end{tikzpicture}
+        % \begin{tikzpicture}[remember picture,overlay]
+        %     % \node[circledstyle,draw] at ([xshift=2cm,yshift=1cm]current page.center) {A};
+        %     \node[circledstyle, fill=pairedOneLightBlue] ([xshift=2cm,yshift=5cm]current page.center) {A};
+        % \end{tikzpicture}
         \captionsetup{width=0.8\textwidth}
         \caption{The default constructor has a high overhead, calculating known invariants and .}
         \label{fig:ubenchmark-hastrait-xdsl-viztracer}
@@ -70,10 +78,13 @@ As such, specialisation to remove this overhead can vastly reduce the complexity
 
 %% Describe specialisation/optimisation
 % Hook
-Examining the above trace, we can
+Examining the above trace, we can visually identify components which take a large proportion of runtime, and may represent unnecessary computation.
 % Argument
-
+For example, the xDSL constructor for \mintinline{python3}{IRDLOperation}s invokes logic with significant overhead building and filtering properties of the operation \circledbase{pairedOneLightBlue}{A}. However, in this example of the empty operation, this logic does not change the constructed object. Because of this, eliding this logic results in a specialised version of the operation which generates the same output using less computation by applying domain knowledge.
+In addition to this, \ac{mlir}'s core operations are not \ac{irdl} based, unlike xDSL, meaning this overhead is implementation specific.
+Similarly, the post-constructor includes logic for context-managed builders \circledbase{pairedTwoDarkBlue}{B}, which is again unrelated to the empty operation case and not present in \ac{mlir}.
 % Link
+To avoid this overhead through specialisation, we move from the idiomatic constructor (Listing \ref{listing:ubenchmark-xdsl-constant-constructor}) to directly modifying xDSL's underlying data structures (Listing \ref{listing:ubenchmark-xdsl-constant-direct}).
 
 
 \begin{figure}[H]
@@ -88,7 +99,7 @@ Examining the above trace, we can
         %             i32
         %         )
         %     )
-        \footnotesize\vspace{3em}
+        \footnotesize\vspace{3.5em}
         \caption{Instantiation with constructors.}
         \label{listing:ubenchmark-xdsl-constant-constructor}
     \end{subfigure}
@@ -125,12 +136,13 @@ Examining the above trace, we can
 
 %% Specialised performance and lessons learnt
 % Hook
+Through this process of specialisation, we can improve the performance of this micro-benchmark by up to $26\times$ (\autoref{tab:ubenchmark-instantiation-optimised}).
 % Argument
-% Link
 From this example, we can see that xDSL's design goal of a simple, expressive API is antagonistic with the performance of its implementation. By specialising the implementation to the workload, directly invoking only the required instructions, we can achieve significant performance improvements. We argue that this specialisation approaches the upper bound of performance for this workload as a result of the constraints of the language runtime.
+% Link
 
 \begin{table}[H]
-  \caption{Specialisation improves xDSL's operation instantiation performance by $26\times$, lifting it from $83\times$ to $3\times$ slower than MLIR.}
+  \caption{Specialisation improves xDSL's operation instantiation performance by $26\times$, lifting it from $83\times$ to $3\times$ slower than \ac{mlir}.}
   \label{tab:ubenchmark-instantiation-optimised}
   \centering
   \begin{tabular}{ccc}
@@ -152,12 +164,19 @@ From this example, we can see that xDSL's design goal of a simple, expressive AP
 
 
 
+
+
+
+
+
+
+
 \subsection{Operation trait checks}
 \label{ssec:specialising-ubenchmarks-trait}
 
 %% Re-introduce microbenchmark
 % Hook
-The second micro-benchmark discussed in \autoref{sec:ubenchmark} was checking traits on operations, and was measured to perform $\times$ worse in xDSL than MLIR.
+The second micro-benchmark discussed in \autoref{sec:ubenchmark} was checking traits on operations, and was measured to perform $\times$ worse in xDSL than \ac{mlir}.
 % Argument
 Similarly to the operation instantiation micro-benchmark, this slow-down results from a high proportion of method's logic not implementing the core functionality (\autoref{fig:ubenchmark-hastrait-original-viztracer}). In this case, this logic improves the expressivity of the API, supporting both concrete objects and types as arguments, along with handling the edge case of unregistered operations. However, this logic lies on the hot path of execution, and again these properties are known as runtime invariants. As such, specialisation can again be leveraged to remove this implementation overhead (\autoref{fig:ubenchmark-hastrait-optimised-viztracer}).
 % Link
@@ -266,12 +285,12 @@ Similarly to the operation instantiation micro-benchmark, this slow-down results
             return false;
         \end{minted}
         \captionsetup{name=Listing}
-        \caption{MLIR's \mintinline{c++}{has_trait} method.}
+        \caption{\ac{mlir}'s \mintinline{c++}{has_trait} method.}
         \label{listing:ubenchmark-trait-checks-both-mlir}
     \end{subfigure}
     \vspace{1em}
     \captionsetup{name=Listing}
-    \caption{xDSL and MLIR methods searching trait arrays.}
+    \caption{xDSL and \ac{mlir} methods searching trait arrays.}
     \label{listing:ubenchmark-trait-checks-both}
 \end{figure}
 
@@ -282,8 +301,8 @@ Similarly to the operation instantiation micro-benchmark, this slow-down results
 
 
 \begin{table}[H]
-  \caption{Specialisation improves xDSL's trait checking performance by $3.5\times$, lifting it from $79\times$ to $23\times$ slower than MLIR.}
-%   \caption{Trait checks in xDSL are approximately $130\times$ slower than in MLIR in the asymptotic case, but can be accelerated to $16\times$ slower with only algorithmic changes.}
+  \caption{Specialisation improves xDSL's trait checking performance by $3.5\times$, lifting it from $79\times$ to $23\times$ slower than \ac{mlir}.}
+%   \caption{Trait checks in xDSL are approximately $130\times$ slower than in \ac{mlir} in the asymptotic case, but can be accelerated to $16\times$ slower with only algorithmic changes.}
   \label{tab:ubenchmark-trait-checks-optimised}
   \centering
   \begin{tabular}{ccc}
