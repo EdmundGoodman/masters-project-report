@@ -15,8 +15,11 @@ with the following changes.
 - Increase output figure dpi
 """
 
+import enum
 import matplotlib
+import matplotlib.colors
 import matplotlib.figure
+import matplotlib.patches
 import matplotlib.pyplot as plt
 import numpy as np
 import math
@@ -145,16 +148,17 @@ def autolabel(
 ):
     # kwargs is directly passed to ax.annotate and overrides defaults below
     assert "xytext" not in kwargs, "use xoffset and yoffset instead of xytext"
-    default_kwargs = dict(
-        xytext=(xoffset, yoffset),
-        fontsize="smaller",
-        rotation=0,
-        ha="center",
-        va="bottom",
-        textcoords="offset points",
-    )
-
-    for rect in rects:
+    for i, rect in enumerate(rects):
+        xoffset_ = xoffset[i] if isinstance(xoffset, list) else xoffset
+        yoffset_ = yoffset[i] if isinstance(yoffset, list) else yoffset
+        default_kwargs = dict(
+            xytext=(xoffset_, yoffset_),
+            fontsize="smaller",
+            rotation=0,
+            ha="center",
+            va="bottom",
+            textcoords="offset points",
+        )
         height = rect.get_height()
         ax.annotate(
             label_from_height(height),
@@ -198,8 +202,8 @@ def autolabel_ms(ax, rects, **kwargs):
 # Plot an example speedup plot
 def plot_performance():
     labels = ["Current\nxDSL", "Specialised\nxDSL", "MLIR"]
-    perf_means = [504, 63.6, 3.89]
-    perf_errors = [76, 40, 0.01]
+    perf_means = [12700, 477, 153]
+    perf_errors = [1810, 385, 0.5]
 
     x = np.arange(len(labels))  # the label locations
     width = 0.35  # the width of the bars
@@ -210,7 +214,7 @@ def plot_performance():
         error_kw={"ecolor": "black", "linewidth": 1},)
 
     # Logarithmic Y-Axis
-    ax.set_yscale("log")
+    # ax.set_yscale("log")
 
     # Y-Axis Label
     #
@@ -229,16 +233,60 @@ def plot_performance():
 
     ax.legend(ncol=100, loc="lower right", bbox_to_anchor=(0, 1, 1, 0))
 
-    autolabel(ax, rects1)
+    autolabel(ax, rects1, yoffset=[16, 4, 1]) #, xoffset=10, yoffset=2)
 
     fig.tight_layout()
     # plt.show()
-    save(fig, PARENT_DIRECTORY / "../specialising_optimising_xdsl_rewriting/instantiate.pdf")
+    save(fig, PARENT_DIRECTORY / "../specialising_optimising_xdsl_rewriting/instantiate_performance.pdf")
+
+
+def plot_instructions():
+    labels = ["Current\nxDSL", "Specialised\nxDSL", "MLIR"]
+    perf_means = [466, 28, 9429]
+
+    x = np.arange(len(labels))  # the label locations
+    width = 0.35  # the width of the bars
+
+    fig, ax = plt.subplots()
+    rects1 = ax.bar(x, perf_means, width, color=[light_blue, light_blue, dark_blue])
+
+    # Custom legend
+    red_patch = matplotlib.patches.Patch(color=light_blue, label='Python bytecode')
+    blue_patch = matplotlib.patches.Patch(color=dark_blue, label='AArch64 assembly')
+    fig.legend(handles=[red_patch, blue_patch], loc="upper center")
+
+    # Logarithmic Y-Axis
+    ax.set_yscale("log")
+
+    # Y-Axis Label
+    #
+    # Use a horizontal label for improved readability.
+    ax.set_ylabel(
+        "Instruction count",
+        rotation="horizontal",
+        position=(1, 1.05),
+        horizontalalignment="left",
+        verticalalignment="bottom",
+    )
+
+    # Add some text for labels, title and custom x-axis tick labels, etc.
+    ax.set_xticks(x)
+    ax.set_xticklabels(labels)
+
+    ax.legend(ncol=100, loc="lower right", bbox_to_anchor=(0, 1, 1, 0))
+
+    autolabel(ax, rects1)
+
+    fig.tight_layout()
+    plt.show()
+    save(fig, PARENT_DIRECTORY / "../specialising_optimising_xdsl_rewriting/instantiate_instructions.pdf")
 
 
 def main():
     plot_performance()
+    plot_instructions()
 
 
 if __name__ == "__main__":
+    setGlobalDefaults()
     main()

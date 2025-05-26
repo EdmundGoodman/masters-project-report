@@ -197,11 +197,11 @@ def autolabel_ms(ax, rects, **kwargs) -> None:
 
 # Plot an example speedup plot
 def plot_speedup():
-    labels = ["G1", "G2", "G3", "G4", "G5"]
-    men_means = [1.5, 1.2, 1.3, 1.1, 1.0]
-    women_means = [1.8, 1.5, 1.1, 1.3, 0.9]
-    men_errors = [0.1, 0.1, 0.1, 0.1, 0.1]
-    women_errors = [0.1, 0.1, 0.1, 0.1, 0.1]
+    labels = ["Operation\ncreate", "Operation\nbuild", "Trait\ncheck", "Array\niteration", "Block\niteration", "Recursive\nwalk"]
+    mlir_means = [155, 153, 11.7, 0.45, 2.47, 5.38]
+    mlir_errors = [14, 0.5, 0.5, 0.05, 0.05, 0.01]
+    xdsl_means = [3770, 12700, 924, 9.98, 202.9, 521.9]
+    xdsl_errors = [916, 1810, 513, 0.2, 0.4, 0.9]
 
     x = np.arange(len(labels))  # the label locations
     width = 0.35  # the width of the bars
@@ -209,30 +209,33 @@ def plot_speedup():
     fig, ax = plt.subplots()
     rects1 = ax.bar(
         x - width / 2,
-        men_means,
+        xdsl_means,
         width,
-        label="Men",
+        label="xDSL",
         color=light_blue,
-        yerr=men_errors,
+        yerr=xdsl_errors,
         capsize=5,
         error_kw={"ecolor": "black", "linewidth": 1},
     )
     rects2 = ax.bar(
         x + width / 2,
-        women_means,
+        mlir_means,
         width,
-        label="Women",
+        label="MLIR",
         color=dark_blue,
-        yerr=women_errors,
+        yerr=mlir_errors,
         capsize=5,
         error_kw={"ecolor": "black", "linewidth": 1},
     )
+
+    # # Logarithmic Y-Axis
+    ax.set_yscale("log")
 
     # Y-Axis Label
     #
     # Use a horizontal label for improved readability.
     ax.set_ylabel(
-        "Speedup",
+        "Wall time [s]",
         rotation="horizontal",
         position=(1, 1.05),
         horizontalalignment="left",
@@ -245,12 +248,12 @@ def plot_speedup():
 
     ax.legend(ncol=100, loc="lower right", bbox_to_anchor=(0, 1, 1, 0))
 
-    autolabel(ax, rects1)
-    autolabel(ax, rects2)
+    autolabel(ax, rects1, yoffset=5)
+    autolabel(ax, rects2, yoffset=3)
 
-    plt.tight_layout()
-    plt.show()
-    # save(fig, PARENT_DIRECTORY / "_template.pdf")
+    # plt.tight_layout()
+    # plt.show()
+    save(fig, PARENT_DIRECTORY / "../measuring_compiler_performance/summary.pdf")
 
 
 def main():

@@ -43,10 +43,10 @@ The first micro-benchmark discussed was instantiating operations, one of the cen
 % Argument
 The idiomatic way to do this in xDSL is directly instantiating a new Python object.
 This invokes the \mintinline{python3}{__new__} method to construct an empty class, then the \mintinline{python3}{__init__} method to initialise it, and optionally \mintinline{python3}{__post_init__} following initialisation.
-In xDSL, this instantiation process includes a large amount of logic (\autoref{fig:ubenchmark-hastrait-xdsl-viztracer}), including verifying attributes and building properties of the operation.
+In xDSL, this instantiation process includes a large amount of logic (\autoref{fig:ubenchmark-original-instantiation-xdsl-viztracer}), including verifying attributes and building properties of the operation.
 However, in many instances this verification is unneeded as it is already known as a runtime invariant, and the building process can similarly be simplified as the structure can be inferred.
 % Link
-As such, specialisation to remove this overhead can vastly reduce the complexity and hence improve performance (\autoref{fig:ubenchmark-gettrait-xdsl-viztracer}).
+As such, specialisation to remove this overhead can vastly reduce the complexity and hence improve performance (\autoref{fig:ubenchmark-optimised-instantiation-xdsl-viztracer}).
 
 \begin{figure}[H]
     \centering
@@ -57,23 +57,19 @@ As such, specialisation to remove this overhead can vastly reduce the complexity
             \node[circledstyle, fill=pairedOneLightBlue] at (6.25,1.25) {A};
             \node[circledstyle, fill=pairedTwoDarkBlue] at (14,0.75) {B};
         \end{tikzpicture}
-        % \begin{tikzpicture}[remember picture,overlay]
-        %     % \node[circledstyle,draw] at ([xshift=2cm,yshift=1cm]current page.center) {A};
-        %     \node[circledstyle, fill=pairedOneLightBlue] ([xshift=2cm,yshift=5cm]current page.center) {A};
-        % \end{tikzpicture}
         \captionsetup{width=0.8\textwidth}
         \caption{The default constructor has a high overhead, calculating known invariants and .}
-        \label{fig:ubenchmark-hastrait-xdsl-viztracer}
+        \label{fig:ubenchmark-original-instantiation-xdsl-viztracer}
     \end{subfigure}
     \begin{subfigure}[b]{\textwidth}
         \centering
         \includegraphics[width=\textwidth]{images/specialising_optimising_xdsl_rewriting/optimised_empty_create}
         \captionsetup{width=0.8\textwidth}
         \caption{The same object can be constructed with significantly less logic.}
-        \label{fig:ubenchmark-gettrait-xdsl-viztracer}
+        \label{fig:ubenchmark-optimised-instantiation-xdsl-viztracer}
     \end{subfigure}
     \caption{\texttt{viztracer} traces of xDSL instantiating an \texttt{EmptyOp} before (top) and after (bottom) specialisation.}
-    \label{fig:ubenchmark-hasgettrait-xdsl-viztracer}
+    \label{fig:ubenchmark-instantiation-xdsl-viztracer}
 \end{figure}
 
 %% Describe specialisation/optimisation
@@ -93,13 +89,7 @@ To avoid this overhead through specialisation, we move from the idiomatic constr
         \begin{minted}[fontsize=\footnotesize]{text}
             EmptyOp()
         \end{minted}
-        % ConstantOp(
-        %         IntegerAttr(
-        %             100,
-        %             i32
-        %         )
-        %     )
-        \footnotesize\vspace{3.5em}
+        \footnotesize\vspace{4em}
         \caption{Instantiation with constructors.}
         \label{listing:ubenchmark-xdsl-constant-constructor}
     \end{subfigure}
@@ -115,17 +105,6 @@ To avoid this overhead through specialisation, we move from the idiomatic constr
             empty_op._successors = tuple()
             empty_op.regions = tuple()
         \end{minted}
-            % int_attr = IntAttr.__new__(IntAttr)
-            % object.__setattr__(int_attr, "data", 100)
-            % integer_attr = IntegerAttr.__new__(IntegerAttr)
-            % object.__setattr__(integer_attr, "parameters", (int_attr, i32))
-            % constant_op = ConstantOp.__new__(ConstantOp)
-            % constant_op._operands = tuple()
-            % constant_op.results = (OpResult(i32, constant_op, 0),)
-            % constant_op.properties = {"value": integer_attr}
-            % constant_op.attributes = {}
-            % constant_op._successors = []
-            % constant_op.regions = tuple()
         \caption{Instantiation by direct manipulation of xDSL's data structures.}
         \label{listing:ubenchmark-xdsl-constant-direct}
     \end{subfigure}
@@ -138,27 +117,29 @@ To avoid this overhead through specialisation, we move from the idiomatic constr
 % Hook
 Through this process of specialisation, we can improve the performance of this micro-benchmark by up to $26\times$ (\autoref{tab:ubenchmark-instantiation-optimised}).
 % Argument
-From this example, we can see that xDSL's design goal of a simple, expressive API is antagonistic with the performance of its implementation. By specialising the implementation to the workload, directly invoking only the required instructions, we can achieve significant performance improvements. We argue that this specialisation approaches the upper bound of performance for this workload as a result of the constraints of the language runtime.
+% TODO: Discuss overhead in MLIR
+% TODO: ...
 % Link
-
-\begin{table}[H]
-  \caption{Specialisation improves xDSL's operation instantiation performance by $26\times$, lifting it from $83\times$ to $3\times$ slower than \ac{mlir}.}
-  \label{tab:ubenchmark-instantiation-optimised}
-  \centering
-  \begin{tabular}{ccc}
-    \toprule
-    \textbf{MLIR [ns]} & \textbf{xDSL [ns]} & \textbf{Optimised xDSL [ns]} \\
-    \midrule
-    $153 \pm 0.5$ & $12700 \pm 1810$ & $477 \pm 385$ \\
-    % $357 \pm 0.5$ & $33400 \pm 3680$ & $1830 \pm 774$ \\
-    \bottomrule
-  \end{tabular}
-\end{table}
+From this example, we can see that xDSL's design goal of a simple, expressive API is antagonistic with the performance of its implementation. By specialising the implementation to the workload, directly invoking only the required instructions, we can achieve significant performance improvements. We argue that this specialisation approaches the upper bound of performance for this workload as a result of the constraints of the language runtime.
 
 
 %% Compare performance and number of bytecode/assembly operations
-
-
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{images/specialising_optimising_xdsl_rewriting/instantiate_performance.pdf}
+        \caption{.}
+        \label{fig:ubenchmark-original-instantiation-performance}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{images/specialising_optimising_xdsl_rewriting/instantiate_instructions.pdf}
+        \caption{.}
+        \label{ubenchmark-original-instantiation-instructions}
+    \end{subfigure}
+    \caption{Performance comparison of constant folding $1000$ integer addition operations (\autoref{sssec:experimental-workload-constant-folding}) between xDSL and MLIR.}
+    \label{ubenchmark-original-instantiation-summary}
+\end{figure}
 
 
 
@@ -300,20 +281,6 @@ Similarly to the operation instantiation micro-benchmark, this slow-down results
 % Link
 
 
-\begin{table}[H]
-  \caption{Specialisation improves xDSL's trait checking performance by $3.5\times$, lifting it from $79\times$ to $23\times$ slower than \ac{mlir}.}
-%   \caption{Trait checks in xDSL are approximately $130\times$ slower than in \ac{mlir} in the asymptotic case, but can be accelerated to $16\times$ slower with only algorithmic changes.}
-  \label{tab:ubenchmark-trait-checks-optimised}
-  \centering
-  \begin{tabular}{ccc}
-    \toprule
-    \textbf{MLIR [ns]} & \textbf{xDSL [ns]} & \textbf{Optimised xDSL [ns]} \\
-    \midrule
-    $11.7 \pm 0.5$ & $924 \pm 513$ & $266 \pm 34$\\
-    \bottomrule
-  \end{tabular}
-\end{table}
-
 
 \subsection{What does specialisation do?}
 \label{ssec:specialising-what-do}
@@ -327,6 +294,25 @@ The mechanism for this is simple: specialisation uses extra information in the f
 % Link
 Having demonstrated and understood the effectiveness of specialisation for small workloads, we can now leverage it for a non-trivial example of pattern rewriting.
 
+
+
+%% Summary table??
+
+\begin{table}[H]
+%   \caption{Specialisation improves xDSL's operation instantiation performance by $26\times$, lifting it from $83\times$ to $3\times$ slower than \ac{mlir}.}
+  \caption{Specialisation improves xDSL's performance for micro-benchmarks.}
+  \label{tab:ubenchmark-instantiation-optimised}
+  \centering
+  \begin{tabular}{cccc}
+    \toprule
+    \textbf{} & \textbf{MLIR [ns]} & \textbf{xDSL [ns]} & \textbf{Specialised xDSL [ns]} \\
+    \midrule
+    Operation instantiation & $153 \pm 0.5$ & $12700 \pm 1810$ & $477 \pm 385$ \\
+    % Operation instantiation & $357 \pm 0.5$ & $33400 \pm 3680$ & $1830 \pm 774$ \\
+    Trait checking & $11.7 \pm 0.5$ & $924 \pm 513$ & $266 \pm 34$\\
+    \bottomrule
+  \end{tabular}
+\end{table}
 
 
 
