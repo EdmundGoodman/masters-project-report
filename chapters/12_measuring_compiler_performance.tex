@@ -352,14 +352,14 @@ In both MLIR and xDSL, there are two main ways an operation can be constructed: 
     \centering
     \begin{subfigure}[b]{0.45\textwidth}
        \centering
-        \begin{minted}[fontsize=\footnotesize,escapeinside=$$]{text}
+        \begin{minted}[fontsize=\footnotesize,escapeinside=££]{text}
             // Setup
             OpBuilder b(ctx.get());
 
             // Benchmarks
             OperationState opState(unknownLoc, "testbench.empty"); $\circledbase{pairedOneLightBlue}{1}$
             Operation::create(opState);
-            b.create<EmptyOp>(unknownLoc); $\circledbase{pairedTwoDarkBlue}{2}$
+            b.create<EmptyOp>(unknownLoc); £\circledbase{pairedTwoDarkBlue}{2}£
         \end{minted}
         \caption{``How Slow is MLIR?'' C++ implementation.}
         \label{listing:ubenchmark-op-creation-bench-mlir}
@@ -367,10 +367,10 @@ In both MLIR and xDSL, there are two main ways an operation can be constructed: 
     \hfill
     \begin{subfigure}[b]{0.45\textwidth}
         \centering
-        \begin{minted}[fontsize=\footnotesize,escapeinside=$$]{text}
+        \begin{minted}[fontsize=\footnotesize,escapeinside=££]{text}
             # Benchmarks
-            EmptyOp.create() $\circledbase{pairedOneLightBlue}{1}$
-            EmptyOp()  $\circledbase{pairedTwoDarkBlue}{2}$
+            EmptyOp.create() £\circledbase{pairedOneLightBlue}{1}£
+            EmptyOp()  £\circledbase{pairedTwoDarkBlue}{2}£
         \end{minted}
         \footnotesize\vspace{3.5em}
         \caption{xDSL Python implementation.}
@@ -503,7 +503,7 @@ Because of this operation traversal is another fundamental procedure in both xDS
     \centering
     \begin{subfigure}[b]{0.45\textwidth}
        \centering
-        \begin{minted}[breakanywhere,fontsize=\footnotesize,escapeinside=$$]{text}
+        \begin{minted}[breakanywhere,fontsize=\footnotesize,escapeinside=££]{text}
             // Setup
             OpBuilder b = OpBuilder::atBlockBegin( moduleOp->getBody());
             Block *block = moduleOp->getBody();
@@ -513,9 +513,9 @@ Because of this operation traversal is another fundamental procedure in both xDS
             }
 
             // Benchmarks
-            for (Operation &op : *block) { }; $\circledbase{pairedOneLightBlue}{1}$
-            block->walk([](Operation *op) { }); $\circledbase{pairedTwoDarkBlue}{2}$
-            block->walk([](Operation *op) { }); $\circledbase{pairedThreeLightGreen}{3}$
+            for (Operation &op : *block) { }; £\circledbase{pairedOneLightBlue}{1}£
+            block->walk([](Operation *op) { }); £\circledbase{pairedTwoDarkBlue}{2}£
+            block->walk([](Operation *op) { }); £\circledbase{pairedThreeLightGreen}{3}£
         \end{minted}
         \caption{``How Slow is MLIR?'' C++ implementation.}
         \label{listing:ubenchmark-op-traversal-bench-mlir}
@@ -523,18 +523,18 @@ Because of this operation traversal is another fundamental procedure in both xDS
     \hfill
     \begin{subfigure}[b]{0.45\textwidth}
         \centering
-        \begin{minted}[fontsize=\footnotesize,escapeinside=$$]{text}
+        \begin{minted}[fontsize=\footnotesize,escapeinside=££]{text}
             # Setup
             EXAMPLE_BLOCK = Block(ops=(
                 EmptyOp() for _ in range(32768)
             ))
 
             # Benchmarks
-            for op in EXAMPLE_BLOCK: $\circledbase{pairedOneLightBlue}{1}$
+            for op in EXAMPLE_BLOCK: £\circledbase{pairedOneLightBlue}{1}£
                 pass
-            for op in EXAMPLE_BLOCK.ops: $\circledbase{pairedTwoDarkBlue}{2}$
+            for op in EXAMPLE_BLOCK.ops: £\circledbase{pairedTwoDarkBlue}{2}£
                 pass
-            for op in EXAMPLE_BLOCK.walk(): $\circledbase{pairedThreeLightGreen}{3}$
+            for op in EXAMPLE_BLOCK.walk(): £\circledbase{pairedThreeLightGreen}{3}£
                 pass
         \end{minted}
         \footnotesize\vspace{1em}
