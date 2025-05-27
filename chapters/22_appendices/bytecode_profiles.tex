@@ -207,292 +207,702 @@
 \vspace{2em}
 \begin{code}
     \begin{minted}[fontsize=\footnotesize]{text}
-//// Trace of `OpCreation.time_operation_create` :
+//// Trace of `OpCreation.time_operation_build` :
 
-// == microbenchmarks:261 `time_operation_create` ==
-// >>> EmptyOp.create()
-276         0   LOAD_GLOBAL          0   (EmptyOp)                                                  // 10   ns
-            2   LOAD_METHOD          1   (create)                                                   // 12   ns
-            4   CALL_METHOD          0   ()                                                         // 46   ns
+// == microbenchmarks:278 `time_operation_build` ==
+// >>> EmptyOp.build()
+295         0   LOAD_GLOBAL          0   (EmptyOp)                                                  // 8    ns
+            2   LOAD_METHOD          1   (build)                                                    // 10   ns
+            4   CALL_METHOD          0   ()                                                         // 38   ns
 
-    // ============= core:942 `create` =============
+    // ========== operations:160 `build` ===========
     // >>> op = cls.__new__(cls)
-    953         0   LOAD_FAST            0   (cls)                                                  // 21   ns
-                2   LOAD_METHOD          0   (__new__)                                              // 20   ns
-                4   LOAD_FAST            0   (cls)                                                  // 19   ns
-                6   CALL_METHOD          1   ()                                                     // 22   ns
-                8   STORE_FAST           7   (op)                                                   // 18   ns
-    // >>> Operation.__init__(
-    954         10  LOAD_GLOBAL          1   (Operation)                                            // 16   ns
-                12  LOAD_ATTR            2   (__init__)                                             // 18   ns
+    184         0   LOAD_FAST            0   (cls)                                                  // 15   ns
+                2   LOAD_METHOD          0   (__new__)                                              // 15   ns
+                4   LOAD_FAST            0   (cls)                                                  // 15   ns
+                6   CALL_METHOD          1   ()                                                     // 18   ns
+                8   STORE_FAST           7   (op)                                                   // 15   ns
+    // >>> IRDLOperation.__init__(
+    185         10  LOAD_GLOBAL          1   (IRDLOperation)                                        // 13   ns
+                12  LOAD_ATTR            2   (__init__)                                             // 14   ns
     // >>> op,
-    955         14  LOAD_FAST            7   (op)                                                   // 16   ns
+    186         14  LOAD_FAST            7   (op)                                                   // 12   ns
     // >>> operands=operands,
-    956         16  LOAD_FAST            1   (operands)                                             // 15   ns
+    187         16  LOAD_FAST            1   (operands)                                             // 12   ns
     // >>> result_types=result_types,
-    957         18  LOAD_FAST            2   (result_types)                                         // 15   ns
+    188         18  LOAD_FAST            2   (result_types)                                         // 12   ns
     // >>> properties=properties,
-    958         20  LOAD_FAST            3   (properties)                                           // 15   ns
+    189         20  LOAD_FAST            4   (properties)                                           // 12   ns
     // >>> attributes=attributes,
-    959         22  LOAD_FAST            4   (attributes)                                           // 15   ns
+    190         22  LOAD_FAST            3   (attributes)                                           // 12   ns
     // >>> successors=successors,
-    960         24  LOAD_FAST            5   (successors)                                           // 15   ns
+    191         24  LOAD_FAST            5   (successors)                                           // 12   ns
     // >>> regions=regions,
-    961         26  LOAD_FAST            6   (regions)                                              // 15   ns
-    // >>> Operation.__init__(
-    954         28  LOAD_CONST           1   (('operands', 'result_types', 'properties', 'attributes', 'successors', 'regions'))  // 16   ns
-                30  CALL_FUNCTION_KW     7   ()                                                     // 54   ns
+    192         26  LOAD_FAST            6   (regions)                                              // 12   ns
+    // >>> IRDLOperation.__init__(
+    185         28  LOAD_CONST           1   (('operands', 'result_types', 'properties', 'attributes', 'successors', 'regions'))  // 13   ns
+                30  CALL_FUNCTION_KW     7   ()                                                     // 33   ns
 
-        // ============ core:914 `__init__` ============
-        // >>> super().__init__()
-        924         0   LOAD_GLOBAL          0   (super)                                            // 23   ns
-                    2   CALL_FUNCTION        0   ()                                                 // 26   ns
-                    4   LOAD_METHOD          1   (__init__)                                         // 26   ns
-                    6   CALL_METHOD          0   ()                                                 // 25   ns
-                    8   POP_TOP                  ()                                                 // 22   ns
-        // >>> self.operands = operands
-        927         10  LOAD_FAST            1   (operands)                                         // 21   ns
-                    12  LOAD_DEREF           0   (self)                                             // 21   ns
-                    14  STORE_ATTR           2   (operands)                                         // 44   ns
+        // ========= operations:93 `__init__` ==========
+        // >>> if operands is None:
+        115         0   LOAD_FAST            1   (operands)                                         // 12   ns
+                    2   LOAD_CONST           0   (None)                                             // 12   ns
+                    4   IS_OP                0   ()                                                 // 11   ns
+                    6   POP_JUMP_IF_FALSE    6   (to 12)                                            // 12   ns
+        // >>> operands = []
+        116         8   BUILD_LIST           0   ()                                                 // 12   ns
+                    10  STORE_FAST           1   (operands)                                         // 12   ns
+        // >>> if result_types is None:
+        117     >>  12  LOAD_FAST            2   (result_types)                                     // 12   ns
+                    14  LOAD_CONST           0   (None)                                             // 11   ns
+                    16  IS_OP                0   ()                                                 // 12   ns
+                    18  POP_JUMP_IF_FALSE    12  (to 24)                                            // 12   ns
+        // >>> result_types = []
+        118         20  BUILD_LIST           0   ()                                                 // 12   ns
+                    22  STORE_FAST           2   (result_types)                                     // 12   ns
+        // >>> if properties is None:
+        119     >>  24  LOAD_FAST            3   (properties)                                       // 11   ns
+                    26  LOAD_CONST           0   (None)                                             // 12   ns
+                    28  IS_OP                0   ()                                                 // 11   ns
+                    30  POP_JUMP_IF_FALSE    18  (to 36)                                            // 12   ns
+        // >>> properties = {}
+        120         32  BUILD_MAP            0   ()                                                 // 12   ns
+                    34  STORE_FAST           3   (properties)                                       // 12   ns
+        // >>> if attributes is None:
+        121     >>  36  LOAD_FAST            4   (attributes)                                       // 11   ns
+                    38  LOAD_CONST           0   (None)                                             // 11   ns
+                    40  IS_OP                0   ()                                                 // 12   ns
+                    42  POP_JUMP_IF_FALSE    24  (to 48)                                            // 12   ns
+        // >>> attributes = {}
+        122         44  BUILD_MAP            0   ()                                                 // 12   ns
+                    46  STORE_FAST           4   (attributes)                                       // 12   ns
+        // >>> if successors is None:
+        123     >>  48  LOAD_FAST            5   (successors)                                       // 12   ns
+                    50  LOAD_CONST           0   (None)                                             // 11   ns
+                    52  IS_OP                0   ()                                                 // 12   ns
+                    54  POP_JUMP_IF_FALSE    30  (to 60)                                            // 12   ns
+        // >>> successors = []
+        124         56  BUILD_LIST           0   ()                                                 // 12   ns
+                    58  STORE_FAST           5   (successors)                                       // 12   ns
+        // >>> if regions is None:
+        125     >>  60  LOAD_FAST            6   (regions)                                          // 12   ns
+                    62  LOAD_CONST           0   (None)                                             // 11   ns
+                    64  IS_OP                0   ()                                                 // 12   ns
+                    66  POP_JUMP_IF_FALSE    36  (to 72)                                            // 12   ns
+        // >>> regions = []
+        126         68  BUILD_LIST           0   ()                                                 // 12   ns
+                    70  STORE_FAST           6   (regions)                                          // 12   ns
+        // >>> irdl_op_init(
+        127     >>  72  LOAD_GLOBAL          0   (irdl_op_init)                                     // 12   ns
+        // >>> self,
+        128         74  LOAD_FAST            0   (self)                                             // 12   ns
+        // >>> type(self).get_irdl_definition(),
+        129         76  LOAD_GLOBAL          1   (type)                                             // 12   ns
+                    78  LOAD_FAST            0   (self)                                             // 11   ns
+                    80  CALL_FUNCTION        1   ()                                                 // 12   ns
+                    82  LOAD_METHOD          2   (get_irdl_definition)                              // 14   ns
+                    84  CALL_METHOD          0   ()                                                 // 24   ns
 
-            // ============ core:888 `operands` ============
-            // >>> new = tuple(new)
-            890         0   LOAD_GLOBAL          0   (tuple)                                        // 19   ns
-                        2   LOAD_FAST            1   (new)                                          // 18   ns
-                        4   CALL_FUNCTION        1   ()                                             // 20   ns
-                        6   STORE_FAST           1   (new)                                          // 18   ns
-            // >>> for idx, operand in enumerate(self._operands):
-            891         8   LOAD_GLOBAL          1   (enumerate)                                    // 17   ns
-                        10  LOAD_FAST            0   (self)                                         // 17   ns
-                        12  LOAD_ATTR            2   (_operands)                                    // 18   ns
-                        14  CALL_FUNCTION        1   ()                                             // 20   ns
-                        16  GET_ITER                 ()                                             // 18   ns
-                    >>  18  FOR_ITER             12  (to 44)                                        // 19   ns
-            // >>> for idx, operand in enumerate(new):
-            893     >>  44  LOAD_GLOBAL          1   (enumerate)                                    // 17   ns
-                        46  LOAD_FAST            1   (new)                                          // 18   ns
-                        48  CALL_FUNCTION        1   ()                                             // 20   ns
-                        50  GET_ITER                 ()                                             // 18   ns
-                    >>  52  FOR_ITER             12  (to 78)                                        // 19   ns
-            // >>> self._operands = new
-            895     >>  78  LOAD_FAST            1   (new)                                          // 17   ns
-                        80  LOAD_FAST            0   (self)                                         // 17   ns
-                        82  STORE_ATTR           2   (_operands)                                    // 19   ns
-                        84  LOAD_CONST           0   (None)                                         // 17   ns
-                        86  RETURN_VALUE             ()                                             // 42   ns
+            // === operations:2004 `get_irdl_definition` ===
+            // >>> return op_def
+            2006         0   LOAD_DEREF           0   (op_def)                                      // 10   ns
+                        2   RETURN_VALUE             ()                                             // 24   ns
             // =============================================
 
-        // >>> self.results = tuple(
-        929         16  LOAD_GLOBAL          3   (tuple)                                            // 22   ns
-                    18  LOAD_CLOSURE         0   (self)                                             // 22   ns
-                    20  BUILD_TUPLE          1   ()                                                 // 22   ns
-                    22  LOAD_CONST           1   (<code object <genexpr> at 0x7a192e602b80, file "/home/ubuntu/Desktop/xdsl/xdsl/ir/core.py", line 929>)  // 22   ns
-                    24  LOAD_CONST           2   ('Operation.__init__.<locals>.<genexpr>')          // 21   ns
-                    26  MAKE_FUNCTION        8   (closure)                                          // 24   ns
-        // >>> for (idx, result_type) in enumerate(result_types)
-        931         28  LOAD_GLOBAL          4   (enumerate)                                        // 22   ns
-                    30  LOAD_FAST            2   (result_types)                                     // 21   ns
-                    32  CALL_FUNCTION        1   ()                                                 // 25   ns
-        // >>> self.results = tuple(
-        929         34  GET_ITER                 ()                                                 // 22   ns
-                    36  CALL_FUNCTION        1   ()                                                 // 25   ns
-                    38  CALL_FUNCTION        1   ()                                                 // 46   ns
+        // >>> operands=operands,
+        130         86  LOAD_FAST            1   (operands)                                         // 12   ns
+        // >>> result_types=result_types,
+        131         88  LOAD_FAST            2   (result_types)                                     // 12   ns
+        // >>> properties=properties,
+        132         90  LOAD_FAST            3   (properties)                                       // 11   ns
+        // >>> attributes=attributes,
+        133         92  LOAD_FAST            4   (attributes)                                       // 11   ns
+        // >>> successors=successors,
+        134         94  LOAD_FAST            5   (successors)                                       // 11   ns
+        // >>> regions=regions,
+        135         96  LOAD_FAST            6   (regions)                                          // 11   ns
+        // >>> irdl_op_init(
+        127         98  LOAD_CONST           1   (('operands', 'result_types', 'properties', 'attributes', 'successors', 'regions'))  // 11   ns
+                    100 CALL_FUNCTION_KW     8   ()                                                 // 127  ns
 
-            // =========== core:929 `<genexpr>` ============
-                        0   GEN_START            0   ()                                             // 19   ns
-            // >>> self.results = tuple(
-            929         2   LOAD_FAST            0   (.0)                                           // 19   ns
-                    >>  4   FOR_ITER             11  (to 28)                                        // 20   ns
-                    >>  28  LOAD_CONST           0   (None)                                         // 19   ns
-                        30  RETURN_VALUE             ()                                             // 47   ns
-            // =============================================
+            // ====== operations:1738 `irdl_op_init` =======
+            // >>> from xdsl.dialects.builtin import DenseArrayBase, i32
+            1760         0   LOAD_CONST           1   (0)                                           // 71   ns
+                        2   LOAD_CONST           2   (('DenseArrayBase', 'i32'))                    // 69   ns
+                        4   IMPORT_NAME          0   (xdsl.dialects.builtin)                        // 100  ns
+                        6   IMPORT_FROM          1   (DenseArrayBase)                               // 69   ns
+                        8   STORE_FAST           8   (DenseArrayBase)                               // 68   ns
+                        10  IMPORT_FROM          2   (i32)                                          // 67   ns
+                        12  STORE_FAST           9   (i32)                                          // 66   ns
+                        14  POP_TOP                  ()                                             // 65   ns
+            // >>> error_prefix = f"Error in {op_def.name} builder: "
+            1762         16  LOAD_CONST           3   ('Error in ')                                 // 64   ns
+                        18  LOAD_FAST            1   (op_def)                                       // 63   ns
+                        20  LOAD_ATTR            3   (name)                                         // 64   ns
+                        22  FORMAT_VALUE         0   ()                                             // 63   ns
+                        24  LOAD_CONST           4   (' builder: ')                                 // 62   ns
+                        26  BUILD_STRING         3   ()                                             // 65   ns
+                        28  STORE_FAST           10  (error_prefix)                                 // 67   ns
+            // >>> operands_arg = [irdl_build_operations_arg(operand) for operand in operands]
+            1764         30  LOAD_CONST           5   (<code object <listcomp> at 0x70c199c29dc0, file "/home/ubuntu/Desktop/xdsl/xdsl/irdl/operations.py", line 1764>)  // 65   ns
+                        32  LOAD_CONST           6   ('irdl_op_init.<locals>.<listcomp>')           // 62   ns
+                        34  MAKE_FUNCTION        0   ()                                             // 64   ns
+                        36  LOAD_FAST            2   (operands)                                     // 60   ns
+                        38  GET_ITER                 ()                                             // 61   ns
+                        40  CALL_FUNCTION        1   ()                                             // 48   ns
 
-                    40  LOAD_DEREF           0   (self)                                             // 22   ns
-                    42  STORE_ATTR           5   (results)                                          // 24   ns
-        // >>> self.properties = dict(properties)
-        933         44  LOAD_GLOBAL          6   (dict)                                             // 22   ns
-                    46  LOAD_FAST            3   (properties)                                       // 21   ns
-                    48  CALL_FUNCTION        1   ()                                                 // 24   ns
-                    50  LOAD_DEREF           0   (self)                                             // 22   ns
-                    52  STORE_ATTR           7   (properties)                                       // 23   ns
-        // >>> self.attributes = dict(attributes)
-        934         54  LOAD_GLOBAL          6   (dict)                                             // 21   ns
-                    56  LOAD_FAST            4   (attributes)                                       // 21   ns
-                    58  CALL_FUNCTION        1   ()                                                 // 23   ns
-                    60  LOAD_DEREF           0   (self)                                             // 21   ns
-                    62  STORE_ATTR           8   (attributes)                                       // 23   ns
-        // >>> self.successors = list(successors)
-        935         64  LOAD_GLOBAL          9   (list)                                             // 21   ns
-                    66  LOAD_FAST            5   (successors)                                       // 21   ns
-                    68  CALL_FUNCTION        1   ()                                                 // 23   ns
-                    70  LOAD_DEREF           0   (self)                                             // 22   ns
-                    72  STORE_ATTR           10  (successors)                                       // 43   ns
-
-            // =========== core:901 `successors` ===========
-            // >>> new = tuple(new)
-            903         0   LOAD_GLOBAL          0   (tuple)                                        // 19   ns
-                        2   LOAD_FAST            1   (new)                                          // 19   ns
-                        4   CALL_FUNCTION        1   ()                                             // 20   ns
-                        6   STORE_FAST           1   (new)                                          // 18   ns
-            // >>> for idx, successor in enumerate(self._successors):
-            904         8   LOAD_GLOBAL          1   (enumerate)                                    // 17   ns
-                        10  LOAD_FAST            0   (self)                                         // 17   ns
-                        12  LOAD_ATTR            2   (_successors)                                  // 18   ns
-                        14  CALL_FUNCTION        1   ()                                             // 20   ns
-                        16  GET_ITER                 ()                                             // 18   ns
-                    >>  18  FOR_ITER             12  (to 44)                                        // 19   ns
-            // >>> for idx, successor in enumerate(new):
-            906     >>  44  LOAD_GLOBAL          1   (enumerate)                                    // 18   ns
-                        46  LOAD_FAST            1   (new)                                          // 18   ns
-                        48  CALL_FUNCTION        1   ()                                             // 20   ns
-                        50  GET_ITER                 ()                                             // 18   ns
-                    >>  52  FOR_ITER             12  (to 78)                                        // 19   ns
-            // >>> self._successors = new
-            908     >>  78  LOAD_FAST            1   (new)                                          // 18   ns
-                        80  LOAD_FAST            0   (self)                                         // 17   ns
-                        82  STORE_ATTR           2   (_successors)                                  // 19   ns
-                        84  LOAD_CONST           0   (None)                                         // 17   ns
-                        86  RETURN_VALUE             ()                                             // 42   ns
-            // =============================================
-
-        // >>> self.regions = ()
-        936         74  LOAD_CONST           3   (())                                               // 22   ns
-                    76  LOAD_DEREF           0   (self)                                             // 22   ns
-                    78  STORE_ATTR           11  (regions)                                          // 25   ns
-        // >>> for region in regions:
-        937         80  LOAD_FAST            6   (regions)                                          // 22   ns
-                    82  GET_ITER                 ()                                                 // 23   ns
-                >>  84  FOR_ITER             7   (to 100)                                           // 22   ns
-        // >>> self.__post_init__()
-        940     >>  100 LOAD_DEREF           0   (self)                                             // 21   ns
-                    102 LOAD_METHOD          13  (__post_init__)                                    // 22   ns
-                    104 CALL_METHOD          0   ()                                                 // 57   ns
-
-            // ====== operations:138 `__post_init__` =======
-            // >>> op_def = self.get_irdl_definition()
-            139         0   LOAD_FAST            0   (self)                                         // 29   ns
-                        2   LOAD_METHOD          0   (get_irdl_definition)                          // 31   ns
-                        4   CALL_METHOD          0   ()                                             // 36   ns
-
-                // === operations:2004 `get_irdl_definition` ===
-                // >>> return op_def
-                2006         0   LOAD_DEREF           0   (op_def)                                  // 12   ns
-                            2   RETURN_VALUE             ()                                         // 36   ns
+                // ======= operations:1764 `<listcomp>` ========
+                // >>> operands_arg = [irdl_build_operations_arg(operand) for operand in operands]
+                1764         0   BUILD_LIST           0   ()                                        // 10   ns
+                            2   LOAD_FAST            0   (.0)                                       // 11   ns
+                        >>  4   FOR_ITER             6   (to 18)                                    // 11   ns
+                        >>  18  RETURN_VALUE             ()                                         // 51   ns
                 // =============================================
 
-                        6   STORE_FAST           1   (op_def)                                       // 27   ns
-            // >>> for prop_name, prop_def in op_def.properties.items():
-            141         8   LOAD_FAST            1   (op_def)                                       // 26   ns
-                        10  LOAD_ATTR            1   (properties)                                   // 26   ns
-                        12  LOAD_METHOD          2   (items)                                        // 26   ns
-                        14  CALL_METHOD          0   ()                                             // 28   ns
-                        16  GET_ITER                 ()                                             // 28   ns
-                    >>  18  FOR_ITER             25  (to 70)                                        // 27   ns
-            // >>> for attr_name, attr_def in op_def.attributes.items():
-            150     >>  70  LOAD_FAST            1   (op_def)                                       // 25   ns
-                        72  LOAD_ATTR            6   (attributes)                                   // 25   ns
-                        74  LOAD_METHOD          2   (items)                                        // 25   ns
-                        76  CALL_METHOD          0   ()                                             // 27   ns
-                        78  GET_ITER                 ()                                             // 27   ns
-                    >>  80  FOR_ITER             25  (to 132)                                       // 27   ns
-            // >>> return super().__post_init__()
-            158     >>  132 LOAD_GLOBAL          7   (super)                                        // 26   ns
-                        134 CALL_FUNCTION        0   ()                                             // 29   ns
-                        136 LOAD_METHOD          8   (__post_init__)                                // 29   ns
-                        138 CALL_METHOD          0   ()                                             // 34   ns
+                        42  STORE_FAST           11  (operands_arg)                                 // 61   ns
+            // >>> regions_arg = [irdl_build_regions_arg(region) for region in regions]
+            1766         44  LOAD_CONST           7   (<code object <listcomp> at 0x70c199c29e70, file "/home/ubuntu/Desktop/xdsl/xdsl/irdl/operations.py", line 1766>)  // 59   ns
+                        46  LOAD_CONST           6   ('irdl_op_init.<locals>.<listcomp>')           // 58   ns
+                        48  MAKE_FUNCTION        0   ()                                             // 60   ns
+                        50  LOAD_FAST            7   (regions)                                      // 58   ns
+                        52  GET_ITER                 ()                                             // 58   ns
+                        54  CALL_FUNCTION        1   ()                                             // 48   ns
 
-                // ======== builder:343 `new_post_init` ========
-                // >>> old_post_init(self)
-                344         0   LOAD_DEREF           0   (old_post_init)                            // 12   ns
-                            2   LOAD_FAST            0   (self)                                     // 12   ns
-                            4   CALL_FUNCTION        1   ()                                         // 25   ns
+                // ======= operations:1766 `<listcomp>` ========
+                // >>> regions_arg = [irdl_build_regions_arg(region) for region in regions]
+                1766         0   BUILD_LIST           0   ()                                        // 11   ns
+                            2   LOAD_FAST            0   (.0)                                       // 11   ns
+                        >>  4   FOR_ITER             6   (to 18)                                    // 11   ns
+                        >>  18  RETURN_VALUE             ()                                         // 50   ns
+                // =============================================
 
-                    // ========= core:910 `__post_init__` ==========
-                    // >>> assert self.name != ""
-                    911         0   LOAD_FAST            0   (self)                                 // 11   ns
-                                2   LOAD_ATTR            0   (name)                                 // 11   ns
-                                4   LOAD_CONST           1   ('')                                   // 10   ns
-                                6   COMPARE_OP           3   (!=)                                   // 10   ns
-                                8   POP_JUMP_IF_TRUE     7   (to 14)                                // 10   ns
-                    // >>> assert isinstance(self.name, str)
-                    912     >>  14  LOAD_GLOBAL          1   (isinstance)                           // 10   ns
-                                16  LOAD_FAST            0   (self)                                 // 10   ns
-                                18  LOAD_ATTR            0   (name)                                 // 11   ns
-                                20  LOAD_GLOBAL          2   (str)                                  // 10   ns
-                                22  CALL_FUNCTION        2   ()                                     // 11   ns
-                                24  POP_JUMP_IF_TRUE     15  (to 30)                                // 10   ns
-                            >>  30  LOAD_CONST           0   (None)                                 // 10   ns
-                                32  RETURN_VALUE             ()                                     // 24   ns
+                        56  STORE_FAST           12  (regions_arg)                                  // 60   ns
+            // >>> built_operands, operand_sizes = irdl_build_arg_list(
+            1769         58  LOAD_GLOBAL          4   (irdl_build_arg_list)                         // 60   ns
+            // >>> VarIRConstruct.OPERAND, operands_arg, op_def.operands, error_prefix
+            1770         60  LOAD_GLOBAL          5   (VarIRConstruct)                              // 59   ns
+                        62  LOAD_ATTR            6   (OPERAND)                                      // 65   ns
+                        64  LOAD_FAST            11  (operands_arg)                                 // 58   ns
+                        66  LOAD_FAST            1   (op_def)                                       // 57   ns
+                        68  LOAD_ATTR            7   (operands)                                     // 57   ns
+                        70  LOAD_FAST            10  (error_prefix)                                 // 57   ns
+            // >>> built_operands, operand_sizes = irdl_build_arg_list(
+            1769         72  CALL_FUNCTION        4   ()                                            // 70   ns
+
+                // === operations:1637 `irdl_build_arg_list` ===
+                // >>> if len(args) != len(arg_defs):
+                1645         0   LOAD_GLOBAL          0   (len)                                     // 27   ns
+                            2   LOAD_FAST            1   (args)                                     // 25   ns
+                            4   CALL_FUNCTION        1   ()                                         // 26   ns
+                            6   LOAD_GLOBAL          0   (len)                                      // 24   ns
+                            8   LOAD_FAST            2   (arg_defs)                                 // 23   ns
+                            10  CALL_FUNCTION        1   ()                                         // 24   ns
+                            12  COMPARE_OP           3   (!=)                                       // 24   ns
+                            14  POP_JUMP_IF_FALSE    27  (to 54)                                    // 24   ns
+                // >>> res = list[_T]()
+                1651     >>  54  LOAD_GLOBAL          3   (list)                                    // 23   ns
+                            56  LOAD_GLOBAL          4   (_T)                                       // 23   ns
+                            58  BINARY_SUBSCR            ()                                         // 28   ns
+                            60  CALL_FUNCTION        0   ()                                         // 37   ns
+                            62  STORE_FAST           4   (res)                                      // 25   ns
+                // >>> arg_sizes = list[int]()
+                1652         64  LOAD_GLOBAL          3   (list)                                    // 23   ns
+                            66  LOAD_GLOBAL          5   (int)                                      // 22   ns
+                            68  BINARY_SUBSCR            ()                                         // 26   ns
+                            70  CALL_FUNCTION        0   ()                                         // 33   ns
+                            72  STORE_FAST           5   (arg_sizes)                                // 26   ns
+                // >>> for arg_idx, ((arg_name, arg_def), arg) in enumerate(zip(arg_defs, args)):
+                1654         74  LOAD_GLOBAL          6   (enumerate)                               // 25   ns
+                            76  LOAD_GLOBAL          7   (zip)                                      // 23   ns
+                            78  LOAD_FAST            2   (arg_defs)                                 // 23   ns
+                            80  LOAD_FAST            1   (args)                                     // 21   ns
+                            82  CALL_FUNCTION        2   ()                                         // 24   ns
+                            84  CALL_FUNCTION        1   ()                                         // 23   ns
+                            86  GET_ITER                 ()                                         // 21   ns
+                        >>  88  FOR_ITER             126 (to 342)                                   // 26   ns
+                // >>> return res, arg_sizes
+                1683     >>  342 LOAD_FAST            4   (res)                                     // 20   ns
+                            344 LOAD_FAST            5   (arg_sizes)                                // 20   ns
+                            346 BUILD_TUPLE          2   ()                                         // 20   ns
+                            348 RETURN_VALUE             ()                                         // 65   ns
+                // =============================================
+
+                        74  UNPACK_SEQUENCE      2   ()                                             // 60   ns
+                        76  STORE_FAST           13  (built_operands)                               // 59   ns
+                        78  STORE_FAST           14  (operand_sizes)                                // 58   ns
+            // >>> built_res_types, result_sizes = irdl_build_arg_list(
+            1774         80  LOAD_GLOBAL          4   (irdl_build_arg_list)                         // 57   ns
+            // >>> VarIRConstruct.RESULT, result_types, op_def.results, error_prefix
+            1775         82  LOAD_GLOBAL          5   (VarIRConstruct)                              // 55   ns
+                        84  LOAD_ATTR            8   (RESULT)                                       // 59   ns
+                        86  LOAD_FAST            3   (result_types)                                 // 54   ns
+                        88  LOAD_FAST            1   (op_def)                                       // 53   ns
+                        90  LOAD_ATTR            9   (results)                                      // 53   ns
+                        92  LOAD_FAST            10  (error_prefix)                                 // 53   ns
+            // >>> built_res_types, result_sizes = irdl_build_arg_list(
+            1774         94  CALL_FUNCTION        4   ()                                            // 69   ns
+
+                // === operations:1637 `irdl_build_arg_list` ===
+                // >>> if len(args) != len(arg_defs):
+                1645         0   LOAD_GLOBAL          0   (len)                                     // 26   ns
+                            2   LOAD_FAST            1   (args)                                     // 26   ns
+                            4   CALL_FUNCTION        1   ()                                         // 26   ns
+                            6   LOAD_GLOBAL          0   (len)                                      // 24   ns
+                            8   LOAD_FAST            2   (arg_defs)                                 // 23   ns
+                            10  CALL_FUNCTION        1   ()                                         // 24   ns
+                            12  COMPARE_OP           3   (!=)                                       // 24   ns
+                            14  POP_JUMP_IF_FALSE    27  (to 54)                                    // 24   ns
+                // >>> res = list[_T]()
+                1651     >>  54  LOAD_GLOBAL          3   (list)                                    // 23   ns
+                            56  LOAD_GLOBAL          4   (_T)                                       // 23   ns
+                            58  BINARY_SUBSCR            ()                                         // 27   ns
+                            60  CALL_FUNCTION        0   ()                                         // 35   ns
+                            62  STORE_FAST           4   (res)                                      // 25   ns
+                // >>> arg_sizes = list[int]()
+                1652         64  LOAD_GLOBAL          3   (list)                                    // 23   ns
+                            66  LOAD_GLOBAL          5   (int)                                      // 23   ns
+                            68  BINARY_SUBSCR            ()                                         // 26   ns
+                            70  CALL_FUNCTION        0   ()                                         // 33   ns
+                            72  STORE_FAST           5   (arg_sizes)                                // 25   ns
+                // >>> for arg_idx, ((arg_name, arg_def), arg) in enumerate(zip(arg_defs, args)):
+                1654         74  LOAD_GLOBAL          6   (enumerate)                               // 23   ns
+                            76  LOAD_GLOBAL          7   (zip)                                      // 22   ns
+                            78  LOAD_FAST            2   (arg_defs)                                 // 22   ns
+                            80  LOAD_FAST            1   (args)                                     // 20   ns
+                            82  CALL_FUNCTION        2   ()                                         // 24   ns
+                            84  CALL_FUNCTION        1   ()                                         // 23   ns
+                            86  GET_ITER                 ()                                         // 21   ns
+                        >>  88  FOR_ITER             126 (to 342)                                   // 25   ns
+                // >>> return res, arg_sizes
+                1683     >>  342 LOAD_FAST            4   (res)                                     // 20   ns
+                            344 LOAD_FAST            5   (arg_sizes)                                // 20   ns
+                            346 BUILD_TUPLE          2   ()                                         // 20   ns
+                            348 RETURN_VALUE             ()                                         // 63   ns
+                // =============================================
+
+                        96  UNPACK_SEQUENCE      2   ()                                             // 56   ns
+                        98  STORE_FAST           15  (built_res_types)                              // 56   ns
+                        100 STORE_FAST           16  (result_sizes)                                 // 54   ns
+            // >>> built_regions, region_sizes = irdl_build_arg_list(
+            1779         102 LOAD_GLOBAL          4   (irdl_build_arg_list)                         // 53   ns
+            // >>> VarIRConstruct.REGION, regions_arg, op_def.regions, error_prefix
+            1780         104 LOAD_GLOBAL          5   (VarIRConstruct)                              // 51   ns
+                        106 LOAD_ATTR            10  (REGION)                                       // 55   ns
+                        108 LOAD_FAST            12  (regions_arg)                                  // 51   ns
+                        110 LOAD_FAST            1   (op_def)                                       // 49   ns
+                        112 LOAD_ATTR            11  (regions)                                      // 50   ns
+                        114 LOAD_FAST            10  (error_prefix)                                 // 49   ns
+            // >>> built_regions, region_sizes = irdl_build_arg_list(
+            1779         116 CALL_FUNCTION        4   ()                                            // 67   ns
+
+                // === operations:1637 `irdl_build_arg_list` ===
+                // >>> if len(args) != len(arg_defs):
+                1645         0   LOAD_GLOBAL          0   (len)                                     // 26   ns
+                            2   LOAD_FAST            1   (args)                                     // 26   ns
+                            4   CALL_FUNCTION        1   ()                                         // 26   ns
+                            6   LOAD_GLOBAL          0   (len)                                      // 23   ns
+                            8   LOAD_FAST            2   (arg_defs)                                 // 24   ns
+                            10  CALL_FUNCTION        1   ()                                         // 24   ns
+                            12  COMPARE_OP           3   (!=)                                       // 24   ns
+                            14  POP_JUMP_IF_FALSE    27  (to 54)                                    // 24   ns
+                // >>> res = list[_T]()
+                1651     >>  54  LOAD_GLOBAL          3   (list)                                    // 23   ns
+                            56  LOAD_GLOBAL          4   (_T)                                       // 23   ns
+                            58  BINARY_SUBSCR            ()                                         // 27   ns
+                            60  CALL_FUNCTION        0   ()                                         // 35   ns
+                            62  STORE_FAST           4   (res)                                      // 25   ns
+                // >>> arg_sizes = list[int]()
+                1652         64  LOAD_GLOBAL          3   (list)                                    // 24   ns
+                            66  LOAD_GLOBAL          5   (int)                                      // 23   ns
+                            68  BINARY_SUBSCR            ()                                         // 26   ns
+                            70  CALL_FUNCTION        0   ()                                         // 33   ns
+                            72  STORE_FAST           5   (arg_sizes)                                // 25   ns
+                // >>> for arg_idx, ((arg_name, arg_def), arg) in enumerate(zip(arg_defs, args)):
+                1654         74  LOAD_GLOBAL          6   (enumerate)                               // 23   ns
+                            76  LOAD_GLOBAL          7   (zip)                                      // 22   ns
+                            78  LOAD_FAST            2   (arg_defs)                                 // 21   ns
+                            80  LOAD_FAST            1   (args)                                     // 20   ns
+                            82  CALL_FUNCTION        2   ()                                         // 24   ns
+                            84  CALL_FUNCTION        1   ()                                         // 23   ns
+                            86  GET_ITER                 ()                                         // 21   ns
+                        >>  88  FOR_ITER             126 (to 342)                                   // 25   ns
+                // >>> return res, arg_sizes
+                1683     >>  342 LOAD_FAST            4   (res)                                     // 20   ns
+                            344 LOAD_FAST            5   (arg_sizes)                                // 20   ns
+                            346 BUILD_TUPLE          2   ()                                         // 20   ns
+                            348 RETURN_VALUE             ()                                         // 61   ns
+                // =============================================
+
+                        118 UNPACK_SEQUENCE      2   ()                                             // 52   ns
+                        120 STORE_FAST           17  (built_regions)                                // 51   ns
+                        122 STORE_FAST           18  (region_sizes)                                 // 50   ns
+            // >>> built_successors, successor_sizes = irdl_build_arg_list(
+            1784         124 LOAD_GLOBAL          4   (irdl_build_arg_list)                         // 50   ns
+            // >>> VarIRConstruct.SUCCESSOR, successors, op_def.successors, error_prefix
+            1785         126 LOAD_GLOBAL          5   (VarIRConstruct)                              // 48   ns
+                        128 LOAD_ATTR            12  (SUCCESSOR)                                    // 52   ns
+                        130 LOAD_FAST            6   (successors)                                   // 47   ns
+                        132 LOAD_FAST            1   (op_def)                                       // 46   ns
+                        134 LOAD_ATTR            13  (successors)                                   // 47   ns
+                        136 LOAD_FAST            10  (error_prefix)                                 // 46   ns
+            // >>> built_successors, successor_sizes = irdl_build_arg_list(
+            1784         138 CALL_FUNCTION        4   ()                                            // 65   ns
+
+                // === operations:1637 `irdl_build_arg_list` ===
+                // >>> if len(args) != len(arg_defs):
+                1645         0   LOAD_GLOBAL          0   (len)                                     // 26   ns
+                            2   LOAD_FAST            1   (args)                                     // 26   ns
+                            4   CALL_FUNCTION        1   ()                                         // 26   ns
+                            6   LOAD_GLOBAL          0   (len)                                      // 24   ns
+                            8   LOAD_FAST            2   (arg_defs)                                 // 24   ns
+                            10  CALL_FUNCTION        1   ()                                         // 24   ns
+                            12  COMPARE_OP           3   (!=)                                       // 23   ns
+                            14  POP_JUMP_IF_FALSE    27  (to 54)                                    // 23   ns
+                // >>> res = list[_T]()
+                1651     >>  54  LOAD_GLOBAL          3   (list)                                    // 23   ns
+                            56  LOAD_GLOBAL          4   (_T)                                       // 23   ns
+                            58  BINARY_SUBSCR            ()                                         // 27   ns
+                            60  CALL_FUNCTION        0   ()                                         // 35   ns
+                            62  STORE_FAST           4   (res)                                      // 25   ns
+                // >>> arg_sizes = list[int]()
+                1652         64  LOAD_GLOBAL          3   (list)                                    // 23   ns
+                            66  LOAD_GLOBAL          5   (int)                                      // 23   ns
+                            68  BINARY_SUBSCR            ()                                         // 26   ns
+                            70  CALL_FUNCTION        0   ()                                         // 33   ns
+                            72  STORE_FAST           5   (arg_sizes)                                // 25   ns
+                // >>> for arg_idx, ((arg_name, arg_def), arg) in enumerate(zip(arg_defs, args)):
+                1654         74  LOAD_GLOBAL          6   (enumerate)                               // 23   ns
+                            76  LOAD_GLOBAL          7   (zip)                                      // 22   ns
+                            78  LOAD_FAST            2   (arg_defs)                                 // 21   ns
+                            80  LOAD_FAST            1   (args)                                     // 20   ns
+                            82  CALL_FUNCTION        2   ()                                         // 23   ns
+                            84  CALL_FUNCTION        1   ()                                         // 23   ns
+                            86  GET_ITER                 ()                                         // 21   ns
+                        >>  88  FOR_ITER             126 (to 342)                                   // 25   ns
+                // >>> return res, arg_sizes
+                1683     >>  342 LOAD_FAST            4   (res)                                     // 20   ns
+                            344 LOAD_FAST            5   (arg_sizes)                                // 20   ns
+                            346 BUILD_TUPLE          2   ()                                         // 20   ns
+                            348 RETURN_VALUE             ()                                         // 59   ns
+                // =============================================
+
+                        140 UNPACK_SEQUENCE      2   ()                                             // 49   ns
+                        142 STORE_FAST           19  (built_successors)                             // 48   ns
+                        144 STORE_FAST           20  (successor_sizes)                              // 46   ns
+            // >>> built_properties = dict[str, Attribute]()
+            1789         146 LOAD_GLOBAL          14  (dict)                                        // 45   ns
+                        148 LOAD_GLOBAL          15  (str)                                          // 43   ns
+                        150 LOAD_GLOBAL          16  (Attribute)                                    // 42   ns
+                        152 BUILD_TUPLE          2   ()                                             // 43   ns
+                        154 BINARY_SUBSCR            ()                                             // 46   ns
+                        156 CALL_FUNCTION        0   ()                                             // 54   ns
+                        158 STORE_FAST           21  (built_properties)                             // 49   ns
+            // >>> for attr_name, attr in properties.items():
+            1790         160 LOAD_FAST            4   (properties)                                  // 45   ns
+                        162 LOAD_METHOD          17  (items)                                        // 44   ns
+                        164 CALL_METHOD          0   ()                                             // 45   ns
+                        166 GET_ITER                 ()                                             // 43   ns
+                    >>  168 FOR_ITER             13  (to 196)                                       // 42   ns
+            // >>> built_attributes = dict[str, Attribute]()
+            1796     >>  196 LOAD_GLOBAL          14  (dict)                                        // 40   ns
+                        198 LOAD_GLOBAL          15  (str)                                          // 39   ns
+                        200 LOAD_GLOBAL          16  (Attribute)                                    // 40   ns
+                        202 BUILD_TUPLE          2   ()                                             // 41   ns
+                        204 BINARY_SUBSCR            ()                                             // 43   ns
+                        206 CALL_FUNCTION        0   ()                                             // 51   ns
+                        208 STORE_FAST           24  (built_attributes)                             // 41   ns
+            // >>> for attr_name, attr in attributes.items():
+            1797         210 LOAD_FAST            5   (attributes)                                  // 39   ns
+                        212 LOAD_METHOD          17  (items)                                        // 39   ns
+                        214 CALL_METHOD          0   ()                                             // 40   ns
+                        216 GET_ITER                 ()                                             // 39   ns
+                    >>  218 FOR_ITER             13  (to 246)                                       // 39   ns
+            // >>> for option in op_def.options:
+            1803     >>  246 LOAD_FAST            1   (op_def)                                      // 38   ns
+                        248 LOAD_ATTR            18  (options)                                      // 38   ns
+                        250 GET_ITER                 ()                                             // 38   ns
+                    >>  252 FOR_ITER             223 (to 700)                                       // 43   ns
+            // >>> Operation.__init__(
+            1863     >>  700 LOAD_GLOBAL          37  (Operation)                                   // 38   ns
+                        702 LOAD_ATTR            38  (__init__)                                     // 40   ns
+            // >>> self,
+            1864         704 LOAD_FAST            0   (self)                                        // 38   ns
+            // >>> operands=built_operands,
+            1865         706 LOAD_FAST            13  (built_operands)                              // 37   ns
+            // >>> result_types=built_res_types,
+            1866         708 LOAD_FAST            15  (built_res_types)                             // 37   ns
+            // >>> properties=built_properties,
+            1867         710 LOAD_FAST            21  (built_properties)                            // 37   ns
+            // >>> attributes=built_attributes,
+            1868         712 LOAD_FAST            24  (built_attributes)                            // 37   ns
+            // >>> successors=built_successors,
+            1869         714 LOAD_FAST            19  (built_successors)                            // 37   ns
+            // >>> regions=built_regions,
+            1870         716 LOAD_FAST            17  (built_regions)                               // 37   ns
+            // >>> Operation.__init__(
+            1863         718 LOAD_CONST           19  (('operands', 'result_types', 'properties', 'attributes', 'successors', 'regions'))  // 37   ns
+                        720 CALL_FUNCTION_KW     7   ()                                             // 55   ns
+
+                // ============ core:914 `__init__` ============
+                // >>> super().__init__()
+                924         0   LOAD_GLOBAL          0   (super)                                    // 18   ns
+                            2   CALL_FUNCTION        0   ()                                         // 21   ns
+                            4   LOAD_METHOD          1   (__init__)                                 // 22   ns
+                            6   CALL_METHOD          0   ()                                         // 20   ns
+                            8   POP_TOP                  ()                                         // 17   ns
+                // >>> self.operands = operands
+                927         10  LOAD_FAST            1   (operands)                                 // 16   ns
+                            12  LOAD_DEREF           0   (self)                                     // 16   ns
+                            14  STORE_ATTR           2   (operands)                                 // 36   ns
+
+                    // ============ core:888 `operands` ============
+                    // >>> new = tuple(new)
+                    890         0   LOAD_GLOBAL          0   (tuple)                                // 15   ns
+                                2   LOAD_FAST            1   (new)                                  // 14   ns
+                                4   CALL_FUNCTION        1   ()                                     // 15   ns
+                                6   STORE_FAST           1   (new)                                  // 14   ns
+                    // >>> for idx, operand in enumerate(self._operands):
+                    891         8   LOAD_GLOBAL          1   (enumerate)                            // 13   ns
+                                10  LOAD_FAST            0   (self)                                 // 13   ns
+                                12  LOAD_ATTR            2   (_operands)                            // 13   ns
+                                14  CALL_FUNCTION        1   ()                                     // 16   ns
+                                16  GET_ITER                 ()                                     // 14   ns
+                            >>  18  FOR_ITER             12  (to 44)                                // 15   ns
+                    // >>> for idx, operand in enumerate(new):
+                    893     >>  44  LOAD_GLOBAL          1   (enumerate)                            // 13   ns
+                                46  LOAD_FAST            1   (new)                                  // 14   ns
+                                48  CALL_FUNCTION        1   ()                                     // 15   ns
+                                50  GET_ITER                 ()                                     // 13   ns
+                            >>  52  FOR_ITER             12  (to 78)                                // 15   ns
+                    // >>> self._operands = new
+                    895     >>  78  LOAD_FAST            1   (new)                                  // 13   ns
+                                80  LOAD_FAST            0   (self)                                 // 13   ns
+                                82  STORE_ATTR           2   (_operands)                            // 15   ns
+                                84  LOAD_CONST           0   (None)                                 // 13   ns
+                                86  RETURN_VALUE             ()                                     // 32   ns
                     // =============================================
 
-                            6   POP_TOP                  ()                                         // 13   ns
-                // >>> _op_init_callback(self)
-                345         8   LOAD_GLOBAL          0   (_op_init_callback)                        // 12   ns
-                            10  LOAD_FAST            0   (self)                                     // 12   ns
-                            12  CALL_FUNCTION        1   ()                                         // 31   ns
+                // >>> self.results = tuple(
+                929         16  LOAD_GLOBAL          3   (tuple)                                    // 17   ns
+                            18  LOAD_CLOSURE         0   (self)                                     // 17   ns
+                            20  BUILD_TUPLE          1   ()                                         // 17   ns
+                            22  LOAD_CONST           1   (<code object <genexpr> at 0x70c199e02b80, file "/home/ubuntu/Desktop/xdsl/xdsl/ir/core.py", line 929>)  // 17   ns
+                            24  LOAD_CONST           2   ('Operation.__init__.<locals>.<genexpr>')  // 16   ns
+                            26  MAKE_FUNCTION        8   (closure)                                  // 18   ns
+                // >>> for (idx, result_type) in enumerate(result_types)
+                931         28  LOAD_GLOBAL          4   (enumerate)                                // 17   ns
+                            30  LOAD_FAST            2   (result_types)                             // 16   ns
+                            32  CALL_FUNCTION        1   ()                                         // 20   ns
+                // >>> self.results = tuple(
+                929         34  GET_ITER                 ()                                         // 17   ns
+                            36  CALL_FUNCTION        1   ()                                         // 20   ns
+                            38  CALL_FUNCTION        1   ()                                         // 36   ns
 
-                    // ====== builder:335 `_op_init_callback` ======
-                    // >>> if (b := ImplicitBuilder.get()) is not None:
-                    336         0   LOAD_GLOBAL          0   (ImplicitBuilder)                      // 14   ns
-                                2   LOAD_METHOD          1   (get)                                  // 16   ns
-                                4   CALL_METHOD          0   ()                                     // 26   ns
+                    // =========== core:929 `<genexpr>` ============
+                                0   GEN_START            0   ()                                     // 15   ns
+                    // >>> self.results = tuple(
+                    929         2   LOAD_FAST            0   (.0)                                   // 15   ns
+                            >>  4   FOR_ITER             11  (to 28)                                // 15   ns
+                            >>  28  LOAD_CONST           0   (None)                                 // 14   ns
+                                30  RETURN_VALUE             ()                                     // 38   ns
+                    // =============================================
 
-                        // ============= builder:321 `get` =============
-                        // >>> return cls._stack.get()
-                        326         0   LOAD_FAST            0   (cls)                              // 10   ns
-                                    2   LOAD_ATTR            0   (_stack)                           // 11   ns
-                                    4   LOAD_METHOD          1   (get)                              // 14   ns
-                                    6   CALL_METHOD          0   ()                                 // 23   ns
+                            40  LOAD_DEREF           0   (self)                                     // 17   ns
+                            42  STORE_ATTR           5   (results)                                  // 18   ns
+                // >>> self.properties = dict(properties)
+                933         44  LOAD_GLOBAL          6   (dict)                                     // 17   ns
+                            46  LOAD_FAST            3   (properties)                               // 17   ns
+                            48  CALL_FUNCTION        1   ()                                         // 19   ns
+                            50  LOAD_DEREF           0   (self)                                     // 17   ns
+                            52  STORE_ATTR           7   (properties)                               // 18   ns
+                // >>> self.attributes = dict(attributes)
+                934         54  LOAD_GLOBAL          6   (dict)                                     // 16   ns
+                            56  LOAD_FAST            4   (attributes)                               // 16   ns
+                            58  CALL_FUNCTION        1   ()                                         // 18   ns
+                            60  LOAD_DEREF           0   (self)                                     // 17   ns
+                            62  STORE_ATTR           8   (attributes)                               // 17   ns
+                // >>> self.successors = list(successors)
+                935         64  LOAD_GLOBAL          9   (list)                                     // 16   ns
+                            66  LOAD_FAST            5   (successors)                               // 16   ns
+                            68  CALL_FUNCTION        1   ()                                         // 18   ns
+                            70  LOAD_DEREF           0   (self)                                     // 17   ns
+                            72  STORE_ATTR           10  (successors)                               // 33   ns
 
-                            // ============= builder:261 `get` =============
-                            // >>> if len(self.stack):
-                            262         0   LOAD_GLOBAL          0   (len)                          // 10   ns
-                                        2   LOAD_FAST            0   (self)                         // 10   ns
-                                        4   LOAD_ATTR            1   (stack)                        // 13   ns
-                                        6   CALL_FUNCTION        1   ()                             // 12   ns
-                                        8   POP_JUMP_IF_FALSE    10  (to 20)                        // 11   ns
-                            262     >>  20  LOAD_CONST           0   (None)                         // 10   ns
-                                        22  RETURN_VALUE             ()                             // 23   ns
-                            // =============================================
+                    // =========== core:901 `successors` ===========
+                    // >>> new = tuple(new)
+                    903         0   LOAD_GLOBAL          0   (tuple)                                // 14   ns
+                                2   LOAD_FAST            1   (new)                                  // 13   ns
+                                4   CALL_FUNCTION        1   ()                                     // 15   ns
+                                6   STORE_FAST           1   (new)                                  // 13   ns
+                    // >>> for idx, successor in enumerate(self._successors):
+                    904         8   LOAD_GLOBAL          1   (enumerate)                            // 13   ns
+                                10  LOAD_FAST            0   (self)                                 // 13   ns
+                                12  LOAD_ATTR            2   (_successors)                          // 14   ns
+                                14  CALL_FUNCTION        1   ()                                     // 16   ns
+                                16  GET_ITER                 ()                                     // 14   ns
+                            >>  18  FOR_ITER             12  (to 44)                                // 15   ns
+                    // >>> for idx, successor in enumerate(new):
+                    906     >>  44  LOAD_GLOBAL          1   (enumerate)                            // 13   ns
+                                46  LOAD_FAST            1   (new)                                  // 13   ns
+                                48  CALL_FUNCTION        1   ()                                     // 15   ns
+                                50  GET_ITER                 ()                                     // 13   ns
+                            >>  52  FOR_ITER             12  (to 78)                                // 15   ns
+                    // >>> self._successors = new
+                    908     >>  78  LOAD_FAST            1   (new)                                  // 13   ns
+                                80  LOAD_FAST            0   (self)                                 // 13   ns
+                                82  STORE_ATTR           2   (_successors)                          // 14   ns
+                                84  LOAD_CONST           0   (None)                                 // 13   ns
+                                86  RETURN_VALUE             ()                                     // 32   ns
+                    // =============================================
 
-                                    8   RETURN_VALUE             ()                                 // 25   ns
+                // >>> self.regions = ()
+                936         74  LOAD_CONST           3   (())                                       // 17   ns
+                            76  LOAD_DEREF           0   (self)                                     // 16   ns
+                            78  STORE_ATTR           11  (regions)                                  // 20   ns
+                // >>> for region in regions:
+                937         80  LOAD_FAST            6   (regions)                                  // 17   ns
+                            82  GET_ITER                 ()                                         // 17   ns
+                        >>  84  FOR_ITER             7   (to 100)                                   // 17   ns
+                // >>> self.__post_init__()
+                940     >>  100 LOAD_DEREF           0   (self)                                     // 17   ns
+                            102 LOAD_METHOD          13  (__post_init__)                            // 17   ns
+                            104 CALL_METHOD          0   ()                                         // 45   ns
+
+                    // ====== operations:138 `__post_init__` =======
+                    // >>> op_def = self.get_irdl_definition()
+                    139         0   LOAD_FAST            0   (self)                                 // 22   ns
+                                2   LOAD_METHOD          0   (get_irdl_definition)                  // 24   ns
+                                4   CALL_METHOD          0   ()                                     // 28   ns
+
+                        // === operations:2004 `get_irdl_definition` ===
+                        // >>> return op_def
+                        2006         0   LOAD_DEREF           0   (op_def)                          // 10   ns
+                                    2   RETURN_VALUE             ()                                 // 28   ns
                         // =============================================
 
-                                6   DUP_TOP                  ()                                     // 14   ns
-                                8   STORE_FAST           1   (b)                                    // 13   ns
-                                10  LOAD_CONST           0   (None)                                 // 11   ns
-                                12  IS_OP                1   ()                                     // 12   ns
-                                14  POP_JUMP_IF_FALSE    15  (to 30)                                // 12   ns
-                    336     >>  30  LOAD_CONST           0   (None)                                 // 11   ns
-                                32  RETURN_VALUE             ()                                     // 26   ns
+                                6   STORE_FAST           1   (op_def)                               // 21   ns
+                    // >>> for prop_name, prop_def in op_def.properties.items():
+                    141         8   LOAD_FAST            1   (op_def)                               // 21   ns
+                                10  LOAD_ATTR            1   (properties)                           // 21   ns
+                                12  LOAD_METHOD          2   (items)                                // 20   ns
+                                14  CALL_METHOD          0   ()                                     // 22   ns
+                                16  GET_ITER                 ()                                     // 21   ns
+                            >>  18  FOR_ITER             25  (to 70)                                // 21   ns
+                    // >>> for attr_name, attr_def in op_def.attributes.items():
+                    150     >>  70  LOAD_FAST            1   (op_def)                               // 20   ns
+                                72  LOAD_ATTR            6   (attributes)                           // 19   ns
+                                74  LOAD_METHOD          2   (items)                                // 19   ns
+                                76  CALL_METHOD          0   ()                                     // 21   ns
+                                78  GET_ITER                 ()                                     // 20   ns
+                            >>  80  FOR_ITER             25  (to 132)                               // 20   ns
+                    // >>> return super().__post_init__()
+                    158     >>  132 LOAD_GLOBAL          7   (super)                                // 20   ns
+                                134 CALL_FUNCTION        0   ()                                     // 22   ns
+                                136 LOAD_METHOD          8   (__post_init__)                        // 22   ns
+                                138 CALL_METHOD          0   ()                                     // 27   ns
+
+                        // ======== builder:343 `new_post_init` ========
+                        // >>> old_post_init(self)
+                        344         0   LOAD_DEREF           0   (old_post_init)                    // 9    ns
+                                    2   LOAD_FAST            0   (self)                             // 9    ns
+                                    4   CALL_FUNCTION        1   ()                                 // 20   ns
+
+                            // ========= core:910 `__post_init__` ==========
+                            // >>> assert self.name != ""
+                            911         0   LOAD_FAST            0   (self)                         // 8    ns
+                                        2   LOAD_ATTR            0   (name)                         // 9    ns
+                                        4   LOAD_CONST           1   ('')                           // 8    ns
+                                        6   COMPARE_OP           3   (!=)                           // 8    ns
+                                        8   POP_JUMP_IF_TRUE     7   (to 14)                        // 8    ns
+                            // >>> assert isinstance(self.name, str)
+                            912     >>  14  LOAD_GLOBAL          1   (isinstance)                   // 7    ns
+                                        16  LOAD_FAST            0   (self)                         // 7    ns
+                                        18  LOAD_ATTR            0   (name)                         // 8    ns
+                                        20  LOAD_GLOBAL          2   (str)                          // 7    ns
+                                        22  CALL_FUNCTION        2   ()                             // 9    ns
+                                        24  POP_JUMP_IF_TRUE     15  (to 30)                        // 8    ns
+                                    >>  30  LOAD_CONST           0   (None)                         // 7    ns
+                                        32  RETURN_VALUE             ()                             // 18   ns
+                            // =============================================
+
+                                    6   POP_TOP                  ()                                 // 10   ns
+                        // >>> _op_init_callback(self)
+                        345         8   LOAD_GLOBAL          0   (_op_init_callback)                // 9    ns
+                                    10  LOAD_FAST            0   (self)                             // 9    ns
+                                    12  CALL_FUNCTION        1   ()                                 // 24   ns
+
+                            // ====== builder:335 `_op_init_callback` ======
+                            // >>> if (b := ImplicitBuilder.get()) is not None:
+                            336         0   LOAD_GLOBAL          0   (ImplicitBuilder)              // 11   ns
+                                        2   LOAD_METHOD          1   (get)                          // 13   ns
+                                        4   CALL_METHOD          0   ()                             // 21   ns
+
+                                // ============= builder:321 `get` =============
+                                // >>> return cls._stack.get()
+                                326         0   LOAD_FAST            0   (cls)                      // 7    ns
+                                            2   LOAD_ATTR            0   (_stack)                   // 9    ns
+                                            4   LOAD_METHOD          1   (get)                      // 12   ns
+                                            6   CALL_METHOD          0   ()                         // 18   ns
+
+                                    // ============= builder:261 `get` =============
+                                    // >>> if len(self.stack):
+                                    262         0   LOAD_GLOBAL          0   (len)                  // 8    ns
+                                                2   LOAD_FAST            0   (self)                 // 7    ns
+                                                4   LOAD_ATTR            1   (stack)                // 10   ns
+                                                6   CALL_FUNCTION        1   ()                     // 9    ns
+                                                8   POP_JUMP_IF_FALSE    10  (to 20)                // 9    ns
+                                    262     >>  20  LOAD_CONST           0   (None)                 // 8    ns
+                                                22  RETURN_VALUE             ()                     // 18   ns
+                                    // =============================================
+
+                                            8   RETURN_VALUE             ()                         // 19   ns
+                                // =============================================
+
+                                        6   DUP_TOP                  ()                             // 11   ns
+                                        8   STORE_FAST           1   (b)                            // 10   ns
+                                        10  LOAD_CONST           0   (None)                         // 9    ns
+                                        12  IS_OP                1   ()                             // 9    ns
+                                        14  POP_JUMP_IF_FALSE    15  (to 30)                        // 9    ns
+                            336     >>  30  LOAD_CONST           0   (None)                         // 8    ns
+                                        32  RETURN_VALUE             ()                             // 20   ns
+                            // =============================================
+
+                                    14  POP_TOP                  ()                                 // 10   ns
+                                    16  LOAD_CONST           0   (None)                             // 9    ns
+                                    18  RETURN_VALUE             ()                                 // 27   ns
+                        // =============================================
+
+                                140 RETURN_VALUE             ()                                     // 42   ns
                     // =============================================
 
-                            14  POP_TOP                  ()                                         // 12   ns
-                            16  LOAD_CONST           0   (None)                                     // 12   ns
-                            18  RETURN_VALUE             ()                                         // 36   ns
+                            106 POP_TOP                  ()                                         // 18   ns
+                            108 LOAD_CONST           0   (None)                                     // 17   ns
+                            110 RETURN_VALUE             ()                                         // 51   ns
                 // =============================================
 
-                        140 RETURN_VALUE             ()                                             // 54   ns
+                        722 POP_TOP                  ()                                             // 39   ns
+                        724 LOAD_CONST           8   (None)                                         // 38   ns
+                        726 RETURN_VALUE             ()                                             // 76   ns
             // =============================================
 
-                    106 POP_TOP                  ()                                                 // 22   ns
-                    108 LOAD_CONST           0   (None)                                             // 22   ns
-                    110 RETURN_VALUE             ()                                                 // 47   ns
+                    102 POP_TOP                  ()                                                 // 14   ns
+                    104 LOAD_CONST           0   (None)                                             // 13   ns
+                    106 RETURN_VALUE             ()                                                 // 34   ns
         // =============================================
 
-                32  POP_TOP                  ()                                                     // 17   ns
+                32  POP_TOP                  ()                                                     // 14   ns
     // >>> return op
-    963         34  LOAD_FAST            7   (op)                                                   // 17   ns
-                36  RETURN_VALUE             ()                                                     // 35   ns
+    194         34  LOAD_FAST            7   (op)                                                   // 13   ns
+                36  RETURN_VALUE             ()                                                     // 29   ns
     // =============================================
 
-            6   POP_TOP                  ()                                                         // 15   ns
-            8   LOAD_CONST           1   (None)                                                     // 10   ns
-            10  RETURN_VALUE             ()                                                         // 24   ns
+            6   POP_TOP                  ()                                                         // 12   ns
+            8   LOAD_CONST           1   (None)                                                     // 8    ns
+            10  RETURN_VALUE             ()                                                         // 20   ns
 // =============================================
     \end{minted}
     \caption{Bytecode profile trace of the original implementation of instantiation of an empty operation.}
-    \label{listing:bytecode-profiles-hastrait-original}
+    \label{listing:bytecode-profiles-op-build-original}
 \end{code}
 
 \vspace{2em}
@@ -540,7 +950,7 @@
 // =============================================
     \end{minted}
     \caption{Bytecode profile trace of the optimised implementation of instantiation an empty operation.}
-    \label{listing:bytecode-profiles-hastrait-optimised}
+    \label{listing:bytecode-profiles-op-build-optimised}
 \end{code}
 
 

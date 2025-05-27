@@ -235,7 +235,7 @@ def plot_speedup():
     #
     # Use a horizontal label for improved readability.
     ax.set_ylabel(
-        "Wall time [s]",
+        "Wall time [ns]",
         rotation="horizontal",
         position=(1, 1.05),
         horizontalalignment="left",
