@@ -35,7 +35,7 @@ Having done this, we re-run the micro-benchmarks to quantify the performance of 
 
 
 \subsection{Operation instantiation}
-\label{sec:specialising-ubenchmarks-instantiation}
+\label{ssec:specialising-ubenchmarks-instantiation}
 
 %% Re-introduce microbenchmark
 % Hook
@@ -367,7 +367,8 @@ However, this again incurs a cost to xDSL's expressivity, sacrificing polymorphi
 Having demonstrated specialisation as an approach to approach the performance bound of a language for micro-benchmarks%to examine the underlying language runtime performance for micro-benchmarks
 , we can further apply it to real-world workloads such as constant folding.
 % Argument
-In this section, we specialise a simple pattern rewriter: constant folding over integer add operations. Unlike previous micro-benchmarks, MLIR's implementation of pattern rewriting also introduces non-negligible implementation overhead. As such, we provide a matching implementation of this algorithm in MLIR to guarantee fair comparison.
+In this section, we specialise a simple pattern rewriter: constant folding over integer addition.
+% Unlike previous micro-benchmarks, MLIR's implementation of pattern rewriting also introduces non-negligible implementation overhead. As such, we provide a matching implementation of this algorithm in MLIR to guarantee fair comparison.
 % Link
 These specialised implementations can then be taken as performance baselines for their respective languages, and further analysed through bytecode tracing or disassembly to understand their implementation.
 
@@ -375,16 +376,27 @@ These specialised implementations can then be taken as performance baselines for
 \subsection{Constant folding}
 \label{sec:specialising-pattern-rewriting-workload}
 
-%% Summarise the workload and how it is special (xDSL and MLIR!)
+%% Summarise the workload and how it is special
 % Hook
-For our first benchmarks of xDSL, we measured the end-to-end performance of canonicalization passes applied to an \ac{ir} with many foldable constants (\autoref{sssec:experimental-workload-constant-folding}).
+For our first benchmarks of the two frameworks, we measured the end-to-end performance of canonicalization passes applied to an \ac{ir} with many foldable constants (\autoref{sssec:experimental-workload-constant-folding}).
 % Argument
 However, canonicalization passes are fairly complex, encompassing a suite of common optimisations, many of which are not applicable to our \ac{ir} workload. This complexity is detrimental to manual specialisation, resulting in more code requiring transformation by hand.
 As such, we implement a simple pattern rewriting pass for constant folding over the addition of integers. This pass captures common idioms in pattern rewriting, making it a fair proxy for more complex workloads, but is also sufficiently simple to rewrite by hand into a fully specialised form.
 The rewriter first matches against the integer addition operation to fold \circledbase{pairedOneLightBlue}{1}, exercising operation type checks. Next, it checks the invariant of our workload that both addition operands are constant \circledbase{pairedTwoDarkBlue}{\scriptsize{2}}, exercising trait lookups. After this, it gets the value of each operand, exercising operation properties \circledbase{pairedThreeLightGreen}{\scriptsize{3}}. Finally, it replaces the matched operation with a new one, exercising the rewriting mechanism \circledbase{pairedFourDarkGreen}{\scriptsize{4}}.
-% Link
+% Link   % TODO: Think of some link
 
-%% Listing showing the two guys
+%% Implementation details and why separate xDSL and MLIR?
+% Hook
+In order to draw fair comparisons between the two frameworks, their implementations of the constant folding pattern rewriting must be equivalent.
+% Argument
+As such, we provide implementations for both xDSL (Listing \ref{listing:constant-folding-impl-xdsl}) and \ac{mlir} (Listing \ref{listing:constant-folding-impl-xdsl}).
+\ac{mlir}'s implementation is complicated by the fact that its pattern rewriting infrastructure implements constant folding by default. To mitigate this, we modify its implementation to ensure that only the constant folding pattern is correctly exercised.
+% Link
+% Unlike previous micro-benchmarks, MLIR's implementation of pattern rewriting also introduces non-negligible implementation overhead. As such, we provide a matching implementation of this algorithm in MLIR to guarantee fair comparison.
+% In addition to this, unlike previous micro-benchmarks, MLIR's implementation of pattern rewriting introduces significant overhead by providing expressivity in the form of features such as rewriting callbacks.
+
+
+%% Listing showing the two implementations
 \begin{figure}[H]
     \centering
     \begin{subfigure}[b]{0.45\textwidth}
@@ -455,7 +467,7 @@ def match_and_rewrite(self, op: Operation, rewriter: PatternRewriter, /):
     \end{subfigure}
     \vspace{1em}
     \captionsetup{name=Listing}
-    \caption{Implementations of constant folding over integer addition.}
+    \caption{Implementations of pattern rewriters for constant folding over integer addition.}
     \label{listing:constant-folding-impl}
 \end{figure}
 
@@ -465,8 +477,10 @@ def match_and_rewrite(self, op: Operation, rewriter: PatternRewriter, /):
 
 %% What does specialisation mean in this context (inlining/eliding/...)
 % Link
-Due to the length of the constant folding workload, there are many more opportunities for specialisation than in the above micro-benchmarks. Despite this, the overall approach is the same: removing unnecessary computation
+Whilst our constant folding pass is less complex than passes such as canonicalisation, it is still much more complex than any of the above micro-benchmarks. As such, there are many more opportunities for the specialisation of its implementation.
+% Due to the length of the constant folding workload, there are many more opportunities for specialisation than in the above micro-benchmarks.
 % Argument
+Despite this, the overall approach is the same: removing unnecessary computation
 % Link
 
 %% Figure comparing traces
@@ -493,6 +507,7 @@ Due to the length of the constant folding workload, there are many more opportun
 
 %% Either perf table here or later in summary?
 
+%% TODO: Probably drop?
 %% Hopes of automation?
 % Link
 % Argument
@@ -503,6 +518,13 @@ Due to the length of the constant folding workload, there are many more opportun
 
 %% How much did we get out of this?
 % Link
+From this specialisation process, we gained...
+% Argument
+% Link
+
+%% What did we lose from this?
+% Link
+From this specialisation process, we lost
 % Argument
 % Link
 
@@ -547,19 +569,14 @@ Due to the length of the constant folding workload, there are many more opportun
 % SimpleConstantFolding/folding_BigO    10083.92 N      10041.57 N
 % SimpleConstantFolding/folding_RMS            1 %             1 %
 
-
-% 7897500000 events in
+% 58594 events in
 % mlir::applyPatternsAndFoldGreedily(mlir::Region&, mlir::FrozenRewritePatternSet const&, mlir::GreedyRewriteConfig, bool*)
-
-%% What did we lose from this?
-% Link
-% Argument
-% Link
 
 %% Figure or table comparing lines of code/functionality in some way
 
 %% What does this information let us do?
 % Link
+This information further tells us...
 % Argument
 % Link
 
@@ -569,27 +586,27 @@ Due to the length of the constant folding workload, there are many more opportun
 
 %% Introduction + scope of stuff
 % Hook
-xDSL is a
+xDSL is a very large codebase, and as such is not tractable to fully optimise alone...
 % Argument
-However, xDSL
 % xDSL is very big -- cannot optimise everything! But can show optimisations from specialisation are applicable and make change with time.
 % Link
 
 
 %% Removing overhead in functions
 % Link
-During the specialisation process \autoref{ssec:specialising-ubenchmarks-trait}, we saw that the implementation of xDSL's \texttt{has\_trait} helper function introduces significant overhead by checking the infrequent case of unregistered operations on the hot path of execution.
+During the specialisation process of trait checking (\autoref{ssec:specialising-ubenchmarks-trait}), we saw that the implementation of xDSL's \texttt{has\_trait} helper function introduces significant overhead by checking the infrequent case of unregistered operations on the hot path of execution.
 % Argument
 Since this functionality was not used by the target workload, this could be elided by specialisation for performance. However, it also reveals an optimisation which can be applied to the general case:
 % Link
-% This optimisation was applied in \href{PR xyz}{PR xyz}, resulting in a $x\times$ speedup on micro-benchmarks and $y\times$ speedup on workload z.
+This optimisation was applied in \href{https://github.com/xdslproject/xdsl/pull/4242}{PR \#4242}, resulting in a $x\times$ speedup on micro-benchmarks and $y\times$ speedup on workload z. % TODO: Complete
 
 
 %% Removing implicit builders
 % Link
+Similarly, the specialisation of operation instantiation (\autoref{ssec:specialising-ubenchmarks-instantiation}) revealed the performance impact of managing the scope of implicit builders, even when they are not being used.
 % Argument
 % Link
-
+This optimisation was applied in \href{https://github.com/xdslproject/xdsl/pull/4163}{PR \#4163}, resulting in a $x\times$ speedup on micro-benchmarks and $y\times$ speedup on workload z. % TODO: Complete
 
 %% Optional stretch goal to be filled in later...?
 %% `__slots__` (stretch dataclasses stuff -> custom dataclass like thing without most of the overhead as a helper, replaces frozen dataclasses (what functionality is used here: https://github.com/python/cpython/blob/main/Lib/dataclasses.py and what can we rip out???))
