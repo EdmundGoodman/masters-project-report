@@ -121,7 +121,7 @@ As such, we predominantly focus on simple but non-trivial optimisations such as 
 Stoltz et al. define constant folding as ``a well-known static compiler technique in which values of variables which are determined to be constants can be passed to expressions which use these constants'' \cite{stoltzConstantPropagationFresh1994}.
 % Argument
 It has been leveraged for both performance and space improvements since the earliest optimising compilers. Despite this, it remains relevant even over more modern, exotic optimisations due to its simplicity, efficient implementation, and high impact on generated \ac{ir}.
-In addition to this, procedural generation of the workload \ac{ir} can be simply parameterised in length (\autoref{sec:constant-folding-workload-impl}), facilitating experiments examining performance scaling.
+In addition to this, procedural generation of \ac{ir} which can be constant folded is simply parameterised in length (\autoref{sec:constant-folding-workload-impl}), facilitating experiments examining performance scaling.
 % Link
 An example \ac{ir} segment with three constants is shown below (\autoref{listing:constant-folding-workload-example}).
 
@@ -218,6 +218,7 @@ This allows us to break down end-to-end benchmarks into components of finer gran
 
 %% Methodology
 % Hook
+% Canonicalization is ... % TODO: Complete link...
 % Argument
 For MLIR, we invoke \texttt{mlir-opt constant\_folding.mlir --canonicalize --mlir-timing}. By default, this prints results to four decimal places, which is insufficiently granular to time printing very short \ac{ir} segments. As such, we modify MLIR's implementation to print more decimal places. In order to guarantee statistical significance following this change, we measure across ten repeats. Since we are sampling a single variable, we take the arithmetic mean of these values, with an uncertainty given by their standard deviation.
 For xDSL, we leverage our custom benchmarking infrastructure (\autoref{ssec:infrastructure}), which drives each phase canonicalsing the workload and records precise timings. We then calculate the average and uncertainty by the same procedure.
@@ -357,9 +358,9 @@ In both MLIR and xDSL, there are two main ways an operation can be constructed: 
             OpBuilder b(ctx.get());
 
             // Benchmarks
-            OperationState opState(unknownLoc, "testbench.empty"); $\circledbase{pairedOneLightBlue}{1}$
+            OperationState opState(unknownLoc, "testbench.empty"); £\circledbase{pairedOneLightBlue}{\footnotesize{1}}£
             Operation::create(opState);
-            b.create<EmptyOp>(unknownLoc); £\circledbase{pairedTwoDarkBlue}{2}£
+            b.create<EmptyOp>(unknownLoc); £\circledbase{pairedTwoDarkBlue}{\footnotesize{2}}£
         \end{minted}
         \caption{``How Slow is MLIR?'' C++ implementation.}
         \label{listing:ubenchmark-op-creation-bench-mlir}
@@ -369,8 +370,8 @@ In both MLIR and xDSL, there are two main ways an operation can be constructed: 
         \centering
         \begin{minted}[fontsize=\footnotesize,escapeinside=££]{text}
             # Benchmarks
-            EmptyOp.create() £\circledbase{pairedOneLightBlue}{1}£
-            EmptyOp()  £\circledbase{pairedTwoDarkBlue}{2}£
+            EmptyOp.create() £\circledbase{pairedOneLightBlue}{\footnotesize{1}}£
+            EmptyOp()  £\circledbase{pairedTwoDarkBlue}{\footnotesize{2}}£
         \end{minted}
         \footnotesize\vspace{3.5em}
         \caption{xDSL Python implementation.}
@@ -513,9 +514,9 @@ Because of this operation traversal is another fundamental procedure in both xDS
             }
 
             // Benchmarks
-            for (Operation &op : *block) { }; £\circledbase{pairedOneLightBlue}{1}£
-            block->walk([](Operation *op) { }); £\circledbase{pairedTwoDarkBlue}{2}£
-            block->walk([](Operation *op) { }); £\circledbase{pairedThreeLightGreen}{3}£
+            for (Operation &op : *block) { }; £\circledbase{pairedOneLightBlue}{\footnotesize{1}}£
+            block->walk([](Operation *op) { }); £\circledbase{pairedTwoDarkBlue}{\footnotesize{2}}£
+            block->walk([](Operation *op) { }); £\circledbase{pairedThreeLightGreen}{\footnotesize{3}}£
         \end{minted}
         \caption{``How Slow is MLIR?'' C++ implementation.}
         \label{listing:ubenchmark-op-traversal-bench-mlir}
@@ -530,11 +531,11 @@ Because of this operation traversal is another fundamental procedure in both xDS
             ))
 
             # Benchmarks
-            for op in EXAMPLE_BLOCK: £\circledbase{pairedOneLightBlue}{1}£
+            for op in EXAMPLE_BLOCK: £\circledbase{pairedOneLightBlue}{\footnotesize{1}}£
                 pass
-            for op in EXAMPLE_BLOCK.ops: £\circledbase{pairedTwoDarkBlue}{2}£
+            for op in EXAMPLE_BLOCK.ops: £\circledbase{pairedTwoDarkBlue}{\footnotesize{2}}£
                 pass
-            for op in EXAMPLE_BLOCK.walk(): £\circledbase{pairedThreeLightGreen}{3}£
+            for op in EXAMPLE_BLOCK.walk(): £\circledbase{pairedThreeLightGreen}{\footnotesize{3}}£
                 pass
         \end{minted}
         \footnotesize\vspace{1em}

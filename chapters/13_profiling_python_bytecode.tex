@@ -137,7 +137,7 @@ def example_function() -> None:
             2   LOAD_CONST           1   (1)                 // 15   ns
             4   CALL_FUNCTION        1   ()                  // 31   ns
 
-    // ======== example:1 `inner_function` ========= £\scriptsize\circledbase{pairedOneLightBlue}{a}£
+    // ======== example:1 `inner_function` ========= £\scriptsize\circledbase{pairedOneLightBlue}{\scriptsize{a}}£
     // >>> assert x
     4           0   LOAD_FAST            0   (x)             // 13   ns
                 2   POP_JUMP_IF_TRUE     4   (to 8)          // 13   ns
@@ -146,7 +146,7 @@ def example_function() -> None:
     // =============================================
 
             6   POP_TOP                  ()                  // 16   ns
-// >>> pass                                                     £\scriptsize\circledbase{pairedTwoDarkBlue}{b}£
+// >>> pass                                                     £\scriptsize\circledbase{pairedTwoDarkBlue}{\scriptsize{b}}£
 8           8   NOP                      ()                  // 15   ns
 // >>> _x = perf_counter()
 9           10  LOAD_GLOBAL          1   (perf_counter)      // 15   ns

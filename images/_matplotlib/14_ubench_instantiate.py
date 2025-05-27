@@ -278,7 +278,7 @@ def plot_instructions():
     autolabel(ax, rects1)
 
     fig.tight_layout()
-    plt.show()
+    # plt.show()
     save(fig, PARENT_DIRECTORY / "../specialising_optimising_xdsl_rewriting/instantiate_instructions.pdf")
 
 

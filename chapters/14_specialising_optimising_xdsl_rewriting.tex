@@ -189,7 +189,7 @@ Similarly to the operation instantiation micro-benchmark, this slow-down results
 % Hook
 Examining the implementation of this micro-benchmark (Listing \ref{listing:ubenchmark-trait-checks-xdsl}), we can again identify opportunities for specialisation and optimisation.
 % Argument
-The execution trace shows that checking the whether an operation is unregistered  $\circledbase{pairedOneLightBlue}{1}$ accounts for over one third of the micro-benchmark runtime. Through specialisation under the runtime invariant that all operations are registered, this check can be removed -- reducing computation. Furthermore, this inspires a general optimisation to xDSL to avoid this check by overloading \mintinline{python}{UnregisteredOp.has_trait} rather than checking on all code paths.
+The execution trace shows that checking the whether an operation is unregistered $\circledbase{pairedOneLightBlue}{1}$ accounts for over one third of the micro-benchmark runtime. Through specialisation under the runtime invariant that all operations are registered, this check can be removed -- reducing computation. Furthermore, this inspires a general optimisation to xDSL to avoid this check by overloading \mintinline{python}{UnregisteredOp.has_trait} rather than checking on all code paths.
 In addition to this, function invocation in Python incurs a performance cost due to the overhead of modifying the stack frame. As such, inlining the call to \mintinline{python}{get_trait} \circledbase{pairedTwoDarkBlue}{2} is another beneficial specialisation.
 Finally, argument types are dynamically checked \circledbase{pairedThreeLightGreen}{3} and casted \circledbase{pairedFourDarkGreen}{4}, incurring a performance overhead. However, the type of these arguments are runtime invariants of the caller, so the checks can be specialised away.
 % Link
@@ -205,11 +205,11 @@ Finally, argument types are dynamically checked \circledbase{pairedThreeLightGre
                 *,
                 value_if_unregistered: bool = True,
             ) -> bool:
-                from xdsl.dialects.builtin import UnregisteredOp £\circledbase{pairedOneLightBlue}{1}£
+                from xdsl.dialects.builtin import UnregisteredOp £\circledbase{pairedOneLightBlue}{\footnotesize{1}}£
                 if issubclass(cls, UnregisteredOp):
                     return value_if_unregistered
 
-                return cls.get_trait(trait) is not None £\circledbase{pairedTwoDarkBlue}{2}£
+                return cls.get_trait(trait) is not None £\circledbase{pairedTwoDarkBlue}{\footnotesize{2}}£
         \end{minted}
         \footnotesize\vspace{1.5em}
         \caption{Outer \mintinline{python}{has_trait} method.}
@@ -224,9 +224,9 @@ Finally, argument types are dynamically checked \circledbase{pairedThreeLightGre
                 cls,
                 trait: type[OpTraitInvT] | OpTraitInvT
             ) -> OpTraitInvT | None:
-                if isinstance(trait, type): £\circledbase{pairedThreeLightGreen}{3}£
+                if isinstance(trait, type): £\circledbase{pairedThreeLightGreen}{\footnotesize{3}}£
                     for t in cls.traits:
-                        if isinstance(t, cast( £\circledbase{pairedFourDarkGreen}{4}£
+                        if isinstance(t, cast( £\circledbase{pairedFourDarkGreen}{\footnotesize{4}}£
                             type[OpTraitInvT], trait
                         )):
                             return t
@@ -372,12 +372,16 @@ In this section, we specialise a simple pattern rewriter: constant folding over 
 These specialised implementations can then be taken as performance baselines for their respective languages, and further analysed through bytecode tracing or disassembly to understand their implementation.
 
 
-\subsection{Constant folding workload}
+\subsection{Constant folding}
 \label{sec:specialising-pattern-rewriting-workload}
 
 %% Summarise the workload and how it is special (xDSL and MLIR!)
 % Hook
+For our first benchmarks of xDSL, we measured the end-to-end performance of canonicalization passes applied to an \ac{ir} with many foldable constants (\autoref{sssec:experimental-workload-constant-folding}).
 % Argument
+However, canonicalization passes are fairly complex, encompassing a suite of common optimisations, many of which are not applicable to our \ac{ir} workload. This complexity is detrimental to manual specialisation, resulting in more code requiring transformation by hand.
+As such, we implement a simple pattern rewriting pass for constant folding over the addition of integers. This pass captures common idioms in pattern rewriting, making it a fair proxy for more complex workloads, but is also sufficiently simple to rewrite by hand into a fully specialised form.
+The rewriter first matches against the integer addition operation to fold \circledbase{pairedOneLightBlue}{1}, exercising operation type checks. Next, it checks the invariant of our workload that both addition operands are constant \circledbase{pairedTwoDarkBlue}{\scriptsize{2}}, exercising trait lookups. After this, it gets the value of each operand, exercising operation properties \circledbase{pairedThreeLightGreen}{\scriptsize{3}}. Finally, it replaces the matched operation with a new one, exercising the rewriting mechanism \circledbase{pairedFourDarkGreen}{\scriptsize{4}}.
 % Link
 
 %% Listing showing the two guys
@@ -385,26 +389,26 @@ These specialised implementations can then be taken as performance baselines for
     \centering
     \begin{subfigure}[b]{0.45\textwidth}
        \centering
-        \begin{minted}[fontsize=\scriptsize]{python}
+        \begin{minted}[fontsize=\scriptsize,escapeinside=££]{text}
 def match_and_rewrite(self, op: Operation, rewriter: PatternRewriter, /):
-    # Only rewrite integer add operations
+    # Only rewrite integer add operations £\circledbase{pairedOneLightBlue}{\scriptsize{1}}£
     if not isinstance(op, AddiOp):
         return
 
-    # Ensure both operands are constants
+    # Ensure both operands are constants £\circledbase{pairedTwoDarkBlue}{\scriptsize{2}}£
     lhs_op = op.operands[0].op
     rhs_op = op.operands[1].op
     assert lhs_op.has_trait(ConstantLike)
     assert rhs_op.has_trait(ConstantLike)
 
-    # Calculate the result of the addition
+    # Calculate the result of the addition £\circledbase{pairedThreeLightGreen}{\scriptsize{3}}£
     lhs = lhs_op.value.value.data
     rhs = rhs_op.value.value.data
     folded_op = ConstantOp(
         IntegerAttr(lhs + rhs, op.result.type)
     )
 
-    # Rewrite with the calculated result
+    # Rewrite with the calculated result £\circledbase{pairedFourDarkGreen}{\scriptsize{4}}£
     rewriter.replace_matched_op(
         folded_op, [folded_op.results[0]]
     )
@@ -417,18 +421,18 @@ def match_and_rewrite(self, op: Operation, rewriter: PatternRewriter, /):
     \hfill
     \begin{subfigure}[b]{0.5\textwidth}
         \centering
-        \begin{minted}[breakanywhere,fontsize=\scriptsize]{c++}
-  // Only rewrite integer add operations
+        \begin{minted}[breakanywhere,fontsize=\scriptsize,escapeinside=££]{text}
+  // Only rewrite integer add operations £\circledbase{pairedOneLightBlue}{\scriptsize{1}}£
   LogicalResult matchAndRewrite(arith::AddIOp op, PatternRewriter &rewriter) const override {
 
-    // Ensure both operands are constants
+    // Ensure both operands are constants £\circledbase{pairedTwoDarkBlue}{\scriptsize{2}}£
     arith::ConstantOp lhsConstOp = op.getLhs().getDefiningOp<arith::ConstantOp>();
     arith::ConstantOp rhsConstOp = op.getRhs().getDefiningOp<arith::ConstantOp>();
     if (!lhsConstOp || !rhsConstOp) {
         return failure();
     }
 
-    // Calculate the result of the addition
+    // Calculate the result of the addition £\circledbase{pairedThreeLightGreen}{\scriptsize{3}}£
     auto lhsAttr = lhsConstOp.getValue().dyn_cast<IntegerAttr>();
     auto rhsAttr = rhsConstOp.getValue().dyn_cast<IntegerAttr>();
     if (!lhsAttr || !rhsAttr) {
@@ -438,7 +442,7 @@ def match_and_rewrite(self, op: Operation, rewriter: PatternRewriter, /):
     APInt rhsValue = rhsAttr.getValue();
     APInt result = lhsAttr.getValue() + rhsAttr.getValue();
 
-    // Rewrite with the calculated result
+    // Rewrite with the calculated result £\circledbase{pairedFourDarkGreen}{\scriptsize{4}}£
     auto resultType = op.getType();
     auto foldedValue = rewriter.getIntegerAttr(resultType, result);
     rewriter.replaceOpWithNewOp<arith::ConstantOp>(op, resultType, foldedValue);
@@ -460,8 +464,8 @@ def match_and_rewrite(self, op: Operation, rewriter: PatternRewriter, /):
 \label{sec:specialising-pattern-rewriting-specialisation}
 
 %% What does specialisation mean in this context (inlining/eliding/...)
-Due to the length of the constant folding workload, there are many more opportunities for specialisation than in the above micro-benchmarks. Despite this, the overall approach is the same: removing unnecessary computation
 % Link
+Due to the length of the constant folding workload, there are many more opportunities for specialisation than in the above micro-benchmarks. Despite this, the overall approach is the same: removing unnecessary computation
 % Argument
 % Link
 
@@ -503,28 +507,44 @@ Due to the length of the constant folding workload, there are many more opportun
 % Link
 
 %% Figure or table comparing performance
-\begin{table}[H]
-  \caption{.}
-  \label{tab:constant-folding-optimised}
-  \centering
-  \begin{tabular}{ccc}
-    \toprule
-    \textbf{MLIR [ns]} & \textbf{xDSL [ns]} & \textbf{Optimised xDSL [ns]} \\
-    \midrule
-    $3.89 \pm 0.01$ & $504 \pm 76$ & $63.6 \pm 40$\\
-    \bottomrule
-  \end{tabular}
-\end{table}
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{images/specialising_optimising_xdsl_rewriting/constant_performance.pdf}
+        \caption{.}
+        \label{fig:constant-fold-performance}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{images/specialising_optimising_xdsl_rewriting/constant_instructions.pdf}
+        \caption{.}
+        \label{fig:constant-fold-instructions}
+    \end{subfigure}
+    \caption{.}
+    \label{fig:constant-fold-summary}
+\end{figure}
+% \begin{table}[H]
+%   \caption{.}
+%   \label{tab:constant-folding-optimised}
+%   \centering
+%   \begin{tabular}{ccc}
+%     \toprule
+%     \textbf{MLIR [$\bm{\mu}$s]} & \textbf{xDSL [$\bm{\mu}$s]} & \textbf{Optimised xDSL [$\bm{\mu}$s]} \\
+%     \midrule
+%     $10.3 \pm 0.1$ & $1150 \pm 30$ & $142 \pm 30$\\
+%     \bottomrule
+%   \end{tabular}
+% \end{table}
 % Test ConstantFoldingSimple.20(unspecialised) ran in: 0.00115 ± 3e-05s
-% Test ConstantFoldingSimple.20(unspecialised) ran in: 0.000142 ± 2.92e-05s
+% Test ConstantFoldingSimple.20(specialised) ran in: 0.000142 ± 2.92e-05s
 % TODO: This looks wrong...
-% SimpleConstantFolding/folding/1           3226 ns         3181 ns       223707
-% SimpleConstantFolding/folding/8           5473 ns         5424 ns       131733
-% SimpleConstantFolding/folding/64         30174 ns        30110 ns        23037
-% SimpleConstantFolding/folding/512       237039 ns       236957 ns         2991
-% SimpleConstantFolding/folding/4096     1854095 ns      1853693 ns          379
-% SimpleConstantFolding/folding/10000    4584451 ns      4583852 ns          154
-% SimpleConstantFolding/folding_BigO      457.63 N        457.56 N
+% SimpleConstantFolding/folding/1          10112 ns        10070 ns        70189
+% SimpleConstantFolding/folding/8          81970 ns        81663 ns         8557
+% SimpleConstantFolding/folding/64        640847 ns       638256 ns         1074
+% SimpleConstantFolding/folding/512      5222675 ns      5202763 ns          135
+% SimpleConstantFolding/folding/4096    42047737 ns     41843492 ns           17
+% SimpleConstantFolding/folding/10000  100531426 ns    100120405 ns            7
+% SimpleConstantFolding/folding_BigO    10083.92 N      10041.57 N
 % SimpleConstantFolding/folding_RMS            1 %             1 %
 
 
