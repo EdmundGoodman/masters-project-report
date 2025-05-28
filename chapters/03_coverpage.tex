@@ -19,7 +19,7 @@ Main chapters (excluding front-matter, references and appendix):
 \contentpages~pages
 (pp~\pageref{firstcontentpage}--\pageref{lastcontentpage})
 
-Main chapters word count: 7936
+Main chapters word count: \wordcount
 
 \vspace*{1em}
 Methodology used to generate that word count:
@@ -30,7 +30,7 @@ $ make wordcount
 gs -q -dSAFER -sDEVICE=txtwrite -o - \
    -dFirstPage=6 -dLastPage=11 report-submission.pdf | \
 egrep '[A-Za-z]{3}' | wc -w
-7936
+\wordcount
 \end{verbatim}
 \end{quote}
 
@@ -64,7 +64,7 @@ Main chapters (excluding front-matter, references and appendix):
 \contentpages~pages
 (pp~\pageref{firstcontentpage}--\pageref{lastcontentpage})
 
-Main chapters word count: 7936
+Main chapters word count: \wordcount
 
 \vspace*{2em}
 \begin{code}
@@ -73,7 +73,7 @@ Main chapters word count: 7936
         gs -q -dSAFER -sDEVICE=txtwrite -o - \
            -dFirstPage=6 -dLastPage=11 report-submission.pdf | \
         egrep '[A-Za-z]{3}' | wc -w
-        7936
+        \wordcount
     \end{minted}
     \captionsetup{textfont=sf}
     \caption*{\textbf{Listing:} Methodology used to generate that word count.}
@@ -87,15 +87,17 @@ Main chapters word count: 7936
 \textbf{\Huge Declaration}
 \vspace{40pt}
 
-I, \@author\ of \college, being a candidate for the \course, hereby
-declare that this report and the work described in it are my own work,
-unaided except as may be specified below, and that the report does not
-contain material that has already been used to any substantial extent
-for a comparable purpose.
+I, \@author\ of \college, being a candidate for the \course, hereby declare that
+this report and the work described in it are my own work, unaided except as may
+be specified below, and that the report does not contain material that has
+already been used to any substantial extent for a comparable purpose. In
+preparation of this report, I adhered to the Department of Computer Science and
+Technology AI Policy. I am content for my report to be made available to the
+students and staff of the University.
 
 % TODO: This doesn't show up in the submission version!!!
 % Add here things like: Figure X is the work of Y, etc.
-Figure \ref{fig:compilers-lagging} was created by Anton Lydike, based on a slide from Sean Silva's talk at the March 2025 Cambridge Compiler Social.
+Figure \ref{fig:compilers-lagging} was created by Anton Lydike, based on a slide from Sean Silva's talk at the March 2025 Cambridge Compiler Social. This work relates to the open source xDSL and MLIR projects, and as such builds upon their code. This work makes contributions to the xDSL project, with these contributions receiving code reviews from the maintainers of xDSL.
 
 \bigskip
 \textbf{Signed:} \@author
@@ -110,5 +112,6 @@ Figure \ref{fig:compilers-lagging} was created by Anton Lydike, based on a slide
 \makeatother
 
 \end{sffamily}
+\onehalfspacing
 
 \fi

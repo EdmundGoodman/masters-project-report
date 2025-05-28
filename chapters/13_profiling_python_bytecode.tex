@@ -7,15 +7,24 @@ Performance profilers are powerful tools, providing useful information about pro
 % Argument
 However, the feature set and granularity of these tools must match that of the program they are being applied to.
 % Link
+In this chapter we introduce ByteSight, a novel tool for performance profiling at the bytecode level, allowing us to look deeper into the performance characteristics of highly dynamic programs whose implementation cannot easily be deferred into lower level languages.
 
+%% TODO: Need to add some stuff to the background introducing Python bytecode
+
+%% TODO: To what degree does this duplicate related work? Will this need hoisting?
 %% Research gap
 % Hook
-Existing profilers for Python operate at the function or line level.
+Existing profilers for Python typically operate at the function level.
 % Argument
-% cProfile
+For example, Python's standard library provides the \texttt{profile} module, a Python-native tracing profiler, along with \texttt{cProfile}, a more performant C implementation of the same functionality. These instrument each call event, providing accuract profiling information for each evaluated function (\autoref{listing:cprofile-example}).
+
+% snakeviz, viztracer, pyinstrument
+
 % scalene
-% + 1 other?
+Sometimes, profiling information at a higher granularity than the function level is needed to understand the performance of a program. This functionality
 % Link
+However,
+
 
 \vspace{1em}
 \begin{code}
@@ -39,6 +48,11 @@ ncalls  tottime  percall  cumtime  percall filename:lineno(function)
         \label{listing:cprofile-example}
 \end{code}
 
+%% Introduce Python bytecode briefly
+% Hook
+% Argument
+% Link
+
 %% Our tool and its goals
 % Hook
 Recent developments to CPython's runtime motivate collecting more fine-grained profiling information.
@@ -52,8 +66,7 @@ One reason for this conspicuous absence of bytecode level profilers is the diffi
 % Hook
 To address this gap in the field, we present ByteSight, a novel tool for the performance profiling of CPython bytecode.
 % Argument
-ByteSight is a tracing profiler which operates on the bytecode level of the Python interpreter. This provides
-% ByteSight is implemented natively in Python, using only the standard library. As such, it is both portable and robust
+ByteSight is a tracing profiler which operates on the bytecode level of the Python interpreter. It is implemented natively in Python, using only the standard library. It does not require patches to Python's language implementation. This makes it portable, robust across language versions, and quick to install using \texttt{pip}.
 % Link
 In this chapter, we discuss the approach and challenges of its implementation, along with providing examples of its use.
 
@@ -74,12 +87,13 @@ This callback function receives the event type along with the CPython frame and 
 Our tool captures bytecode level profiling information through a custom callback function which records a sequence of timestamps associated with the traced events.
 % Argument
 From this set of timestamps, we can calculate the execution duration of each emitted opcode. This constitutes profiling information of a higher granularity than existing Python performance profilers.
-Despite its name, we leverage the \mintinline{python}{sys.settrace} function instead of \mintinline{python}{sys.setprofile}. This is because since Python 3.7, \mintinline{python}{sys.settrace} has supported emitting trace events for opcodes, whereas \mintinline{python}{sys.setprofile} only emits events at the function granularity.
+Despite its name, we leverage the \mintinline{python}{sys.settrace} function instead of \mintinline{python}{sys.setprofile}. This is because \mintinline{python}{sys.settrace} has supported emitting trace events for opcodes since Python 3.7, whereas \mintinline{python}{sys.setprofile} only emits events at the function granularity.
 % Link
+This approach of leveraging CPython's API provides benefits of robustness across versions and easy installation, but also causes a number of challenges for accurate and precise measurement of very short events.
 
 %% Challenges associated with approach
 % Hook
-This approach presents a number of challenges.
+These challenges
 % Argument
 % Link
 % Requires tight co-design with CPython
@@ -93,10 +107,12 @@ To navigate these challenges, we carefully co-design our tracing function with C
 
 %% Interpreter loop, specific to CPython3.10. LLTrace/profile don't give us what we want
 % Hook
-Due to the short execution duration
+In this section, we present a view of the CPython3.10's implementation on which our measurement procedure is based.
 % Argument
-In this section, we present a view of the CPython3.10's implementation to justify our measurement approach.
+
+In recent Python versions such as CPython3.13, aspects of the tracing infrastructure have been refactored. However, since both the API provided by the standard library and the position of the tracing logic in the evaluation loop remain the same, the procedure remains applicable to these newer versions.
 % Link
+From this understanding of the
 
 %% Block diagram?
 
@@ -167,6 +183,33 @@ To do this, Python users can invoke \mintinline{python}{sys.settrace}, a standar
 % Link
 
 %% Listing of our tracing function
+
+\begin{code}
+    \centering
+    \begin{minted}[breakanywhere,fontsize=\footnotesize,escapeinside=££]{text}
+    def _trace__collect_event_timestamps(
+        self, frame: types.FrameType, event: str, _arg: Any
+    ) -> Callable[..., Any] | None:
+        """Trace function to collect opcode timestamps."""
+        now_timestamp = perf_counter() £\circledbase{pairedOneLightBlue}{\footnotesize{1}}£
+
+        frame.f_trace_lines = False £\circledbase{pairedTwoDarkBlue}{\footnotesize{2}}£
+        frame.f_trace_opcodes = True
+
+        if event == "opcode":
+            self._timestamps.append( £\circledbase{pairedThreeLightGreen}{\footnotesize{3}}£
+                (
+                    self._prev_event_timestamp,
+                    now_timestamp,
+                )
+            )
+            self._prev_event_timestamp = perf_counter()  £\circledbase{pairedFourDarkGreen}{\footnotesize{4}}£
+
+        return self._trace__collect_event_timestamps
+    \end{minted}
+    \caption{.}
+    \label{listing:profiling-trace-function}
+\end{code}
 
 %% This gives us measurements within the CPython runtime
 % Hook
