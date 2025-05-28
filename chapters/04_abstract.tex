@@ -46,10 +46,12 @@ Previous compiler frameworks accept the limitations of this optimization boundar
 % //  4. Explain, in one sentence, how you tackled the research question.
 We examine performance bottlenecks incurred by dynamic languages for code rewriting tasks in xDSL, a Python-native compiler framework inspired by MLIR.
 % //  5. In one sentence, how did you go about doing the research that follows from your big idea.
-We find that both the inherent dynamism of these rewriting tasks and modern interpreter optimisations narrow the performance gap between static and dynamic languages, challenging the status quo of implementing user-extensible compiler frameworks in static, ahead-of-time compiled languages.
+We find that both the inherent dynamism of these rewriting tasks and modern interpreter optimisations narrow the performance gap between static and dynamic languages, using both traditional measurement techniques and a novel tool for performance profiling bytecode instructions.
+% We find that both the inherent dynamism of these rewriting tasks and modern interpreter optimisations narrow the performance gap between static and dynamic languages, challenging the status quo of implementing user-extensible compiler frameworks in static, ahead-of-time compiled languages.
 % These mitigations include adding new bytecode operations to replace bottlenecking logic, and rewriting optimisations on xDSL's own bytecode informed by domain-specific knowledge.
 % //  6. As a single sentence, what's the key impact of your research?
-Our research motivates the use of dynamic languages for building user-extensible compiler infrastructure, balancing performance with flexibility and fast build times.
+Our research challenges the status quo of implementing user-extensible compiler frameworks in static, ahead-of-time compiled languages, instead motivating the use of dynamic languages which balance performance with flexibility and fast build times.
+% Our research motivates the use of dynamic languages for building user-extensible compiler infrastructure, balancing performance with flexibility and fast build times.
 
 \ifsubmission
 \else

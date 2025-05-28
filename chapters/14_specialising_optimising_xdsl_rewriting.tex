@@ -381,20 +381,9 @@ These specialised implementations can then be taken as performance baselines for
 For our first benchmarks of the two frameworks, we measured the end-to-end performance of canonicalization passes applied to an \ac{ir} with many foldable constants (\autoref{sssec:experimental-workload-constant-folding}).
 % Argument
 However, canonicalization passes are fairly complex, encompassing a suite of common optimisations, many of which are not applicable to our \ac{ir} workload. This complexity is detrimental to manual specialisation, resulting in more code requiring transformation by hand.
-As such, we implement a simple pattern rewriting pass for constant folding over the addition of integers. This pass captures common idioms in pattern rewriting, making it a fair proxy for more complex workloads, but is also sufficiently simple to rewrite by hand into a fully specialised form.
+As such, we implement a simple pattern rewriting pass for constant folding over the addition of integers (\autoref{listing:constant-folding-impl}). This pass captures common idioms in pattern rewriting, making it a fair proxy for more complex workloads, but is also sufficiently simple to rewrite by hand into a fully specialised form.
 The rewriter first matches against the integer addition operation to fold \circledbase{pairedOneLightBlue}{1}, exercising operation type checks. Next, it checks the invariant of our workload that both addition operands are constant \circledbase{pairedTwoDarkBlue}{\scriptsize{2}}, exercising trait lookups. After this, it gets the value of each operand, exercising operation properties \circledbase{pairedThreeLightGreen}{\scriptsize{3}}. Finally, it replaces the matched operation with a new one, exercising the rewriting mechanism \circledbase{pairedFourDarkGreen}{\scriptsize{4}}.
 % Link   % TODO: Think of some link
-
-%% Implementation details and why separate xDSL and MLIR?
-% Hook
-In order to draw fair comparisons between the two frameworks, their implementations of the constant folding pattern rewriting must be equivalent.
-% Argument
-As such, we provide implementations for both xDSL (Listing \ref{listing:constant-folding-impl-xdsl}) and \ac{mlir} (Listing \ref{listing:constant-folding-impl-xdsl}).
-\ac{mlir}'s implementation is complicated by the fact that its pattern rewriting infrastructure implements constant folding by default. To mitigate this, we modify its implementation to ensure that only the constant folding pattern is correctly exercised.
-% Link
-% Unlike previous micro-benchmarks, MLIR's implementation of pattern rewriting also introduces non-negligible implementation overhead. As such, we provide a matching implementation of this algorithm in MLIR to guarantee fair comparison.
-% In addition to this, unlike previous micro-benchmarks, MLIR's implementation of pattern rewriting introduces significant overhead by providing expressivity in the form of features such as rewriting callbacks.
-
 
 %% Listing showing the two implementations
 \begin{figure}[H]
@@ -471,16 +460,25 @@ def match_and_rewrite(self, op: Operation, rewriter: PatternRewriter, /):
     \label{listing:constant-folding-impl}
 \end{figure}
 
+%% Implementation details and why separate xDSL and MLIR?
+% Hook
+In order to draw fair comparisons between the two frameworks, their implementations of the constant folding pattern rewriting must be equivalent.
+% Argument
+As such, we provide implementations for both xDSL (Listing \ref{listing:constant-folding-impl-xdsl}) and \ac{mlir} (Listing \ref{listing:constant-folding-impl-xdsl}).
+\ac{mlir}'s implementation is complicated by the fact that its pattern rewriting infrastructure implements constant folding by default. To mitigate this, we modify its implementation to ensure that only the constant folding pattern is correctly exercised.
+% Link
+% Unlike previous micro-benchmarks, MLIR's implementation of pattern rewriting also introduces non-negligible implementation overhead. As such, we provide a matching implementation of this algorithm in MLIR to guarantee fair comparison.
+% In addition to this, unlike previous micro-benchmarks, MLIR's implementation of pattern rewriting introduces significant overhead by providing expressivity in the form of features such as rewriting callbacks.
+
 
 \subsection{Specialisation}
 \label{sec:specialising-pattern-rewriting-specialisation}
 
 %% What does specialisation mean in this context (inlining/eliding/...)
 % Link
-Whilst our constant folding pass is less complex than passes such as canonicalisation, it is still much more complex than any of the above micro-benchmarks. As such, there are many more opportunities for the specialisation of its implementation.
-% Due to the length of the constant folding workload, there are many more opportunities for specialisation than in the above micro-benchmarks.
+Whilst our constant folding pass is less complex than existing passes such as canonicalisation, it is still much more complex than any of the above micro-benchmarks. As such, there are many more opportunities for the specialisation of its implementation.
 % Argument
-Despite this, the overall approach is the same: removing unnecessary computation
+Despite this, the specialisation process reamins unchanged
 % Link
 
 %% Figure comparing traces
@@ -586,11 +584,12 @@ This information further tells us...
 
 %% Introduction + scope of stuff
 % Hook
-xDSL is a very large codebase, and as such is not tractable to fully optimise alone...
+The majority of changes made during specialisation are applicable only to their specific workload.
 % Argument
-% xDSL is very big -- cannot optimise everything! But can show optimisations from specialisation are applicable and make change with time.
+However, some are more generic to any use case of xDSL, and as such can be applied as generic optimisations. Unfortunately, xDSL is a large codebase, over $150,000$ lines of Python, and as such it is out of scope of this thesis to improve the performance of all of it.
+Despite this, we demonstate that the specialisation process lead to generalisable optimisations with measurable performance impact.
 % Link
-
+Through this, we enable performance improvement over time, which can be quantified using our previosuly introduced measurement infrastructure (\autoref{ssec:infrastructure}).
 
 %% Removing overhead in functions
 % Link
@@ -599,7 +598,6 @@ During the specialisation process of trait checking (\autoref{ssec:specialising-
 Since this functionality was not used by the target workload, this could be elided by specialisation for performance. However, it also reveals an optimisation which can be applied to the general case:
 % Link
 This optimisation was applied in \href{https://github.com/xdslproject/xdsl/pull/4242}{PR \#4242}, resulting in a $x\times$ speedup on micro-benchmarks and $y\times$ speedup on workload z. % TODO: Complete
-
 
 %% Removing implicit builders
 % Link
@@ -610,3 +608,7 @@ This optimisation was applied in \href{https://github.com/xdslproject/xdsl/pull/
 
 %% Optional stretch goal to be filled in later...?
 %% `__slots__` (stretch dataclasses stuff -> custom dataclass like thing without most of the overhead as a helper, replaces frozen dataclasses (what functionality is used here: https://github.com/python/cpython/blob/main/Lib/dataclasses.py and what can we rip out???))
+
+
+\section{Summary}
+\label{sec:specialising-summary}
