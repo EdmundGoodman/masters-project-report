@@ -25,13 +25,19 @@ Main chapters word count: \wordcount
 Methodology used to generate that word count:
 
 \begin{quote}
-\begin{verbatim}
-$ make wordcount
-gs -q -dSAFER -sDEVICE=txtwrite -o - \
-   -dFirstPage=6 -dLastPage=11 report-submission.pdf | \
-egrep '[A-Za-z]{3}' | wc -w
-\wordcount
-\end{verbatim}
+\begin{minted}[escapeinside=££,linenos=false]{text}
+    $ make texwordcount
+    texcount -inc report-submission.tex | \
+        grep "Words in text:" | tail -n 1
+    £\wordcount£
+\end{minted}
+% \begin{verbatim}
+% $ make wordcount
+% gs -q -dSAFER -sDEVICE=txtwrite -o - \
+%    -dFirstPage=6 -dLastPage=11 report-submission.pdf | \
+% egrep '[A-Za-z]{3}' | wc -w
+% \wordcount
+% \end{verbatim}
 \end{quote}
 
 \end{defaultsffamily}
@@ -68,13 +74,19 @@ Main chapters word count: \wordcount
 
 \vspace*{2em}
 \begin{code}
-    \begin{minted}{text}
-        $ make wordcount
-        gs -q -dSAFER -sDEVICE=txtwrite -o - \
-           -dFirstPage=6 -dLastPage=11 report-submission.pdf | \
-        egrep '[A-Za-z]{3}' | wc -w
-        \wordcount
+    \begin{minted}[escapeinside=££,linenos=false]{text}
+        $ make texwordcount
+        texcount -inc report-submission.tex | \
+            grep "Words in text:" | tail -n 1
+        £\wordcount£
     \end{minted}
+    % \begin{minted}[escapeinside=££]{text}
+    %     $ make wordcount
+    %     gs -q -dSAFER -sDEVICE=txtwrite -o - \
+    %        -dFirstPage=6 -dLastPage=11 report-submission.pdf | \
+    %     egrep '[A-Za-z]{3}' | wc -w
+    %     £\wordcount£
+    % \end{minted}
     \captionsetup{textfont=sf}
     \caption*{\textbf{Listing:} Methodology used to generate that word count.}
 \end{code}

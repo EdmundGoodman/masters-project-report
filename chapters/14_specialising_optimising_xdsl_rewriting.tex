@@ -76,7 +76,7 @@ As such, specialisation to remove this overhead can vastly reduce the complexity
 % Hook
 Examining the above trace, we can visually identify components which take a large proportion of runtime, and may represent unnecessary computation.
 % Argument
-For example, the xDSL constructor for \mintinline{python3}{IRDLOperation}s invokes logic with significant overhead building and filtering properties of the operation \circledbase{pairedOneLightBlue}{A}. However, in this example of the empty operation, this logic does not change the constructed object. Because of this, eliding this logic results in a specialised version of the operation which generates the same output using less computation by applying domain knowledge.
+For example, the xDSL constructor for \mintinline{python3}{IRDLOperation}s invokes logic with significant overhead building and filtering properties of the operation \circledbase{pairedOneLightBlue}{A}. However, in this workload of the empty operation, this logic does not change the constructed object. Because of this, eliding this logic results in a specialised version of the operation which generates the same output using less computation by applying domain knowledge.
 In addition to this, \ac{mlir}'s core operations are not \ac{irdl} based, unlike xDSL, meaning this overhead is implementation specific.
 Similarly, the post-constructor includes logic for context-managed builders \circledbase{pairedTwoDarkBlue}{B}, which is again unrelated to the empty operation case and not present in \ac{mlir}.
 % Link
@@ -118,8 +118,8 @@ To avoid this overhead through specialisation, we move from the idiomatic constr
 Through specialising the implementation to the workload of this micro-benchmark we can achieve significant performance improvements of up to $26\times$ (\autoref{tab:ubenchmark-instantiation-optimised}).
 % Argument
 % Drop runtime by performing fewer, quicker operations
-We can quantify the one cause of this improvement by leveraging our novel bytecode profiling tool as the specialised code executing fewer, faster bytecode instructions (Listing \ref{listing:bytecode-profiles-op-build-original}, Listing \ref{listing:bytecode-profiles-op-build-optimised}).
-For example, specialisation reduces the number of instructions executed from $466$ to only $29$. Of these instructions, function calls occupy a disproportionate amount of runtime, with their mutation of the call stack taking up to three times longer than other operations such as loading variables. Again leveraging our tool, we can see that specialisation reduces the number of function calls from $65$ to $5$, further improving performance.
+We can quantify one cause of this improvement as the specialised code executing fewer, faster bytecode instructions (Listing \ref{listing:bytecode-profiles-op-build-original}, Listing \ref{listing:bytecode-profiles-op-build-optimised}) by leveraging our novel bytecode profiling tool.
+For example, specialisation reduces the number of bytecode instructions executed from $466$ to only $29$. Function calls have a much longer duration than other instructions, with their mutation of the call stack taking up to three times longer than loading from a variable. Again leveraging our tool, we can see that specialisation reduces the number of function calls from $65$ to $5$, further contributing to the performance uplift.
 % This process comes with the drawback of making the API much more complex
 However, the performance improvement comes at the cost of a significantly more complex implementation, contrary to xDSL's design goaals of a simple expressive API.
 % close to MLIR
