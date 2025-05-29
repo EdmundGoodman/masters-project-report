@@ -13,7 +13,7 @@ The calculated speedups are shown in the main body of the thesis (\autoref{tab:f
 \vspace{2em}
 
 \begin{code}
-    \begin{minted}{bash}
+    \begin{minted}[fontsize=\footnotesize]{text}
         pyperformance run --python=BASELINE_PYTHON -f -o baseline_file.json
         pyperformance run --python=CHANGED_PYTHON -f -o changed_file.json
         pyperformance compare baseline_file.json changed_file.json -O table
