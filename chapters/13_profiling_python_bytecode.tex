@@ -91,14 +91,44 @@ In spite of its name, we leverage the \mintinline{python}{sys.settrace} function
 % Link
 This approach of leveraging CPython's API provides benefits of robustness across versions and easy installation, but also causes a number of challenges for accurate and precise measurement of very short events.
 
-%% Challenges associated with approach
+%% Challenges associated with approach + Explaining our tracing function
 % Hook
 These challenges come as a result of the callback function itself being a callable Python code object.
 % Argument
-As such, the infrastructure to invoke and evaluate this function has a significant performance cost, in many cases taking longer than the opcode it is instrumenting.
+As such, the infrastructure to invoke and evaluate this function has a significant performance cost, in many cases taking longer than the opcode it is instrumenting. To mitigate this, our custom tracing function (Listing \ref{listing:profiling-trace-function}) records the timestamp at the earliest point \circledbase{pairedOneLightBlue}{1} and the latest point \circledbase{pairedFourDarkGreen}{4}, allowing the majority of its overhead to be excluded. Properties of the frame are then set to emit events for opcodes but not lines \circledbase{pairedTwoDarkBlue}{2}, avoiding extraneous overhead. Finally, a tuple of timestamps for the end of the last trace function and the start of the current one are recorded \circledbase{pairedThreeLightGreen}{3}, upper bounding the duration of opcode execution.
 % One step that can be taken to mitigate this is implementing the callback function using Cython \cite{}, but this presents further challenges associated with crossing the \ac{ffi} boundary. % TODO: explore this more?
 % Link
-To navigate these challenges, we carefully co-design our tracing function with CPython's interpreter loop and tracing infrastructure in mind to exclude this overhead from the traced opode durations.
+This sequence of recorded timestamps can then be used in combination with domain knowledge of the language runtime to calculate individual opcode durations.
+% To navigate these challenges, we carefully co-design our tracing function with CPython's interpreter loop and tracing infrastructure in mind to exclude this overhead from the traced opode durations.
+% This
+
+\begin{listing}[H]
+    \centering
+    \begin{minted}[xleftmargin=0.2\textwidth,breakanywhere,fontsize=\footnotesize,escapeinside=££]{text}
+    def _trace__collect_event_timestamps(
+        self, frame: types.FrameType, event: str, _arg: Any
+    ) -> Callable[..., Any] | None:
+        """Trace function to collect opcode timestamps."""
+        now_timestamp = perf_counter() £\circledbase{pairedOneLightBlue}{\footnotesize{1}}£
+
+        frame.f_trace_lines = False £\circledbase{pairedTwoDarkBlue}{\footnotesize{2}}£
+        frame.f_trace_opcodes = True
+
+        if event == "opcode":
+            self._timestamps.append( £\circledbase{pairedThreeLightGreen}{\footnotesize{3}}£
+                (
+                    self._prev_event_timestamp,
+                    now_timestamp,
+                )
+            )
+            self._prev_event_timestamp = perf_counter()  £\circledbase{pairedFourDarkGreen}{\footnotesize{4}}£
+
+        return self._trace__collect_event_timestamps
+    \end{minted}
+    \vspace{1em}
+    \caption{Trace callback function generating a sequence of timestamps instrumenting opcode events.}
+    \label{listing:profiling-trace-function}
+\end{listing}
 
 
 \subsection{CPython internals}
@@ -106,15 +136,13 @@ To navigate these challenges, we carefully co-design our tracing function with C
 
 %% Interpreter loop, specific to CPython3.10. LLTrace/profile don't give us what we want
 % Hook
-In order to justify the validity of our tracing function, we must first examine the language runtime implementation with which it is co-designed. In this section, we present a view of CPython 3.10 as a basis for our profiler.
+In order to infer opcode durations from the event timestamps emitted tracing function, we must first examine the language runtime implementation with which it is co-designed. In this section, we present a view of CPython 3.10's implementation as a basis for our profiler.
 % Argument
 In more recent Python versions such as CPython 3.13, aspects of the tracing infrastructure have been refactored. However, since both the API provided by the standard library and the position of the tracing logic in the evaluation loop remain the same, the procedure remains applicable to these newer versions.
 % In background (\autoref{}) we introduced the structure of python's interpreter
 Code objects in CPython are executed by the \texttt{\_PyEval\_EvalFrameDefault} function (\autoref{listing:cpython-evaluation-overview-code}). This begins with initialisation to ready for evaluation \circledbase{pairedOneLightBlue}{a}, then enters an unbounded evaluation loop \circledbase{pairedTwoDarkBlue}{b}. This loop decodes the next bytecode instruction \circledbase{pairedThreeLightGreen}{c}, then switches on it to select the appropriate logic to execute \circledbase{pairedFourDarkGreen}{d}, and repeats until an exception is thrown or the code object terminates.
 % Link
 Having an understanding of the evaluation loop, we can next discuss how it is instrumented for tracing.
-
-%% Block diagram?
 
 \begin{figure}[H]
     \centering
@@ -165,7 +193,6 @@ PyObject* _PyEval_EvalFrameDefault(PyThreadState *tstate, PyFrameObject *f, int 
     \label{figure:cpython-evaluation-overview}
 \end{figure}
 
-
 %% Registering and using a trace function
 % Hook
 CPython's tracing mechanism works in two phases: registering the callback function, and the invocation of this callback function from the evaluation loop.
@@ -173,97 +200,72 @@ CPython's tracing mechanism works in two phases: registering the callback functi
 To register the callback function, users can invoke \mintinline{python}{sys.settrace}, a standard library function binding to the C implementation of \texttt{sys\_settrace} in \texttt{sysmodule.c:}. This in turn invokes \texttt{\_PyEval\_SetTrace} in \texttt{ceval.c}, which updates two fields on the Python \ac{gil} thread state struct: \texttt{c\_traceobj} and \texttt{c\_tracefunc}. The former is a callable Python code object for the callback function, and the latter points to a ``trampoline'' function, which invokes this code object with the current frame information.
 This trampoline is then invoked when events occur in the evaluation loop, including at the start of the frame evaluation for functions, after each opcode is extracted, and on returning from the function (green blocks in \autoref{figure:cpython-evaluation-overview-block}).
 % Link
-As such, our approach leverages a custom callback function to sample the system timer at each event, then uses knowledge of the profiling
+% TODO: Something here?? Not sure how to link...
 
 
-\subsection{Approach}
-\label{ssec:profiling-bytecode-approach}
-
-%% Our approach is...
-% Hook
-% Argument
-% Link
-
-%% Listing of our tracing function
-
-% \begin{listing}[H]
-%     \centering
-%     \begin{minted}[breakanywhere,fontsize=\footnotesize,escapeinside=££]{text}
-%     def _trace__collect_event_timestamps(
-%         self, frame: types.FrameType, event: str, _arg: Any
-%     ) -> Callable[..., Any] | None:
-%         """Trace function to collect opcode timestamps."""
-%         now_timestamp = perf_counter() £\circledbase{pairedOneLightBlue}{\footnotesize{1}}£
-
-%         frame.f_trace_lines = False £\circledbase{pairedTwoDarkBlue}{\footnotesize{2}}£
-%         frame.f_trace_opcodes = True
-
-%         if event == "opcode":
-%             self._timestamps.append( £\circledbase{pairedThreeLightGreen}{\footnotesize{3}}£
-%                 (
-%                     self._prev_event_timestamp,
-%                     now_timestamp,
-%                 )
-%             )
-%             self._prev_event_timestamp = perf_counter()  £\circledbase{pairedFourDarkGreen}{\footnotesize{4}}£
-
-%         return self._trace__collect_event_timestamps
-%     \end{minted}
-%     \caption{.}
-%     \label{listing:profiling-trace-function}
-% \end{listing}
+\subsection{Inferring bytecode duration}
+\label{ssec:profiling-bytecode-inferring-duration}
 
 %% This gives us measurements within the CPython runtime
 % Hook
-This tracing function provides us with a sequence of timestamps for points in the execution stream.
+Given both the sequence of timestamps and an understanding of their place in CPython's evaluation loop, we can infer our profiler's goal of the time taken to execute each opcode.
 % Argument
-From this sequence of timestamps, we need to synthesise the durations of each opcode.
-We can reason about this by flattening the block diagram of the evaluation loop (\autoref{figure:cpython-evaluation-overview-block}) and annotating it with the timestamp measurements (\autoref{}).
 % Link
+One way to visualise this is by flattening the block diagram of the evaluation loop (\autoref{figure:cpython-evaluation-overview-block}) and annotating it with timestamp measurements (\autoref{figure:profiler-run}). From this, we can then construct a system of equations relating the measurements, and derive the durations of each opcode.
 
-%% Figure showing trace events, possibly side-by-side with equations?
 
 \begin{figure}[H]
     \centering
+    % TODO: Any way to make these diagrams neater?
     \begin{subfigure}[b]{0.45\textwidth}
        \centering
        \includegraphics[width=\textwidth]{images/profiling_bytecode/untraced_run.drawio.pdf}
-       \vspace{2em}
-       \caption{Partially traced function.}
+       \vspace{0em}
+       \caption{Timing function runtime without opcode event tracing.}
        \label{figure:profiler-untraced-run}
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.45\textwidth}
        \centering
        \includegraphics[width=\textwidth]{images/profiling_bytecode/traced_run.drawio.pdf}
-       \caption{Fully traced function.}
+       \caption{Timing function runtime, including recording timestamps at the start and end of each opcode event.}
        \label{figure:profiler-traced-run}
     \end{subfigure}
-    \caption{.}
+    \caption{Timing Python's evaluation loop with and without instrumentation of opcode events using \texttt{sys.settrace}.}
     \label{figure:profiler-run}
 \end{figure}
 
-%% From these, we can calculate the time taken by each opcode
-% Hook
-% Argument
-% Link
+By examination of where trace timestamps are recorded, we can see that the n\textsuperscript{th} bytecode instruction, $b_n$, is equal to the difference between the recorded timestamp pairs, $o_n$, and the fixed overheads before and after the tracing function, $\alpha$ and $\omega$ respectively (\autoref{eq:bn_examination}).
 
 \begin{equation}
-    \label{eq:1}
+    \label{eq:bn_examination}
     b_n = o_n - (\alpha + \omega)
 \end{equation}
 
-\begin{equation}
-    \label{eq:2}
-    \begin{split}
-        T_i &= \sum_{n} t_n + \sum_{n} o_n \\
-            &= T_u + n \alpha + n \omega
-    \end{split}
-\end{equation}
+Furthermore, the measured runtime of the instrumented function, $T_I$, is equal to the sum of the uninstrumented runtime $T_U$ and the overhead incurred by tracing (\autoref{eq:ti_examination}).
 
 \begin{equation}
-    \label{eq:3}
-    b_n = o_n - \frac{T_i - T_u}{n}
+    \label{eq:ti_examination}
+    T_I = T_U + \sum_{n} (\alpha + \omega + t_n)
+\end{equation}
+
+% \begin{equation}
+%     \label{eq:bn_inferred}
+%     b_n = o_n - \frac{T_i - T_u}{n}
+% \end{equation}
+
+As such, we calculate the sum of the overheads before and after the tracing function, $\alpha + \omega$, under the assumption that they are fixed (\autoref{eq:ao_inferred}). This assumption is justified by the calling infrastructure for the tracing function being the same across all opcodes.
+
+\begin{equation}
+    \label{eq:ao_inferred}
+    \alpha + \omega = \frac{T_I - T_U - \sum_{n} t_n}{n}
+\end{equation}
+
+Finally, we can combine this with our initial observation to infer our goal of opcode duration (\autoref{eq:bn_inferred}).
+
+\begin{equation}
+    \label{eq:bn_inferred}
+    b_n = o_n - \frac{T_I - T_U - \sum_{n} t_n}{n}
 \end{equation}
 
 %% Timer granularity + other tricks
@@ -293,6 +295,8 @@ Each traced event is displayed on its own line, in combination showing the exact
     \begin{subfigure}[b]{0.275\textwidth}
        \centering
         \begin{minted}[fontsize=\scriptsize,escapeinside=££]{python}
+import bytesight
+
 def inner_function(
     x: int | str | float
 ) -> None:
@@ -302,8 +306,12 @@ def example_function():
     inner_function(1)
     pass
     _x = perf_counter()
+
+bytesight.profile_bytecode(
+    example_function
+)
         \end{minted}
-        \footnotesize\vspace{8em}
+        \footnotesize\vspace{6em}
         \caption{Python program.}
         \label{listing:profiler-example-python}
     \end{subfigure}
@@ -348,6 +356,10 @@ def example_function():
 
 %% Summary/why should I care?
 % Hook
+ByteSight provides straightforward mechanism to show the bytecode trace of any Python function.
 % Argument
-% Link forward to where it is used in other places
+This facilitates debugging control flows in highly dynamic code, which often suffer from ``spooky action at a distance'', and is educational for the internal workings of Python's interpreter.
+This functionality easily accessible by installation from \ac{pypi}, contrasting previous approaches which required either re-compiling the Python interpreter or manually implementing the same approach each time.
+Beyond this, the profiling information of the duration of each opcode is not provided by any existing tools to the author's knowledge. This information provides insight into the relationship between performance and dynamism in Python, and is more generally helpful for understanding and optimising performance critical code which cannot be deferred to a low-level language through \ac{ffi} bindings.
 % Link
+In the context of our research, this tool unblocks our work in later chapters characterising and optimising the performance of xDSL.
