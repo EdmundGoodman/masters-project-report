@@ -89,22 +89,32 @@ Driven by Python's immense popularity, significant research effort has been expe
 This section discusses a relevant subset of these tools and techniques, and contrasts them with our novel contributions.
 
 
+%% TODO: Could have re-worked section headings, but might be better to just have two section headings?
+\subsection{Comparing Python and compiled code}
+\label{sec:python-performance-comparing}
 
 %% Traditional approach is FFI bindings, but this doesn't work for us
-%% Sasha comment:
-%   I'd recommend against using names of talks or papers as subheadings here. It would be useful to try and frame this subsection in terms of a perspective. For example, "Performance of Python vs compiled code" or something in that direction, in which you could say that the common approach is to use pre-compiled functions for things, as the Python interpreter is inherently much slower than native code. Your work seeks to work out whether this is true for workloads that are dynamic, in contrast to linear algebra functions provided in numpy.
 % Hook
 In his talk ``Python Performance Matters'' \cite{emerybergerPythonPerformanceMatters2022}, Emery Berger argues that whilst Python is a critical language for writing ``glue code'', its performance is bounded by the overhead of its virtual machine, making it necessarily slower than languages compiled to native machine code.
 % Argument
 As such, he asserts a maximally performant Python program is one which executes as few Python instructions as possible, instead heavily leveraging code written in more performant languages such as C or FORTRAN through \ac{ffi} bindings.
-As these \ac{ffi} bindings incur an overhead, particularly when copying large data structures, instances of switching between the two languages should be minimised.
-This approach is applicable to many applications, for example libraries such as NumPy and TensorFlow, providing useful abstractions for compiled code over common tasks.
-% TODO: Could split paragraph here?
-Unfortunately, this approach cannot easily be applied to user-extensible compiler frameworks. This is because user defined extensions make frequent interactions across a wide API surface, and operate on large data structures -- resulting in a disproportionate cost from crossing \ac{ffi} boundaries.
-In addition to this, compiler optimisation workloads are less amenable to ahead-of-time compiled optimisations such as vectorisations, further reducing the benefit of leveraging such languages.
+This approach is effective for many applications, for example libraries such as NumPy and TensorFlow, providing useful abstractions for compiled code over common tasks.
+However, these \ac{ffi} bindings incur an overhead, particularly when copying large data structures.
 % Link
-Our research extends the state-of-the-art by examining cases where existing best practices are not applicable.
+This makes the approach less suitable for applications which cannot be partitioned into two loosely coupled components split over the language boundary.
 
+%% Our work
+% Hook
+Our work examines user-extensible compiler frameworks, which we argue contain bottlenecking components such as the pattern rewriter which cannot be split in this way.
+% Argument
+This is because user defined extensions make frequent interactions across a wide API surface, and operate on large data structures -- resulting in a disproportionate cost from crossing \ac{ffi} boundaries. This contrasts linear algebra workloads such as those supported by NumPy, where large batches of computation are dispatched by only one interaction across the boundary.
+In addition to this, compiler optimisation workloads are less amenable to ahead-of-time compiled optimisations such as vectorisations, further reducing the benefit of leveraging low-level compiled languages.
+% Link
+Our research extends the state-of-the-art by examining these cases where existing best practices are not applicable.
+
+
+\subsection{Measuring application performance in Python}
+\label{sec:python-performance-application}
 
 %% Difficulty measuring python
 % Hook
@@ -137,6 +147,9 @@ In addition to the research contribution of these measurements themselves, our w
 % Link
 However, sometimes measurements with finer than end-to-end granularity are required to characterise performance properties more deeply. As such, our tooling also provides a simple user interface for applying performance profilers to these benchmarks.
 
+
+\subsection{Profiling to understand Python's performance}
+\label{sec:python-performance-profiling}
 
 %% TODO: To what degree does this duplicate related work? Will this need hoisting?
 %% Research gap
