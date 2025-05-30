@@ -3,50 +3,13 @@
 
 %% Top-level summary
 % Hook
-Performance profilers are powerful tools, providing useful information about program control flow and hotspots -- facilitating performance optimisation.
+Performance profilers are powerful tools that provide useful information about program control flow and hotspots, facilitating performance optimisation.
 % Argument
-However, different circumstances demand different feature sets of these tools to ensure their users have access to the greatest amount of relevant information.
+Our research requires detailed information instrumenting Python's internal evaluation loop to draw comparisons with the C++ language runtime and characterise the cost of dynamism. However, existing profilers do not provide information at this granularity, motivating our work in this area. % motivating our development of a new tool.
 % Link
 In this chapter we present ByteSight, a novel tool for performance profiling at the bytecode level, allowing us to look deeper into the performance characteristics of highly dynamic programs whose implementation cannot easily be deferred into lower level languages.
 
 %% TODO: Need to add some stuff to the background introducing Python bytecode
-
-%% TODO: To what degree does this duplicate related work? Will this need hoisting?
-%% Research gap
-% Hook
-Existing profilers for Python typically operate at the function level.
-% Argument
-For example, Python's standard library provides the \texttt{profile} module, a Python-native tracing profiler, along with \texttt{cProfile}, a more performant C implementation of the same functionality \cite{pythonsoftwarefoundationPythonProfilers}. These instrument each call event, providing accuract profiling information for each evaluated function.
-Beyond the standard library, profilers such as \texttt{pyinstrument} use statistical sampling rather than tracing to reduce overhead incurred by performance measurement \cite{rickerbyPyinstrument2025}.
-In addition to this, the recent OSDI best paper winner ``Triangulating Python Performance Issues with SCALENE'' \cite{bergerTriangulatingPythonPerformance2023a} introduces another profiler which focusses on the \ac{ffi} boundary between C and Python, a key bottleneck for the best practice of delegating computation to fast low-level implementations.
-Whilst this delegation is particularly effective for structured workloads such as linear algebra, it is less suitable for highly dynamic workloads. % TODO: Remove whilst?
-As such, profilers for pure Python are still important for these applications.
-Furthermore, profiling information at a finer granularity than the function level is often needed to deeply the performance of a program.
-% Link
-\texttt{line\_profiler} provides this functionality to a line level \cite{robertkernPyutilsLine_profiler2025}, but this is still one level of abstraction over the increasingly complex implementation of CPython's interpreter.
-
-% % \vspace{1em}
-% \begin{listing}[H]
-%     \centering
-%     \begin{minted}[fontsize=\footnotesize]{text}
-%       214 function calls (207 primitive calls) in 0.002 seconds
-
-% Ordered by: cumulative time
-
-% ncalls  tottime  percall  cumtime  percall filename:lineno(function)
-%      1    0.000    0.000    0.002    0.002 {built-in method builtins.exec}
-%      1    0.000    0.000    0.001    0.001 <string>:1(<module>)
-%      1    0.000    0.000    0.001    0.001 __init__.py:250(compile)
-%      1    0.000    0.000    0.001    0.001 __init__.py:289(_compile)
-%      1    0.000    0.000    0.000    0.000 _compiler.py:759(compile)
-%      1    0.000    0.000    0.000    0.000 _parser.py:937(parse)
-%      1    0.000    0.000    0.000    0.000 _compiler.py:598(_code)
-%      1    0.000    0.000    0.000    0.000 _parser.py:435(_parse_sub)
-%     \end{minted}
-%     \vspace{1em}
-%     \caption{Profiling results of \texttt{cProfile.run('re.compile("foo|bar")')} are at the granularity of function calls.}
-%     \label{listing:cprofile-example}
-% \end{listing}
 
 %% Bytecode intro and profiling motivation
 % Hook
@@ -54,8 +17,8 @@ Recent developments to CPython's runtime motivate collecting more fine-grained p
 % Argument
 For example, the specialising adaptive interpreter rewrites bytecode at runtime into quickened forms, and the baseline \ac{jit} substitutes bytecode for tier two micro-operations -- both yielding performance characteristics which cannot be reasoned about with function or line level instrumentation.
 In addition to this, bytecode performance profiling information helps provide a key missing data point when examining the impact of program dynamism.
-However, to the author's knowledge, no profilers exist which support measurement at this granularity.
-One reason for this conspicuous absence of bytecode level profilers is the difficulty of measuring their very short execution times, in the order of highest resolution system counter. This difficulty is further worsened by the bytecode dispatch and evaluation being deeply interleaved within the interpreter's execution loop.
+However, to the author's knowledge, no profilers exist which support measurement at this granularity (\nameref{chap:related-work}, \autoref{sec:python-performance}).
+One reason for this conspicuous absence of bytecode level profilers is the difficulty of measuring their very short execution times, in the order of the highest resolution system counter. This difficulty is further worsened by the bytecode dispatch and evaluation being deeply interleaved within the interpreter's execution loop.
 % Link
 
 %% Our tool and its goals

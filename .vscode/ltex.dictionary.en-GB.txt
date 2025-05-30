@@ -7,3 +7,10 @@ pairedThreeLightGreen
 valgrind
 callgrind
 ByteSight
+Lattner
+Adve
+gcc
+CPython
+cProfile
+pyinstrument
+OSDI

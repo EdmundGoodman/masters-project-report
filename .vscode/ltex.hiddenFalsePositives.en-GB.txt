@@ -1,0 +1,1 @@
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qlineprofiler provides this functionality to a line level \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q, but this is still one level of abstraction over the increasingly complex implementation of CPython's interpreter.\\E$"}
