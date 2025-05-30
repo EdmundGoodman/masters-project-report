@@ -18,7 +18,7 @@ Existing profilers for Python typically operate at the function level.
 % Argument
 For example, Python's standard library provides the \texttt{profile} module, a Python-native tracing profiler, along with \texttt{cProfile}, a more performant C implementation of the same functionality \cite{pythonsoftwarefoundationPythonProfilers}. These instrument each call event, providing accuract profiling information for each evaluated function.
 Beyond the standard library, profilers such as \texttt{pyinstrument} use statistical sampling rather than tracing to reduce overhead incurred by performance measurement \cite{rickerbyPyinstrument2025}.
-Recent work such as \texttt{scalene} \cite{bergerTriangulatingPythonPerformance2023a} has focussed on the \ac{ffi} boundary between C and Python, a key bottleneck for the best practice of delegating computation to fast low-level implementations.
+In addition to this, the recent OSDI best paper winner ``Triangulating Python Performance Issues with SCALENE'' \cite{bergerTriangulatingPythonPerformance2023a} introduces another profiler which focusses on the \ac{ffi} boundary between C and Python, a key bottleneck for the best practice of delegating computation to fast low-level implementations.
 Whilst this delegation is particularly effective for structured workloads such as linear algebra, it is less suitable for highly dynamic workloads. % TODO: Remove whilst?
 As such, profilers for pure Python are still important for these applications.
 Furthermore, profiling information at a finer granularity than the function level is often needed to deeply the performance of a program.
@@ -220,8 +220,8 @@ One way to visualise this is by flattening the block diagram of the evaluation l
     \begin{subfigure}[b]{0.45\textwidth}
        \centering
        \includegraphics[width=\textwidth]{images/profiling_bytecode/untraced_run.drawio.pdf}
-       \vspace{0em}
        \caption{Timing function runtime without opcode event tracing.}
+       \vspace{1em}
        \label{figure:profiler-untraced-run}
     \end{subfigure}
     \hfill
@@ -235,7 +235,7 @@ One way to visualise this is by flattening the block diagram of the evaluation l
     \label{figure:profiler-run}
 \end{figure}
 
-By examination of where trace timestamps are recorded, we can see that the n\textsuperscript{th} bytecode instruction, $b_n$, is equal to the difference between the recorded timestamp pairs, $o_n$, and the fixed overheads before and after the tracing function, $\alpha$ and $\omega$ respectively (\autoref{eq:bn_examination}).
+By examination of where trace timestamps are recorded, we can see that the duration of the n\textsuperscript{th} bytecode instruction, $b_n$, is equal to the difference between the recorded timestamp pairs, $o_n$, and the fixed overheads before and after the tracing function, $\alpha$ and $\omega$ respectively (\autoref{eq:bn_examination}).
 
 \begin{equation}
     \label{eq:bn_examination}
@@ -319,13 +319,13 @@ bytesight.profile_bytecode(
     \begin{subfigure}[b]{0.695\textwidth}
         \centering
         \begin{minted}[fontsize=\scriptsize,escapeinside=££,linenos=false]{text}
-// ======= example:6 `example_function` ========
+// ======= example:8 `example_function` ========
 // >>> inner_function(1)
 7           0   LOAD_GLOBAL          0   (inner_function)   // 15   ns
             2   LOAD_CONST           1   (1)                // 15   ns
             4   CALL_FUNCTION        1   ()                 // 31   ns
 
-    // ======== example:1 `inner_function` ========= £\circledbase{pairedOneLightBlue}{\scriptsize{x}}£
+    // ======== example:3 `inner_function` ========= £\circledbase{pairedOneLightBlue}{\scriptsize{x}}£
     // >>> assert x
     4           0   LOAD_FAST            0   (x)            // 13   ns
                 2   POP_JUMP_IF_TRUE     4   (to 8)         // 13   ns

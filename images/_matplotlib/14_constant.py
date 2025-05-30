@@ -283,9 +283,52 @@ def plot_instructions():
     save(fig, PARENT_DIRECTORY / "../specialising_optimising_xdsl_rewriting/constant_instructions.pdf")
 
 
+def plot_loc():
+    labels = ["Current\nxDSL", "Specialised\nxDSL", "MLIR"]
+    perf_means = [15, 102, 22]
+    # CALL -> 113
+
+    x = np.arange(len(labels))  # the label locations
+    width = 0.35  # the width of the bars
+
+    fig, ax = plt.subplots()
+    rects1 = ax.bar(x, perf_means, width, color=[light_blue, light_blue, dark_blue])
+
+    # Custom legend
+    red_patch = matplotlib.patches.Patch(color=light_blue, label='Python')
+    blue_patch = matplotlib.patches.Patch(color=dark_blue, label='C++')
+    fig.legend(handles=[red_patch, blue_patch], loc="upper right")
+
+    # Logarithmic Y-Axis
+    # ax.set_yscale("log")
+
+    # Y-Axis Label
+    #
+    # Use a horizontal label for improved readability.
+    ax.set_ylabel(
+        "Lines of code",
+        rotation="horizontal",
+        position=(1, 1.05),
+        horizontalalignment="left",
+        verticalalignment="bottom",
+    )
+
+    # Add some text for labels, title and custom x-axis tick labels, etc.
+    ax.set_xticks(x)
+    ax.set_xticklabels(labels)
+
+    ax.legend(ncol=100, loc="lower right", bbox_to_anchor=(0, 1, 1, 0))
+
+    autolabel(ax, rects1)
+
+    fig.tight_layout()
+    # plt.show()
+    save(fig, PARENT_DIRECTORY / "../specialising_optimising_xdsl_rewriting/constant_loc.pdf")
+
 def main():
     plot_performance()
     plot_instructions()
+    plot_loc()
 
 
 if __name__ == "__main__":
