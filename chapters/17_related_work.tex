@@ -27,9 +27,14 @@ Our research builds on top of two existing bodies of work.
 % Argument
 The first is characterisation of the performance of user-extensible compiler frameworks. Existing work in this domain is limited to examining frameworks written in ahead-of-time compiled languages, such as \ac{mlir} in C++.
 Our work extends this by measuring the performance of xDSL, a framework written in Python -- an interpreted dynamic language. This measurement then allows us to contrast the performance characteristics of static and dynamic implementations for this workload.
-% TODO: Make this more focussed
-% The second body of work is the performance measurement of the Python programming language. Existing work in this domain provides a wide variety of performance measurement and profiling tools for Python programs. However, the finest granularity of profiling information provided by these tools is at the line level. Our need for even finer granularity measurements to characterise the performance of dynamic workload demonstrates a gap in this existing provision.
-% Our novel bytecode profiling tool fills this gap by recording highly granular timing information for the bytecodes dispatched to interpret native Python code. This facilitates deep performance analysis of workloads which benefit from remaining in Python natively.
+The second body of work is the performance measurement of the Python programming language.
+% FFI boundaries and dynamism
+Recent work discusses the optimisation of Python code by delegating execution to faster, compiled implementations through library calls. However, we argue that this approach is not suitable for some applications, including user-extensible compiler infrastructure.
+% Applying performance measurement techniques
+To substantiate this claim, we further apply existing tools and techniques for measuring Python performance.
+% Filling the research gap with bytecode level profiling
+However, the finest granularity of profiling information provided by these tools is at the line level. Our need for even finer granularity measurements to characterise the performance of dynamic workload demonstrates a gap in this existing provision. Our novel bytecode profiling tool fills this gap by recording highly granular timing information for the bytecodes dispatched to interpret native Python code. This facilitates deep performance analysis of workloads which benefit from remaining in Python natively.
+% This measurement relies on deep analysis of Python's internal evaluation machinery, which is not fully supported by existing tools. As such, we extend this existing body of work with a novel profiling tool, facilitating deep performance analysis of workloads which benefit from remaining in Python natively.
 % Link
 
 
@@ -131,14 +136,14 @@ As such, accurate measurement of the performance characteristics of a Python pro
 % Hook
 Fortunately, Python's strong ecosystem provides a wide variety of tools to achieve this goal.
 % Argument
-This existing body of work
+% TODO: possibly needs link like "This existing body of work..."?
 The standard library includes the \texttt{timeit} utility, which measures the wall clock time to execute code snippets. However, \texttt{timeit} is fairly simplistic, and does not account for all the complexities of modern interpreted runtimes.
 The \texttt{pyperf} \cite{victorstinnerPsfPyperf2025} package aims to address these issues, with more complex control over confounding effects such as warm-ups and CPU isolation.
 Other tools provide more specialised functionality, for example Airspeed Velocity \cite{michaeldroettboomAirspeedvelocityAsv2025} visualising performance regressions across repository commits, and \texttt{pyperformance} \cite{collinwinterPythonPyperformance2025} benchmarking the performance of the Python language implementation itself across a variety of workloads.
 % Link
 Our work leverages these tools to make accurate measurements of compiler framework performance.
 
-%% Our measurements and infrastructure (optional?)
+%% Our measurements and infrastructure
 % Hook
 A key contribution of our research is the comprehensive performance measurements and analysis of the xDSL and \ac{mlir} user-extensible compiler frameworks.
 % Argument
