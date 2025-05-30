@@ -11,9 +11,9 @@ However, the experiments so far measure a combination of the effects of dynamism
 In order to use the frameworks for our aims, our measurements must be as independent of implementation details as possible.
 
 % Hook
-In this chapter, we meet this disentangle these effects by specialising the xDSL framework to implement only a single workload.
+In this chapter, we disentangle these effects by specialising the xDSL framework to implement only a single workload.
 % Argument
-To do this, we manually identify and remove computation performed by the framework which is unnecessary to its execution of this workload. For example, the framework may calculate and check values that are known as runtime invariants for the selected workload. Checking properties of empty fields is one such example. Since this checking does not contribute to the workload's behavior, it can be removed. Another example is functionality which improves the expressivity of the framework's API, such as runtime type checks to support polymorphism of arguments. Since only a single facet of this API is used by the workload, this can also be removed.
+To do this, we manually identify and remove computation performed by the framework which is unnecessary to its execution of this workload. For example, the framework may calculate and check values that are known as runtime invariants for the selected workload. Checking properties of empty fields is one such example. Since this checking does not contribute to the workload's behaviour, it can be removed. Another example is functionality which improves the expressivity of the framework's API, such as runtime type checks to support polymorphism of arguments. Since the workload only uses a single facet of this API, this can also be removed.
 % One common example of this is functionality which improves the expressivity of the framework, such as runtime type checks to support polymorphism of arguments. A second example is calculating and checking values which are known as runtime invariants for the selected workload, such as checking properties of empty fields.
 % In this process, we manually identify and remove computation performed by the framework which is unnecessary to its execution of this workload. This computation broadly falls into two categories. The first is functionality which improves the expressivity of the framework, such as runtime type checks to support polymorphism of arguments. The second is calculating and checking values which are known as runtime invariants for the selected workload. % DONE: Does it make sense to split these into categories, almost the same thing in some sense -- no!
 By eliminating the performance overheads from these unnecessary computations, we reach an implementation representative of the best-case performance of Python for this workload.
@@ -190,7 +190,7 @@ Examining the implementation of this micro-benchmark (Listing \ref{listing:ubenc
 % Argument
 The execution trace shows that checking the whether an operation is unregistered $\circledbase{pairedOneLightBlue}{1}$ accounts for over one third of the micro-benchmark runtime. Through specialisation under the runtime invariant that all operations are registered, this check can be removed -- reducing computation. Furthermore, this inspires a general optimisation to xDSL to avoid this check by overloading \mintinline{python}{UnregisteredOp.has_trait} rather than checking on all code paths.
 In addition to this, function invocation in Python incurs a performance cost due to the overhead of modifying the stack frame. As such, inlining the call to \mintinline{python}{get_trait} \circledbase{pairedTwoDarkBlue}{2} is another beneficial specialisation.
-Finally, argument types are dynamically checked \circledbase{pairedThreeLightGreen}{3} and casted \circledbase{pairedFourDarkGreen}{4}, incurring a performance overhead. However, the type of these arguments are runtime invariants of the caller, so the checks can be specialised away.
+Finally, argument types are dynamically checked \circledbase{pairedThreeLightGreen}{3} and cast \circledbase{pairedFourDarkGreen}{4}, incurring a performance overhead. However, the type of these arguments are runtime invariants of the caller, so the checks can be specialised away.
 % Link
 
 \begin{figure}[H]
@@ -315,13 +315,15 @@ In addition to this, the similarity of the two implementations allows us to draw
     \label{fig:ubenchmark-original-trait-summary}
 \end{figure}
 
-% TODO: Does this want to be lifted into the dynamism section?
+% TODO: Does this want to be lifted into the dynamism section -- this might make it easier to link to more substantial data rather than just explaining interpreter/compiler again in gratuitous detail
 % Hook
+Empowered by the similarity of their implementations, we can further apply profiling tools to contrast the emitted instructions by each language runtime.
 % Argument
-We use \texttt{valgrind}'s \texttt{callgrind} tool \cite{valgrindtmdevelopersCallgrindCallgraphGenerating} to instrument \ac{mlir}'s C++ implementation, as opposed to ByteSight for xDSL's Python.
-For the same implementation, Python dispatches only $35$ bytecode instructions in comparison with AArch64 assembly taking $708$ (\autoref{fig:ubenchmark-original-trait-performance}).
-This demonstrates... % TODO:...
+For xDSL's Python, we use our novel bytecode profiling tool ByteSight, and for \ac{mlir}'s C++, we use \texttt{valgrind}'s \texttt{callgrind} tool \cite{valgrindtmdevelopersCallgrindCallgraphGenerating}.
+For the same algorithm, Python dispatches only $35$ bytecode instructions in comparison with AArch64 assembly taking $708$ (\autoref{fig:ubenchmark-original-trait-performance}).
+This demonstrates the significant abstraction gap between high-level Python bytecode and the low-level assembly instructions compiled from C++. While Python requires fewer explicit instructions due to its dynamic dispatch and built-in operations handling complex tasks internally, the underlying C++ implementation must execute many more granular assembly instructions to achieve the same computational result.
 % Link
+Despite this, the C++ implementation outperforms the Python implementation, due to these assembly instructions more closely matching the execution model of the target machine.
 
 
 
@@ -467,11 +469,12 @@ def match_and_rewrite(self, op: Operation, rewriter: PatternRewriter, /):
 
 %% Implementation details and why separate xDSL and MLIR?
 % Hook
-In order to draw fair comparisons between the two frameworks, their implementations of the constant folding pattern rewriting must be equivalent.
+In order to draw fair comparisons between the two frameworks, their implementations of the constant folding pattern rewrite must be equivalent.
 % Argument
 As such, we provide implementations for both xDSL (Listing \ref{listing:constant-folding-impl-xdsl}) and \ac{mlir} (Listing \ref{listing:constant-folding-impl-xdsl}).
 Measuring the \ac{mlir} implementation is complicated by the fact that its pattern rewriting infrastructure implements constant folding by default. To mitigate this, we manually excise this functionality from the \ac{mlir} framework to ensure that our pattern rewriting kernel is the implementation being measured.
 % Link
+Having constructed these implementations, we can follow the same specialisation process introduced for the micro-benchmarks to bring the xDSL's performance closer to the best-case for that workload in the Python language.
 % Unlike previous micro-benchmarks, MLIR's implementation of pattern rewriting also introduces non-negligible implementation overhead. As such, we provide a matching implementation of this algorithm in MLIR to guarantee fair comparison.
 % In addition to this, unlike previous micro-benchmarks, MLIR's implementation of pattern rewriting introduces significant overhead by providing expressivity in the form of features such as rewriting callbacks.
 
@@ -481,13 +484,14 @@ Measuring the \ac{mlir} implementation is complicated by the fact that its patte
 
 %% What does specialisation mean in this context (inlining/eliding/...)
 % Link
-Whilst our constant folding pass is less complex than existing passes such as canonicalisation, it is still much more complex than any of the above micro-benchmarks. As such, there are many more opportunities for the specialisation of its implementation.
+Although our constant folding pass is less intricate than existing passes such as canonicalisation, it is still much more complex than any of the above micro-benchmarks (\autoref{fig:constant-fold-original-viztracer}).
+% As such, there are many more opportunities for the specialisation of its implementation.
 % Argument
-Despite this, the specialisation process remains unchanged.
-Applying a tracing profiler, we can identify computation which can be elided (\autoref{fig:constant-fold-original-viztracer}).
-As with the micro-benchmarks, this includes functionality to increase the expressiveness of the API, and logic which is unrelated to the workload. Furthermore, we apply function inlining to avoid the performance cost of interacting with the call stack.
+Instead of one or two helper functions in xDSL's API, aspects of the pattern rewriter such as replacing the matched operation have a deep call stack, invoking methods to set many aspects of the \ac{ir}'s object representation.
+As such, the first step in the specialisation process is manually inlining this call stack, which provides two benefits. Firstly, it avoids the non-negligible overhead of function calls discussed in previous micro-benchmarks, and further worsened by the deep call stack of the more complex implementation. Secondly, it reveals logic that is redundant for the implementation of this workload, which is otherwise hidden across the boundaries of xDSL's API.
+The inlined implementation can then be specialised to remove this redundant logic, and further leverage runtime invariants of the integer constant addition workload where possible.
 % Link
-This yields a specialised implementation with reduced overhead, which
+This yields a specialised implementation with reduced overhead, which (\autoref{fig:constant-fold-optimised-viztracer}),
 
 
 \begin{figure}[H]
@@ -510,19 +514,37 @@ This yields a specialised implementation with reduced overhead, which
     \label{fig:constant-fold-viztracer}
 \end{figure}
 
-%% TODO: Some interesting implementation details???
-% Link
-% Argument
-% Link
 
 \subsection{Performance improvement}
 \label{sec:specialising-pattern-rewriting-performance}
 
-%% How much did we get out of this?
+%% How much did we get/lose out of this?
 % Link
-From this specialisation process, we gained...
+Through specialising the constant folding implemenation, we achieve a $8\times$ speedup over the original implementation (\autoref{fig:constant-fold-summary}).
 % Argument
+However, this performance uplift comes at the cost of ease of implementation, increasing the constant folding implementation length by $7\times$ (\autoref{fig:constant-fold-loc}).
+As with the specialised micro-benchmarks, we can leverage our novel bytecode profiling tool to explain this improvement in terms of dispatched bytecode instructions, with the workload dropping from $5465$ to $977$ instructions required to implement its functionality.
+By examining the implementation and its emitted bytecode instructions, we are confident that it is close to optimal for the workload within the context of xDSL's data structures.
+In combination with the modifications made to \ac{mlir} to similarly avoid extraneous computation, these two implementations are both directly comparable and complex enough to be representative of real-world workloads.
 % Link
+This facilitates their later use for exploring the impact of dynamism on such workloads.
+
+
+
+
+
+% Through specialising the implementation to the workload of this micro-benchmark we can achieve significant performance improvements of up to $26\times$ (\autoref{tab:ubenchmark-instantiation-optimised}).
+% % Argument
+% % This process comes with the drawback of making the API much more complex
+% However, the performance improvement comes at the cost of a significantly more complex implementation, contrary to xDSL's design goals of a simple expressive API.
+% % Drop runtime by performing fewer, quicker operations
+% We can quantify one cause of this improvement as the specialised code executing fewer, faster bytecode instructions by leveraging our novel bytecode profiling tool (full traces in Appendices \ref{listing:bytecode-profiles-op-build-original}, \ref{listing:bytecode-profiles-op-build-optimised}).
+% For example, specialisation reduces the number of bytecode instructions executed from $466$ to only $29$. Function calls have a much longer duration than other instructions, with their mutation of the call stack taking up to three times longer than loading from a variable. Again leveraging our tool, we can see that specialisation reduces the number of function calls from $65$ to $5$, further contributing to the performance uplift.
+% By examination of its emitted bytecode (Listing \ref{listing:bytecode-profiles-op-build-optimised}), we can be confident in the optimality of the specialised implementation, as it only constructs the object and sets required fields, performing no other extraneous logic.
+
+
+
+% TODO? Further weaknesses of workload so large hard to reason about and MLIR itself has implementation details adding overhead -- but does demonstrate xDSL can be improved and lower bound C++ performance
 
 %% Figure or table comparing performance
 \begin{figure}[H]
@@ -566,7 +588,6 @@ implementation.}
 % \end{table}
 % Test ConstantFoldingSimple.20(unspecialised) ran in: 0.00115 ± 3e-05s
 % Test ConstantFoldingSimple.20(specialised) ran in: 0.000142 ± 2.92e-05s
-% TODO: This looks wrong...
 % SimpleConstantFolding/folding/1          10112 ns        10070 ns        70189
 % SimpleConstantFolding/folding/8          81970 ns        81663 ns         8557
 % SimpleConstantFolding/folding/64        640847 ns       638256 ns         1074
@@ -581,15 +602,6 @@ implementation.}
 
 
 
-%% What did we lose from this?
-% Link
-From this specialisation process, we lost
-% Argument
-% Further weaknesses of workload so large hard to reason about and MLIR itself has implementation details adding overhead -- but does demonstrate xDSL can be improved and lower bound C++ performance
-% Link
-
-
-
 \subsection{Optimisations}
 \label{sec:specialising-pattern-rewriting-optimisations}
 
@@ -598,8 +610,8 @@ From this specialisation process, we lost
 The majority of changes made during specialisation are applicable only to their specific workload.
 % Argument
 However, some are more generic to any use case of xDSL, and as such can be applied as stand-alone optimisations. Unfortunately, xDSL is a large codebase, over $150,000$ lines of Python, and as such it is out of scope of this thesis to improve the performance of all of it.
-Despite this, we demonstate that the specialisation process lead to generalisable optimisations with measurable performance impact.
-Through this, we enable performance improvement over time, which can be quantified using our previosuly introduced measurement infrastructure (\autoref{ssec:infrastructure}).
+Despite this, we demonstrate that the specialisation process lead to generalisable optimisations with measurable performance impact.
+Through this, we enable performance improvement over time, which can be quantified using our previously introduced measurement infrastructure (\autoref{ssec:infrastructure}).
 % Link
 In this section, we discuss two salient examples of the generalised optimisations.
 
@@ -632,8 +644,8 @@ This optimisation was applied in \href{https://github.com/xdslproject/xdsl/pull/
 % Hook
 Through empirical measurement, we approach the best-case performance of Python for pattern rewriting in user-extensible compiler infrastructure.
 % Argument
-We find that ..
-% something something generalising optimisations
-In addition to this, for some workloads we find that Python's performance can further approach C++
+We demonstrate that specialised Python implementations of real-world pattern rewriting workloads can improve xDSL's performance by $8\times$, to be only $14\times$ slower than the equivalent \ac{mlir} implementation. This specialisation avoids computation which is redundant for the selected workload, and avoids costs associated with function invocation.
+% In addition to this, for some workloads we find that Python's performance can further approach C++,
+We further show that this specialisation process reveals optimisations that can be generalised to improve xDSL beyond the individual workload.
 %
-In the next chapters, we leverage this best-case performance specialisatgion as a baseline to examine the effect of both recent improvements to CPython's runtime, and the cost of dynamism in comparison with statcially compiled languages.
+In the next chapters, we leverage this best-case performance specialisation as a baseline to examine the effect of both recent improvements to CPython's runtime, and the cost of dynamism in comparison with statcially compiled languages.
