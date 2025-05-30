@@ -45,12 +45,19 @@ Our novel bytecode profiling tool fills this gap by recording highly granular ti
 
 %% General vibe of the community?
 % Hook
-A main focus of compiler designers is the performance of executing the output lowered representation. However, this is not the only important metric in compiler design.
+While compiler designers naturally focus on optimizing the performance of compiled code, the execution time of the compiler itself (henceforth referred to as compiler performance) also matters significantly for developer productivity.
 % Argument
-In real-world use cases, the execution time of the compiler itself (henceforth referred to as compiler performance) is essential for the productivity of its users. For very large projects such as Firefox, which contains over twenty million lines of code \cite{bastienabadieEngineeringCodeQuality}, small changes to compiler performance can result in minutes gained or lost for each compilation -- significantly impacting developer productivity.
-Despite the real-world importance of compiler performance, and the engineering effort expended to improve it, the majority of research is focussed only on improving the compiled output. % TODO: Is it fair to assert this without citation?
+For very large projects such as Firefox, which contains over twenty million lines of code \cite{bastienabadieEngineeringCodeQuality}, small changes to compiler performance can result in minutes gained or lost for each compilation -- significantly impacting developer productivity. Although there has been considerable engineering effort devoted to compiler performance, academic research continues to focus primarily on improving the compiled output rather than the compilation process itself.
 % Link
-As such, the field is under-researched, with only a few academic explorations of the performance of compiler frameworks, the most salient of which we discuss below.
+As such, the field is not yet fully explored, having only a few academic studies of the performance of compiler frameworks, the most salient of which we discuss below.
+% %% General vibe of the community?
+% % Hook
+% A main focus of compiler designers is the performance of executing the output lowered representation. However, this is not the only important metric in compiler design.
+% % Argument
+% In real-world use cases, the execution time of the compiler itself (henceforth referred to as compiler performance) is essential for the productivity of its users. For very large projects such as Firefox, which contains over twenty million lines of code \cite{bastienabadieEngineeringCodeQuality}, small changes to compiler performance can result in minutes gained or lost for each compilation -- significantly impacting developer productivity.
+% Despite the real-world importance of compiler performance, and the engineering effort expended to improve it, the majority of research is focussed only on improving the compiled output. % TODO: Is it fair to assert this without citation?
+% % Link
+% As such, the field is under-researched, with only a few academic explorations of the performance of compiler frameworks, the most salient of which we discuss below.
 
 %% Performance of LLVM
 % Hook
@@ -120,6 +127,7 @@ As such, our research extends the state-of-the-art by examining cases where exis
 %% Difficulty measuring python
 % Hook
 Reliable and accurate performance measurement is notoriously difficult.
+As such, its careful execution constitutes the main contribution of systems papers and theses \cite{crapeperformance} \cite{harris2021understanding}.
 % , having literature discussing procedures for it \cite{harris2021understanding}, and constituting the main contribution of systems papers and theses \cite{crapeperformance}.
 % Argument
 This difficulty comes from both sides of the hardware-software interface.
