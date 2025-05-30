@@ -1,1 +1,4 @@
 {"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qlineprofiler provides this functionality to a line level \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q, but this is still one level of abstraction over the increasingly complex implementation of CPython's interpreter.\\E$"}
+{"rule":"THREE_NN","sentence":"^\\QOur work leverages these tools to make accurate measurements of compiler framework performance.\\E$"}
+{"rule":"WANT","sentence":"^\\QThis existing body of work The standard library includes the timeit utility, which measures the wall clock time to execute code snippets.\\E$"}
+{"rule":"THREE_NN","sentence":"^\\QOther tools provide more specialised functionality, for example Airspeed Velocity \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q visualising performance regressions across repository commits, and pyperformance \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q benchmarking the performance of the Python language implementation itself across a variety of workloads.\\E$"}
