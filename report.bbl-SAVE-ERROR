@@ -1,0 +1,3212 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.2 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{none/global//global/global}
+    \entry{lattnerLLVMCompilationFramework2004}{inproceedings}{}
+      \name{author}{2}{}{%
+        {{hash=4d858f5bbf45615625cd18cd3b2ea86e}{%
+           family={Lattner},
+           familyi={L\bibinitperiod},
+           given={C.},
+           giveni={C\bibinitperiod}}}%
+        {{hash=017576d67e6e625a0446eac935217f40}{%
+           family={Adve},
+           familyi={A\bibinitperiod},
+           given={V.},
+           giveni={V\bibinitperiod}}}%
+      }
+      \strng{namehash}{d7f89711a4b1e03e6ca320fdd0bb064b}
+      \strng{fullhash}{d7f89711a4b1e03e6ca320fdd0bb064b}
+      \strng{bibnamehash}{d7f89711a4b1e03e6ca320fdd0bb064b}
+      \strng{authorbibnamehash}{d7f89711a4b1e03e6ca320fdd0bb064b}
+      \strng{authornamehash}{d7f89711a4b1e03e6ca320fdd0bb064b}
+      \strng{authorfullhash}{d7f89711a4b1e03e6ca320fdd0bb064b}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{shorttitle}
+      \field{abstract}{We describe LLVM (low level virtual machine), a compiler framework designed to support transparent, lifelong program analysis and transformation for arbitrary programs, by providing high-level information to compiler transformations at compile-time, link-time, run-time, and in idle time between runs. LLVM defines a common, low-level code representation in static single assignment (SSA) form, with several novel features: a simple, language-independent type-system that exposes the primitives commonly used to implement high-level language features; an instruction for typed address arithmetic; and a simple mechanism that can be used to implement the exception handling features of high-level languages (and setjmp/longjmp in C) uniformly and efficiently. The LLVM compiler framework and code representation together provide a combination of key capabilities that are important for practical, lifelong analysis and transformation of programs. To our knowledge, no existing compilation approach provides all these capabilities. We describe the design of the LLVM representation and compiler framework, and evaluate the design in three ways: (a) the size and effectiveness of the representation, including the type information it provides; (b) compiler performance for several interprocedural problems; and (c) illustrative examples of the benefits LLVM provides for several challenging compiler problems.}
+      \field{booktitle}{International {{Symposium}} on {{Code Generation}} and {{Optimization}}, 2004. {{CGO}} 2004.}
+      \field{eventtitle}{International {{Symposium}} on {{Code Generation}} and {{Optimization}}, 2004. {{CGO}} 2004.}
+      \field{month}{3}
+      \field{shorttitle}{{{LLVM}}}
+      \field{title}{{{LLVM}}: A Compilation Framework for Lifelong Program Analysis \& Transformation}
+      \field{urlday}{18}
+      \field{urlmonth}{11}
+      \field{urlyear}{2024}
+      \field{year}{2004}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \field{pages}{75\bibrangedash 86}
+      \range{pages}{12}
+      \verb{doi}
+      \verb 10.1109/CGO.2004.1281665
+      \endverb
+      \verb{file}
+      \verb /Users/edjg/Zotero/storage/KPM23KWZ/Lattner and Adve - 2004 - LLVM a compilation framework for lifelong program analysis & transformation.pdf;/Users/edjg/Zotero/storage/W7FDUUG6/1281665.html
+      \endverb
+      \verb{urlraw}
+      \verb https://ieeexplore.ieee.org/abstract/document/1281665
+      \endverb
+      \verb{url}
+      \verb https://ieeexplore.ieee.org/abstract/document/1281665
+      \endverb
+      \keyw{Algorithm design and analysis,Application software,Arithmetic,High level languages,Information analysis,Performance analysis,Program processors,Runtime,Software safety,Virtual machining}
+    \endentry
+    \entry{lattnerMLIRScalingCompiler2021a}{inproceedings}{}
+      \name{author}{10}{}{%
+        {{hash=082d304bf1444853e07be11590d172a2}{%
+           family={Lattner},
+           familyi={L\bibinitperiod},
+           given={Chris},
+           giveni={C\bibinitperiod}}}%
+        {{hash=a348049bbee83ce5dc3444b952a2e4e0}{%
+           family={Amini},
+           familyi={A\bibinitperiod},
+           given={Mehdi},
+           giveni={M\bibinitperiod}}}%
+        {{hash=44beb2efd6fff24cc11c2165be3061df}{%
+           family={Bondhugula},
+           familyi={B\bibinitperiod},
+           given={Uday},
+           giveni={U\bibinitperiod}}}%
+        {{hash=172a9e8d07a17bf85f8736265ac88aae}{%
+           family={Cohen},
+           familyi={C\bibinitperiod},
+           given={Albert},
+           giveni={A\bibinitperiod}}}%
+        {{hash=a4c859221cc41e2db6d63b486f955ba2}{%
+           family={Davis},
+           familyi={D\bibinitperiod},
+           given={Andy},
+           giveni={A\bibinitperiod}}}%
+        {{hash=fa8cd7351db263fc7bb9149842f16d47}{%
+           family={Pienaar},
+           familyi={P\bibinitperiod},
+           given={Jacques},
+           giveni={J\bibinitperiod}}}%
+        {{hash=22b8268ddc68fbfe733d278d847a1c8e}{%
+           family={Riddle},
+           familyi={R\bibinitperiod},
+           given={River},
+           giveni={R\bibinitperiod}}}%
+        {{hash=6e3d94b6d44b7fcf4fd06d7f167c2a82}{%
+           family={Shpeisman},
+           familyi={S\bibinitperiod},
+           given={Tatiana},
+           giveni={T\bibinitperiod}}}%
+        {{hash=24df4de2e6a66b7661e3d3491e24007d}{%
+           family={Vasilache},
+           familyi={V\bibinitperiod},
+           given={Nicolas},
+           giveni={N\bibinitperiod}}}%
+        {{hash=dd7e1186ad5e5ac1aa0a5273fb1891d2}{%
+           family={Zinenko},
+           familyi={Z\bibinitperiod},
+           given={Oleksandr},
+           giveni={O\bibinitperiod}}}%
+      }
+      \strng{namehash}{e6c5586b87741612dbeb55b0bffcb94d}
+      \strng{fullhash}{db33f1a54b98527b6c0766c902649cb4}
+      \strng{bibnamehash}{e6c5586b87741612dbeb55b0bffcb94d}
+      \strng{authorbibnamehash}{e6c5586b87741612dbeb55b0bffcb94d}
+      \strng{authornamehash}{e6c5586b87741612dbeb55b0bffcb94d}
+      \strng{authorfullhash}{db33f1a54b98527b6c0766c902649cb4}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{shorttitle}
+      \field{abstract}{This work presents MLIR, a novel approach to building reusable and extensible compiler infrastructure. MLIR addresses software fragmentation, compilation for heterogeneous hardware, significantly reducing the cost of building domain specific compilers, and connecting existing compilers together. MLIR facilitates the design and implementation of code generators, translators and optimizers at different levels of abstraction and across application domains, hardware targets and execution environments. The contribution of this work includes (1) discussion of MLIR as a research artifact, built for extension and evolution, while identifying the challenges and opportunities posed by this novel design, semantics, optimization specification, system, and engineering. (2) evaluation of MLIR as a generalized infrastructure that reduces the cost of building compilers-describing diverse use-cases to show research and educational opportunities for future programming languages, compilers, execution environments, and computer architecture. The paper also presents the rationale for MLIR, its original design principles, structures and semantics.}
+      \field{booktitle}{2021 {{IEEE}}/{{ACM International Symposium}} on {{Code Generation}} and {{Optimization}} ({{CGO}})}
+      \field{eventtitle}{2021 {{IEEE}}/{{ACM International Symposium}} on {{Code Generation}} and {{Optimization}} ({{CGO}})}
+      \field{month}{2}
+      \field{shorttitle}{{{MLIR}}}
+      \field{title}{{{MLIR}}: {{Scaling Compiler Infrastructure}} for {{Domain Specific Computation}}}
+      \field{urlday}{11}
+      \field{urlmonth}{4}
+      \field{urlyear}{2025}
+      \field{year}{2021}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \field{pages}{2\bibrangedash 14}
+      \range{pages}{13}
+      \verb{doi}
+      \verb 10.1109/CGO51591.2021.9370308
+      \endverb
+      \verb{file}
+      \verb /Users/edjg/Zotero/storage/GW75VWA5/Lattner et al. - 2021 - MLIR Scaling Compiler Infrastructure for Domain Specific Computation.pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://ieeexplore.ieee.org/abstract/document/9370308
+      \endverb
+      \verb{url}
+      \verb https://ieeexplore.ieee.org/abstract/document/9370308
+      \endverb
+      \keyw{Buildings,Generators,Hardware,Optimization,Program processors,Semantics,Software}
+    \endentry
+    \entry{fehrXDSLSidekickCompilation2025}{inproceedings}{}
+      \name{author}{9}{}{%
+        {{hash=385ace4971afcf156f01f8044e750b1c}{%
+           family={Fehr},
+           familyi={F\bibinitperiod},
+           given={Mathieu},
+           giveni={M\bibinitperiod}}}%
+        {{hash=d05abf1309f81f28117c976c43db0a41}{%
+           family={Weber},
+           familyi={W\bibinitperiod},
+           given={Michel},
+           giveni={M\bibinitperiod}}}%
+        {{hash=1d1125f57a699514480a25c53f3b85d1}{%
+           family={Ulmann},
+           familyi={U\bibinitperiod},
+           given={Christian},
+           giveni={C\bibinitperiod}}}%
+        {{hash=51caaa1006aeb7388d4acea040699229}{%
+           family={Lopoukhine},
+           familyi={L\bibinitperiod},
+           given={Alexandre},
+           giveni={A\bibinitperiod}}}%
+        {{hash=ebe476d62f5108e18a5cc576d1805f14}{%
+           family={Lücke},
+           familyi={L\bibinitperiod},
+           given={Martin\bibnamedelima Paul},
+           giveni={M\bibinitperiod\bibinitdelim P\bibinitperiod}}}%
+        {{hash=b7e94f8e5e8a7f305426bc5b07898bc0}{%
+           family={Degioanni},
+           familyi={D\bibinitperiod},
+           given={Théo},
+           giveni={T\bibinitperiod}}}%
+        {{hash=58edd4d2dfb024883f6e84560dc27098}{%
+           family={Vasiladiotis},
+           familyi={V\bibinitperiod},
+           given={Christos},
+           giveni={C\bibinitperiod}}}%
+        {{hash=187269ddb4a287b49f62f0c4a3c57bd0}{%
+           family={Steuwer},
+           familyi={S\bibinitperiod},
+           given={Michel},
+           giveni={M\bibinitperiod}}}%
+        {{hash=8d5b5e98a55e4f5262f328dd602a741d}{%
+           family={Grosser},
+           familyi={G\bibinitperiod},
+           given={Tobias},
+           giveni={T\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {New York, NY, USA}%
+      }
+      \list{publisher}{1}{%
+        {Association for Computing Machinery}%
+      }
+      \strng{namehash}{24e77df8f3d024e4d09b8848057c5bf0}
+      \strng{fullhash}{afcd4402de9400c46a38e0f64d168fce}
+      \strng{bibnamehash}{24e77df8f3d024e4d09b8848057c5bf0}
+      \strng{authorbibnamehash}{24e77df8f3d024e4d09b8848057c5bf0}
+      \strng{authornamehash}{24e77df8f3d024e4d09b8848057c5bf0}
+      \strng{authorfullhash}{afcd4402de9400c46a38e0f64d168fce}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{shorttitle}
+      \field{abstract}{Traditionally, compiler researchers either conduct experiments within an existing production compiler or develop their own prototype compiler; both options come with trade-offs. On one hand, prototyping in a production compiler can be cumbersome, as they are often optimized for program compilation speed at the expense of software simplicity and development speed. On the other hand, the transition from a prototype compiler to production requires significant engineering work. To bridge this gap, we introduce the concept of sidekick compiler frameworks, an approach that uses multiple frameworks that interoperate with each other by leveraging textual interchange formats and declarative descriptions of abstractions. Each such compiler framework is specialized for specific use cases, such as performance or prototyping. Abstractions are by design shared across frameworks, simplifying the transition from prototyping to production. We demonstrate this idea with xDSL, a sidekick for MLIR focused on prototyping and teaching. xDSL interoperates with MLIR through a shared textual IR and the exchange of IRs through an IR Definition Language. The benefits of sidekick compiler frameworks are evaluated by showing on three use cases how xDSL impacts their development: teaching, DSL compilation, and rewrite system prototyping. We also investigate the trade-offs that xDSL offers, and demonstrate how we simplify the transition between frameworks using the IRDL dialect. With sidekick compilation, we envision a future in which engineers minimize the cost of development by choosing a framework built for their immediate needs, and later transitioning to production with minimal overhead.}
+      \field{booktitle}{Proceedings of the 23rd {{ACM}}/{{IEEE International Symposium}} on {{Code Generation}} and {{Optimization}}}
+      \field{day}{1}
+      \field{isbn}{979-8-4007-1275-3}
+      \field{month}{3}
+      \field{series}{{{CGO}} '25}
+      \field{shorttitle}{{{xDSL}}}
+      \field{title}{{{xDSL}}: {{Sidekick Compilation}} for {{SSA-Based Compilers}}}
+      \field{urlday}{11}
+      \field{urlmonth}{4}
+      \field{urlyear}{2025}
+      \field{year}{2025}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \field{pages}{179\bibrangedash 192}
+      \range{pages}{14}
+      \verb{doi}
+      \verb 10.1145/3696443.3708945
+      \endverb
+      \verb{file}
+      \verb /Users/edjg/Zotero/storage/7YEB29W8/Fehr et al. - 2025 - xDSL Sidekick Compilation for SSA-Based Compilers.pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://dl.acm.org/doi/10.1145/3696443.3708945
+      \endverb
+      \verb{url}
+      \verb https://dl.acm.org/doi/10.1145/3696443.3708945
+      \endverb
+    \endentry
+    \entry{williamsDynamicInterpretationDynamic2010}{inproceedings}{}
+      \name{author}{3}{}{%
+        {{hash=38413b3a7fb968d90657e58d5f7880f9}{%
+           family={Williams},
+           familyi={W\bibinitperiod},
+           given={Kevin},
+           giveni={K\bibinitperiod}}}%
+        {{hash=f273062beb0c48949b14396a933cfad3}{%
+           family={McCandless},
+           familyi={M\bibinitperiod},
+           given={Jason},
+           giveni={J\bibinitperiod}}}%
+        {{hash=3c5843659365f6b136433b6b30f20afb}{%
+           family={Gregg},
+           familyi={G\bibinitperiod},
+           given={David},
+           giveni={D\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {New York, NY, USA}%
+      }
+      \list{publisher}{1}{%
+        {Association for Computing Machinery}%
+      }
+      \strng{namehash}{849a8d5cd8f8dcfd0b7e37f50fb9dd2c}
+      \strng{fullhash}{849a8d5cd8f8dcfd0b7e37f50fb9dd2c}
+      \strng{bibnamehash}{849a8d5cd8f8dcfd0b7e37f50fb9dd2c}
+      \strng{authorbibnamehash}{849a8d5cd8f8dcfd0b7e37f50fb9dd2c}
+      \strng{authornamehash}{849a8d5cd8f8dcfd0b7e37f50fb9dd2c}
+      \strng{authorfullhash}{849a8d5cd8f8dcfd0b7e37f50fb9dd2c}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{Dynamic scripting languages offer programmers increased flexibility by allowing properties of programs to be defined at run-time. Typically, program execution begins with an interpreter where type checks are implemented using conditional statements. Recent JIT compilers have begun removing run-time checks by specializing native code to program properties discovered at JIT time.This paper presents a novel intermediate representation for scripting languages that explicitly encodes types of variables. The dynamic representation is a flow graph, where each node is a specialized virtual instruction and each edge directs program flow based on control and type changes in the program. The interpreter thus performs specialized execution of whole programs. We present techniques for the efficient interpretation of our representation showing speed-ups of greater than 2x over static interpretation, with an average speed-up of approximately 1.3x.}
+      \field{booktitle}{Proceedings of the 8th Annual {{IEEE}}/{{ACM}} International Symposium on {{Code}} Generation and Optimization}
+      \field{day}{24}
+      \field{isbn}{978-1-60558-635-9}
+      \field{month}{4}
+      \field{series}{{{CGO}} '10}
+      \field{title}{Dynamic Interpretation for Dynamic Scripting Languages}
+      \field{urlday}{10}
+      \field{urlmonth}{5}
+      \field{urlyear}{2025}
+      \field{year}{2010}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \field{pages}{278\bibrangedash 287}
+      \range{pages}{10}
+      \verb{doi}
+      \verb 10.1145/1772954.1772993
+      \endverb
+      \verb{file}
+      \verb /Users/edjg/Zotero/storage/FW38FJTP/Williams et al. - 2010 - Dynamic interpretation for dynamic scripting languages.pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://dl.acm.org/doi/10.1145/1772954.1772993
+      \endverb
+      \verb{url}
+      \verb https://dl.acm.org/doi/10.1145/1772954.1772993
+      \endverb
+    \endentry
+    \entry{chatleyNext7000Programming2019}{incollection}{}
+      \name{author}{3}{}{%
+        {{hash=42d37cc4bccbfa84ad613780417ca050}{%
+           family={Chatley},
+           familyi={C\bibinitperiod},
+           given={Robert},
+           giveni={R\bibinitperiod}}}%
+        {{hash=4cd79f620b04a8118fa0aa2d54763d61}{%
+           family={Donaldson},
+           familyi={D\bibinitperiod},
+           given={Alastair},
+           giveni={A\bibinitperiod}}}%
+        {{hash=131ecd99af3f1a52210ec52d05e89e14}{%
+           family={Mycroft},
+           familyi={M\bibinitperiod},
+           given={Alan},
+           giveni={A\bibinitperiod}}}%
+      }
+      \name{editor}{2}{}{%
+        {{hash=665b6687b4ed05721bf55d61032505ca}{%
+           family={Steffen},
+           familyi={S\bibinitperiod},
+           given={Bernhard},
+           giveni={B\bibinitperiod}}}%
+        {{hash=e310acd82680d78595c854fd57d9156a}{%
+           family={Woeginger},
+           familyi={W\bibinitperiod},
+           given={Gerhard},
+           giveni={G\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Cham}%
+      }
+      \list{publisher}{1}{%
+        {Springer International Publishing}%
+      }
+      \strng{namehash}{382c33a05edff18a5e09eabb21b6df06}
+      \strng{fullhash}{382c33a05edff18a5e09eabb21b6df06}
+      \strng{bibnamehash}{382c33a05edff18a5e09eabb21b6df06}
+      \strng{authorbibnamehash}{382c33a05edff18a5e09eabb21b6df06}
+      \strng{authornamehash}{382c33a05edff18a5e09eabb21b6df06}
+      \strng{authorfullhash}{382c33a05edff18a5e09eabb21b6df06}
+      \strng{editorbibnamehash}{8ad2a3cd46eb8d1dcc83158f0ee8b684}
+      \strng{editornamehash}{8ad2a3cd46eb8d1dcc83158f0ee8b684}
+      \strng{editorfullhash}{8ad2a3cd46eb8d1dcc83158f0ee8b684}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{Landin’s seminal paper “The next 700 programming languages” considered programming languages prior to 1966 and speculated on the next 700. Half-a-century on, we cast programming languages in a Darwinian ‘tree of life’ and explore languages, their features (genes) and language evolution from the viewpoint of ‘survival of the fittest’.}
+      \field{booktitle}{Computing and {{Software Science}}: {{State}} of the {{Art}} and {{Perspectives}}}
+      \field{isbn}{978-3-319-91908-9}
+      \field{langid}{english}
+      \field{title}{The {{Next}} 7000 {{Programming Languages}}}
+      \field{urlday}{10}
+      \field{urlmonth}{5}
+      \field{urlyear}{2025}
+      \field{year}{2019}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \field{pages}{250\bibrangedash 282}
+      \range{pages}{33}
+      \verb{doi}
+      \verb 10.1007/978-3-319-91908-9_15
+      \endverb
+      \verb{file}
+      \verb /Users/edjg/Zotero/storage/8ZWWCKTL/Chatley et al. - 2019 - The Next 7000 Programming Languages.pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1007/978-3-319-91908-9_15
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1007/978-3-319-91908-9_15
+      \endverb
+    \endentry
+    \entry{landinNext700Programming1966}{article}{}
+      \name{author}{1}{}{%
+        {{hash=2c166df1ac8b55c4860adc44f4c06340}{%
+           family={Landin},
+           familyi={L\bibinitperiod},
+           given={P.\bibnamedelimi J.},
+           giveni={P\bibinitperiod\bibinitdelim J\bibinitperiod}}}%
+      }
+      \strng{namehash}{2c166df1ac8b55c4860adc44f4c06340}
+      \strng{fullhash}{2c166df1ac8b55c4860adc44f4c06340}
+      \strng{bibnamehash}{2c166df1ac8b55c4860adc44f4c06340}
+      \strng{authorbibnamehash}{2c166df1ac8b55c4860adc44f4c06340}
+      \strng{authornamehash}{2c166df1ac8b55c4860adc44f4c06340}
+      \strng{authorfullhash}{2c166df1ac8b55c4860adc44f4c06340}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{A family of unimplemented computing languages is described that is intended to span differences of application area by a unified framework. This framework dictates the rules about the uses of user-coined names, and the conventions about characterizing functional relationships. Within this framework the design of a specific language splits into two independent parts. One is the choice of written appearances of programs (or more generally, their physical representation). The other is the choice of the abstract entities (such as numbers, character-strings, list of them, functional relations among them) that can be referred to in the language.The system is biased towards “expressions” rather than “statements.” It includes a nonprocedural (purely functional) subsystem that aims to expand the class of users' needs that can be met by a single print-instruction, without sacrificing the important properties that make conventional right-hand-side expressions easy to construct and understand.}
+      \field{day}{1}
+      \field{issn}{0001-0782}
+      \field{journaltitle}{Commun. ACM}
+      \field{month}{3}
+      \field{number}{3}
+      \field{title}{The next 700 Programming Languages}
+      \field{urlday}{10}
+      \field{urlmonth}{5}
+      \field{urlyear}{2025}
+      \field{volume}{9}
+      \field{year}{1966}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \field{pages}{157\bibrangedash 166}
+      \range{pages}{10}
+      \verb{doi}
+      \verb 10.1145/365230.365257
+      \endverb
+      \verb{file}
+      \verb /Users/edjg/Zotero/storage/ZYESTFPK/Landin - 1966 - The next 700 programming languages.pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://dl.acm.org/doi/10.1145/365230.365257
+      \endverb
+      \verb{url}
+      \verb https://dl.acm.org/doi/10.1145/365230.365257
+      \endverb
+    \endentry
+    \entry{holzleOptimizingDynamicallydispatchedCalls1994}{inproceedings}{}
+      \name{author}{2}{}{%
+        {{hash=531728f47c89524d0805ea3cedc9b049}{%
+           family={Hölzle},
+           familyi={H\bibinitperiod},
+           given={Urs},
+           giveni={U\bibinitperiod}}}%
+        {{hash=d3efc54e3b56f22ac669afd21d02b4a0}{%
+           family={Ungar},
+           familyi={U\bibinitperiod},
+           given={David},
+           giveni={D\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {New York, NY, USA}%
+      }
+      \list{publisher}{1}{%
+        {Association for Computing Machinery}%
+      }
+      \strng{namehash}{00ec725f9d542a15f7e3f343121cc4da}
+      \strng{fullhash}{00ec725f9d542a15f7e3f343121cc4da}
+      \strng{bibnamehash}{00ec725f9d542a15f7e3f343121cc4da}
+      \strng{authorbibnamehash}{00ec725f9d542a15f7e3f343121cc4da}
+      \strng{authornamehash}{00ec725f9d542a15f7e3f343121cc4da}
+      \strng{authorfullhash}{00ec725f9d542a15f7e3f343121cc4da}
+      \field{sortinit}{7}
+      \field{sortinithash}{108d0be1b1bee9773a1173443802c0a3}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the {{ACM SIGPLAN}} 1994 Conference on {{Programming}} Language Design and Implementation}
+      \field{day}{1}
+      \field{isbn}{978-0-89791-662-2}
+      \field{month}{6}
+      \field{series}{{{PLDI}} '94}
+      \field{title}{Optimizing Dynamically-Dispatched Calls with Run-Time Type Feedback}
+      \field{urlday}{12}
+      \field{urlmonth}{5}
+      \field{urlyear}{2025}
+      \field{year}{1994}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \field{pages}{326\bibrangedash 336}
+      \range{pages}{11}
+      \verb{doi}
+      \verb 10.1145/178243.178478
+      \endverb
+      \verb{file}
+      \verb /Users/edjg/Zotero/storage/4AMQL6SQ/Hölzle and Ungar - 1994 - Optimizing dynamically-dispatched calls with run-time type feedback.pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://dl.acm.org/doi/10.1145/178243.178478
+      \endverb
+      \verb{url}
+      \verb https://dl.acm.org/doi/10.1145/178243.178478
+      \endverb
+    \endentry
+    \entry{aycockBriefHistoryJustintime2003}{article}{}
+      \name{author}{1}{}{%
+        {{hash=049b32b7099aaf092ef4ab0d94f82dc5}{%
+           family={Aycock},
+           familyi={A\bibinitperiod},
+           given={John},
+           giveni={J\bibinitperiod}}}%
+      }
+      \strng{namehash}{049b32b7099aaf092ef4ab0d94f82dc5}
+      \strng{fullhash}{049b32b7099aaf092ef4ab0d94f82dc5}
+      \strng{bibnamehash}{049b32b7099aaf092ef4ab0d94f82dc5}
+      \strng{authorbibnamehash}{049b32b7099aaf092ef4ab0d94f82dc5}
+      \strng{authornamehash}{049b32b7099aaf092ef4ab0d94f82dc5}
+      \strng{authorfullhash}{049b32b7099aaf092ef4ab0d94f82dc5}
+      \field{sortinit}{8}
+      \field{sortinithash}{a231b008ebf0ecbe0b4d96dcc159445f}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{Software systems have been using "just-in-time" compilation (JIT) techniques since the 1960s. Broadly, JIT compilation includes any translation performed dynamically, after a program has started execution. We examine the motivation behind JIT compilation and constraints imposed on JIT compilation systems, and present a classification scheme for such systems. This classification emerges as we survey forty years of JIT work, from 1960--2000.}
+      \field{day}{1}
+      \field{issn}{0360-0300}
+      \field{journaltitle}{ACM Comput. Surv.}
+      \field{month}{6}
+      \field{number}{2}
+      \field{title}{A Brief History of Just-in-Time}
+      \field{urlday}{11}
+      \field{urlmonth}{5}
+      \field{urlyear}{2025}
+      \field{volume}{35}
+      \field{year}{2003}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \field{pages}{97\bibrangedash 113}
+      \range{pages}{17}
+      \verb{doi}
+      \verb 10.1145/857076.857077
+      \endverb
+      \verb{file}
+      \verb /Users/edjg/Zotero/storage/KFW9CF8P/Aycock - 2003 - A brief history of just-in-time.pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://dl.acm.org/doi/10.1145/857076.857077
+      \endverb
+      \verb{url}
+      \verb https://dl.acm.org/doi/10.1145/857076.857077
+      \endverb
+    \endentry
+    \entry{amdahlValiditySingleProcessor1967}{inproceedings}{}
+      \name{author}{1}{}{%
+        {{hash=9d4382f1500ff84c4eca531179c994c7}{%
+           family={Amdahl},
+           familyi={A\bibinitperiod},
+           given={Gene\bibnamedelima M.},
+           giveni={G\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {New York, NY, USA}%
+      }
+      \list{publisher}{1}{%
+        {Association for Computing Machinery}%
+      }
+      \strng{namehash}{9d4382f1500ff84c4eca531179c994c7}
+      \strng{fullhash}{9d4382f1500ff84c4eca531179c994c7}
+      \strng{bibnamehash}{9d4382f1500ff84c4eca531179c994c7}
+      \strng{authorbibnamehash}{9d4382f1500ff84c4eca531179c994c7}
+      \strng{authornamehash}{9d4382f1500ff84c4eca531179c994c7}
+      \strng{authorfullhash}{9d4382f1500ff84c4eca531179c994c7}
+      \field{sortinit}{9}
+      \field{sortinithash}{0a5ebc79d83c96b6579069544c73c7d4}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{For over a decade prophets have voiced the contention that the organization of a single computer has reached its limits and that truly significant advances can be made only by interconnection of a multiplicity of computers in such a manner as to permit cooperative solution. Variously the proper direction has been pointed out as general purpose computers with a generalized interconnection of memories, or as specialized computers with geometrically related memory interconnections and controlled by one or more instruction streams.}
+      \field{booktitle}{Proceedings of the {{April}} 18-20, 1967, Spring Joint Computer Conference}
+      \field{day}{18}
+      \field{isbn}{978-1-4503-7895-6}
+      \field{month}{4}
+      \field{series}{{{AFIPS}} '67 ({{Spring}})}
+      \field{title}{Validity of the Single Processor Approach to Achieving Large Scale Computing Capabilities}
+      \field{urlday}{13}
+      \field{urlmonth}{1}
+      \field{urlyear}{2025}
+      \field{year}{1967}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \field{pages}{483\bibrangedash 485}
+      \range{pages}{3}
+      \verb{doi}
+      \verb 10.1145/1465482.1465560
+      \endverb
+      \verb{file}
+      \verb /Users/edjg/Zotero/storage/VRNQ8ZCL/Amdahl - 1967 - Validity of the single processor approach to achieving large scale computing capabilities.pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://dl.acm.org/doi/10.1145/1465482.1465560
+      \endverb
+      \verb{url}
+      \verb https://dl.acm.org/doi/10.1145/1465482.1465560
+      \endverb
+    \endentry
+    \entry{vaivaswathanagarajVaivaswathaPliron2025}{software}{}
+      \name{author}{1}{}{%
+        {{hash=77f851d13c85183d81f91511934e098d}{%
+           family={{Vaivaswatha Nagaraj}},
+           familyi={V\bibinitperiod}}}%
+      }
+      \strng{namehash}{77f851d13c85183d81f91511934e098d}
+      \strng{fullhash}{77f851d13c85183d81f91511934e098d}
+      \strng{bibnamehash}{77f851d13c85183d81f91511934e098d}
+      \strng{authorbibnamehash}{77f851d13c85183d81f91511934e098d}
+      \strng{authornamehash}{77f851d13c85183d81f91511934e098d}
+      \strng{authorfullhash}{77f851d13c85183d81f91511934e098d}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{An Extensible Compiler IR Framework}
+      \field{day}{16}
+      \field{hour}{23}
+      \field{minute}{51}
+      \field{month}{5}
+      \field{origday}{4}
+      \field{orighour}{14}
+      \field{origminute}{3}
+      \field{origmonth}{8}
+      \field{origsecond}{33}
+      \field{origtimezone}{Z}
+      \field{origyear}{2022}
+      \field{second}{15}
+      \field{timezone}{Z}
+      \field{title}{Vaivaswatha/Pliron}
+      \field{urlday}{17}
+      \field{urlmonth}{5}
+      \field{urlyear}{2025}
+      \field{year}{2025}
+      \field{dateera}{ce}
+      \field{origdateera}{ce}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://github.com/vaivaswatha/pliron
+      \endverb
+      \verb{url}
+      \verb https://github.com/vaivaswatha/pliron
+      \endverb
+      \keyw{compilers,ir,mlir,programming-languages}
+    \endentry
+    \entry{stoltzConstantPropagationFresh1994}{inproceedings}{}
+      \name{author}{3}{}{%
+        {{hash=4ddc3d484c2e4f5637283343618253b9}{%
+           family={Stoltz},
+           familyi={S\bibinitperiod},
+           given={Eric},
+           giveni={E\bibinitperiod}}}%
+        {{hash=26e83bfd22c0ede9a80e1da4da14f561}{%
+           family={Wolfe},
+           familyi={W\bibinitperiod},
+           given={Michael},
+           giveni={M\bibinitperiod}}}%
+        {{hash=56ae9d40f4d663f13bca61b628ccd440}{%
+           family={Gerlek},
+           familyi={G\bibinitperiod},
+           given={Michael\bibnamedelima P.},
+           giveni={M\bibinitperiod\bibinitdelim P\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {New York, NY, USA}%
+      }
+      \list{publisher}{1}{%
+        {Association for Computing Machinery}%
+      }
+      \strng{namehash}{cb5e85d694e5bafa842951f7ed9cb593}
+      \strng{fullhash}{cb5e85d694e5bafa842951f7ed9cb593}
+      \strng{bibnamehash}{cb5e85d694e5bafa842951f7ed9cb593}
+      \strng{authorbibnamehash}{cb5e85d694e5bafa842951f7ed9cb593}
+      \strng{authornamehash}{cb5e85d694e5bafa842951f7ed9cb593}
+      \strng{authorfullhash}{cb5e85d694e5bafa842951f7ed9cb593}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{shorttitle}
+      \field{booktitle}{Proceedings of the 1994 {{ACM}} Symposium on {{Applied}} Computing}
+      \field{day}{6}
+      \field{isbn}{978-0-89791-647-9}
+      \field{month}{4}
+      \field{series}{{{SAC}} '94}
+      \field{shorttitle}{Constant Propagation}
+      \field{title}{Constant Propagation: A Fresh, Demand-Driven Look}
+      \field{urlday}{16}
+      \field{urlmonth}{5}
+      \field{urlyear}{2025}
+      \field{year}{1994}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \field{pages}{400\bibrangedash 404}
+      \range{pages}{5}
+      \verb{doi}
+      \verb 10.1145/326619.326791
+      \endverb
+      \verb{file}
+      \verb /Users/edjg/Zotero/storage/6WAK9W8U/Stoltz et al. - 1994 - Constant propagation a fresh, demand-driven look.pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://dl.acm.org/doi/10.1145/326619.326791
+      \endverb
+      \verb{url}
+      \verb https://dl.acm.org/doi/10.1145/326619.326791
+      \endverb
+    \endentry
+    \entry{michaeldroettboomAirspeedvelocityAsv2025}{software}{}
+      \name{author}{2}{}{%
+        {{hash=03751600baa440ca29beaad67c1f94f4}{%
+           family={{Michael Droettboom}},
+           familyi={M\bibinitperiod}}}%
+        {{hash=caea97c814d40be21ad7d6521eee7bf4}{%
+           family={{Pauli Virtanen}},
+           familyi={P\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {Airspeed Velocity}%
+      }
+      \strng{namehash}{f8af5fc9135fd95a83b6ef03c3880c51}
+      \strng{fullhash}{f8af5fc9135fd95a83b6ef03c3880c51}
+      \strng{bibnamehash}{f8af5fc9135fd95a83b6ef03c3880c51}
+      \strng{authorbibnamehash}{f8af5fc9135fd95a83b6ef03c3880c51}
+      \strng{authornamehash}{f8af5fc9135fd95a83b6ef03c3880c51}
+      \strng{authorfullhash}{f8af5fc9135fd95a83b6ef03c3880c51}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{Airspeed Velocity: A simple Python benchmarking tool with web-based reporting}
+      \field{day}{27}
+      \field{hour}{7}
+      \field{minute}{11}
+      \field{month}{4}
+      \field{origday}{7}
+      \field{orighour}{20}
+      \field{origminute}{43}
+      \field{origmonth}{11}
+      \field{origsecond}{31}
+      \field{origtimezone}{Z}
+      \field{origyear}{2013}
+      \field{second}{5}
+      \field{timezone}{Z}
+      \field{title}{Airspeed-Velocity/Asv}
+      \field{urlday}{28}
+      \field{urlmonth}{4}
+      \field{urlyear}{2025}
+      \field{year}{2025}
+      \field{dateera}{ce}
+      \field{origdateera}{ce}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://github.com/airspeed-velocity/asv
+      \endverb
+      \verb{url}
+      \verb https://github.com/airspeed-velocity/asv
+      \endverb
+      \keyw{airspeed-velocity,benchmark,python}
+    \endentry
+    \entry{sabne2020xla}{article}{}
+      \name{author}{1}{}{%
+        {{hash=f3fd5fa5463a2674784b985db7a2f963}{%
+           family={Sabne},
+           familyi={S\bibinitperiod},
+           given={Amit},
+           giveni={A\bibinitperiod}}}%
+      }
+      \strng{namehash}{f3fd5fa5463a2674784b985db7a2f963}
+      \strng{fullhash}{f3fd5fa5463a2674784b985db7a2f963}
+      \strng{bibnamehash}{f3fd5fa5463a2674784b985db7a2f963}
+      \strng{authorbibnamehash}{f3fd5fa5463a2674784b985db7a2f963}
+      \strng{authornamehash}{f3fd5fa5463a2674784b985db7a2f963}
+      \strng{authorfullhash}{f3fd5fa5463a2674784b985db7a2f963}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Google Research}
+      \field{title}{{{XLA}}: {{Compiling}} Machine Learning for Peak Performance}
+      \field{year}{2020}
+      \field{dateera}{ce}
+      \verb{urlraw}
+      \verb https://openxla.org/
+      \endverb
+      \verb{url}
+      \verb https://openxla.org/
+      \endverb
+    \endentry
+    \entry{saavedraPerformanceCharacterizationOptimizing1995}{article}{}
+      \name{author}{2}{}{%
+        {{hash=7f9de5f8f62b7588bace5c43305ab0e1}{%
+           family={Saavedra},
+           familyi={S\bibinitperiod},
+           given={R.H.},
+           giveni={R\bibinitperiod}}}%
+        {{hash=bd52a49b0adf96b3c6dc7128aa4024d2}{%
+           family={Smith},
+           familyi={S\bibinitperiod},
+           given={A.J.},
+           giveni={A\bibinitperiod}}}%
+      }
+      \strng{namehash}{9526d72255ce1ce67d1467dd00d94fa6}
+      \strng{fullhash}{9526d72255ce1ce67d1467dd00d94fa6}
+      \strng{bibnamehash}{9526d72255ce1ce67d1467dd00d94fa6}
+      \strng{authorbibnamehash}{9526d72255ce1ce67d1467dd00d94fa6}
+      \strng{authornamehash}{9526d72255ce1ce67d1467dd00d94fa6}
+      \strng{authorfullhash}{9526d72255ce1ce67d1467dd00d94fa6}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{Optimizing compilers have become an essential component in achieving high levels of performance. Various simple and sophisticated optimizations are implemented at different stages of compilation to yield significant improvements, but little work has been done in characterizing the effectiveness of optimizers, or in understanding where most of this improvement comes from. We study the performance impact of optimization in the context of our methodology for CPU performance characterization based on the abstract machine model. The model considers all machines to be different implementations of the same high level language abstract machine; in previous research, the model has been used as a basis to analyze machine and benchmark performance. We show that our model can be extended to characterize the performance improvement provided by optimizers and to predict the run time of optimized programs, and measure the effectiveness of several compilers in implementing different optimization techniques.{$<>$}}
+      \field{issn}{1939-3520}
+      \field{journaltitle}{IEEE Transactions on Software Engineering}
+      \field{month}{7}
+      \field{number}{7}
+      \field{title}{Performance Characterization of Optimizing Compilers}
+      \field{urlday}{24}
+      \field{urlmonth}{4}
+      \field{urlyear}{2025}
+      \field{volume}{21}
+      \field{year}{1995}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \field{pages}{615\bibrangedash 628}
+      \range{pages}{14}
+      \verb{doi}
+      \verb 10.1109/32.392982
+      \endverb
+      \verb{file}
+      \verb /Users/edjg/Zotero/storage/7CTJVHTF/Saavedra and Smith - 1995 - Performance characterization of optimizing compilers.pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://ieeexplore.ieee.org/document/392982/
+      \endverb
+      \verb{url}
+      \verb https://ieeexplore.ieee.org/document/392982/
+      \endverb
+      \keyw{Application software,Central Processing Unit,Computer aided manufacturing,Computer science,Context modeling,High level languages,Optimizing compilers,Performance analysis,Predictive models,Time measurement}
+    \endentry
+    \entry{aminiHowSlowMLIR2024}{unpublished}{}
+      \name{author}{2}{}{%
+        {{hash=a348049bbee83ce5dc3444b952a2e4e0}{%
+           family={Amini},
+           familyi={A\bibinitperiod},
+           given={Mehdi},
+           giveni={M\bibinitperiod}}}%
+        {{hash=581a380b3385f79852b26cdb725befdc}{%
+           family={Nui},
+           familyi={N\bibinitperiod},
+           given={Jeff},
+           giveni={J\bibinitperiod}}}%
+      }
+      \strng{namehash}{28604bee83019a5c6c6340741a838d6c}
+      \strng{fullhash}{28604bee83019a5c6c6340741a838d6c}
+      \strng{bibnamehash}{28604bee83019a5c6c6340741a838d6c}
+      \strng{authorbibnamehash}{28604bee83019a5c6c6340741a838d6c}
+      \strng{authornamehash}{28604bee83019a5c6c6340741a838d6c}
+      \strng{authorfullhash}{28604bee83019a5c6c6340741a838d6c}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{eventtitle}{2024 {{European LLVM Developers}}' {{Meeting}}}
+      \field{month}{4}
+      \field{title}{How {{Slow}} Is {{MLIR}}?}
+      \field{venue}{Vienna, Austria}
+      \field{year}{2024}
+      \field{dateera}{ce}
+      \verb{urlraw}
+      \verb https://www.youtube.com/watch?v=7qvVMUSxqz4
+      \endverb
+      \verb{url}
+      \verb https://www.youtube.com/watch?v=7qvVMUSxqz4
+      \endverb
+    \endentry
+    \entry{victorskvortsovPythonScenes42020}{online}{}
+      \name{author}{1}{}{%
+        {{hash=0ea0077a3b04f6cdc49d18e4a4c7e432}{%
+           family={{Victor Skvortsov}},
+           familyi={V\bibinitperiod}}}%
+      }
+      \strng{namehash}{0ea0077a3b04f6cdc49d18e4a4c7e432}
+      \strng{fullhash}{0ea0077a3b04f6cdc49d18e4a4c7e432}
+      \strng{bibnamehash}{0ea0077a3b04f6cdc49d18e4a4c7e432}
+      \strng{authorbibnamehash}{0ea0077a3b04f6cdc49d18e4a4c7e432}
+      \strng{authornamehash}{0ea0077a3b04f6cdc49d18e4a4c7e432}
+      \strng{authorfullhash}{0ea0077a3b04f6cdc49d18e4a4c7e432}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{day}{30}
+      \field{month}{10}
+      \field{title}{Python behind the Scenes \#4: How {{Python}} Bytecode Is Executed}
+      \field{urlday}{27}
+      \field{urlmonth}{5}
+      \field{urlyear}{2025}
+      \field{year}{2020}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \verb{file}
+      \verb /Users/edjg/Zotero/storage/ZN95JZGJ/python-behind-the-scenes-4-how-python-bytecode-is-executed.html
+      \endverb
+      \verb{urlraw}
+      \verb https://tenthousandmeters.com/blog/python-behind-the-scenes-4-how-python-bytecode-is-executed/
+      \endverb
+      \verb{url}
+      \verb https://tenthousandmeters.com/blog/python-behind-the-scenes-4-how-python-bytecode-is-executed/
+      \endverb
+    \endentry
+    \entry{appleinc.Mach_absolute_time}{online}{}
+      \name{author}{1}{}{%
+        {{hash=3325b015fbae57ba74629a53f1ead961}{%
+           family={{Apple Inc.}},
+           familyi={A\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {Apple Developer Documentation}%
+      }
+      \strng{namehash}{3325b015fbae57ba74629a53f1ead961}
+      \strng{fullhash}{3325b015fbae57ba74629a53f1ead961}
+      \strng{bibnamehash}{3325b015fbae57ba74629a53f1ead961}
+      \strng{authorbibnamehash}{3325b015fbae57ba74629a53f1ead961}
+      \strng{authornamehash}{3325b015fbae57ba74629a53f1ead961}
+      \strng{authorfullhash}{3325b015fbae57ba74629a53f1ead961}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{Returns current value of a clock that increments monotonically in tick units (starting at an arbitrary point), this clock does not increment while the system is asleep.}
+      \field{langid}{american}
+      \field{title}{Mach\_absolute\_time}
+      \field{urlday}{28}
+      \field{urlmonth}{5}
+      \field{urlyear}{2025}
+      \field{urldateera}{ce}
+      \verb{file}
+      \verb /Users/edjg/Zotero/storage/JR5TLPBR/1462446-mach_absolute_time.html
+      \endverb
+      \verb{urlraw}
+      \verb https://developer.apple.com/documentation/kernel/1462446-mach_absolute_time
+      \endverb
+      \verb{url}
+      \verb https://developer.apple.com/documentation/kernel/1462446-mach_absolute_time
+      \endverb
+    \endentry
+    \entry{pythonsoftwarefoundationTimeitMeasureExecution}{online}{}
+      \name{author}{1}{}{%
+        {{hash=c7b5508dc5e59a2846d22617276cc27c}{%
+           family={{Python Software Foundation}},
+           familyi={P\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {Python documentation}%
+      }
+      \strng{namehash}{c7b5508dc5e59a2846d22617276cc27c}
+      \strng{fullhash}{c7b5508dc5e59a2846d22617276cc27c}
+      \strng{bibnamehash}{c7b5508dc5e59a2846d22617276cc27c}
+      \strng{authorbibnamehash}{c7b5508dc5e59a2846d22617276cc27c}
+      \strng{authornamehash}{c7b5508dc5e59a2846d22617276cc27c}
+      \strng{authorfullhash}{c7b5508dc5e59a2846d22617276cc27c}
+      \field{extraname}{1}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{Source code: Lib/timeit.py This module provides a simple way to time small bits of Python code. It has both a Command-Line Interface as well as a callable one. It avoids a number of common traps fo...}
+      \field{langid}{english}
+      \field{title}{Timeit — {{Measure}} Execution Time of Small Code Snippets}
+      \field{urlday}{28}
+      \field{urlmonth}{5}
+      \field{urlyear}{2025}
+      \field{urldateera}{ce}
+      \verb{file}
+      \verb /Users/edjg/Zotero/storage/HDM73KJL/timeit.html
+      \endverb
+      \verb{urlraw}
+      \verb https://docs.python.org/3/library/timeit.html
+      \endverb
+      \verb{url}
+      \verb https://docs.python.org/3/library/timeit.html
+      \endverb
+    \endentry
+    \entry{victorstinnerPsfPyperf2025}{software}{}
+      \name{author}{1}{}{%
+        {{hash=d2f87dded2b319cfaebe20183571c320}{%
+           family={{Victor Stinner}},
+           familyi={V\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {Python Software Foundation}%
+      }
+      \strng{namehash}{d2f87dded2b319cfaebe20183571c320}
+      \strng{fullhash}{d2f87dded2b319cfaebe20183571c320}
+      \strng{bibnamehash}{d2f87dded2b319cfaebe20183571c320}
+      \strng{authorbibnamehash}{d2f87dded2b319cfaebe20183571c320}
+      \strng{authornamehash}{d2f87dded2b319cfaebe20183571c320}
+      \strng{authorfullhash}{d2f87dded2b319cfaebe20183571c320}
+      \field{extraname}{1}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{Toolkit to run Python benchmarks}
+      \field{day}{12}
+      \field{hour}{15}
+      \field{minute}{1}
+      \field{month}{5}
+      \field{origday}{1}
+      \field{orighour}{13}
+      \field{origminute}{25}
+      \field{origmonth}{6}
+      \field{origsecond}{17}
+      \field{origtimezone}{Z}
+      \field{origyear}{2016}
+      \field{second}{45}
+      \field{timezone}{Z}
+      \field{title}{Psf/Pyperf}
+      \field{urlday}{15}
+      \field{urlmonth}{5}
+      \field{urlyear}{2025}
+      \field{year}{2025}
+      \field{dateera}{ce}
+      \field{origdateera}{ce}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://github.com/psf/pyperf
+      \endverb
+      \verb{url}
+      \verb https://github.com/psf/pyperf
+      \endverb
+      \keyw{benchmarking,python}
+    \endentry
+    \entry{valgrindtmdevelopersCallgrindCallgraphGenerating}{online}{}
+      \name{author}{1}{}{%
+        {{hash=e6ea2d31edd22bbc3bf2021acd7bd130}{%
+           family={{Valgrind™ Developers}},
+           familyi={V\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {Valgrind}%
+      }
+      \strng{namehash}{e6ea2d31edd22bbc3bf2021acd7bd130}
+      \strng{fullhash}{e6ea2d31edd22bbc3bf2021acd7bd130}
+      \strng{bibnamehash}{e6ea2d31edd22bbc3bf2021acd7bd130}
+      \strng{authorbibnamehash}{e6ea2d31edd22bbc3bf2021acd7bd130}
+      \strng{authornamehash}{e6ea2d31edd22bbc3bf2021acd7bd130}
+      \strng{authorfullhash}{e6ea2d31edd22bbc3bf2021acd7bd130}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Callgrind: A Call-Graph Generating Cache and Branch Prediction Profiler}
+      \field{urlday}{29}
+      \field{urlmonth}{5}
+      \field{urlyear}{2025}
+      \field{urldateera}{ce}
+      \verb{file}
+      \verb /Users/edjg/Zotero/storage/VKF6SIAI/cl-manual.html
+      \endverb
+      \verb{urlraw}
+      \verb https://valgrind.org/docs/manual/cl-manual.html
+      \endverb
+      \verb{url}
+      \verb https://valgrind.org/docs/manual/cl-manual.html
+      \endverb
+    \endentry
+    \entry{pep659}{report}{}
+      \name{author}{1}{}{%
+        {{hash=7bb5d3b17ba0761870ced85cf540f324}{%
+           family={{Mark Shannon}},
+           familyi={M\bibinitperiod}}}%
+      }
+      \strng{namehash}{7bb5d3b17ba0761870ced85cf540f324}
+      \strng{fullhash}{7bb5d3b17ba0761870ced85cf540f324}
+      \strng{bibnamehash}{7bb5d3b17ba0761870ced85cf540f324}
+      \strng{authorbibnamehash}{7bb5d3b17ba0761870ced85cf540f324}
+      \strng{authornamehash}{7bb5d3b17ba0761870ced85cf540f324}
+      \strng{authorfullhash}{7bb5d3b17ba0761870ced85cf540f324}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{number}{659}
+      \field{title}{Specializing {{Adaptive Interpreter}}}
+      \field{type}{PEP}
+      \field{year}{2021}
+      \field{dateera}{ce}
+      \verb{urlraw}
+      \verb https://peps.python.org/pep-0659/
+      \endverb
+      \verb{url}
+      \verb https://peps.python.org/pep-0659/
+      \endverb
+    \endentry
+    \entry{bastienabadieEngineeringCodeQuality}{online}{}
+      \name{author}{2}{}{%
+        {{hash=3191b99238782e08f87f97ca5651a520}{%
+           family={{Bastien Abadie}},
+           familyi={B\bibinitperiod}}}%
+        {{hash=492aa30a413fd3113dac0a6031c091cd}{%
+           family={{Sylvestre Ledru}},
+           familyi={S\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {Mozilla Hacks – the Web developer blog}%
+      }
+      \strng{namehash}{21c723ef6ddfd8b85665cf921164bd53}
+      \strng{fullhash}{21c723ef6ddfd8b85665cf921164bd53}
+      \strng{bibnamehash}{21c723ef6ddfd8b85665cf921164bd53}
+      \strng{authorbibnamehash}{21c723ef6ddfd8b85665cf921164bd53}
+      \strng{authornamehash}{21c723ef6ddfd8b85665cf921164bd53}
+      \strng{authorfullhash}{21c723ef6ddfd8b85665cf921164bd53}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{shorttitle}
+      \field{abstract}{Here's an insider's look at Firefox's code quality toolchain that's been designed to manage the ongoing development and monthly releases of our desktop browser. This post explores the architecture, challenges, ...}
+      \field{langid}{american}
+      \field{shorttitle}{Engineering Code Quality in the {{Firefox}} Browser}
+      \field{title}{Engineering Code Quality in the {{Firefox}} Browser: {{A}} Look at Our Tools and Challenges}
+      \field{urlday}{13}
+      \field{urlmonth}{5}
+      \field{urlyear}{2025}
+      \field{urldateera}{ce}
+      \verb{file}
+      \verb /Users/edjg/Zotero/storage/PS3AQWI2/code-quality-tools-at-mozilla.html
+      \endverb
+      \verb{urlraw}
+      \verb https://hacks.mozilla.org/2020/04/code-quality-tools-at-mozilla
+      \endverb
+      \verb{url}
+      \verb https://hacks.mozilla.org/2020/04/code-quality-tools-at-mozilla
+      \endverb
+    \endentry
+    \entry{emerybergerPythonPerformanceMatters2022}{unpublished}{}
+      \name{author}{1}{}{%
+        {{hash=0b6ff8990f066621d503836c1c591281}{%
+           family={{Emery Berger}},
+           familyi={E\bibinitperiod}}}%
+      }
+      \strng{namehash}{0b6ff8990f066621d503836c1c591281}
+      \strng{fullhash}{0b6ff8990f066621d503836c1c591281}
+      \strng{bibnamehash}{0b6ff8990f066621d503836c1c591281}
+      \strng{authorbibnamehash}{0b6ff8990f066621d503836c1c591281}
+      \strng{authornamehash}{0b6ff8990f066621d503836c1c591281}
+      \strng{authorfullhash}{0b6ff8990f066621d503836c1c591281}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{It's 2022. Moore's Law and Dennard scaling have run out of steam, making it harder than ever to achieve high performance - especially in Python. This talk first explains in detail the unique challenges that Python poses to programmers. It then presents Scalene, a novel high-performance CPU, GPU and memory profiler for Python that does many things that past Python profilers do not and cannot do. Scalene both runs orders of magnitude faster than other profilers while delivering more accurate and more actionable information that's especially valuable to Python programmers. Emery Berger Professor, University of Massachusetts Amherst @emeryberger Emery Berger is a Professor of Computer Sciences at the University of Massachusetts Amherst, the flagship campus of the UMass system. Professor Berger and his collaborators have built numerous widely adopted software systems including Hoard, a fast and scalable memory manager that accelerates multithreaded applications (on which the Mac OS X memory manager is based); DieHard/DieHarder, error-avoiding and secure memory managers that influenced Windows, and Coz, a "causal profiler" that ships with modern Linux distros. He is also the developer and maintainer of CSrankings.org. His honors include an NSF CAREER Award, Most Influential Paper Awards at OOPSLA, at PLDI, and ASPLOS; five CACM Research Highlights, and Best Paper Awards at FAST, OOPSLA, and SOSP; he is an ACM Fellow. Professor Berger served six years as an elected member of the SIGPLAN Executive Committee; a decade as Associate Editor of TOPLAS; he was Program Chair for PLDI 2016 and co-Program Chair of ASPLOS 2021. ------- Sponsored by: ------- Stream is the \# 1 Chat API for custom messaging apps. Activate your free 30-day trial to explore Stream Chat. https://gstrm.io/tsl}
+      \field{day}{6}
+      \field{month}{10}
+      \field{title}{"{{Python Performance Matters}}" by {{Emery Berger}} ({{Strange Loop}} 2022)}
+      \field{urlday}{21}
+      \field{urlmonth}{10}
+      \field{urlyear}{2024}
+      \field{venue}{Strange Loop Conference}
+      \field{year}{2022}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://www.youtube.com/watch?v=vVUnCXKuNOg
+      \endverb
+      \verb{url}
+      \verb https://www.youtube.com/watch?v=vVUnCXKuNOg
+      \endverb
+    \endentry
+    \entry{crapeperformance}{thesis}{}
+      \name{author}{1}{}{%
+        {{hash=074360853a9a2afd692a8a13c3f4e4ee}{%
+           family={Crapé},
+           familyi={C\bibinitperiod},
+           given={Arthur},
+           giveni={A\bibinitperiod}}}%
+      }
+      \list{institution}{1}{%
+        {Ghent University}%
+      }
+      \list{location}{1}{%
+        {Ghent, Belgium}%
+      }
+      \strng{namehash}{074360853a9a2afd692a8a13c3f4e4ee}
+      \strng{fullhash}{074360853a9a2afd692a8a13c3f4e4ee}
+      \strng{bibnamehash}{074360853a9a2afd692a8a13c3f4e4ee}
+      \strng{authorbibnamehash}{074360853a9a2afd692a8a13c3f4e4ee}
+      \strng{authornamehash}{074360853a9a2afd692a8a13c3f4e4ee}
+      \strng{authorfullhash}{074360853a9a2afd692a8a13c3f4e4ee}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{pagetotal}{105}
+      \field{title}{Performance Analysis and Benchmarking of {{Python}}}
+      \field{type}{Master's dissertation}
+      \field{year}{2020}
+      \field{dateera}{ce}
+      \verb{file}
+      \verb /Users/edjg/Zotero/storage/W2EIY5QW/Crapé - Performance analysis and benchmarking of python.pdf
+      \endverb
+    \endentry
+    \entry{harris2021understanding}{incollection}{}
+      \name{author}{2}{}{%
+        {{hash=00ea9146a6e61e5a74e6464bafc9856f}{%
+           family={Harris-Birtill},
+           familyi={H\bibinithyphendelim B\bibinitperiod},
+           given={David},
+           giveni={D\bibinitperiod}}}%
+        {{hash=4cf9f78314a63022e69753ea861af43c}{%
+           family={Harris-Birtill},
+           familyi={H\bibinithyphendelim B\bibinitperiod},
+           given={Rose},
+           giveni={R\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Brill}%
+      }
+      \strng{namehash}{12d082f2a4ee89356d0703a017ed5e5d}
+      \strng{fullhash}{12d082f2a4ee89356d0703a017ed5e5d}
+      \strng{bibnamehash}{12d082f2a4ee89356d0703a017ed5e5d}
+      \strng{authorbibnamehash}{12d082f2a4ee89356d0703a017ed5e5d}
+      \strng{authornamehash}{12d082f2a4ee89356d0703a017ed5e5d}
+      \strng{authorfullhash}{12d082f2a4ee89356d0703a017ed5e5d}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Time in Variance}
+      \field{title}{Understanding Computation Time: A Critical Discussion of Time as a Computational Performance Metric}
+      \field{year}{2021}
+      \field{dateera}{ce}
+      \field{pages}{220\bibrangedash 248}
+      \range{pages}{29}
+      \verb{file}
+      \verb /Users/edjg/Zotero/storage/S7HA4J9C/Harris-Birtill and Harris-Birtill - 2021 - Understanding computation time a critical discussion of time as a computational performance metric.pdf
+      \endverb
+    \endentry
+    \entry{barrettVirtualMachineWarmup2017}{article}{}
+      \name{author}{5}{}{%
+        {{hash=ef423277d9fde86573bb75a8b0b76c1b}{%
+           family={Barrett},
+           familyi={B\bibinitperiod},
+           given={Edd},
+           giveni={E\bibinitperiod}}}%
+        {{hash=fadcdf4ae8395969d6f659ec4825996f}{%
+           family={Bolz-Tereick},
+           familyi={B\bibinithyphendelim T\bibinitperiod},
+           given={Carl\bibnamedelima Friedrich},
+           giveni={C\bibinitperiod\bibinitdelim F\bibinitperiod}}}%
+        {{hash=fb5a615920221c38584fe3a3a935e49e}{%
+           family={Killick},
+           familyi={K\bibinitperiod},
+           given={Rebecca},
+           giveni={R\bibinitperiod}}}%
+        {{hash=ad67cfb029da3107937b74ccd1561907}{%
+           family={Mount},
+           familyi={M\bibinitperiod},
+           given={Sarah},
+           giveni={S\bibinitperiod}}}%
+        {{hash=04251aecd27674162b4593c62f368f52}{%
+           family={Tratt},
+           familyi={T\bibinitperiod},
+           given={Laurence},
+           giveni={L\bibinitperiod}}}%
+      }
+      \strng{namehash}{64d57995cd2bed6fd33da8976c9e48f5}
+      \strng{fullhash}{e7f4cc6af096dd47eaa0b36a0d56b2e4}
+      \strng{bibnamehash}{64d57995cd2bed6fd33da8976c9e48f5}
+      \strng{authorbibnamehash}{64d57995cd2bed6fd33da8976c9e48f5}
+      \strng{authornamehash}{64d57995cd2bed6fd33da8976c9e48f5}
+      \strng{authorfullhash}{e7f4cc6af096dd47eaa0b36a0d56b2e4}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{Virtual Machines (VMs) with Just-In-Time (JIT) compilers are traditionally thought to execute programs in two phases: the initial warmup phase determines which parts of a program would most benefit from dynamic compilation, before JIT compiling those parts into machine code; subsequently the program is said to be at a steady state of peak performance. Measurement methodologies almost always discard data collected during the warmup phase such that reported measurements focus entirely on peak performance. We introduce a fully automated statistical approach, based on changepoint analysis, which allows us to determine if a program has reached a steady state and, if so, whether that represents peak performance or not. Using this, we show that even when run in the most controlled of circumstances, small, deterministic, widely studied microbenchmarks often fail to reach a steady state of peak performance on a variety of common VMs. Repeating our experiment on 3 different machines, we found that at most 43.5\% of {$<$}VM, benchmark{$>$} pairs consistently reach a steady state of peak performance.}
+      \field{day}{12}
+      \field{eprintclass}{cs}
+      \field{eprinttype}{arXiv}
+      \field{issn}{2475-1421}
+      \field{issue}{OOPSLA}
+      \field{journaltitle}{Proceedings of the ACM on Programming Languages}
+      \field{month}{10}
+      \field{shortjournal}{Proc. ACM Program. Lang.}
+      \field{title}{Virtual {{Machine Warmup Blows Hot}} and {{Cold}}}
+      \field{urlday}{14}
+      \field{urlmonth}{5}
+      \field{urlyear}{2025}
+      \field{volume}{1}
+      \field{year}{2017}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \field{pages}{1\bibrangedash 27}
+      \range{pages}{27}
+      \verb{doi}
+      \verb 10.1145/3133876
+      \endverb
+      \verb{eprint}
+      \verb 1602.00602
+      \endverb
+      \verb{file}
+      \verb /Users/edjg/Zotero/storage/MR6M8M8V/Barrett et al. - 2017 - Virtual Machine Warmup Blows Hot and Cold.pdf;/Users/edjg/Zotero/storage/U9VBGS8S/1602.html
+      \endverb
+      \verb{urlraw}
+      \verb http://arxiv.org/abs/1602.00602
+      \endverb
+      \verb{url}
+      \verb http://arxiv.org/abs/1602.00602
+      \endverb
+      \keyw{Computer Science - Programming Languages}
+    \endentry
+    \entry{collinwinterPythonPyperformance2025}{software}{}
+      \name{author}{2}{}{%
+        {{hash=d66cba27d1755a4b33c0f18a73e72f67}{%
+           family={{Collin Winter}},
+           familyi={C\bibinitperiod}}}%
+        {{hash=5fd841811635570776bc0e7929386530}{%
+           family={{Jeffrey Yasskin}},
+           familyi={J\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {Python}%
+      }
+      \strng{namehash}{ea7d2a631a4d7ce11b5f5a43c38c1600}
+      \strng{fullhash}{ea7d2a631a4d7ce11b5f5a43c38c1600}
+      \strng{bibnamehash}{ea7d2a631a4d7ce11b5f5a43c38c1600}
+      \strng{authorbibnamehash}{ea7d2a631a4d7ce11b5f5a43c38c1600}
+      \strng{authornamehash}{ea7d2a631a4d7ce11b5f5a43c38c1600}
+      \strng{authorfullhash}{ea7d2a631a4d7ce11b5f5a43c38c1600}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{Python Performance Benchmark Suite}
+      \field{day}{6}
+      \field{hour}{16}
+      \field{minute}{31}
+      \field{month}{5}
+      \field{origday}{17}
+      \field{orighour}{23}
+      \field{origminute}{43}
+      \field{origmonth}{8}
+      \field{origsecond}{22}
+      \field{origtimezone}{Z}
+      \field{origyear}{2016}
+      \field{second}{43}
+      \field{timezone}{Z}
+      \field{title}{Python/Pyperformance}
+      \field{urlday}{15}
+      \field{urlmonth}{5}
+      \field{urlyear}{2025}
+      \field{year}{2025}
+      \field{dateera}{ce}
+      \field{origdateera}{ce}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://github.com/python/pyperformance
+      \endverb
+      \verb{url}
+      \verb https://github.com/python/pyperformance
+      \endverb
+      \keyw{benchmark,performance,python}
+    \endentry
+    \entry{pythonsoftwarefoundationPythonProfilers}{online}{}
+      \name{author}{1}{}{%
+        {{hash=c7b5508dc5e59a2846d22617276cc27c}{%
+           family={{Python Software Foundation}},
+           familyi={P\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {Python documentation}%
+      }
+      \strng{namehash}{c7b5508dc5e59a2846d22617276cc27c}
+      \strng{fullhash}{c7b5508dc5e59a2846d22617276cc27c}
+      \strng{bibnamehash}{c7b5508dc5e59a2846d22617276cc27c}
+      \strng{authorbibnamehash}{c7b5508dc5e59a2846d22617276cc27c}
+      \strng{authornamehash}{c7b5508dc5e59a2846d22617276cc27c}
+      \strng{authorfullhash}{c7b5508dc5e59a2846d22617276cc27c}
+      \field{extraname}{2}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{Source code: Lib/profile.py and Lib/pstats.py Introduction to the profilers: cProfile and profile provide deterministic profiling of Python programs. A profile is a set of statistics that describes...}
+      \field{langid}{english}
+      \field{title}{The {{Python Profilers}}}
+      \field{urlday}{28}
+      \field{urlmonth}{5}
+      \field{urlyear}{2025}
+      \field{urldateera}{ce}
+      \verb{file}
+      \verb /Users/edjg/Zotero/storage/V69P47SH/profile.html
+      \endverb
+      \verb{urlraw}
+      \verb https://docs.python.org/3/library/profile.html
+      \endverb
+      \verb{url}
+      \verb https://docs.python.org/3/library/profile.html
+      \endverb
+    \endentry
+    \entry{rickerbyPyinstrument2025}{software}{}
+      \name{author}{1}{}{%
+        {{hash=f5694058bd399d2b57aeb9c120924eb2}{%
+           family={Rickerby},
+           familyi={R\bibinitperiod},
+           given={Joe},
+           giveni={J\bibinitperiod}}}%
+      }
+      \strng{namehash}{f5694058bd399d2b57aeb9c120924eb2}
+      \strng{fullhash}{f5694058bd399d2b57aeb9c120924eb2}
+      \strng{bibnamehash}{f5694058bd399d2b57aeb9c120924eb2}
+      \strng{authorbibnamehash}{f5694058bd399d2b57aeb9c120924eb2}
+      \strng{authornamehash}{f5694058bd399d2b57aeb9c120924eb2}
+      \strng{authorfullhash}{f5694058bd399d2b57aeb9c120924eb2}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{🚴~Call stack profiler for Python. Shows you why your code is slow!}
+      \field{day}{28}
+      \field{hour}{17}
+      \field{minute}{17}
+      \field{month}{5}
+      \field{origday}{13}
+      \field{orighour}{17}
+      \field{origminute}{53}
+      \field{origmonth}{3}
+      \field{origsecond}{13}
+      \field{origtimezone}{Z}
+      \field{origyear}{2014}
+      \field{second}{39}
+      \field{timezone}{Z}
+      \field{title}{Pyinstrument}
+      \field{urlday}{28}
+      \field{urlmonth}{5}
+      \field{urlyear}{2025}
+      \field{year}{2025}
+      \field{dateera}{ce}
+      \field{origdateera}{ce}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://github.com/joerick/pyinstrument
+      \endverb
+      \verb{url}
+      \verb https://github.com/joerick/pyinstrument
+      \endverb
+      \keyw{async,django,performance,profile,profiler,python}
+    \endentry
+    \entry{bergerTriangulatingPythonPerformance2023a}{inproceedings}{}
+      \name{author}{3}{}{%
+        {{hash=6ad677bc0ccea25ae32ea445c9e85cca}{%
+           family={Berger},
+           familyi={B\bibinitperiod},
+           given={Emery\bibnamedelima D.},
+           giveni={E\bibinitperiod\bibinitdelim D\bibinitperiod}}}%
+        {{hash=9dc97798dd0815c4a17dcb2775c51041}{%
+           family={Stern},
+           familyi={S\bibinitperiod},
+           given={Sam},
+           giveni={S\bibinitperiod}}}%
+        {{hash=acb6361611f1f331d2f02a429889ff6e}{%
+           family={Pizzorno},
+           familyi={P\bibinitperiod},
+           given={Juan\bibnamedelima Altmayer},
+           giveni={J\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+      }
+      \strng{namehash}{e0910bc5744df54568a5fbe630085e91}
+      \strng{fullhash}{e0910bc5744df54568a5fbe630085e91}
+      \strng{bibnamehash}{e0910bc5744df54568a5fbe630085e91}
+      \strng{authorbibnamehash}{e0910bc5744df54568a5fbe630085e91}
+      \strng{authornamehash}{e0910bc5744df54568a5fbe630085e91}
+      \strng{authorfullhash}{e0910bc5744df54568a5fbe630085e91}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{eventtitle}{17th {{USENIX Symposium}} on {{Operating Systems Design}} and {{Implementation}} ({{OSDI}} 23)}
+      \field{isbn}{978-1-939133-34-2}
+      \field{langid}{english}
+      \field{title}{Triangulating {{Python Performance Issues}} with {{SCALENE}}}
+      \field{urlday}{14}
+      \field{urlmonth}{5}
+      \field{urlyear}{2025}
+      \field{year}{2023}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \field{pages}{51\bibrangedash 64}
+      \range{pages}{14}
+      \verb{file}
+      \verb /Users/edjg/Zotero/storage/2PSMWKHJ/Berger et al. - 2023 - Triangulating Python Performance Issues with SCALENE .pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://www.usenix.org/conference/osdi23/presentation/berger
+      \endverb
+      \verb{url}
+      \verb https://www.usenix.org/conference/osdi23/presentation/berger
+      \endverb
+    \endentry
+    \entry{robertkernPyutilsLine_profiler2025}{software}{}
+      \name{author}{2}{}{%
+        {{hash=d739f9bce3c8d5fb88c1c31f8e6cbfdf}{%
+           family={{Robert Kern}},
+           familyi={R\bibinitperiod}}}%
+        {{hash=b54c20e94144509cffade423d6aca629}{%
+           family={{Jon Crall}},
+           familyi={J\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {OpenPyUtils}%
+      }
+      \strng{namehash}{7e4915197781a2da64601ef138a482ed}
+      \strng{fullhash}{7e4915197781a2da64601ef138a482ed}
+      \strng{bibnamehash}{7e4915197781a2da64601ef138a482ed}
+      \strng{authorbibnamehash}{7e4915197781a2da64601ef138a482ed}
+      \strng{authornamehash}{7e4915197781a2da64601ef138a482ed}
+      \strng{authorfullhash}{7e4915197781a2da64601ef138a482ed}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{Line-by-line profiling for Python}
+      \field{day}{28}
+      \field{hour}{9}
+      \field{minute}{11}
+      \field{month}{5}
+      \field{origday}{10}
+      \field{orighour}{22}
+      \field{origminute}{26}
+      \field{origmonth}{12}
+      \field{origsecond}{33}
+      \field{origtimezone}{Z}
+      \field{origyear}{2019}
+      \field{second}{49}
+      \field{timezone}{Z}
+      \field{title}{Pyutils/Line\_profiler}
+      \field{urlday}{28}
+      \field{urlmonth}{5}
+      \field{urlyear}{2025}
+      \field{year}{2025}
+      \field{dateera}{ce}
+      \field{origdateera}{ce}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://github.com/pyutils/line_profiler
+      \endverb
+      \verb{url}
+      \verb https://github.com/pyutils/line_profiler
+      \endverb
+    \endentry
+    \entry{0xecCodingReversingHacking2017}{online}{}
+      \name{author}{1}{}{%
+        {{hash=b7403d6dc0ad0efa71c9eb1572f6d37b}{%
+           family={{0xec}},
+           familyi={0\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {Coding | Reversing}%
+      }
+      \strng{namehash}{b7403d6dc0ad0efa71c9eb1572f6d37b}
+      \strng{fullhash}{b7403d6dc0ad0efa71c9eb1572f6d37b}
+      \strng{bibnamehash}{b7403d6dc0ad0efa71c9eb1572f6d37b}
+      \strng{authorbibnamehash}{b7403d6dc0ad0efa71c9eb1572f6d37b}
+      \strng{authornamehash}{b7403d6dc0ad0efa71c9eb1572f6d37b}
+      \strng{authorfullhash}{b7403d6dc0ad0efa71c9eb1572f6d37b}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{shorttitle}
+      \field{day}{16}
+      \field{month}{3}
+      \field{shorttitle}{Coding | {{Reversing}}}
+      \field{title}{Coding | {{Reversing}}: {{Hacking}} the {{CPython}} Virtual Machine to Support Bytecode Debugging}
+      \field{urlday}{17}
+      \field{urlmonth}{5}
+      \field{urlyear}{2025}
+      \field{year}{2017}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \verb{file}
+      \verb /Users/edjg/Zotero/storage/L42GUFUD/hacking-cpython-virtual-machine-to.html
+      \endverb
+      \verb{urlraw}
+      \verb https://0xec.blogspot.com/2017/03/hacking-cpython-virtual-machine-to.html
+      \endverb
+      \verb{url}
+      \verb https://0xec.blogspot.com/2017/03/hacking-cpython-virtual-machine-to.html
+      \endverb
+      \keyw{debugging,pjorion,programming,python}
+    \endentry
+    \entry{clementrouaultUnderstandingPythonExecution}{online}{}
+      \name{author}{1}{}{%
+        {{hash=0c52d716b409de5df6e775078cad7611}{%
+           family={{Clement Rouault}},
+           familyi={C\bibinitperiod}}}%
+      }
+      \strng{namehash}{0c52d716b409de5df6e775078cad7611}
+      \strng{fullhash}{0c52d716b409de5df6e775078cad7611}
+      \strng{bibnamehash}{0c52d716b409de5df6e775078cad7611}
+      \strng{authorbibnamehash}{0c52d716b409de5df6e775078cad7611}
+      \strng{authornamehash}{0c52d716b409de5df6e775078cad7611}
+      \strng{authorfullhash}{0c52d716b409de5df6e775078cad7611}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Understanding {{Python}} Execution from inside: {{A Python}} Assembly Tracer - {{Hakril}}'s Blog}
+      \field{urlday}{17}
+      \field{urlmonth}{5}
+      \field{urlyear}{2025}
+      \field{urldateera}{ce}
+      \verb{file}
+      \verb /Users/edjg/Zotero/storage/Q3ISCLWL/2-understanding-python-execution-tracer.html
+      \endverb
+      \verb{urlraw}
+      \verb https://blog.hakril.net/articles/2-understanding-python-execution-tracer.html
+      \endverb
+      \verb{url}
+      \verb https://blog.hakril.net/articles/2-understanding-python-execution-tracer.html
+      \endverb
+    \endentry
+    \entry{nedbatchelderWickedHackPython2008}{online}{}
+      \name{author}{1}{}{%
+        {{hash=6cc4b0b3384ca29ded766e87e5ad7aed}{%
+           family={{Ned Batchelder}},
+           familyi={N\bibinitperiod}}}%
+      }
+      \strng{namehash}{6cc4b0b3384ca29ded766e87e5ad7aed}
+      \strng{fullhash}{6cc4b0b3384ca29ded766e87e5ad7aed}
+      \strng{bibnamehash}{6cc4b0b3384ca29ded766e87e5ad7aed}
+      \strng{authorbibnamehash}{6cc4b0b3384ca29ded766e87e5ad7aed}
+      \strng{authornamehash}{6cc4b0b3384ca29ded766e87e5ad7aed}
+      \strng{authorfullhash}{6cc4b0b3384ca29ded766e87e5ad7aed}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{shorttitle}
+      \field{abstract}{Something I’ve been noodling on since PyCon is how to improve code coverage testing in Python, in particular, finding a way to measure bytecode execution instead of just line execution. After a fruitful investigation, I know a lot more about how CPython executes code, and I’ve found a way to trace each bytecode.}
+      \field{day}{11}
+      \field{hour}{7}
+      \field{langid}{english}
+      \field{minute}{25}
+      \field{month}{4}
+      \field{second}{34}
+      \field{shorttitle}{Wicked Hack}
+      \field{title}{Wicked Hack: {{Python}} Bytecode Tracing}
+      \field{urlday}{17}
+      \field{urlmonth}{5}
+      \field{urlyear}{2025}
+      \field{year}{2008}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \verb{file}
+      \verb /Users/edjg/Zotero/storage/X52F35FA/wicked_hack_python_bytecode_tracing.html
+      \endverb
+      \verb{urlraw}
+      \verb https://nedbatchelder.com/blog/200804/wicked_hack_python_bytecode_tracing.html
+      \endverb
+      \verb{url}
+      \verb https://nedbatchelder.com/blog/200804/wicked_hack_python_bytecode_tracing.html
+      \endverb
+    \endentry
+    \entry{0xecExtremecodersreBytecode_tracer2024}{software}{}
+      \name{author}{2}{}{%
+        {{hash=b7403d6dc0ad0efa71c9eb1572f6d37b}{%
+           family={{0xec}},
+           familyi={0\bibinitperiod}}}%
+        {{hash=5ac270f85d4e94fa9867a60ddda0db42}{%
+           family={{Dominik Moritz}},
+           familyi={D\bibinitperiod}}}%
+      }
+      \strng{namehash}{2c4cdbc3ca5a250c5b09ecfeaa3ff4d5}
+      \strng{fullhash}{2c4cdbc3ca5a250c5b09ecfeaa3ff4d5}
+      \strng{bibnamehash}{2c4cdbc3ca5a250c5b09ecfeaa3ff4d5}
+      \strng{authorbibnamehash}{2c4cdbc3ca5a250c5b09ecfeaa3ff4d5}
+      \strng{authornamehash}{2c4cdbc3ca5a250c5b09ecfeaa3ff4d5}
+      \strng{authorfullhash}{2c4cdbc3ca5a250c5b09ecfeaa3ff4d5}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{Tracing execution of python bytecode}
+      \field{day}{27}
+      \field{hour}{13}
+      \field{minute}{4}
+      \field{month}{7}
+      \field{origday}{16}
+      \field{orighour}{8}
+      \field{origminute}{4}
+      \field{origmonth}{3}
+      \field{origsecond}{2}
+      \field{origtimezone}{Z}
+      \field{origyear}{2017}
+      \field{second}{29}
+      \field{timezone}{Z}
+      \field{title}{Extremecoders-Re/Bytecode\_tracer}
+      \field{urlday}{17}
+      \field{urlmonth}{5}
+      \field{urlyear}{2025}
+      \field{year}{2024}
+      \field{dateera}{ce}
+      \field{origdateera}{ce}
+      \field{urldateera}{ce}
+      \true{nocite}
+      \verb{urlraw}
+      \verb https://github.com/extremecoders-re/bytecode_tracer
+      \endverb
+      \verb{url}
+      \verb https://github.com/extremecoders-re/bytecode_tracer
+      \endverb
+      \keyw{debugging,python,python-2-7,reverse-engineering,tracing}
+    \endentry
+    \entry{alfred2007compilers}{book}{}
+      \name{author}{3}{}{%
+        {{hash=72871b7a1792b05fd0157ada589b2e28}{%
+           family={Alfred},
+           familyi={A\bibinitperiod},
+           given={V\bibnamedelima Aho},
+           giveni={V\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+        {{hash=99791af30184066ef06a881dc6ec103b}{%
+           family={Monica},
+           familyi={M\bibinitperiod},
+           given={S\bibnamedelima Lam},
+           giveni={S\bibinitperiod\bibinitdelim L\bibinitperiod}}}%
+        {{hash=e7b075935170817bc52712a1529f3543}{%
+           family={Jeffrey},
+           familyi={J\bibinitperiod},
+           given={D\bibnamedelima Ullman},
+           giveni={D\bibinitperiod\bibinitdelim U\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {pearson Education}%
+      }
+      \strng{namehash}{9f02eb93662cf22637a65fff2f748b5d}
+      \strng{fullhash}{9f02eb93662cf22637a65fff2f748b5d}
+      \strng{bibnamehash}{9f02eb93662cf22637a65fff2f748b5d}
+      \strng{authorbibnamehash}{9f02eb93662cf22637a65fff2f748b5d}
+      \strng{authornamehash}{9f02eb93662cf22637a65fff2f748b5d}
+      \strng{authorfullhash}{9f02eb93662cf22637a65fff2f748b5d}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{edition}{2}
+      \field{title}{Compilers: {{Principles}}, {{Techniques}} \& {{Tools}}}
+      \field{year}{2007}
+      \field{dateera}{ce}
+      \true{nocite}
+    \endentry
+    \entry{baconFastStaticAnalysis1996}{inproceedings}{}
+      \name{author}{2}{}{%
+        {{hash=75ba5e8450d25d2b417a35f75f8d5345}{%
+           family={Bacon},
+           familyi={B\bibinitperiod},
+           given={David\bibnamedelima F.},
+           giveni={D\bibinitperiod\bibinitdelim F\bibinitperiod}}}%
+        {{hash=a59f40ddcef25eeca5f71afc26732880}{%
+           family={Sweeney},
+           familyi={S\bibinitperiod},
+           given={Peter\bibnamedelima F.},
+           giveni={P\bibinitperiod\bibinitdelim F\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {New York, NY, USA}%
+      }
+      \list{publisher}{1}{%
+        {Association for Computing Machinery}%
+      }
+      \strng{namehash}{e1bc57df07c880f63f15cc82faead4a0}
+      \strng{fullhash}{e1bc57df07c880f63f15cc82faead4a0}
+      \strng{bibnamehash}{e1bc57df07c880f63f15cc82faead4a0}
+      \strng{authorbibnamehash}{e1bc57df07c880f63f15cc82faead4a0}
+      \strng{authornamehash}{e1bc57df07c880f63f15cc82faead4a0}
+      \strng{authorfullhash}{e1bc57df07c880f63f15cc82faead4a0}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{Virtual functions make code easier for programmers to reuse but also make it harder for compilers to analyze. We investigate the ability of three static analysis algorithms to improve C++ programs by resolving virtual function calls, thereby reducing compiled code size and reducing program complexity so as to improve both human and automated program understanding and analysis. In measurements of seven programs of significant size (5000 to 20000 lines of code each) we found that on average the most precise of the three algorithms resolved 71\% of the virtual function calls and reduced compiled code size by 25\%. This algorithm is very fast: it analyzes 3300 source lines per second on an 80 MHz PowerPC 601. Because of its accuracy and speed, this algorithm is an excellent candidate for inclusion in production C++ compilers.}
+      \field{booktitle}{Proceedings of the 11th {{ACM SIGPLAN}} Conference on {{Object-oriented}} Programming, Systems, Languages, and Applications}
+      \field{day}{1}
+      \field{isbn}{978-0-89791-788-9}
+      \field{month}{10}
+      \field{series}{{{OOPSLA}} '96}
+      \field{title}{Fast Static Analysis of {{C}}++ Virtual Function Calls}
+      \field{urlday}{11}
+      \field{urlmonth}{5}
+      \field{urlyear}{2025}
+      \field{year}{1996}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \true{nocite}
+      \field{pages}{324\bibrangedash 341}
+      \range{pages}{18}
+      \verb{doi}
+      \verb 10.1145/236337.236371
+      \endverb
+      \verb{file}
+      \verb /Users/edjg/Zotero/storage/LL8LCXSD/Bacon and Sweeney - 1996 - Fast static analysis of C++ virtual function calls.pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://dl.acm.org/doi/10.1145/236337.236371
+      \endverb
+      \verb{url}
+      \verb https://dl.acm.org/doi/10.1145/236337.236371
+      \endverb
+    \endentry
+    \entry{callahanInterproceduralConstantPropagation1986}{inproceedings}{}
+      \name{author}{4}{}{%
+        {{hash=3701ab90b460afeb1d1a5322af8b43c5}{%
+           family={Callahan},
+           familyi={C\bibinitperiod},
+           given={David},
+           giveni={D\bibinitperiod}}}%
+        {{hash=71f400e279a0a15beb329315b99759a1}{%
+           family={Cooper},
+           familyi={C\bibinitperiod},
+           given={Keith\bibnamedelima D.},
+           giveni={K\bibinitperiod\bibinitdelim D\bibinitperiod}}}%
+        {{hash=095a2ec99e957300d314a4ca73111fbf}{%
+           family={Kennedy},
+           familyi={K\bibinitperiod},
+           given={Ken},
+           giveni={K\bibinitperiod}}}%
+        {{hash=5a13a70664e0baca925e51491a217c03}{%
+           family={Torczon},
+           familyi={T\bibinitperiod},
+           given={Linda},
+           giveni={L\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {New York, NY, USA}%
+      }
+      \list{publisher}{1}{%
+        {Association for Computing Machinery}%
+      }
+      \strng{namehash}{551b5006940007c7b9cc93c8a4d99ac5}
+      \strng{fullhash}{ed6ac5f37ace49b995e850b0ebccd3ac}
+      \strng{bibnamehash}{551b5006940007c7b9cc93c8a4d99ac5}
+      \strng{authorbibnamehash}{551b5006940007c7b9cc93c8a4d99ac5}
+      \strng{authornamehash}{551b5006940007c7b9cc93c8a4d99ac5}
+      \strng{authorfullhash}{ed6ac5f37ace49b995e850b0ebccd3ac}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{In a compiling system that attempts to improve code for a whole program by optimizing across procedures, the compiler can generate better code for a specific procedure if it knows which variables will have constant values, and what those values will be, when the procedure is invoked. This paper presents a general algorithm for determining for each procedure in a given program the set of inputs that will have known constant values at run time. The precision of the answers provided by this method are dependent on the precision of the local analysis of individual procedures in the program. Since the algorithm is intended for use in a sophisticated software development environment in which local analysis would be provided by the source editor, the quality of the answers will depend on the amount of work the editor performs. Several reasonable strategies for local analysis with different levels of complexity and precision are suggested and the results of a prototype implementation in a vectorizing Fortran compiler are presented.}
+      \field{booktitle}{Proceedings of the 1986 {{SIGPLAN}} Symposium on {{Compiler}} Construction}
+      \field{day}{1}
+      \field{isbn}{978-0-89791-197-9}
+      \field{month}{7}
+      \field{series}{{{SIGPLAN}} '86}
+      \field{title}{Interprocedural Constant Propagation}
+      \field{urlday}{16}
+      \field{urlmonth}{5}
+      \field{urlyear}{2025}
+      \field{year}{1986}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \true{nocite}
+      \field{pages}{152\bibrangedash 161}
+      \range{pages}{10}
+      \verb{doi}
+      \verb 10.1145/12276.13327
+      \endverb
+      \verb{file}
+      \verb /Users/edjg/Zotero/storage/N39QA3AE/Callahan et al. - 1986 - Interprocedural constant propagation.pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://dl.acm.org/doi/10.1145/12276.13327
+      \endverb
+      \verb{url}
+      \verb https://dl.acm.org/doi/10.1145/12276.13327
+      \endverb
+    \endentry
+    \entry{cooperAdaptiveOptimizingCompilers2002}{article}{}
+      \name{author}{3}{}{%
+        {{hash=71f400e279a0a15beb329315b99759a1}{%
+           family={Cooper},
+           familyi={C\bibinitperiod},
+           given={Keith\bibnamedelima D.},
+           giveni={K\bibinitperiod\bibinitdelim D\bibinitperiod}}}%
+        {{hash=b9281008b69674a1d4c76460d361ade8}{%
+           family={Subramanian},
+           familyi={S\bibinitperiod},
+           given={Devika},
+           giveni={D\bibinitperiod}}}%
+        {{hash=5a13a70664e0baca925e51491a217c03}{%
+           family={Torczon},
+           familyi={T\bibinitperiod},
+           given={Linda},
+           giveni={L\bibinitperiod}}}%
+      }
+      \strng{namehash}{425363e7ba0c6076d9e06d460b9f3dcc}
+      \strng{fullhash}{425363e7ba0c6076d9e06d460b9f3dcc}
+      \strng{bibnamehash}{425363e7ba0c6076d9e06d460b9f3dcc}
+      \strng{authorbibnamehash}{425363e7ba0c6076d9e06d460b9f3dcc}
+      \strng{authornamehash}{425363e7ba0c6076d9e06d460b9f3dcc}
+      \strng{authorfullhash}{425363e7ba0c6076d9e06d460b9f3dcc}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{Historically, compilers have operated by applying a fixed set of optimizations in a predetermined order. We call such an ordered list of optimizations a compilation sequence. This paper describes a prototype system that uses biased random search to discover a program-specific compilation sequence that minimizes an explicit, external objective function. The result is a compiler framework that adapts its behavior to the application being compiled, to the pool of available transformations, to the objective function, and to the target machine.}
+      \field{day}{1}
+      \field{issn}{1573-0484}
+      \field{journaltitle}{The Journal of Supercomputing}
+      \field{langid}{english}
+      \field{month}{8}
+      \field{number}{1}
+      \field{shortjournal}{The Journal of Supercomputing}
+      \field{title}{Adaptive {{Optimizing Compilers}} for the 21st {{Century}}}
+      \field{urlday}{12}
+      \field{urlmonth}{5}
+      \field{urlyear}{2025}
+      \field{volume}{23}
+      \field{year}{2002}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \true{nocite}
+      \field{pages}{7\bibrangedash 22}
+      \range{pages}{16}
+      \verb{doi}
+      \verb 10.1023/A:1015729001611
+      \endverb
+      \verb{file}
+      \verb /Users/edjg/Zotero/storage/YHJIJZQ4/Cooper et al. - 2002 - Adaptive Optimizing Compilers for the 21st Century.pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1023/A:1015729001611
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1023/A:1015729001611
+      \endverb
+      \keyw{biased random search,configurable compilers,optimizing compilers,order of optimization}
+    \endentry
+    \entry{curtsingerSTABILIZERStatisticallySound2013}{article}{}
+      \name{author}{2}{}{%
+        {{hash=506bd016d70888aac1bb414dbb02d64d}{%
+           family={Curtsinger},
+           familyi={C\bibinitperiod},
+           given={Charlie},
+           giveni={C\bibinitperiod}}}%
+        {{hash=6ad677bc0ccea25ae32ea445c9e85cca}{%
+           family={Berger},
+           familyi={B\bibinitperiod},
+           given={Emery\bibnamedelima D.},
+           giveni={E\bibinitperiod\bibinitdelim D\bibinitperiod}}}%
+      }
+      \strng{namehash}{907f5e5affcdaec874e8093c2d9deb81}
+      \strng{fullhash}{907f5e5affcdaec874e8093c2d9deb81}
+      \strng{bibnamehash}{907f5e5affcdaec874e8093c2d9deb81}
+      \strng{authorbibnamehash}{907f5e5affcdaec874e8093c2d9deb81}
+      \strng{authornamehash}{907f5e5affcdaec874e8093c2d9deb81}
+      \strng{authorfullhash}{907f5e5affcdaec874e8093c2d9deb81}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{shorttitle}
+      \field{abstract}{Researchers and software developers require effective performance evaluation. Researchers must evaluate optimizations or measure overhead. Software developers use automatic performance regression tests to discover when changes improve or degrade performance. The standard methodology is to compare execution times before and after applying changes.Unfortunately, modern architectural features make this approach unsound. Statistically sound evaluation requires multiple samples to test whether one can or cannot (with high confidence) reject the null hypothesis that results are the same before and after. However, caches and branch predictors make performance dependent on machine-specific parameters and the exact layout of code, stack frames, and heap objects. A single binary constitutes just one sample from the space of program layouts, regardless of the number of runs. Since compiler optimizations and code changes also alter layout, it is currently impossible to distinguish the impact of an optimization from that of its layout effects.This paper presents Stabilizer, a system that enables the use of the powerful statistical techniques required for sound performance evaluation on modern architectures. Stabilizer forces executions to sample the space of memory configurations by repeatedly re-randomizing layouts of code, stack, and heap objects at runtime. Stabilizer thus makes it possible to control for layout effects. Re-randomization also ensures that layout effects follow a Gaussian distribution, enabling the use of statistical tests like ANOVA. We demonstrate Stabilizer's efficiency (\&lt;7\% median overhead) and its effectiveness by evaluating the impact of LLVM's optimizations on the SPEC CPU2006 benchmark suite. We find that, while -O2 has a significant impact relative to -O1, the performance impact of -O3 over -O2 optimizations is indistinguishable from random noise.}
+      \field{day}{16}
+      \field{issn}{0163-5964}
+      \field{journaltitle}{SIGARCH Comput. Archit. News}
+      \field{month}{3}
+      \field{number}{1}
+      \field{shorttitle}{{{STABILIZER}}}
+      \field{title}{{{STABILIZER}}: Statistically Sound Performance Evaluation}
+      \field{urlday}{29}
+      \field{urlmonth}{1}
+      \field{urlyear}{2025}
+      \field{volume}{41}
+      \field{year}{2013}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \true{nocite}
+      \field{pages}{219\bibrangedash 228}
+      \range{pages}{10}
+      \verb{doi}
+      \verb 10.1145/2490301.2451141
+      \endverb
+      \verb{file}
+      \verb /Users/edjg/Zotero/storage/P6T7ZTT6/Curtsinger and Berger - 2013 - STABILIZER statistically sound performance evaluation.pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://dl.acm.org/doi/10.1145/2490301.2451141
+      \endverb
+      \verb{url}
+      \verb https://dl.acm.org/doi/10.1145/2490301.2451141
+      \endverb
+    \endentry
+    \entry{dangohmanCanonicalization2018}{online}{}
+      \name{author}{1}{}{%
+        {{hash=c58622a3c8cb142ff6ea033cb2babbf8}{%
+           family={{Dan Gohman}},
+           familyi={D\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {sunfishcode.github.io}%
+      }
+      \strng{namehash}{c58622a3c8cb142ff6ea033cb2babbf8}
+      \strng{fullhash}{c58622a3c8cb142ff6ea033cb2babbf8}
+      \strng{bibnamehash}{c58622a3c8cb142ff6ea033cb2babbf8}
+      \strng{authorbibnamehash}{c58622a3c8cb142ff6ea033cb2babbf8}
+      \strng{authornamehash}{c58622a3c8cb142ff6ea033cb2babbf8}
+      \strng{authorfullhash}{c58622a3c8cb142ff6ea033cb2babbf8}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{Canonicalization}
+      \field{day}{22}
+      \field{hour}{0}
+      \field{langid}{american}
+      \field{minute}{0}
+      \field{month}{10}
+      \field{second}{0}
+      \field{timezone}{Z}
+      \field{title}{Canonicalization}
+      \field{urlday}{17}
+      \field{urlmonth}{5}
+      \field{urlyear}{2025}
+      \field{year}{2018}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \true{nocite}
+      \verb{file}
+      \verb /Users/edjg/Zotero/storage/PTHTQWMD/Canonicalization.html
+      \endverb
+      \verb{urlraw}
+      \verb https://sunfishcode.github.io/blog/2018/10/22/Canonicalization.html
+      \endverb
+      \verb{url}
+      \verb https://sunfishcode.github.io/blog/2018/10/22/Canonicalization.html
+      \endverb
+    \endentry
+    \entry{fehrIRDLIRDefinition2022a}{inproceedings}{}
+      \name{author}{6}{}{%
+        {{hash=385ace4971afcf156f01f8044e750b1c}{%
+           family={Fehr},
+           familyi={F\bibinitperiod},
+           given={Mathieu},
+           giveni={M\bibinitperiod}}}%
+        {{hash=d676380ca52324efd8d32dcfa05677a1}{%
+           family={Niu},
+           familyi={N\bibinitperiod},
+           given={Jeff},
+           giveni={J\bibinitperiod}}}%
+        {{hash=22b8268ddc68fbfe733d278d847a1c8e}{%
+           family={Riddle},
+           familyi={R\bibinitperiod},
+           given={River},
+           giveni={R\bibinitperiod}}}%
+        {{hash=a348049bbee83ce5dc3444b952a2e4e0}{%
+           family={Amini},
+           familyi={A\bibinitperiod},
+           given={Mehdi},
+           giveni={M\bibinitperiod}}}%
+        {{hash=3995a0c731177d2aa23cbb3a6126be27}{%
+           family={Su},
+           familyi={S\bibinitperiod},
+           given={Zhendong},
+           giveni={Z\bibinitperiod}}}%
+        {{hash=8d5b5e98a55e4f5262f328dd602a741d}{%
+           family={Grosser},
+           familyi={G\bibinitperiod},
+           given={Tobias},
+           giveni={T\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {New York, NY, USA}%
+      }
+      \list{publisher}{1}{%
+        {Association for Computing Machinery}%
+      }
+      \strng{namehash}{fa60d95b379863969179c85412db4380}
+      \strng{fullhash}{476a05f012b624de01c89e98c81e157d}
+      \strng{bibnamehash}{fa60d95b379863969179c85412db4380}
+      \strng{authorbibnamehash}{fa60d95b379863969179c85412db4380}
+      \strng{authornamehash}{fa60d95b379863969179c85412db4380}
+      \strng{authorfullhash}{476a05f012b624de01c89e98c81e157d}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{shorttitle}
+      \field{abstract}{Designing compiler intermediate representations (IRs) is often a manual process that makes exploration and innovation in this space costly. Developers typically use general-purpose programming languages to design IRs. As a result, IR implementations are verbose, manual modifications are expensive, and designing tooling for the inspection or generation of IRs is impractical. While compilers relied historically on a few slowly evolving IRs, domain-specific optimizations and specialized hardware motivate compilers to use and evolve many IRs. We facilitate the implementation of SSA-based IRs by introducing IRDL, a domain-specific language to define IRs. We analyze all 28 domain-specific IRs developed as part of LLVM's MLIR project over the last two years and demonstrate how to express these IRs exclusively in IRDL while only rarely falling back to IRDL's support for generic C++ extensions. By enabling the concise and explicit specification of IRs, we provide foundations for developing effective tooling to automate the compiler construction process.}
+      \field{booktitle}{Proceedings of the 43rd {{ACM SIGPLAN International Conference}} on {{Programming Language Design}} and {{Implementation}}}
+      \field{day}{9}
+      \field{isbn}{978-1-4503-9265-5}
+      \field{month}{6}
+      \field{series}{{{PLDI}} 2022}
+      \field{shorttitle}{{{IRDL}}}
+      \field{title}{{{IRDL}}: An {{IR}} Definition Language for {{SSA}} Compilers}
+      \field{urlday}{11}
+      \field{urlmonth}{4}
+      \field{urlyear}{2025}
+      \field{year}{2022}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \true{nocite}
+      \field{pages}{199\bibrangedash 212}
+      \range{pages}{14}
+      \verb{doi}
+      \verb 10.1145/3519939.3523700
+      \endverb
+      \verb{file}
+      \verb /Users/edjg/Zotero/storage/VB4Z3UNB/Fehr et al. - 2022 - IRDL an IR definition language for SSA compilers.pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://dl.acm.org/doi/10.1145/3519939.3523700
+      \endverb
+      \verb{url}
+      \verb https://dl.acm.org/doi/10.1145/3519939.3523700
+      \endverb
+    \endentry
+    \entry{fehrXdslprojectXdsl2024}{software}{}
+      \name{author}{2}{}{%
+        {{hash=385ace4971afcf156f01f8044e750b1c}{%
+           family={Fehr},
+           familyi={F\bibinitperiod},
+           given={Mathieu},
+           giveni={M\bibinitperiod}}}%
+        {{hash=51caaa1006aeb7388d4acea040699229}{%
+           family={Lopoukhine},
+           familyi={L\bibinitperiod},
+           given={Alexandre},
+           giveni={A\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {xdslproject}%
+      }
+      \strng{namehash}{6cb4375be0bb24434d983ada68f346fd}
+      \strng{fullhash}{6cb4375be0bb24434d983ada68f346fd}
+      \strng{bibnamehash}{6cb4375be0bb24434d983ada68f346fd}
+      \strng{authorbibnamehash}{6cb4375be0bb24434d983ada68f346fd}
+      \strng{authornamehash}{6cb4375be0bb24434d983ada68f346fd}
+      \strng{authorfullhash}{6cb4375be0bb24434d983ada68f346fd}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{A Python Compiler Design Toolkit}
+      \field{day}{21}
+      \field{hour}{13}
+      \field{minute}{1}
+      \field{month}{10}
+      \field{origday}{12}
+      \field{orighour}{14}
+      \field{origminute}{2}
+      \field{origmonth}{9}
+      \field{origsecond}{30}
+      \field{origtimezone}{Z}
+      \field{origyear}{2021}
+      \field{second}{34}
+      \field{timezone}{Z}
+      \field{title}{Xdslproject/Xdsl}
+      \field{urlday}{21}
+      \field{urlmonth}{10}
+      \field{urlyear}{2024}
+      \field{year}{2024}
+      \field{dateera}{ce}
+      \field{origdateera}{ce}
+      \field{urldateera}{ce}
+      \true{nocite}
+      \verb{urlraw}
+      \verb https://github.com/xdslproject/xdsl
+      \endverb
+      \verb{url}
+      \verb https://github.com/xdslproject/xdsl
+      \endverb
+    \endentry
+    \entry{gaoVizTracer2025}{software}{}
+      \name{author}{1}{}{%
+        {{hash=f33b4e26a1b2a1f3288caaf6f6d6385d}{%
+           family={Gao},
+           familyi={G\bibinitperiod},
+           given={Tian},
+           giveni={T\bibinitperiod}}}%
+      }
+      \strng{namehash}{f33b4e26a1b2a1f3288caaf6f6d6385d}
+      \strng{fullhash}{f33b4e26a1b2a1f3288caaf6f6d6385d}
+      \strng{bibnamehash}{f33b4e26a1b2a1f3288caaf6f6d6385d}
+      \strng{authorbibnamehash}{f33b4e26a1b2a1f3288caaf6f6d6385d}
+      \strng{authornamehash}{f33b4e26a1b2a1f3288caaf6f6d6385d}
+      \strng{authorfullhash}{f33b4e26a1b2a1f3288caaf6f6d6385d}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{A debugging and profiling tool that can trace and visualize python code execution}
+      \field{day}{28}
+      \field{hour}{14}
+      \field{minute}{34}
+      \field{month}{4}
+      \field{origday}{5}
+      \field{orighour}{0}
+      \field{origminute}{29}
+      \field{origmonth}{8}
+      \field{origsecond}{56}
+      \field{origtimezone}{Z}
+      \field{origyear}{2020}
+      \field{second}{17}
+      \field{timezone}{Z}
+      \field{title}{{{VizTracer}}}
+      \field{urlday}{28}
+      \field{urlmonth}{4}
+      \field{urlyear}{2025}
+      \field{year}{2025}
+      \field{dateera}{ce}
+      \field{origdateera}{ce}
+      \field{urldateera}{ce}
+      \true{nocite}
+      \verb{urlraw}
+      \verb https://github.com/gaogaotiantian/viztracer
+      \endverb
+      \verb{url}
+      \verb https://github.com/gaogaotiantian/viztracer
+      \endverb
+    \endentry
+    \entry{guidovanrossumPythonCpython2025}{software}{}
+      \name{author}{1}{}{%
+        {{hash=d60a4a8755fe55203470fc31172b2ad8}{%
+           family={{Guido van Rossum}},
+           familyi={G\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {Python}%
+      }
+      \strng{namehash}{d60a4a8755fe55203470fc31172b2ad8}
+      \strng{fullhash}{d60a4a8755fe55203470fc31172b2ad8}
+      \strng{bibnamehash}{d60a4a8755fe55203470fc31172b2ad8}
+      \strng{authorbibnamehash}{d60a4a8755fe55203470fc31172b2ad8}
+      \strng{authornamehash}{d60a4a8755fe55203470fc31172b2ad8}
+      \strng{authorfullhash}{d60a4a8755fe55203470fc31172b2ad8}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{The Python programming language}
+      \field{day}{28}
+      \field{hour}{14}
+      \field{minute}{44}
+      \field{month}{4}
+      \field{origday}{10}
+      \field{orighour}{19}
+      \field{origminute}{23}
+      \field{origmonth}{2}
+      \field{origsecond}{51}
+      \field{origtimezone}{Z}
+      \field{origyear}{2017}
+      \field{second}{57}
+      \field{timezone}{Z}
+      \field{title}{Python/Cpython}
+      \field{urlday}{28}
+      \field{urlmonth}{4}
+      \field{urlyear}{2025}
+      \field{year}{2025}
+      \field{dateera}{ce}
+      \field{origdateera}{ce}
+      \field{urldateera}{ce}
+      \true{nocite}
+      \verb{urlraw}
+      \verb https://github.com/python/cpython
+      \endverb
+      \verb{url}
+      \verb https://github.com/python/cpython
+      \endverb
+    \endentry
+    \entry{joshhabermanTailCallingInterpreter2025}{online}{}
+      \name{author}{1}{}{%
+        {{hash=a8cb38b5c47b96a60732ca6e86d27672}{%
+           family={{Josh Haberman}},
+           familyi={J\bibinitperiod}}}%
+      }
+      \strng{namehash}{a8cb38b5c47b96a60732ca6e86d27672}
+      \strng{fullhash}{a8cb38b5c47b96a60732ca6e86d27672}
+      \strng{bibnamehash}{a8cb38b5c47b96a60732ca6e86d27672}
+      \strng{authorbibnamehash}{a8cb38b5c47b96a60732ca6e86d27672}
+      \strng{authornamehash}{a8cb38b5c47b96a60732ca6e86d27672}
+      \strng{authorfullhash}{a8cb38b5c47b96a60732ca6e86d27672}
+      \field{sortinit}{7}
+      \field{sortinithash}{108d0be1b1bee9773a1173443802c0a3}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{day}{2}
+      \field{month}{10}
+      \field{title}{A {{Tail Calling Interpreter For Python}} ({{And Other Updates}})}
+      \field{urlday}{14}
+      \field{urlmonth}{5}
+      \field{urlyear}{2025}
+      \field{year}{2025}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \true{nocite}
+      \verb{file}
+      \verb /Users/edjg/Zotero/storage/LGPDYQWY/tail-call-updates.html
+      \endverb
+      \verb{urlraw}
+      \verb https://blog.reverberate.org/2025/02/10/tail-call-updates.html
+      \endverb
+      \verb{url}
+      \verb https://blog.reverberate.org/2025/02/10/tail-call-updates.html
+      \endverb
+    \endentry
+    \entry{kempenItsNotEasy2025}{online}{}
+      \name{author}{4}{}{%
+        {{useprefix=false,hash=5b7942fab69142194635ff574e561d36}{%
+           family={Kempen},
+           familyi={K\bibinitperiod},
+           given={Nicolas},
+           giveni={N\bibinitperiod},
+           prefix={van},
+           prefixi={v\bibinitperiod}}}%
+        {{hash=869d2fc999a4bd60bbbbdad4bc661dc2}{%
+           family={Kwon},
+           familyi={K\bibinitperiod},
+           given={Hyuk-Je},
+           giveni={H\bibinithyphendelim J\bibinitperiod}}}%
+        {{hash=ef85c02292d5fb8377be8a48985103af}{%
+           family={Nguyen},
+           familyi={N\bibinitperiod},
+           given={Dung\bibnamedelima Tuan},
+           giveni={D\bibinitperiod\bibinitdelim T\bibinitperiod}}}%
+        {{hash=6ad677bc0ccea25ae32ea445c9e85cca}{%
+           family={Berger},
+           familyi={B\bibinitperiod},
+           given={Emery\bibnamedelima D.},
+           giveni={E\bibinitperiod\bibinitdelim D\bibinitperiod}}}%
+      }
+      \strng{namehash}{5824718eba424d915113a0169e5a1d94}
+      \strng{fullhash}{fb23653b8f375b24beae6072db200b8e}
+      \strng{bibnamehash}{5824718eba424d915113a0169e5a1d94}
+      \strng{authorbibnamehash}{5824718eba424d915113a0169e5a1d94}
+      \strng{authornamehash}{5824718eba424d915113a0169e5a1d94}
+      \strng{authorfullhash}{fb23653b8f375b24beae6072db200b8e}
+      \field{sortinit}{7}
+      \field{sortinithash}{108d0be1b1bee9773a1173443802c0a3}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{shorttitle}
+      \field{abstract}{Does the choice of programming language affect energy consumption? Previous highly visible studies have established associations between certain programming languages and energy consumption. A causal misinterpretation of this work has led academics and industry leaders to use or support certain languages based on their claimed impact on energy consumption. This paper tackles this causal question directly. It first corrects and improves the measurement methodology used by prior work. It then develops a detailed causal model capturing the complex relationship between programming language choice and energy consumption. This model identifies and incorporates several critical but previously overlooked factors that affect energy usage. These factors, such as distinguishing programming languages from their implementations, the impact of the application implementations themselves, the number of active cores, and memory activity, can significantly skew energy consumption measurements if not accounted for. We show -- via empirical experiments, improved methodology, and careful examination of anomalies -- that when these factors are controlled for, notable discrepancies in prior work vanish. Our analysis suggests that the choice of programming language implementation has no significant impact on energy consumption beyond execution time.}
+      \field{day}{28}
+      \field{eprintclass}{cs}
+      \field{eprinttype}{arXiv}
+      \field{month}{3}
+      \field{pubstate}{prepublished}
+      \field{shorttitle}{It's {{Not Easy Being Green}}}
+      \field{title}{It's {{Not Easy Being Green}}: {{On}} the {{Energy Efficiency}} of {{Programming Languages}}}
+      \field{urlday}{11}
+      \field{urlmonth}{5}
+      \field{urlyear}{2025}
+      \field{year}{2025}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \true{nocite}
+      \verb{doi}
+      \verb 10.48550/arXiv.2410.05460
+      \endverb
+      \verb{eprint}
+      \verb 2410.05460
+      \endverb
+      \verb{file}
+      \verb /Users/edjg/Zotero/storage/C65BSPZP/Kempen et al. - 2025 - It's Not Easy Being Green On the Energy Efficiency of Programming Languages.pdf;/Users/edjg/Zotero/storage/WLEKD4IA/2410.html
+      \endverb
+      \verb{urlraw}
+      \verb http://arxiv.org/abs/2410.05460
+      \endverb
+      \verb{url}
+      \verb http://arxiv.org/abs/2410.05460
+      \endverb
+      \keyw{Computer Science - Performance,Computer Science - Programming Languages}
+    \endentry
+    \entry{kunalbhallaUnreasonableEffectivenessSyssettrace}{online}{}
+      \name{author}{1}{}{%
+        {{hash=5f028cc0be507cd7052d6d05ed795d6c}{%
+           family={{Kunal Bhalla}},
+           familyi={K\bibinitperiod}}}%
+      }
+      \strng{namehash}{5f028cc0be507cd7052d6d05ed795d6c}
+      \strng{fullhash}{5f028cc0be507cd7052d6d05ed795d6c}
+      \strng{bibnamehash}{5f028cc0be507cd7052d6d05ed795d6c}
+      \strng{authorbibnamehash}{5f028cc0be507cd7052d6d05ed795d6c}
+      \strng{authornamehash}{5f028cc0be507cd7052d6d05ed795d6c}
+      \strng{authorfullhash}{5f028cc0be507cd7052d6d05ed795d6c}
+      \field{sortinit}{7}
+      \field{sortinithash}{108d0be1b1bee9773a1173443802c0a3}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{The Unreasonable Effectiveness of Sys.Settrace (and Sys.Setprofile)}
+      \field{urlday}{17}
+      \field{urlmonth}{5}
+      \field{urlyear}{2025}
+      \field{urldateera}{ce}
+      \true{nocite}
+      \verb{file}
+      \verb /Users/edjg/Zotero/storage/YS9NUUL8/settrace.html
+      \endverb
+      \verb{urlraw}
+      \verb https://explog.in/notes/settrace.html
+      \endverb
+      \verb{url}
+      \verb https://explog.in/notes/settrace.html
+      \endverb
+    \endentry
+    \entry{laaberEvaluationOpensourceSoftware2018}{inproceedings}{}
+      \name{author}{2}{}{%
+        {{hash=0c8f08f3cc4722eb9b35ed7afc98c847}{%
+           family={Laaber},
+           familyi={L\bibinitperiod},
+           given={Christoph},
+           giveni={C\bibinitperiod}}}%
+        {{hash=e172c0c71241609eecf24b0afd70e341}{%
+           family={Leitner},
+           familyi={L\bibinitperiod},
+           given={Philipp},
+           giveni={P\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {New York, NY, USA}%
+      }
+      \list{publisher}{1}{%
+        {Association for Computing Machinery}%
+      }
+      \strng{namehash}{fd4d5a40c57b8aa0a40c17fb753118e8}
+      \strng{fullhash}{fd4d5a40c57b8aa0a40c17fb753118e8}
+      \strng{bibnamehash}{fd4d5a40c57b8aa0a40c17fb753118e8}
+      \strng{authorbibnamehash}{fd4d5a40c57b8aa0a40c17fb753118e8}
+      \strng{authornamehash}{fd4d5a40c57b8aa0a40c17fb753118e8}
+      \strng{authorfullhash}{fd4d5a40c57b8aa0a40c17fb753118e8}
+      \field{sortinit}{7}
+      \field{sortinithash}{108d0be1b1bee9773a1173443802c0a3}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{Continuous integration (CI) emphasizes quick feedback to developers. This is at odds with current practice of performance testing, which predominantely focuses on long-running tests against entire systems in production-like environments. Alternatively, software microbenchmarking attempts to establish a performance baseline for small code fragments in short time. This paper investigates the quality of microbenchmark suites with a focus on suitability to deliver quick performance feedback and CI integration. We study ten open-source libraries written in Java and Go with benchmark suite sizes ranging from 16 to 983 tests, and runtimes between 11 minutes and 8.75 hours. We show that our study subjects include benchmarks with result variability of 50\% or higher, indicating that not all benchmarks are useful for reliable discovery of slowdowns. We further artificially inject actual slowdowns into public API methods of the study subjects and test whether test suites are able to discover them. We introduce a performance-test quality metric called the API benchmarking score (ABS). ABS represents a benchmark suite's ability to find slowdowns among a set of defined core API methods. Resulting benchmarking scores (i.e., fraction of discovered slowdowns) vary between 10\% and 100\% for the study subjects. This paper's methodology and results can be used to (1) assess the quality of existing microbenchmark suites, (2) select a set of tests to be run as part of CI, and (3) suggest or generate benchmarks for currently untested parts of an API.}
+      \field{booktitle}{Proceedings of the 15th {{International Conference}} on {{Mining Software Repositories}}}
+      \field{day}{28}
+      \field{isbn}{978-1-4503-5716-6}
+      \field{month}{5}
+      \field{series}{{{MSR}} '18}
+      \field{title}{An Evaluation of Open-Source Software Microbenchmark Suites for Continuous Performance Assessment}
+      \field{urlday}{24}
+      \field{urlmonth}{4}
+      \field{urlyear}{2025}
+      \field{year}{2018}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \true{nocite}
+      \field{pages}{119\bibrangedash 130}
+      \range{pages}{12}
+      \verb{doi}
+      \verb 10.1145/3196398.3196407
+      \endverb
+      \verb{file}
+      \verb /Users/edjg/Zotero/storage/8MD74V8C/Laaber and Leitner - 2018 - An evaluation of open-source software microbenchmark suites for continuous performance assessment.pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://dl.acm.org/doi/10.1145/3196398.3196407
+      \endverb
+      \verb{url}
+      \verb https://dl.acm.org/doi/10.1145/3196398.3196407
+      \endverb
+    \endentry
+    \entry{lamNumbaLLVMbasedPython2015}{inproceedings}{}
+      \name{author}{3}{}{%
+        {{hash=31e738d2abdeaf4aad96d0dc47e87405}{%
+           family={Lam},
+           familyi={L\bibinitperiod},
+           given={Siu\bibnamedelima Kwan},
+           giveni={S\bibinitperiod\bibinitdelim K\bibinitperiod}}}%
+        {{hash=5367bdb73444f39a0ea034f24f104805}{%
+           family={Pitrou},
+           familyi={P\bibinitperiod},
+           given={Antoine},
+           giveni={A\bibinitperiod}}}%
+        {{hash=b8f8a4b90ef94fad8c504d0a293755d9}{%
+           family={Seibert},
+           familyi={S\bibinitperiod},
+           given={Stanley},
+           giveni={S\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {New York, NY, USA}%
+      }
+      \list{publisher}{1}{%
+        {Association for Computing Machinery}%
+      }
+      \strng{namehash}{0e3fe92a0dc3d3c6114b4c4a7b5319a4}
+      \strng{fullhash}{0e3fe92a0dc3d3c6114b4c4a7b5319a4}
+      \strng{bibnamehash}{0e3fe92a0dc3d3c6114b4c4a7b5319a4}
+      \strng{authorbibnamehash}{0e3fe92a0dc3d3c6114b4c4a7b5319a4}
+      \strng{authornamehash}{0e3fe92a0dc3d3c6114b4c4a7b5319a4}
+      \strng{authorfullhash}{0e3fe92a0dc3d3c6114b4c4a7b5319a4}
+      \field{sortinit}{7}
+      \field{sortinithash}{108d0be1b1bee9773a1173443802c0a3}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{shorttitle}
+      \field{abstract}{Dynamic, interpreted languages, like Python, are attractive for domain-experts and scientists experimenting with new ideas. However, the performance of the interpreter is often a barrier when scaling to larger data sets. This paper presents a just-in-time compiler for Python that focuses in scientific and array-oriented computing. Starting with the simple syntax of Python, Numba compiles a subset of the language into efficient machine code that is comparable in performance to a traditional compiled language. In addition, we share our experience in building a JIT compiler using LLVM[1].}
+      \field{booktitle}{Proceedings of the {{Second Workshop}} on the {{LLVM Compiler Infrastructure}} in {{HPC}}}
+      \field{day}{15}
+      \field{isbn}{978-1-4503-4005-2}
+      \field{month}{11}
+      \field{series}{{{LLVM}} '15}
+      \field{shorttitle}{Numba}
+      \field{title}{Numba: A {{LLVM-based Python JIT}} Compiler}
+      \field{urlday}{11}
+      \field{urlmonth}{5}
+      \field{urlyear}{2025}
+      \field{year}{2015}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \true{nocite}
+      \field{pages}{1\bibrangedash 6}
+      \range{pages}{6}
+      \verb{doi}
+      \verb 10.1145/2833157.2833162
+      \endverb
+      \verb{file}
+      \verb /Users/edjg/Zotero/storage/YIM4DLPJ/Lam et al. - 2015 - Numba a LLVM-based Python JIT compiler.pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://dl.acm.org/doi/10.1145/2833157.2833162
+      \endverb
+      \verb{url}
+      \verb https://dl.acm.org/doi/10.1145/2833157.2833162
+      \endverb
+    \endentry
+    \entry{lattnerLlvmLlvmproject2025}{software}{}
+      \name{author}{1}{}{%
+        {{hash=082d304bf1444853e07be11590d172a2}{%
+           family={Lattner},
+           familyi={L\bibinitperiod},
+           given={Chris},
+           giveni={C\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {LLVM}%
+      }
+      \strng{namehash}{082d304bf1444853e07be11590d172a2}
+      \strng{fullhash}{082d304bf1444853e07be11590d172a2}
+      \strng{bibnamehash}{082d304bf1444853e07be11590d172a2}
+      \strng{authorbibnamehash}{082d304bf1444853e07be11590d172a2}
+      \strng{authornamehash}{082d304bf1444853e07be11590d172a2}
+      \strng{authorfullhash}{082d304bf1444853e07be11590d172a2}
+      \field{sortinit}{7}
+      \field{sortinithash}{108d0be1b1bee9773a1173443802c0a3}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{The LLVM Project is a collection of modular and reusable compiler and toolchain technologies.}
+      \field{day}{11}
+      \field{hour}{13}
+      \field{minute}{0}
+      \field{month}{4}
+      \field{origday}{7}
+      \field{orighour}{9}
+      \field{origminute}{39}
+      \field{origmonth}{12}
+      \field{origsecond}{33}
+      \field{origtimezone}{Z}
+      \field{origyear}{2016}
+      \field{second}{48}
+      \field{timezone}{Z}
+      \field{title}{Llvm/Llvm-Project}
+      \field{urlday}{11}
+      \field{urlmonth}{4}
+      \field{urlyear}{2025}
+      \field{year}{2025}
+      \field{dateera}{ce}
+      \field{origdateera}{ce}
+      \field{urldateera}{ce}
+      \true{nocite}
+      \verb{urlraw}
+      \verb https://github.com/llvm/llvm-project
+      \endverb
+      \verb{url}
+      \verb https://github.com/llvm/llvm-project
+      \endverb
+    \endentry
+    \entry{lionInvestigatingManagedLanguage2022}{inproceedings}{}
+      \name{author}{4}{}{%
+        {{hash=a4913fefbb2c503b0bec13df1e83c6fc}{%
+           family={Lion},
+           familyi={L\bibinitperiod},
+           given={David},
+           giveni={D\bibinitperiod}}}%
+        {{hash=0a4072dbbddc1f51ec721c187bbbb749}{%
+           family={Chiu},
+           familyi={C\bibinitperiod},
+           given={Adrian},
+           giveni={A\bibinitperiod}}}%
+        {{hash=0cc180f816815b76057e4e06ff75d112}{%
+           family={Stumm},
+           familyi={S\bibinitperiod},
+           given={Michael},
+           giveni={M\bibinitperiod}}}%
+        {{hash=03e39d14ea8566df7611b8b263cd86be}{%
+           family={Yuan},
+           familyi={Y\bibinitperiod},
+           given={Ding},
+           giveni={D\bibinitperiod}}}%
+      }
+      \strng{namehash}{5c574a90bd36e7c448577026ccbd75e4}
+      \strng{fullhash}{1fd9a7272a0bf9f3035f71b7fd3d1432}
+      \strng{bibnamehash}{5c574a90bd36e7c448577026ccbd75e4}
+      \strng{authorbibnamehash}{5c574a90bd36e7c448577026ccbd75e4}
+      \strng{authornamehash}{5c574a90bd36e7c448577026ccbd75e4}
+      \strng{authorfullhash}{1fd9a7272a0bf9f3035f71b7fd3d1432}
+      \field{sortinit}{7}
+      \field{sortinithash}{108d0be1b1bee9773a1173443802c0a3}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{shorttitle}
+      \field{eventtitle}{2022 {{USENIX Annual Technical Conference}} ({{USENIX ATC}} 22)}
+      \field{langid}{english}
+      \field{shorttitle}{Investigating {{Managed Language Runtime Performance}}}
+      \field{title}{Investigating {{Managed Language Runtime Performance}}: {{Why}} \{\vphantom\}{{JavaScript}}\vphantom\{\} and {{Python}} Are 8x and 29x Slower than {{C}}++, yet {{Java}} and {{Go}} Can Be {{Faster}}?}
+      \field{urlday}{11}
+      \field{urlmonth}{5}
+      \field{urlyear}{2025}
+      \field{year}{2022}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \true{nocite}
+      \field{pages}{835\bibrangedash 852}
+      \range{pages}{18}
+      \verb{file}
+      \verb /Users/edjg/Zotero/storage/P3UA85XD/Lion et al. - 2022 - Investigating Managed Language Runtime Performance Why JavaScript and Python are 8x and 29x slowe.pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://www.usenix.org/conference/atc22/presentation/lion
+      \endverb
+      \verb{url}
+      \verb https://www.usenix.org/conference/atc22/presentation/lion
+      \endverb
+    \endentry
+    \entry{mlirteamMLIRCodeDocumentation}{online}{}
+      \name{author}{1}{}{%
+        {{hash=c9ad2c9379d407fe55feea38bd88f55b}{%
+           family={{MLIR Team}},
+           familyi={M\bibinitperiod}}}%
+      }
+      \strng{namehash}{c9ad2c9379d407fe55feea38bd88f55b}
+      \strng{fullhash}{c9ad2c9379d407fe55feea38bd88f55b}
+      \strng{bibnamehash}{c9ad2c9379d407fe55feea38bd88f55b}
+      \strng{authorbibnamehash}{c9ad2c9379d407fe55feea38bd88f55b}
+      \strng{authornamehash}{c9ad2c9379d407fe55feea38bd88f55b}
+      \strng{authorfullhash}{c9ad2c9379d407fe55feea38bd88f55b}
+      \field{sortinit}{8}
+      \field{sortinithash}{a231b008ebf0ecbe0b4d96dcc159445f}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{{{MLIR Code Documentation}}}
+      \field{urlday}{11}
+      \field{urlmonth}{4}
+      \field{urlyear}{2025}
+      \field{urldateera}{ce}
+      \true{nocite}
+      \verb{file}
+      \verb /Users/edjg/Zotero/storage/F3EKI2E6/docs.html
+      \endverb
+      \verb{urlraw}
+      \verb https://mlir.llvm.org/docs/
+      \endverb
+      \verb{url}
+      \verb https://mlir.llvm.org/docs/
+      \endverb
+    \endentry
+    \entry{neilconwayNumbersEveryoneShould2009}{online}{}
+      \name{author}{1}{}{%
+        {{hash=54689e741557382e77178e365e62a2f5}{%
+           family={{Neil Conway}},
+           familyi={N\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {Everything is Data}%
+      }
+      \strng{namehash}{54689e741557382e77178e365e62a2f5}
+      \strng{fullhash}{54689e741557382e77178e365e62a2f5}
+      \strng{bibnamehash}{54689e741557382e77178e365e62a2f5}
+      \strng{authorbibnamehash}{54689e741557382e77178e365e62a2f5}
+      \strng{authornamehash}{54689e741557382e77178e365e62a2f5}
+      \strng{authorfullhash}{54689e741557382e77178e365e62a2f5}
+      \field{sortinit}{8}
+      \field{sortinithash}{a231b008ebf0ecbe0b4d96dcc159445f}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{When you’re designing a performance-sensitive computer system, it is important to have an intuition for the relative costs of different operations. How much does a network I/O cost, compared …}
+      \field{day}{17}
+      \field{hour}{22}
+      \field{langid}{english}
+      \field{minute}{20}
+      \field{month}{10}
+      \field{second}{20}
+      \field{timezone}{Z}
+      \field{title}{Numbers {{Everyone Should Know}}}
+      \field{urlday}{17}
+      \field{urlmonth}{5}
+      \field{urlyear}{2025}
+      \field{year}{2009}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \true{nocite}
+      \verb{file}
+      \verb /Users/edjg/Zotero/storage/K55IK6MP/numbers-everyone-should-know.html
+      \endverb
+      \verb{urlraw}
+      \verb https://everythingisdata.wordpress.com/2009/10/17/numbers-everyone-should-know/
+      \endverb
+      \verb{url}
+      \verb https://everythingisdata.wordpress.com/2009/10/17/numbers-everyone-should-know/
+      \endverb
+    \endentry
+    \entry{pep744}{report}{}
+      \name{author}{2}{}{%
+        {{hash=7965698b94970c9ee6f9b53c625703af}{%
+           family={{Brandt Bucher}},
+           familyi={B\bibinitperiod}}}%
+        {{hash=d21d0308d1cf717f065098c5317b72f2}{%
+           family={{Savannah Ostrowski}},
+           familyi={S\bibinitperiod}}}%
+      }
+      \strng{namehash}{0179a9ba8e1ee3822b6c80c299738cbd}
+      \strng{fullhash}{0179a9ba8e1ee3822b6c80c299738cbd}
+      \strng{bibnamehash}{0179a9ba8e1ee3822b6c80c299738cbd}
+      \strng{authorbibnamehash}{0179a9ba8e1ee3822b6c80c299738cbd}
+      \strng{authornamehash}{0179a9ba8e1ee3822b6c80c299738cbd}
+      \strng{authorfullhash}{0179a9ba8e1ee3822b6c80c299738cbd}
+      \field{sortinit}{8}
+      \field{sortinithash}{a231b008ebf0ecbe0b4d96dcc159445f}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{number}{744}
+      \field{title}{{{JIT Compilation}}}
+      \field{type}{PEP}
+      \field{year}{2024}
+      \field{dateera}{ce}
+      \true{nocite}
+      \verb{urlraw}
+      \verb https://peps.python.org/pep-0744/
+      \endverb
+      \verb{url}
+      \verb https://peps.python.org/pep-0744/
+      \endverb
+    \endentry
+    \entry{saeed2008systematic}{thesis}{}
+      \name{author}{2}{}{%
+        {{hash=e27e9fca78165874bb4998bb8ae699d5}{%
+           family={Saeed},
+           familyi={S\bibinitperiod},
+           given={FSM},
+           giveni={F\bibinitperiod\bibinitdelim S\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+        {{hash=73a833be819d18b1782dc24ff62a8de5}{%
+           family={Saeed},
+           familyi={S\bibinitperiod},
+           given={F},
+           giveni={F\bibinitperiod}}}%
+      }
+      \list{institution}{1}{%
+        {MS. Thesis, Blekinge Institute of Technology, Sweden}%
+      }
+      \strng{namehash}{65c3e5bd220b01fb55c8dfc8751a30db}
+      \strng{fullhash}{65c3e5bd220b01fb55c8dfc8751a30db}
+      \strng{bibnamehash}{65c3e5bd220b01fb55c8dfc8751a30db}
+      \strng{authorbibnamehash}{65c3e5bd220b01fb55c8dfc8751a30db}
+      \strng{authornamehash}{65c3e5bd220b01fb55c8dfc8751a30db}
+      \strng{authorfullhash}{65c3e5bd220b01fb55c8dfc8751a30db}
+      \field{sortinit}{9}
+      \field{sortinithash}{0a5ebc79d83c96b6579069544c73c7d4}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Systematic Review of Verification \& Validation in Dynamic Languages}
+      \field{type}{phdthesis}
+      \field{year}{2008}
+      \field{dateera}{ce}
+      \true{nocite}
+      \verb{file}
+      \verb /Users/edjg/Zotero/storage/AUBRPYLN/Saeed and Saeed - 2008 - Systematic review of verification & validation in dynamic languages.pdf
+      \endverb
+    \endentry
+    \entry{sergegueltonBuildingObfuscatedPython}{online}{}
+      \name{author}{1}{}{%
+        {{hash=0a178ef6ddf6ceffb601fe3b5539ef53}{%
+           family={{Serge Guelton}},
+           familyi={S\bibinitperiod}}}%
+      }
+      \strng{namehash}{0a178ef6ddf6ceffb601fe3b5539ef53}
+      \strng{fullhash}{0a178ef6ddf6ceffb601fe3b5539ef53}
+      \strng{bibnamehash}{0a178ef6ddf6ceffb601fe3b5539ef53}
+      \strng{authorbibnamehash}{0a178ef6ddf6ceffb601fe3b5539ef53}
+      \strng{authornamehash}{0a178ef6ddf6ceffb601fe3b5539ef53}
+      \strng{authorfullhash}{0a178ef6ddf6ceffb601fe3b5539ef53}
+      \field{sortinit}{9}
+      \field{sortinithash}{0a5ebc79d83c96b6579069544c73c7d4}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Building an Obfuscated {{Python}} Interpreter: We Need More Opcodes - {{Quarkslab}}'s Blog}
+      \field{urlday}{17}
+      \field{urlmonth}{5}
+      \field{urlyear}{2025}
+      \field{urldateera}{ce}
+      \true{nocite}
+      \verb{file}
+      \verb /Users/edjg/Zotero/storage/VGXSZTRB/building-an-obfuscated-python-interpreter-we-need-more-opcodes.html
+      \endverb
+      \verb{urlraw}
+      \verb https://blog.quarkslab.com/building-an-obfuscated-python-interpreter-we-need-more-opcodes.html
+      \endverb
+      \verb{url}
+      \verb https://blog.quarkslab.com/building-an-obfuscated-python-interpreter-we-need-more-opcodes.html
+      \endverb
+    \endentry
+    \entry{steeleDebunkingExpensiveProcedure1977}{inproceedings}{}
+      \name{author}{1}{}{%
+        {{hash=a8f9b1d62ac6ece8d877dca28dd61993}{%
+           family={Steele},
+           familyi={S\bibinitperiod},
+           given={Guy\bibnamedelima Lewis},
+           giveni={G\bibinitperiod\bibinitdelim L\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {New York, NY, USA}%
+      }
+      \list{publisher}{1}{%
+        {Association for Computing Machinery}%
+      }
+      \strng{namehash}{a8f9b1d62ac6ece8d877dca28dd61993}
+      \strng{fullhash}{a8f9b1d62ac6ece8d877dca28dd61993}
+      \strng{bibnamehash}{a8f9b1d62ac6ece8d877dca28dd61993}
+      \strng{authorbibnamehash}{a8f9b1d62ac6ece8d877dca28dd61993}
+      \strng{authornamehash}{a8f9b1d62ac6ece8d877dca28dd61993}
+      \strng{authorfullhash}{a8f9b1d62ac6ece8d877dca28dd61993}
+      \field{sortinit}{9}
+      \field{sortinithash}{0a5ebc79d83c96b6579069544c73c7d4}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{shorttitle}
+      \field{abstract}{Folklore states that GOTO statements are “cheap”, while procedure calls are “expensive”. This myth is largely a result of poorly designed language implementations. The historical growth of this myth is considered. Both theoretical ideas and an existing implementation are discussed which debunk this myth. It is shown that the unrestricted use of procedure calls permits great stylistic freedom. In particular, any flowchart can be written as a “structured” program without introducing extra variables. The difficulty with the GOTO statement and the procedure call is characterized as a conflict between abstract programming concepts and concrete language constructs.}
+      \field{booktitle}{Proceedings of the 1977 Annual Conference}
+      \field{day}{1}
+      \field{isbn}{978-1-4503-3921-6}
+      \field{month}{1}
+      \field{series}{{{ACM}} '77}
+      \field{shorttitle}{Debunking the “Expensive Procedure Call” Myth or, Procedure Call Implementations Considered Harmful or, {{LAMBDA}}}
+      \field{title}{Debunking the “Expensive Procedure Call” Myth or, Procedure Call Implementations Considered Harmful or, {{LAMBDA}}: {{The Ultimate GOTO}}}
+      \field{urlday}{13}
+      \field{urlmonth}{5}
+      \field{urlyear}{2025}
+      \field{year}{1977}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \true{nocite}
+      \field{pages}{153\bibrangedash 162}
+      \range{pages}{10}
+      \verb{doi}
+      \verb 10.1145/800179.810196
+      \endverb
+      \verb{file}
+      \verb /Users/edjg/Zotero/storage/CDD4PU2J/Steele - 1977 - Debunking the “expensive procedure call” myth or, procedure call implementations considered harmful.pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://dl.acm.org/doi/10.1145/800179.810196
+      \endverb
+      \verb{url}
+      \verb https://dl.acm.org/doi/10.1145/800179.810196
+      \endverb
+    \endentry
+    \entry{tomdaleAdventuresMicrobenchmarking2017}{online}{}
+      \name{author}{1}{}{%
+        {{hash=a813a6dea95c43a52ef789d69b8bcc25}{%
+           family={{Tom Dale}},
+           familyi={T\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {tomdale.net}%
+      }
+      \strng{namehash}{a813a6dea95c43a52ef789d69b8bcc25}
+      \strng{fullhash}{a813a6dea95c43a52ef789d69b8bcc25}
+      \strng{bibnamehash}{a813a6dea95c43a52ef789d69b8bcc25}
+      \strng{authorbibnamehash}{a813a6dea95c43a52ef789d69b8bcc25}
+      \strng{authornamehash}{a813a6dea95c43a52ef789d69b8bcc25}
+      \strng{authorfullhash}{a813a6dea95c43a52ef789d69b8bcc25}
+      \field{sortinit}{9}
+      \field{sortinithash}{0a5ebc79d83c96b6579069544c73c7d4}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{day}{15}
+      \field{month}{7}
+      \field{title}{Adventures in {{Microbenchmarking}}}
+      \field{urlday}{24}
+      \field{urlmonth}{4}
+      \field{urlyear}{2025}
+      \field{year}{2017}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \true{nocite}
+      \verb{file}
+      \verb /Users/edjg/Zotero/storage/LRBUXXIR/adventures-in-microbenchmarking.html
+      \endverb
+      \verb{urlraw}
+      \verb https://tomdale.net/2017/07/adventures-in-microbenchmarking/
+      \endverb
+      \verb{url}
+      \verb https://tomdale.net/2017/07/adventures-in-microbenchmarking/
+      \endverb
+    \endentry
+    \entry{victorstinnerMyJourneyStable2016}{online}{}
+      \name{author}{1}{}{%
+        {{hash=d2f87dded2b319cfaebe20183571c320}{%
+           family={{Victor Stinner}},
+           familyi={V\bibinitperiod}}}%
+      }
+      \strng{namehash}{d2f87dded2b319cfaebe20183571c320}
+      \strng{fullhash}{d2f87dded2b319cfaebe20183571c320}
+      \strng{bibnamehash}{d2f87dded2b319cfaebe20183571c320}
+      \strng{authorbibnamehash}{d2f87dded2b319cfaebe20183571c320}
+      \strng{authornamehash}{d2f87dded2b319cfaebe20183571c320}
+      \strng{authorfullhash}{d2f87dded2b319cfaebe20183571c320}
+      \field{extraname}{2}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{day}{21}
+      \field{month}{5}
+      \field{title}{My Journey to Stable Benchmark, Part 1 (System)}
+      \field{urlday}{14}
+      \field{urlmonth}{5}
+      \field{urlyear}{2025}
+      \field{year}{2016}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \true{nocite}
+      \verb{file}
+      \verb /Users/edjg/Zotero/storage/YMUXNYS7/journey-to-stable-benchmark-system.html
+      \endverb
+      \verb{urlraw}
+      \verb https://vstinner.github.io/journey-to-stable-benchmark-system.html
+      \endverb
+      \verb{url}
+      \verb https://vstinner.github.io/journey-to-stable-benchmark-system.html
+      \endverb
+    \endentry
+    \entry{victorstinnerMyJourneyStable2016a}{online}{}
+      \name{author}{1}{}{%
+        {{hash=d2f87dded2b319cfaebe20183571c320}{%
+           family={{Victor Stinner}},
+           familyi={V\bibinitperiod}}}%
+      }
+      \strng{namehash}{d2f87dded2b319cfaebe20183571c320}
+      \strng{fullhash}{d2f87dded2b319cfaebe20183571c320}
+      \strng{bibnamehash}{d2f87dded2b319cfaebe20183571c320}
+      \strng{authorbibnamehash}{d2f87dded2b319cfaebe20183571c320}
+      \strng{authornamehash}{d2f87dded2b319cfaebe20183571c320}
+      \strng{authorfullhash}{d2f87dded2b319cfaebe20183571c320}
+      \field{extraname}{3}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{day}{22}
+      \field{month}{5}
+      \field{title}{My Journey to Stable Benchmark, Part 2 (Deadcode)}
+      \field{urlday}{14}
+      \field{urlmonth}{5}
+      \field{urlyear}{2025}
+      \field{year}{2016}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \true{nocite}
+      \verb{file}
+      \verb /Users/edjg/Zotero/storage/KLNBNB74/journey-to-stable-benchmark-deadcode.html
+      \endverb
+      \verb{urlraw}
+      \verb https://vstinner.github.io/journey-to-stable-benchmark-deadcode.html
+      \endverb
+      \verb{url}
+      \verb https://vstinner.github.io/journey-to-stable-benchmark-deadcode.html
+      \endverb
+    \endentry
+    \entry{victorstinnerMyJourneyStable2016b}{online}{}
+      \name{author}{1}{}{%
+        {{hash=d2f87dded2b319cfaebe20183571c320}{%
+           family={{Victor Stinner}},
+           familyi={V\bibinitperiod}}}%
+      }
+      \strng{namehash}{d2f87dded2b319cfaebe20183571c320}
+      \strng{fullhash}{d2f87dded2b319cfaebe20183571c320}
+      \strng{bibnamehash}{d2f87dded2b319cfaebe20183571c320}
+      \strng{authorbibnamehash}{d2f87dded2b319cfaebe20183571c320}
+      \strng{authornamehash}{d2f87dded2b319cfaebe20183571c320}
+      \strng{authorfullhash}{d2f87dded2b319cfaebe20183571c320}
+      \field{extraname}{4}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{day}{23}
+      \field{month}{5}
+      \field{title}{My Journey to Stable Benchmark, Part 3 (Average)}
+      \field{urlday}{14}
+      \field{urlmonth}{5}
+      \field{urlyear}{2025}
+      \field{year}{2016}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \true{nocite}
+      \verb{file}
+      \verb /Users/edjg/Zotero/storage/QLH6WL6M/journey-to-stable-benchmark-average.html
+      \endverb
+      \verb{urlraw}
+      \verb https://vstinner.github.io/journey-to-stable-benchmark-average.html
+      \endverb
+      \verb{url}
+      \verb https://vstinner.github.io/journey-to-stable-benchmark-average.html
+      \endverb
+    \endentry
+    \entry{whatsNewPython311}{online}{}
+      \name{author}{1}{}{%
+        {{hash=7ea134c50dd3a8c0dddc38c58f70fe30}{%
+           family={{Pablo Galindo Salgado}},
+           familyi={P\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {Python documentation}%
+      }
+      \strng{namehash}{7ea134c50dd3a8c0dddc38c58f70fe30}
+      \strng{fullhash}{7ea134c50dd3a8c0dddc38c58f70fe30}
+      \strng{bibnamehash}{7ea134c50dd3a8c0dddc38c58f70fe30}
+      \strng{authorbibnamehash}{7ea134c50dd3a8c0dddc38c58f70fe30}
+      \strng{authornamehash}{7ea134c50dd3a8c0dddc38c58f70fe30}
+      \strng{authorfullhash}{7ea134c50dd3a8c0dddc38c58f70fe30}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{Editor, Pablo Galindo Salgado. This article explains the new features in Python 3.11, compared to 3.10. Python 3.11 was released on October 24, 2022.}
+      \field{langid}{english}
+      \field{title}{What’s {{New In Python}} 3.11}
+      \field{urlday}{10}
+      \field{urlmonth}{5}
+      \field{urlyear}{2025}
+      \field{urldateera}{ce}
+      \true{nocite}
+      \verb{file}
+      \verb /Users/edjg/Zotero/storage/MCFX7GTA/3.11.html
+      \endverb
+      \verb{urlraw}
+      \verb https://docs.python.org/3/whatsnew/3.11.html
+      \endverb
+      \verb{url}
+      \verb https://docs.python.org/3/whatsnew/3.11.html
+      \endverb
+    \endentry
+    \entry{whatsNewPython312}{online}{}
+      \name{author}{1}{}{%
+        {{hash=983efeed10f99411c3ed355811bfb89b}{%
+           family={{Adam Turner}},
+           familyi={A\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {Python documentation}%
+      }
+      \strng{namehash}{983efeed10f99411c3ed355811bfb89b}
+      \strng{fullhash}{983efeed10f99411c3ed355811bfb89b}
+      \strng{bibnamehash}{983efeed10f99411c3ed355811bfb89b}
+      \strng{authorbibnamehash}{983efeed10f99411c3ed355811bfb89b}
+      \strng{authornamehash}{983efeed10f99411c3ed355811bfb89b}
+      \strng{authorfullhash}{983efeed10f99411c3ed355811bfb89b}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{Editor, Adam Turner,. This article explains the new features in Python 3.12, compared to 3.11. Python 3.12 was released on October 2, 2023. For full details, see the changelog. Summary – Release hi...}
+      \field{langid}{english}
+      \field{title}{What’s {{New In Python}} 3.12}
+      \field{urlday}{10}
+      \field{urlmonth}{5}
+      \field{urlyear}{2025}
+      \field{urldateera}{ce}
+      \true{nocite}
+      \verb{file}
+      \verb /Users/edjg/Zotero/storage/CC9F2RGA/3.12.html
+      \endverb
+      \verb{urlraw}
+      \verb https://docs.python.org/3/whatsnew/3.12.html
+      \endverb
+      \verb{url}
+      \verb https://docs.python.org/3/whatsnew/3.12.html
+      \endverb
+    \endentry
+    \entry{whatsNewPython313}{online}{}
+      \name{author}{2}{}{%
+        {{hash=983efeed10f99411c3ed355811bfb89b}{%
+           family={{Adam Turner}},
+           familyi={A\bibinitperiod}}}%
+        {{hash=754b229af8362a29fc3c812a00c678a2}{%
+           family={{Thomas Wouters}},
+           familyi={T\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {Python documentation}%
+      }
+      \strng{namehash}{ec37facad6f91b9bca74719044a42734}
+      \strng{fullhash}{ec37facad6f91b9bca74719044a42734}
+      \strng{bibnamehash}{ec37facad6f91b9bca74719044a42734}
+      \strng{authorbibnamehash}{ec37facad6f91b9bca74719044a42734}
+      \strng{authornamehash}{ec37facad6f91b9bca74719044a42734}
+      \strng{authorfullhash}{ec37facad6f91b9bca74719044a42734}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{Editors, Adam Turner and Thomas Wouters. This article explains the new features in Python 3.13, compared to 3.12. Python 3.13 was released on October 7, 2024.}
+      \field{langid}{english}
+      \field{title}{What’s {{New In Python}} 3.13}
+      \field{urlday}{10}
+      \field{urlmonth}{5}
+      \field{urlyear}{2025}
+      \field{urldateera}{ce}
+      \true{nocite}
+      \verb{file}
+      \verb /Users/edjg/Zotero/storage/A2824J8Z/3.13.html
+      \endverb
+      \verb{urlraw}
+      \verb https://docs.python.org/3/whatsnew/3.13.html
+      \endverb
+      \verb{url}
+      \verb https://docs.python.org/3/whatsnew/3.13.html
+      \endverb
+    \endentry
+    \entry{xuBuildingBaselineJIT2023a}{online}{}
+      \name{author}{1}{}{%
+        {{hash=44ba480e16f817c24223f9044a7889a3}{%
+           family={Xu},
+           familyi={X\bibinitperiod},
+           given={Haoran},
+           giveni={H\bibinitperiod}}}%
+      }
+      \strng{namehash}{44ba480e16f817c24223f9044a7889a3}
+      \strng{fullhash}{44ba480e16f817c24223f9044a7889a3}
+      \strng{bibnamehash}{44ba480e16f817c24223f9044a7889a3}
+      \strng{authorbibnamehash}{44ba480e16f817c24223f9044a7889a3}
+      \strng{authornamehash}{44ba480e16f817c24223f9044a7889a3}
+      \strng{authorfullhash}{44ba480e16f817c24223f9044a7889a3}
+      \field{extraname}{1}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{This is the Part 2 of a series. Feel free to read the prequel for more context: Building the fastest Lua interpreter automatically Building a good VM for a dynamic language takes a ton of engineerin}
+      \field{day}{12}
+      \field{hour}{0}
+      \field{minute}{0}
+      \field{month}{5}
+      \field{second}{0}
+      \field{title}{Building a Baseline {{JIT}} for {{Lua}} Automatically}
+      \field{urlday}{14}
+      \field{urlmonth}{5}
+      \field{urlyear}{2025}
+      \field{year}{2023}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \true{nocite}
+      \verb{file}
+      \verb /Users/edjg/Zotero/storage/SUVYS5UP/2023-05-12.html
+      \endverb
+      \verb{urlraw}
+      \verb https://sillycross.github.io/2023/05/12/2023-05-12/index.html
+      \endverb
+      \verb{url}
+      \verb https://sillycross.github.io/2023/05/12/2023-05-12/index.html
+      \endverb
+    \endentry
+    \entry{xuBuildingFastestLua2022a}{online}{}
+      \name{author}{1}{}{%
+        {{hash=44ba480e16f817c24223f9044a7889a3}{%
+           family={Xu},
+           familyi={X\bibinitperiod},
+           given={Haoran},
+           giveni={H\bibinitperiod}}}%
+      }
+      \strng{namehash}{44ba480e16f817c24223f9044a7889a3}
+      \strng{fullhash}{44ba480e16f817c24223f9044a7889a3}
+      \strng{bibnamehash}{44ba480e16f817c24223f9044a7889a3}
+      \strng{authorbibnamehash}{44ba480e16f817c24223f9044a7889a3}
+      \strng{authornamehash}{44ba480e16f817c24223f9044a7889a3}
+      \strng{authorfullhash}{44ba480e16f817c24223f9044a7889a3}
+      \field{extraname}{2}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{This is Part 1 of a series of posts. Part 2 is available here: Building a baseline JIT for Lua automatically It is well-known that writing a good VM for a dynamic language is never an easy job. High}
+      \field{day}{22}
+      \field{hour}{0}
+      \field{minute}{0}
+      \field{month}{11}
+      \field{second}{0}
+      \field{title}{Building the Fastest {{Lua}} Interpreter.. Automatically!}
+      \field{urlday}{14}
+      \field{urlmonth}{5}
+      \field{urlyear}{2025}
+      \field{year}{2022}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \true{nocite}
+      \verb{file}
+      \verb /Users/edjg/Zotero/storage/L5FXCLMQ/2022-11-22.html
+      \endverb
+      \verb{urlraw}
+      \verb https://sillycross.github.io/2022/11/22/2022-11-22/index.html
+      \endverb
+      \verb{url}
+      \verb https://sillycross.github.io/2022/11/22/2022-11-22/index.html
+      \endverb
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+

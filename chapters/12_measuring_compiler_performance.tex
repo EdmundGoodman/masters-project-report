@@ -3,11 +3,11 @@
 
 %% Introduction
 % Hook
-In this chapter, we measure the runtime performance of two user-extensible compiler frameworks: MLIR and xDSL.
+In this chapter, we measure the runtime performance of two user-extensible compiler frameworks: \ac{mlir} and xDSL.
 % Argument
-The usefulness of these measurements are three-fold. First, we provide insight into the performance of the current versions MLIR and xDSL in relation to each other. % interesting in its own right, and as a baseline for optimisation
+The usefulness of these measurements are three-fold. First, we provide insight into the performance of the current versions \ac{mlir} and xDSL in relation to each other. % interesting in its own right, and as a baseline for optimisation
 Second, we identify the components of xDSL's implementation which contribute most to its overall runtime, and as such are the best targets for optimisation (\autoref{chap:specialising-optimising-pattern-rewriting}) as a corrollary of Amdahl's law \cite{amdahlValiditySingleProcessor1967}.
-Finally, we isolate small, self-contained components of the implementation which are comparable between MLIR and xDSL, through which the impact of dynamism can be examined (\autoref{chap:dynamism-pattern-rewriting}).
+Finally, we isolate small, self-contained components of the implementation which are comparable between \ac{mlir} and xDSL, through which the impact of dynamism can be examined (\autoref{chap:dynamism-pattern-rewriting}).
 % Link
 
 
@@ -97,8 +97,8 @@ Experiments in later chapters ablate across both language and framework versions
 One novel contribution of xDSL is the concept of sidekick compilation frameworks: ``an approach that uses multiple frameworks that interoperate with each other by leveraging textual interchange formats [...]'' \cite{fehrXDSLSidekickCompilation2025}.
 % Argument
 We leverage xDSL's interoperability with \ac{mlir}'s textual \ac{ir} to construct workloads which can be applied to both frameworks.
-This guarantess directly comparable performance measurements at the pipeline phase and function level, driven by the shared representation.
-Without sidekick compilation, for example comparing two more disparate user-extensible compiler frameworks such as MLIR and Pliron \cite{vaivaswathanagarajVaivaswathaPliron2025}, this comparison would be constrained to only end-to-end measurement, obscuring the impact of variables such as dynamism on the performance properties.
+This guarantees directly comparable performance measurements at the pipeline phase and function level, driven by the shared representation.
+Without sidekick compilation, for example comparing two more disparate user-extensible compiler frameworks such as \ac{mlir} and Pliron \cite{vaivaswathanagarajVaivaswathaPliron2025}, this comparison would be constrained to only end-to-end measurement, obscuring the impact of variables such as dynamism on the performance properties.
 % Link
 
 %% Want to pick things which are simple enough to examine in detail but complex enough to exercise interesting properties of the machine.
@@ -107,12 +107,14 @@ Without sidekick compilation, for example comparing two more disparate user-exte
 % Argument
 In this case, we consider workloads to be the combination of a rewriting optimisation and a segment of \ac{ir} which optimises it. This can be used to drive both the two frameworks' command line optimiser tools and internal phases and functions within the frameworks.
 % Simple enough to reason deeply about, but exercises common pattern rewriting dependencies like replacing ops, checking traits, ... (all quite dynamic)
-To maximise the signal measured by our experiments, we prefer workloads which are sufficiently simple examine is significant detail, but also exercise a wide variety of the functionality supported by % and common idioms of
-pattern rewriting machinery.
-Furthermore, whilst making experimental data representative of real-world workloads is an admirable goal, it is orthogonal to our exploration of the impact of dynamism on user-extensible compiler infrastructure.
-Constructing truly representative workloads is a significant task in itself, requiring the survey of all common use cases of compiler infrastructure and thus out of scope of this thesis.
+Although real-world workloads vary in structure, a common use-case for \ac{mlir} is ingesting \ac{ir}, applying rewriting operations to it, and finally passing the transformed \ac{ir} to LLVM for code generation. As outside of development this \ac{ir} is often provided in a binary format as opposed to a textual one, rewriting machinery constitutes a high proportion of the executed logic.
+Because of this, workloads representative of these real-world use-cases should exercise common operations in rewriting machinery, such as walking through operations, checking their traits, and replacing them in their parent block. In addition to this, using basic dialects through which most \acs{ir} are lowered such as \texttt{arith} and \texttt{builtin} is similarly beneficial.
 % Link
-As such, we predominantly focus on simple but non-trivial optimisations such as constant folding.
+As such, we select constant folding as our main experimental workload to fulfil these requirements.
+% To maximise the signal measured by our experiments, we prefer workloads which are sufficiently simple examine is significant detail, but also exercise a wide variety of the functionality supported by pattern rewriting machinery.
+% Furthermore, whilst making experimental data representative of real-world workloads is an admirable goal, it is orthogonal to our exploration of the impact of dynamism on user-extensible compiler infrastructure.
+% Constructing truly representative workloads is a significant task in itself, requiring the survey of all common use cases of compiler infrastructure and thus out of scope of this thesis.
+% As such, we predominantly focus on simple but non-trivial optimisations such as constant folding.
 
 \subsubsection{Constant folding}
 \label{sssec:experimental-workload-constant-folding}
@@ -179,7 +181,7 @@ In order to facilitate the efficient and reproducible measurement of xDSL's perf
 In addition to their usefulness for understanding and optimising compiler performance, the benchmarks composing the performance experiments also provide an opportunity to augment the development process of the xDSL project.
 % Argument
 Benchmarks can be used to characterise the performance impact of changes to the xDSL codebase, making it easier to avoid unnecessary performance regression.
-As such, we provide a command line interface for developers to run the benchmarks, with further functionality which supports a variety of profiling tools. % TODO: Does this get moved up a paragraph?
+As such, we provide a command line interface for developers to run the benchmarks, with further functionality which supports a variety of profiling tools.
 Furthermore, our benchmarks are constructed to interface with Airspeed Velocity \cite{michaeldroettboomAirspeedvelocityAsv2025}, a tool which runs benchmarks across repository commits. This information is tracked on the xDSL website \url{https://xdsl.dev/xdsl-bench/}, providing a dashboard for the performance characteristics of xDSL over time.
 % Link
 
@@ -207,21 +209,25 @@ Furthermore, our benchmarks are constructed to interface with Airspeed Velocity 
 % Hook
 The simplest metric for the performance of a system is its overall runtime.
 % Argument
-As such, a good place to start comparing the performance characteristics of MLIR and xDSL is the end-to-end performance of their command line tools.
+Both xDSL and \ac{mlir} provide two APIs in the form of a command line tools and a programmatic interface. Although real-world workloads typically pass binary \ac{ir} to a subset of the programmatic interface, this does not fully exercise the overall functionality of the system. In contrast, measuring the end-to-end runtime of the command line optimiser for textual \ac{ir} captures a large proportion of the functionality, including debugging tools such as parsing and printing the textual \ac{ir}.
 % Link
-Whilst end-to-end measurements are well-aligned metrics of performance for real-world workloads, they are limited by their coarse granularity. Conveniently, modern compiler frameworks are structured in a way that facilitates more detailed metrics even for end-to-end runs. % TODO: Does this duplicate the earlier workload stuff?
+This makes them a good candidate for this simple metric of end-to-end runtime.
+% As such, a good place to start comparing the performance characteristics of \ac{mlir} and xDSL is the end-to-end performance of their command line tools.
+
+% Hook
+End-to-end measurements are well-aligned metrics of performance for real-world workloads, but are limited by their coarse granularity. Conveniently, modern compiler frameworks are structured in a way that facilitates more detailed metrics even for end-to-end runs.
 One of LLVM's key insights was that compilation can be split into a sequence of discrete steps, avoiding the complex interleaved control logic of previous state-of-the-art compilers.
 % Argument
-As such, compilers having LLVM's pedigree, such as MLIR and xDSL, can be modelled as a pipeline -- parsing the input, applying optimisation transformations, and generating a lowered output.
+As such, compilers having LLVM's pedigree, such as \ac{mlir} and xDSL, can be modelled as a pipeline -- parsing the input, applying optimisation transformations, and generating a lowered output.
 This allows us to break down end-to-end benchmarks into components of finer granularity for free.
 % Link
 
 %% Methodology
 % Hook
-% Canonicalization is ... % TODO: Complete link...
 % Argument
-For MLIR, we invoke \texttt{mlir-opt constant\_folding.mlir --canonicalize --mlir-timing}. By default, this prints results to four decimal places, which is insufficiently granular to time printing very short \ac{ir} segments. As such, we modify MLIR's implementation to print more decimal places. In order to guarantee statistical significance following this change, we measure across ten repeats. Since we are sampling a single variable, we take the arithmetic mean of these values, with an uncertainty given by their standard deviation.
-For xDSL, we leverage our custom benchmarking infrastructure (\autoref{ssec:infrastructure}), which drives each phase canonicalsing the workload and records precise timings. We then calculate the average and uncertainty by the same procedure.
+For \ac{mlir}, we invoke \mintinline[breaklines, breakafter=-]{text}{mlir-opt constant_folding.mlir --canonicalize --mlir-timing}.
+By default, this prints results to four decimal places, which is insufficiently granular to time printing very short \ac{ir} segments. As such, we modify \ac{mlir}'s implementation to print more decimal places. In order to guarantee statistical significance following this change, we measure across ten repeats. Since we are sampling a single variable, we take the arithmetic mean of these values, with an uncertainty given by their standard deviation.
+For xDSL, we leverage our custom benchmarking infrastructure (\autoref{ssec:infrastructure}), which drives each phase canonicalising the workload and records precise timings. We then calculate the average and uncertainty by the same procedure.
 % Link
 These wall times for each framework and the slowdown between them can then be plotted (\autoref{fig:end-to-end-constant-folding-walltime}).
 
@@ -231,7 +237,7 @@ These wall times for each framework and the slowdown between them can then be pl
     \centering
     \begin{subfigure}[b]{0.45\textwidth}
         \includegraphics[width=\textwidth]{images/measuring_compiler_performance/walltimes.pdf}
-        \caption{All pipeline phases of MLIR are faster than xDSL.}
+        \caption{All pipeline phases of \ac{mlir} are faster than xDSL.}
         \vspace{1em}
         \label{fig:end-to-end-constant-folding-walltime}
     \end{subfigure}
@@ -241,7 +247,7 @@ These wall times for each framework and the slowdown between them can then be pl
         \caption{xDSL's parser and canonicalizer incur around $50\times$ slowdown, whereas the printer slows down only $2\times$ for small workloads.}
         \label{fig:end-to-end-constant-folding-speedup}
     \end{subfigure}
-    \caption{Performance comparison of constant folding $1000$ integer addition operations (\autoref{sssec:experimental-workload-constant-folding}) between xDSL and MLIR.}
+    \caption{Performance comparison of constant folding $1000$ integer addition operations (\autoref{sssec:experimental-workload-constant-folding}) between xDSL and \ac{mlir}.}
     \label{fig:end-to-end-constant-folding}
 \end{figure}
 
@@ -250,47 +256,21 @@ These wall times for each framework and the slowdown between them can then be pl
 % Hook
 Despite its simplicity, this initial experiment reveals a number of interesting insights.
 % Argument
-Firstly, the slow-down from xDSL to MLIR for the first two passes is approximately $50\times$. This provides an initial baseline for the overhead incurred by the combination of xDSL's language runtime and implementation details over the MLIR implementation.
-Secondly, the slow-down for the printer is much lower that the other two phases, at only $3\times$. % TODO: Pull in uploaded graphs
+Firstly, the slow-down from xDSL to \ac{mlir} for the first two passes is approximately $50\times$. This provides an initial baseline for the overhead incurred by the combination of xDSL's language runtime and implementation details over the \ac{mlir} implementation.
+Secondly, the slow-down for the printer is much lower that the other two phases, at only $3\times$.
 This is because the constant folded output is very short, containing only two \ac{ir} instructions (\autoref{listing:constant-folding-workload-folded}) for any length input of that schema. As such, the overhead of writing to the standard output is greater than the processing time for those few operations. In contrast, the logic implement parsing and canonicalisation rewrites is much longer than any fixed overhead they incur, such as the parser reading the \ac{ir} from a file.
 % Link
 
 % Hook
-Since the parser represents a majority of the total runtime for both frameworks, it appears an attractive candidate for optimisation as a corrollary of Amdahl's law. This is because improving it by a fixed proportion would result in the greatest runtime reduction than any other pipeline phase.
+Since the parser represents a majority of the total runtime for both frameworks, it appears an attractive candidate for optimisation as a corollary of Amdahl's law. This is because improving it by a fixed proportion would result in the greatest runtime reduction than any other pipeline phase.
 % Argument
-Despite this, we select the pattern rewriting phase, which implements the canonicalizer, for further investigation.
-This is because the complexity of modern compilers is almost exclusively focussed on rewrites for optimisation, with both parsing and printing being broadly solved problems. In addition to this, the parser and printer are used only for debugging in many use cases, with the compiler framework predominantly being used for its rewriting capabilities. Examples of this include XLA \cite{sabne2020xla} emitting \ac{mlir} \ac{ir} in custom dialects, using \ac{mlir}'s rewrite machinery to lower code to the target hardware.
+Despite this, we select the pattern rewriting phase, which implements the canonicaliser, for further investigation.
+This is because the complexity of modern compilers is focussed on rewrites for optimisation, with both parsing and printing being well understood problems. In addition to this, the parser and printer typically only used for debugging, with the compiler framework predominantly being used for its rewriting capabilities. Examples of this include XLA \cite{sabne2020xla} emitting \ac{mlir} \ac{ir} in custom dialects, using \ac{mlir}'s rewrite machinery to lower code to the target hardware.
+As such, optimising these components is a less attractive research direction, as it would only affect the performance of development and testing infrastructure.
 Furthermore, the rewriter is a much more dynamic workload, with its control flow necessarily determined at runtime based on the contents of the \ac{ir} being optimised.
 % Link
 This further makes it a more suitable candidate for examination through the lens of the impact of dynamism on user-extensible compiler frameworks.
 % Secondly, it has the smallest slowdown of the pipeline phases (\autoref{fig:end-to-end-constant-folding-speedup}), suggesting other phases may have more opportunities for optimisation before being bounded by properties of the language runtime.
-
-
-
-
-
-
-
-
-% TODO: Do we even need this section? What does it add -- nothing since repeats less well what we do in specialisation. Just need to segue effectively to micro-benchmarks
-
-% \section{Pattern rewriting}
-% \label{sec:pattern-rewriting}
-
-% %% Introduction
-% % Hook
-% Having selected pattern rewriting as the compilation phase to examine in detail, we can modify our benchmarks to drive only
-% % Figure: MLIR vs xDSL scaling across workloads?
-% % Figure: Trace of MLIR and xDSL overall?
-
-
-
-
-
-
-
-
-
 
 
 
@@ -308,13 +288,13 @@ However, a key difficulty of micro-benchmarking is ensuring alignment with overa
 As such, micro-benchmarking is a useful tool for deeply understanding the performance of software, but must be used carefully to ensure the validity of its results.
 
 % Hook
-As discussed in our related work (Section \ref{sec:perf-user-extensible-frameworks}), Amini and Nui's talk ``How Slow is MLIR'' \cite{aminiHowSlowMLIR2024} discusses a set of micro-benchmarks for key operations in the MLIR compiler, such as traversing the IR and creating operations.
+As discussed in our related work (Section \ref{sec:perf-user-extensible-frameworks}), Amini and Nui's talk ``How Slow is MLIR'' \cite{aminiHowSlowMLIR2024} discusses a set of micro-benchmarks for key operations in the \ac{mlir} compiler, such as traversing the IR and creating operations.
 % Argument
-These micro-benchmarks were used to inform the optimisation of MLIR's data structures and for comparison with traditional LLVM-based compilers. The implementation of the micro-benchmarks allude to an underlying design goal in MLIR by their measurement of asymptotic scaling properties\footnote{\url{https://github.com/joker-eph/llvm-project/blob/6773f827b9ee8055063fcf6b2c6fcdc7f4f579d2/mlir/unittests/Benchmarks/Cloning.cpp\#L66}}. This design goal is asymptotically optimal performance for its underlying data structures. However, data structures with these characteristics often incur constant-time penalties.
+These micro-benchmarks were used to inform the optimisation of \ac{mlir}'s data structures and for comparison with traditional LLVM-based compilers. The implementation of the micro-benchmarks allude to an underlying design goal in \ac{mlir} by their measurement of asymptotic scaling properties\footnote{\url{https://github.com/joker-eph/llvm-project/blob/6773f827b9ee8055063fcf6b2c6fcdc7f4f579d2/mlir/unittests/Benchmarks/Cloning.cpp\#L66}}. This design goal is asymptotically optimal performance for its underlying data structures. However, data structures with these characteristics often incur constant-time penalties.
 This causes overhead for small workloads, where, unlike the asymptotic case, the cost is not amortised. As such, micro-benchmarks may not be representative of the system's overall performance, revealing possibility for the optimisation of code co-designed using them.
-Despite this, they can still provide useful insight into MLIR's performance characteristics.
+Despite this, they can still provide useful insight into \ac{mlir}'s performance characteristics.
 % Link
-We implement micro-benchmark workloads for the xDSL equivalent to those for MLIR presented in the keynote, and compare the results of these benchmarks between the two implementations, giving insights into their relative performance.
+We implement micro-benchmark workloads for the xDSL equivalent to those for \ac{mlir} presented in the keynote, and compare the results of these benchmarks between the two implementations, giving insights into their relative performance.
 % We further leverage profiling tools to examine the execution of the two implementations. This allows us to distinguish the cost incurred by the language runtime from the cost incurred by the algorithmic approach of the implementation.
 
 \subsection{Implementation}
@@ -330,9 +310,9 @@ This source code can then be used to construct comparable micro-benchmarks in Py
 
 %% Design of our microbenchmarks
 % Hook
-A key design goal of our micro-benchmarks for xDSL is parity with those provided for MLIR, ensuring the validity their direct comparison.
+A key design goal of our micro-benchmarks for xDSL is parity with those provided for \ac{mlir}, ensuring the validity their direct comparison.
 % Argument
-As such, their implementation was derived from the MLIR benchmarks, matching test data and function invocations as closely as possible.
+As such, their implementation was derived from the \ac{mlir} benchmarks, matching test data and function invocations as closely as possible.
 In addition to being fairly comparable, it is critical that the micro-benchmark results are statistical significant. This is particularly challenging as their execution time approaches the $1$ns resolution of the most granular system counters on the benchmarking machine. As such, we measure the total time taken to execute the functions under test $32768$ times, evaluating the individual duration by dividing by the number of iterations. As with the traditional benchmarks, this process is repeated ten times, calculating the arithmetic mean and standard deviation as the value and its uncertainty respectively.
 % Link
 In the following sections, we discuss the implementations of a number of micro-benchmarks, facilitating discussion of the insights they give into compiler performance across implementations and language runtimes in later chapters.
@@ -342,11 +322,11 @@ In the following sections, we discuss the implementations of a number of micro-b
 \label{ssec:ubenchmark-operation-instantiation}
 
 % Hook
-Operations are a central data structure in MLIR and xDSL's \ac{ir} representation, constituting dialects and composing together into programs.
+Operations are a central data structure in \ac{mlir} and xDSL's \ac{ir} representation, constituting dialects and composing together into programs.
 % Argument
 As such, the methods to instantiate operations a very frequently invoked, making them a good candidate for micro-benchmarking.
 % Link
-In both MLIR and xDSL, there are two main ways an operation can be constructed: direct creation \circledbase{pairedOneLightBlue}{1}; or using an builder \circledbase{pairedTwoDarkBlue}{2} (Listing \ref{listing:ubenchmark-op-creation-bench}).
+In both \ac{mlir} and xDSL, there are two main ways an operation can be constructed: direct creation \circledbase{pairedOneLightBlue}{1}; or using an builder \circledbase{pairedTwoDarkBlue}{2} (Listing \ref{listing:ubenchmark-op-creation-bench}).
 
 \begin{figure}[H]
     \centering
@@ -385,12 +365,12 @@ In both MLIR and xDSL, there are two main ways an operation can be constructed: 
 % Hook
 The performance characteristics of these implementations differ significantly (\autoref{tab:ubenchmark-op-creation}).
 % Argument
-In MLIR, the creation and building mechanisms have approximately the same performance, taking around $150$ns to instantiate an operation. In contrast, xDSL's operation building is much slower than direct creation, jumping from $20\times$ to $80\times$ slower. This comes as a result of the trade-off xDSL makes between performance and expressivity, with its builder including a large section of inference and verification logic as a wrapper around the create method.
+In \ac{mlir}, the creation and building mechanisms have approximately the same performance, taking around $150$ns to instantiate an operation. In contrast, xDSL's operation building is much slower than direct creation, jumping from $20\times$ to $80\times$ slower. This comes as a result of the trade-off xDSL makes between performance and expressivity, with its builder including a large section of inference and verification logic as a wrapper around the create method.
 % Link
 
 
 \begin{table}[H]
-  \caption{Operation instantiation in xDSL is approximately $25\times$ slower than in MLIR when creating instructions in the asymptotic case, but is up to $90\times$ slower when using the builder API.}
+  \caption{Operation instantiation in xDSL is approximately $25\times$ slower than in \ac{mlir} when creating instructions in the asymptotic case, but is up to $90\times$ slower when using the builder API.}
   \label{tab:ubenchmark-op-creation}
   \centering
   \begin{tabular}{lcc}
@@ -414,9 +394,9 @@ In MLIR, the creation and building mechanisms have approximately the same perfor
 
 %% Micro-benchmark motivation and details
 % Hook
-Traits are a key property of MLIR and xDSL's operations, providing a mechanism to abstract implementation details and properties.
+Traits are a key property of \ac{mlir} and xDSL's operations, providing a mechanism to abstract implementation details and properties.
 % Argument
-In order to allow users of the frameworks to leverage an operation's trait information, both MLIR and xDSL provide helper methods to check whether an operation has a certain trait.
+In order to allow users of the frameworks to leverage an operation's trait information, both \ac{mlir} and xDSL provide helper methods to check whether an operation has a certain trait.
 These methods are used very frequently in common tasks. For example, when pattern rewriting over a block of IR, the traits of the block's constituent operations are often used by the matching engine to identify valid rewrites.
 % Link
 
@@ -464,10 +444,10 @@ These methods can be simply benchmarked for an example workload (Listing \ref{li
 However, care must be taken when implementing these benchmarks to ensure they are can be equitably compared. For example, the operations must both have the same number of traits, and the trait being checked must be at the same position in that operation's list of traits.
 If this is not true, one implementation may require fewer iterations to perform its workload, invalidating the comparability of the two results.
 % Link
-Micro-benchmarks of checking traits for both implementations show a slow-down of approximately $240\times$ from MLIR to xDSL (\autoref{tab:ubenchmark-trait-checks}).
+Micro-benchmarks of checking traits for both implementations show a slow-down of approximately $240\times$ from \ac{mlir} to xDSL (\autoref{tab:ubenchmark-trait-checks}).
 
 \begin{table}[H]
-  \caption{Trait checks in xDSL are approximately $80\times$ slower than in MLIR in the asymptotic case.}
+  \caption{Trait checks in xDSL are approximately $80\times$ slower than in \ac{mlir} in the asymptotic case.}
   \label{tab:ubenchmark-trait-checks}
   \centering
   \begin{tabular}{cc}
@@ -493,9 +473,9 @@ Micro-benchmarks of checking traits for both implementations show a slow-down of
 \label{ssec:ubenchmark-operation-traversal}
 
 % Hook
-Pattern rewriting in MLIR and xDSL typically consists of walking over a region of \ac{ir}, and trying to match the rewrite pattern against each traversed operation.
+Pattern rewriting in \ac{mlir} and xDSL typically consists of walking over a region of \ac{ir}, and trying to match the rewrite pattern against each traversed operation.
 % Argument
-Because of this operation traversal is another fundamental procedure in both xDSL and MLIR, again making it a good target for micro-benchmarking. Similarly to operation instantiation, there are three ways operations in a block can be traversed: directly iterating over the internal operation array \circledbase{pairedOneLightBlue}{1}; directly iterating over the iterable provided by the block \circledbase{pairedTwoDarkBlue}{2}; and using the recursive walk helper method \circledbase{pairedThreeLightGreen}{3} (Listing \ref{listing:ubenchmark-op-traversal-bench}).
+Because of this operation traversal is another fundamental procedure in both xDSL and \ac{mlir}, again making it a good target for micro-benchmarking. Similarly to operation instantiation, there are three ways operations in a block can be traversed: directly iterating over the internal operation array \circledbase{pairedOneLightBlue}{1}; directly iterating over the iterable provided by the block \circledbase{pairedTwoDarkBlue}{2}; and using the recursive walk helper method \circledbase{pairedThreeLightGreen}{3} (Listing \ref{listing:ubenchmark-op-traversal-bench}).
 % Link
 
 %% Listing
@@ -551,7 +531,7 @@ Because of this operation traversal is another fundamental procedure in both xDS
 
 The performance characteristics of these implementations differ significantly, especially between traversal methods (\autoref{tab:ubenchmark-op-traversal}).
 % Argument
-When directly iterating over the arrays, xDSL is $22\times$ slower than MLIR per iteration. This represents the baseline of performance overhead incurred by the language runtime. In contrast, when traversing operations using helper methods provided by xDSL's API, there is a $100\times$ slowdown. This comes as a result of overhead incurred by xDSL's implementation, and the overhead of various nested method calls for the interpreter.
+When directly iterating over the arrays, xDSL is $22\times$ slower than \ac{mlir} per iteration. This represents the baseline of performance overhead incurred by the language runtime. In contrast, when traversing operations using helper methods provided by xDSL's API, there is a $100\times$ slowdown. This comes as a result of overhead incurred by xDSL's implementation, and the overhead of various nested method calls for the interpreter.
 % Link
 
 \begin{table}[H]

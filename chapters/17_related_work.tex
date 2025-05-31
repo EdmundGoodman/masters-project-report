@@ -31,11 +31,11 @@ The second body of work is the performance measurement of the Python programming
 % FFI boundaries and dynamism
 Recent work discusses the optimisation of Python code by delegating execution to faster, compiled implementations through library calls. However, we argue that this approach is not suitable for some applications, including user-extensible compiler infrastructure.
 % Applying performance measurement techniques
-To substantiate this claim, we further apply existing tools and techniques for measuring Python performance.
+To substantiate this claim, we apply existing tools and techniques for measuring Python performance.
 % Filling the research gap with bytecode level profiling
-However, the finest granularity of profiling information provided by these tools is at the line level. Our need for even finer granularity measurements to characterise the performance of dynamic workload demonstrates a gap in this existing provision. Our novel bytecode profiling tool fills this gap by recording highly granular timing information for the bytecodes dispatched to interpret native Python code. This facilitates deep performance analysis of workloads which benefit from remaining in Python natively.
-% This measurement relies on deep analysis of Python's internal evaluation machinery, which is not fully supported by existing tools. As such, we extend this existing body of work with a novel profiling tool, facilitating deep performance analysis of workloads which benefit from remaining in Python natively.
+However, these tools can only resolve performance measurements to the line level. Our need for even finer granularity measurements to characterise the performance of dynamic workload demonstrates a gap in this existing provision. Our novel bytecode profiling tool, ByteSight, fills this gap by recording highly granular timing information for the bytecodes dispatched to interpret native Python code.
 % Link
+This facilitates deep performance analysis of workloads which benefit from remaining in Python natively.
 
 
 \section{Performance of user-extensible compiler frameworks}
@@ -43,7 +43,7 @@ However, the finest granularity of profiling information provided by these tools
 
 %% General vibe of the community?
 % Hook
-While compiler designers naturally focus on optimizing the performance of compiled code, the execution time of the compiler itself (henceforth referred to as compiler performance) also matters significantly for developer productivity.
+While compiler designers naturally focus on optimizing the performance of compiled code, the execution time of the compiler itself (henceforth referred to as compiler performance) also has a significant impact on developer productivity.
 % Argument
 For very large projects such as Firefox, which contains over twenty million lines of code \cite{bastienabadieEngineeringCodeQuality}, small changes to compiler performance can result in minutes gained or lost for each compilation -- significantly impacting developer productivity. Although there has been considerable engineering effort devoted to compiler performance, academic research continues to focus primarily on improving the compiled output rather than the compilation process itself.
 % Link
@@ -54,7 +54,7 @@ As such, researchers have not yet fully explored the field, with only a few acad
 Lattner and Adve's original paper proposing LLVM contains a short evaluation of the framework's performance \cite[Section 4.1.4]{lattnerLLVMCompilationFramework2004}.
 % Argument
 In this evaluation, the authors compare the runtime of individual transformation passes against \texttt{gcc} optimisation level \texttt{-O3} across a variety of workloads.
-The results of this experiment \cite[Table 2]{lattnerLLVMCompilationFramework2004} report each of LLVM's transformation passes is at least two orders of magnitude faster than \texttt{gcc}'s end-to-end compilation across the tested workloads. Whilst this demonstrates that analysis and transformations can be performed efficiently, it has a critical flaw. By using end-to-end compilation time for \texttt{gcc}, the measurement includes time taken by non-transformation phases such as parsing, printing, and code generation, making it incomparable with the measurements of the transformation passes only for LLVM.
+The results of this experiment \cite[Table 2]{lattnerLLVMCompilationFramework2004} report each of LLVM's transformation passes is at least two orders of magnitude faster than \texttt{gcc}'s end-to-end compilation across the tested workloads. This demonstrates that analysis and transformations can be performed efficiently, but has a critical flaw. By using end-to-end compilation time for \texttt{gcc}, the measurement includes time taken by non-transformation phases such as parsing, printing, and code generation, making it incomparable with the measurements of the transformation passes only for LLVM.
 Furthermore, since the paper's publication twenty years ago, LLVM has evolved significantly. This evolution brings new complexity, new performance enhancements, and even new frameworks such as \ac{mlir} -- changing the calculus of its performance characteristics.
 % Link
 This motivated later research to re-examine these performance characteristics of compiler frameworks.
@@ -100,7 +100,7 @@ This section discusses a relevant subset of these tools and techniques, and cont
 
 %% Traditional approach is FFI bindings, but this doesn't work for us
 % Hook
-In his talk ``Python Performance Matters'' \cite{emerybergerPythonPerformanceMatters2022}, Emery Berger argues that whilst Python is a critical language for writing ``glue code'', its performance is bounded by the overhead of its virtual machine, making it necessarily slower than languages compiled to native machine code.
+In his talk ``Python Performance Matters'' \cite{emerybergerPythonPerformanceMatters2022}, Emery Berger argues that although Python is a critical language for writing ``glue code'', its performance is bounded by the overhead of its virtual machine, making it necessarily slower than languages compiled to native machine code.
 % Argument
 As such, he asserts a maximally performant Python program is one which executes as few Python instructions as possible, instead heavily leveraging code written in more performant languages such as C or FORTRAN through \ac{ffi} bindings.
 This approach is effective for many applications, for example libraries such as NumPy and TensorFlow, providing useful abstractions for compiled code over common tasks.
@@ -164,7 +164,7 @@ Existing profilers for Python typically operate at the function level.
 For example, Python's standard library provides the \texttt{profile} module, a Python-native tracing profiler, along with \texttt{cProfile}, a more performant C implementation of the same functionality \cite{pythonsoftwarefoundationPythonProfilers}. These instrument each call event, providing accurate profiling information for each evaluated function.
 Beyond the standard library, profilers such as \texttt{pyinstrument} use statistical sampling rather than tracing to reduce overhead incurred by performance measurement \cite{rickerbyPyinstrument2025}.
 In addition to this, the recent OSDI best paper winner ``Triangulating Python Performance Issues with SCALENE'' \cite{bergerTriangulatingPythonPerformance2023a} introduces another profiler which focusses on the \ac{ffi} boundary between C and Python, a key bottleneck for the best practice of delegating computation to fast low-level implementations.
-Whilst this delegation is particularly effective for structured workloads such as linear algebra, it is less suitable for highly dynamic workloads. % TODO: Remove whilst?
+This delegation is particularly effective for structured workloads such as linear algebra, but is less suitable for highly dynamic workloads.
 As such, profilers for pure Python are still important for these applications.
 Furthermore, profiling information at a finer granularity than the function level is often needed to deeply the performance of a program.
 % Link
