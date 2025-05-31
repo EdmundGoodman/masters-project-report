@@ -304,7 +304,7 @@ We implement micro-benchmark workloads for the xDSL equivalent to those for \ac{
 % Hook
 Unfortunately, the implementation and build instructions for the ``How Slow is MLIR?'' micro-benchmarks were not published with the talk.
 % Argument (too informal?)
-However, their source code can be found on a branch of the presenter's fork of LLVM\footnote{\url{https://github.com/joker-eph/llvm-project/tree/benchmarks}}. We provide a copy of this source code and instructions for running the benchmarks\footnote{\url{https://github.com/EdmundGoodman/llvm-project-benchmarks}} to enhance the replicability of our results and facilitate further performance experiments.
+However, the source code can be found on a branch of their fork of LLVM\footnote{\url{https://github.com/joker-eph/llvm-project/tree/benchmarks}}. We provide a copy of this source code and instructions for running the benchmarks\footnote{\url{https://github.com/EdmundGoodman/llvm-project-benchmarks}} to enhance the replicability of our results and facilitate further performance experiments.
 % Link
 This source code can then be used to construct comparable micro-benchmarks in Python.
 
@@ -313,7 +313,7 @@ This source code can then be used to construct comparable micro-benchmarks in Py
 A key design goal of our micro-benchmarks for xDSL is parity with those provided for \ac{mlir}, ensuring the validity their direct comparison.
 % Argument
 As such, their implementation was derived from the \ac{mlir} benchmarks, matching test data and function invocations as closely as possible.
-In addition to being fairly comparable, it is critical that the micro-benchmark results are statistical significant. This is particularly challenging as their execution time approaches the $1$ns resolution of the most granular system counters on the benchmarking machine. As such, we measure the total time taken to execute the functions under test $32768$ times, evaluating the individual duration by dividing by the number of iterations. As with the traditional benchmarks, this process is repeated ten times, calculating the arithmetic mean and standard deviation as the value and its uncertainty respectively.
+In addition to being fairly comparable, it is critical that the micro-benchmark results are statistically significant. This is particularly challenging as their execution time approaches the $1$ns resolution of the most granular system counters on the benchmarking machine. As such, we measure the total time taken to execute the functions under test $32768$ times, evaluating the individual duration by dividing by the number of iterations. As with the traditional benchmarks, this process is repeated ten times, calculating the arithmetic mean and standard deviation as the value and its uncertainty respectively.
 % Link
 In the following sections, we discuss the implementations of a number of micro-benchmarks, facilitating discussion of the insights they give into compiler performance across implementations and language runtimes in later chapters.
 
@@ -475,7 +475,9 @@ Micro-benchmarks of checking traits for both implementations show a slow-down of
 % Hook
 Pattern rewriting in \ac{mlir} and xDSL typically consists of walking over a region of \ac{ir}, and trying to match the rewrite pattern against each traversed operation.
 % Argument
-Because of this operation traversal is another fundamental procedure in both xDSL and \ac{mlir}, again making it a good target for micro-benchmarking. Similarly to operation instantiation, there are three ways operations in a block can be traversed: directly iterating over the internal operation array \circledbase{pairedOneLightBlue}{1}; directly iterating over the iterable provided by the block \circledbase{pairedTwoDarkBlue}{2}; and using the recursive walk helper method \circledbase{pairedThreeLightGreen}{3} (Listing \ref{listing:ubenchmark-op-traversal-bench}).
+Because of this use in rewriting, operation traversal is another good target for micro-benchmarking.
+% Because of this operation traversal is another fundamental procedure in both xDSL and \ac{mlir}, again making it a good target for micro-benchmarking.
+Similarly to operation instantiation, there are three ways operations in a block can be traversed: directly iterating over the internal operation array \circledbase{pairedOneLightBlue}{1}; directly iterating over the iterable provided by the block \circledbase{pairedTwoDarkBlue}{2}; and using the recursive walk helper method \circledbase{pairedThreeLightGreen}{3} (Listing \ref{listing:ubenchmark-op-traversal-bench}).
 % Link
 
 %% Listing
@@ -493,8 +495,8 @@ Because of this operation traversal is another fundamental procedure in both xDS
             }
 
             // Benchmarks
-            for (Operation &op : *block) { }; £\circledbase{pairedOneLightBlue}{\footnotesize{1}}£
-            block->walk([](Operation *op) { }); £\circledbase{pairedTwoDarkBlue}{\footnotesize{2}}£
+            for (Operation *op : ops) { }; £\circledbase{pairedOneLightBlue}{\footnotesize{1}}£
+            for (Operation &op : *block) { }; £\circledbase{pairedTwoDarkBlue}{\footnotesize{2}}£
             block->walk([](Operation *op) { }); £\circledbase{pairedThreeLightGreen}{\footnotesize{3}}£
         \end{minted}
         \caption{``How Slow is MLIR?'' C++ implementation.}
@@ -569,7 +571,7 @@ This motivates our work examining and understanding the impact of recent optimis
 % Hook
 In addition to the micro-benchmarks matching ``How Slow is MLIR'' discussed in detail above, we also developed a further xDSL-only suite to instrument key functions invoked by the pattern rewriter (Appendix \ref{}).
 % Argument
-Whilst these micro-benchmarks are useful in their own right as performance measurements, they also facilitate further experiments. This is because their small size means they can be reasoned about at the bytecode level (\autoref{chap:profiling-bytecode}), providing useful information about the dynamism of the workload.
+Whilst these micro-benchmarks are useful in their own right as performance measurements, they also facilitate further experiments. Their small size means they can be reasoned about at the bytecode level (\autoref{chap:profiling-bytecode}), providing useful information about the dynamism of the workload.
 % Link
 
 
