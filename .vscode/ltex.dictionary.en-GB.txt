@@ -19,3 +19,4 @@ pyperf
 pyperformance
 arith
 builtin
+LuaJIT

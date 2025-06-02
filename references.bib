@@ -516,6 +516,16 @@
   keywords = {airspeed-velocity,benchmark,python}
 }
 
+@letter{mikepallReSuggestionsImplementing2011,
+  type = {E-mail},
+  title = {Re: {{Suggestions}} on Implementing an Efficient Instruction Set Simulator in {{LuaJIT2}}},
+  author = {{Mike Pall}},
+  date = {2011-02-15},
+  url = {http://lua-users.org/lists/lua-l/2011-02/msg00742.html},
+  urldate = {2025-06-01},
+  file = {/Users/edjg/Zotero/storage/676Q8P62/msg00742.html}
+}
+
 @online{mlirteamMLIRCodeDocumentation,
   title = {{{MLIR Code Documentation}}},
   author = {{MLIR Team}},
@@ -650,6 +660,19 @@
   url = {https://blog.quarkslab.com/building-an-obfuscated-python-interpreter-we-need-more-opcodes.html},
   urldate = {2025-05-17},
   file = {/Users/edjg/Zotero/storage/VGXSZTRB/building-an-obfuscated-python-interpreter-we-need-more-opcodes.html}
+}
+
+@thesis{shannonConstructionHighperformanceVirtual2011,
+  type = {phdthesis},
+  title = {The Construction of High-Performance Virtual Machines for Dynamic Languages},
+  author = {Shannon, Mark},
+  date = {2011},
+  institution = {University of Glasgow},
+  url = {https://eleanor.lib.gla.ac.uk/record=b2890492},
+  urldate = {2025-06-01},
+  abstract = {Dynamic languages, such as Python and Ruby, have become more widely used over the past decade. Despite this, the standard virtual machines for these languages have disappointing performance. These virtual machines are slow, not because methods for achieving better performance are unknown, but because their implementation is hard. What makes the implementation of high-performance virtual machines difficult is not that they are large pieces of software, but that there are fundamental and complex interdependencies between their components. In order to work together correctly, the interpreter, just-in-time compiler, garbage collector and library must all conform to the same precise low-level protocols. In this dissertation I describe a method for constructing virtual machines for dynamic languages, and explain how to design a virtual machine toolkit by building it around an abstract machine. The design and implementation of such a toolkit, the Glasgow Virtual Machine Toolkit, is described. The Glasgow Virtual Machine Toolkit automatically generates a just-in-time compiler, integrates precise garbage collection into the virtual machine, and automatically manages the complex inter-dependencies between all the virtual machine components. Two different virtual machines have been constructed using the GVMT. One is a minimal implementation of Scheme; which was implemented in under three weeks to demonstrate that toolkits like the GVMT can enable the easy construction of virtual machines. The second, the HotPy VM for Python, is a high-performance virtual machine; it demonstrates that a virtual machine built with a toolkit can be fast and that the use of a toolkit does not overly constrain the high-level design. Evaluation shows that HotPy outperforms the standard Python interpreter, CPython, by a large margin, and has performance on a par with PyPy, the fastest Python VM currently available.},
+  langid = {english},
+  file = {/Users/edjg/Zotero/storage/AMYIA87S/Shannon - 2011 - The construction of high-performance virtual machines for dynamic languages.pdf;/Users/edjg/Zotero/storage/SJZBBNVK/2975.html}
 }
 
 @inproceedings{steeleDebunkingExpensiveProcedure1977,
@@ -833,4 +856,21 @@
   urldate = {2025-05-14},
   abstract = {This is Part 1 of a series of posts. Part 2 is available here: Building a baseline JIT for Lua automatically  It is well-known that writing a good VM for a dynamic language is never an easy job. High},
   file = {/Users/edjg/Zotero/storage/L5FXCLMQ/2022-11-22.html}
+}
+
+@online{xuDeegenJITCapableVM2024,
+  title = {Deegen: {{A JIT-Capable VM Generator}} for {{Dynamic Languages}}},
+  shorttitle = {Deegen},
+  author = {Xu, Haoran and Kjolstad, Fredrik},
+  date = {2024-11-24},
+  eprint = {2411.11469},
+  eprinttype = {arXiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2411.11469},
+  url = {http://arxiv.org/abs/2411.11469},
+  urldate = {2025-06-01},
+  abstract = {Building a high-performance JIT-capable VM for a dynamic language has traditionally required a tremendous amount of time, money, and expertise. We present Deegen, a meta-compiler that allows users to generate a high-performance JIT-capable VM for their own language at an engineering cost similar to writing a simple interpreter. Deegen takes in the execution semantics of the bytecodes implemented as C++ functions, and automatically generates a two-tier VM execution engine with a state-of-the-art interpreter, a state-of-the-art baseline JIT, and the tier-switching logic that connects them into a self-adaptive system. We are the first to demonstrate the automatic generation of a JIT compiler, and the automatic generation of an interpreter that outperforms the state of the art. Our performance comes from a long list of optimizations supported by Deegen, including bytecode specialization and quickening, register pinning, tag register optimization, call inline caching, generic inline caching, JIT polymorphic IC, JIT IC inline slab, type-check removal and strength reduction, type-based slow-path extraction and outlining, JIT hot-cold code splitting, and JIT OSR-entry. These optimizations are either employed automatically, or guided by the language implementer through intuitive APIs. As a result, the disassembly of the Deegen-generated interpreter, baseline JIT, and the generated JIT code rivals the assembly code hand-written by experts in state-of-the-art VMs. We implement LuaJIT Remake (LJR), a standard-compliant Lua 5.1 VM, using Deegen. Across 44 benchmarks, LJR's interpreter is on average 179\% faster than the official PUC Lua interpreter, and 31\% faster than LuaJIT's interpreter. LJR's baseline JIT has negligible startup delay, and its execution performance is on average 360\% faster than PUC Lua and only 33\% slower (but faster on 13/44 benchmarks) than LuaJIT's optimizing JIT.},
+  pubstate = {prepublished},
+  keywords = {Computer Science - Programming Languages},
+  file = {/Users/edjg/Zotero/storage/G3HZMA4P/Xu and Kjolstad - 2024 - Deegen A JIT-Capable VM Generator for Dynamic Languages.pdf;/Users/edjg/Zotero/storage/N3EGFE7F/2411.html}
 }

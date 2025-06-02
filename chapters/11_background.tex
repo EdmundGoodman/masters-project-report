@@ -163,7 +163,7 @@ He goes on to argue that \ac{jit} compilation approaches aim to accrue the benef
 \label{ssec:jit-compilation-machine-code}
 
 % Hook
-Whilst \acf{jit} compilation can refer to any program translation occuring at runtime, it is often overloaded to specifically refer to the dynamic generation of machine code.
+Whilst \acf{jit} compilation can refer to any program translation occurring at runtime, it is often overloaded to specifically refer to the dynamic generation of machine code.
 % Argument
 % Link
 
@@ -226,4 +226,4 @@ A significant overhead in the performance of dynamically typed languages is chec
 % Argument
 Whilst this type information cannot be known ahead of time in dynamically typed languages, information collected at runtime can be used to optimised the type-checking process. This adaptive optimisation approach relies on the assumption that if a variable has had a fixed type for a sufficient span of time previously, it is likely that it will have the same type in future. For example, whilst a variable being used as an integer counter in a loop can take any value, if its type in the earlier iterations has always been an integer, it is likely to remain an integer throughout later iterations.
 % Link
-In an interpreted language, this assumption can be leveraged to replace general instructions with faster, specialised variants. A concrete implementation of this is Python's specialising adaptive interpreter, discussed in \autoref{ssec:specialising-adaptive-interpreter}.
+In an interpreted language, this assumption can be leveraged to replace general instructions with faster, specialised variants. A concrete implementation of this is Python's specialising adaptive interpreter, discussed in \autoref{sec:specialising-adaptive-interpreter}.

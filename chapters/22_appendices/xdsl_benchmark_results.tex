@@ -44,7 +44,179 @@ Test OpCreation.operation_clone ran in: 0.000962 ± 1.15e-05s
 Test OpCreation.operation_clone_single ran in: 6.96e-06 ± 1.55e-06s
 Test OpCreation.operation_constant_init ran in: 3.34e-05 ± 3.68e-06s
 Test OpCreation.operation_constant_create ran in: 1.83e-06 ± 7.74e-07s
+Test ConstantFoldingSimple.20 ran in: 0.00114 ± 3.79e-05s
+Test ConstantFoldingSimpleInlined.20 ran in: 0.000135 ± 2.68e-05s
     \end{minted}
     \caption{Results for the xDSL micro-benchmarks derived from ``How Slow is MLIR?'', for CPython version 3.10.17.}
-    \label{listing:how-slow-is-mlir-xdsl-microbenchmark-results}
+    \label{listing:how-slow-is-mlir-xdsl-microbenchmark-results-310}
 \end{code}
+% Test IRTraversal.iterate_ops ran in: 0.000325 ± 5.82e-06s
+% Test IRTraversal.iterate_block_ops ran in: 0.00682 ± 6.36e-05s
+% Test IRTraversal.walk_block_ops ran in: 0.017 ± 7.08e-05s
+% Test Extensibility.interface_check_trait ran in: 4.42e-08 ± 3.73e-07s
+% Test Extensibility.interface_check ran in: 5.21e-08 ± 2.54e-07s
+% Test Extensibility.trait_check ran in: 1.92e-06 ± 6.95e-07s
+% Test Extensibility.trait_check_optimised ran in: 2.39e-07 ± 3.51e-07s
+% Test Extensibility.trait_check_single ran in: 1.73e-06 ± 7.03e-07s
+% Test Extensibility.trait_check_neg ran in: 2.83e-06 ± 7.76e-07s
+% Test OpCreation.operation_create ran in: 3.71e-06 ± 9.5e-07s
+% Test OpCreation.operation_build ran in: 1.24e-05 ± 1.78e-06s
+% Test OpCreation.operation_create_optimised ran in: 4.98e-07 ± 4.1e-07s
+% Test OpCreation.operation_clone ran in: 0.000966 ± 1.29e-05s
+% Test OpCreation.operation_clone_single ran in: 6.88e-06 ± 1.49e-06s
+% Test OpCreation.operation_constant_init ran in: 3.24e-05 ± 3.84e-06s
+% Test OpCreation.operation_constant_create ran in: 1.79e-06 ± 7.83e-07s
+% Test ConstantFoldingSimple.20 ran in: 0.00113 ± 4.21e-05s
+% Test ConstantFoldingSimpleInlined.20 ran in: 0.000134 ± 2.5e-05s
+%
+% Test IRTraversal.iterate_ops ran in: 0.000326 ± 6.65e-06s
+% Test IRTraversal.iterate_block_ops ran in: 0.00669 ± 2.2e-05s
+% Test IRTraversal.walk_block_ops ran in: 0.0171 ± 2.44e-05s
+% Test Extensibility.interface_check_trait ran in: 4.72e-08 ± 2.84e-07s
+% Test Extensibility.interface_check ran in: 4.94e-08 ± 3.08e-07s
+% Test Extensibility.trait_check ran in: 1.94e-06 ± 6.43e-07s
+% Test Extensibility.trait_check_optimised ran in: 2.42e-07 ± 3.92e-07s
+% Test Extensibility.trait_check_single ran in: 1.84e-06 ± 7.18e-07s
+% Test Extensibility.trait_check_neg ran in: 2.86e-06 ± 8.06e-07s
+% Test OpCreation.operation_create ran in: 3.75e-06 ± 8.77e-07s
+% Test OpCreation.operation_build ran in: 1.25e-05 ± 1.72e-06s
+% Test OpCreation.operation_create_optimised ran in: 5.03e-07 ± 4.01e-07s
+% Test OpCreation.operation_clone ran in: 0.000982 ± 1.1e-05s
+% Test OpCreation.operation_clone_single ran in: 7.02e-06 ± 1.45e-06s
+% Test OpCreation.operation_constant_init ran in: 3.29e-05 ± 3.6e-06s
+% Test OpCreation.operation_constant_create ran in: 1.77e-06 ± 7.57e-07s
+
+\vspace{2em}
+
+\begin{code}
+    \begin{minted}[fontsize=\scriptsize]{text}
+Test IRTraversal.iterate_ops ran in: 0.00036 ± 8.27e-06s
+Test IRTraversal.iterate_block_ops ran in: 0.00401 ± 2.31e-05s
+Test IRTraversal.walk_block_ops ran in: 0.0141 ± 0.000126s
+Test Extensibility.interface_check_trait ran in: 2.8e-08 ± 3e-07s
+Test Extensibility.interface_check ran in: 3.17e-08 ± 2.41e-07s
+Test Extensibility.trait_check ran in: 1.71e-06 ± 7.53e-07s
+Test Extensibility.trait_check_optimised ran in: 1.91e-07 ± 3.34e-07s
+Test Extensibility.trait_check_single ran in: 1.48e-06 ± 7.36e-07s
+Test Extensibility.trait_check_neg ran in: 2.53e-06 ± 9.22e-07s
+Test OpCreation.operation_create ran in: 2.84e-06 ± 8.83e-07s
+Test OpCreation.operation_build ran in: 1.06e-05 ± 1.94e-06s
+Test OpCreation.operation_create_optimised ran in: 2.65e-07 ± 3.72e-07s
+Test OpCreation.operation_clone ran in: 0.00074 ± 1.09e-05s
+Test OpCreation.operation_clone_single ran in: 5.27e-06 ± 1.1e-06s
+Test OpCreation.operation_constant_init ran in: 2.77e-05 ± 3.64e-06s
+Test OpCreation.operation_constant_create ran in: 1.7e-06 ± 1.24e-06s
+Test ConstantFoldingSimple.20 ran in: 0.00086 ± 2.68e-05s
+Test ConstantFoldingSimpleInlined.20 ran in: 9.24e-05 ± 2.15e-05s
+    \end{minted}
+    \caption{Results for the xDSL micro-benchmarks derived from ``How Slow is MLIR?'', for CPython version 3.11.12.}
+    \label{listing:how-slow-is-mlir-xdsl-microbenchmark-results-311}
+\end{code}
+% Test IRTraversal.iterate_ops ran in: 0.000362 ± 6.96e-06s
+% Test IRTraversal.iterate_block_ops ran in: 0.00392 ± 0.000127s
+% Test IRTraversal.walk_block_ops ran in: 0.0144 ± 0.000466s
+% Test Extensibility.interface_check_trait ran in: 3.09e-08 ± 2.98e-07s
+% Test Extensibility.interface_check ran in: 3.02e-08 ± 2.6e-07s
+% Test Extensibility.trait_check ran in: 1.67e-06 ± 6.32e-07s
+% Test Extensibility.trait_check_optimised ran in: 1.88e-07 ± 3.08e-07s
+% Test Extensibility.trait_check_single ran in: 1.47e-06 ± 5.79e-07s
+% Test Extensibility.trait_check_neg ran in: 2.49e-06 ± 7.18e-07s
+% Test OpCreation.operation_create ran in: 2.89e-06 ± 7.87e-07s
+% Test OpCreation.operation_build ran in: 1.07e-05 ± 1.52e-06s
+% Test OpCreation.operation_create_optimised ran in: 2.48e-07 ± 3.31e-07s
+% Test OpCreation.operation_clone ran in: 0.00074 ± 1.13e-05s
+% Test OpCreation.operation_clone_single ran in: 5.26e-06 ± 1.12e-06s
+% Test OpCreation.operation_constant_init ran in: 2.72e-05 ± 3.68e-06s
+% Test OpCreation.operation_constant_create ran in: 1.73e-06 ± 1.26e-06s
+% Test ConstantFoldingSimple.20 ran in: 0.000865 ± 2.86e-05s
+% Test ConstantFoldingSimpleInlined.20 ran in: 9.12e-05 ± 2.18e-05s
+
+
+
+\begin{code}
+    \begin{minted}[fontsize=\scriptsize]{text}
+Test IRTraversal.iterate_ops ran in: 0.000318 ± 6.61e-06s
+Test IRTraversal.iterate_block_ops ran in: 0.00487 ± 2.48e-05s
+Test IRTraversal.walk_block_ops ran in: 0.0129 ± 7.65e-05s
+Test Extensibility.interface_check_trait ran in: 4e-08 ± 3.64e-07s
+Test Extensibility.interface_check ran in: 4.09e-08 ± 2.89e-07s
+Test Extensibility.trait_check ran in: 1.19e-06 ± 5.53e-07s
+Test Extensibility.trait_check_optimised ran in: 2.21e-07 ± 3.09e-07s
+Test Extensibility.trait_check_single ran in: 1e-06 ± 5.2e-07s
+Test Extensibility.trait_check_neg ran in: 2.09e-06 ± 6.81e-07s
+Test OpCreation.operation_create ran in: 3.04e-06 ± 7.65e-07s
+Test OpCreation.operation_build ran in: 1.19e-05 ± 1.45e-06s
+Test OpCreation.operation_create_optimised ran in: 3.76e-07 ± 4.07e-07s
+Test OpCreation.operation_clone ran in: 0.000752 ± 1.11e-05s
+Test OpCreation.operation_clone_single ran in: 5.23e-06 ± 1.37e-06s
+Test OpCreation.operation_constant_init ran in: 2.85e-05 ± 3.92e-06s
+Test OpCreation.operation_constant_create ran in: 1.92e-06 ± 1.17e-06s
+Test ConstantFoldingSimple.20 ran in: 0.000892 ± 2.66e-05s
+Test ConstantFoldingSimpleInlined.20 ran in: 0.000108 ± 2.51e-05s
+    \end{minted}
+    \caption{Results for the xDSL micro-benchmarks derived from ``How Slow is MLIR?'', for CPython version 3.13.3.}
+    \label{listing:how-slow-is-mlir-xdsl-microbenchmark-results-313}
+\end{code}
+% Test IRTraversal.iterate_ops ran in: 0.000317 ± 7.15e-06s
+% Test IRTraversal.iterate_block_ops ran in: 0.00468 ± 0.00011s
+% Test IRTraversal.walk_block_ops ran in: 0.0133 ± 9.58e-05s
+% Test Extensibility.interface_check_trait ran in: 4.12e-08 ± 2.93e-07s
+% Test Extensibility.interface_check ran in: 4.29e-08 ± 2.54e-07s
+% Test Extensibility.trait_check ran in: 1.15e-06 ± 5.29e-07s
+% Test Extensibility.trait_check_optimised ran in: 2.21e-07 ± 2.89e-07s
+% Test Extensibility.trait_check_single ran in: 9.58e-07 ± 4.55e-07s
+% Test Extensibility.trait_check_neg ran in: 2.04e-06 ± 6.52e-07s
+% Test OpCreation.operation_create ran in: 2.99e-06 ± 8.08e-07s
+% Test OpCreation.operation_build ran in: 1.17e-05 ± 1.59e-06s
+% Test OpCreation.operation_create_optimised ran in: 3.65e-07 ± 3.25e-07s
+% Test OpCreation.operation_clone ran in: 0.000746 ± 1.11e-05s
+% Test OpCreation.operation_clone_single ran in: 5.2e-06 ± 1.56e-06s
+% Test OpCreation.operation_constant_init ran in: 2.85e-05 ± 3.54e-06s
+% Test OpCreation.operation_constant_create ran in: 1.91e-06 ± 1.25e-06s
+% Test ConstantFoldingSimple.20 ran in: 0.000899 ± 2.7e-05s
+% Test ConstantFoldingSimpleInlined.20 ran in: 0.000111 ± 2.29e-05s
+
+
+
+\begin{code}
+    \begin{minted}[fontsize=\scriptsize]{text}
+Test IRTraversal.iterate_ops ran in: 0.000152 ± 9.27e-06s
+Test IRTraversal.iterate_block_ops ran in: 0.0036 ± 2.78e-05s
+Test IRTraversal.walk_block_ops ran in: 0.014 ± 5.28e-05s
+Test Extensibility.interface_check_trait ran in: 2.53e-08 ± 3.66e-07s
+Test Extensibility.interface_check ran in: 5.38e-08 ± 3.16e-07s
+Test Extensibility.trait_check ran in: 1.22e-06 ± 5.73e-07s
+Test Extensibility.trait_check_optimised ran in: 2.24e-07 ± 3.03e-07s
+Test Extensibility.trait_check_single ran in: 1.04e-06 ± 5.17e-07s
+Test Extensibility.trait_check_neg ran in: 2.11e-06 ± 6.1e-07s
+Test OpCreation.operation_create ran in: 2.98e-06 ± 7.59e-07s
+Test OpCreation.operation_build ran in: 1.16e-05 ± 1.56e-06s
+Test OpCreation.operation_create_optimised ran in: 3.91e-07 ± 3.57e-07s
+Test OpCreation.operation_clone ran in: 0.000741 ± 1.11e-05s
+Test OpCreation.operation_clone_single ran in: 5.08e-06 ± 1.23e-06s
+Test OpCreation.operation_constant_init ran in: 2.85e-05 ± 3.76e-06s
+Test OpCreation.operation_constant_create ran in: 1.95e-06 ± 1.31e-06s
+Test ConstantFoldingSimple.20 ran in: 0.00094 ± 2.9e-05s
+Test ConstantFoldingSimpleInlined.20 ran in: 0.000105 ± 2.55e-05s
+    \end{minted}
+    \caption{Results for the xDSL micro-benchmarks derived from ``How Slow is MLIR?'', for CPython version 3.13.3 with the experimental JIT enabled.}
+    \label{listing:how-slow-is-mlir-xdsl-microbenchmark-results-313jit}
+\end{code}
+% Test IRTraversal.iterate_ops ran in: 0.000159 ± 1.07e-05s
+% Test IRTraversal.iterate_block_ops ran in: 0.00376 ± 9.48e-05s
+% Test IRTraversal.walk_block_ops ran in: 0.0143 ± 0.000304s
+% Test Extensibility.interface_check_trait ran in: 3.03e-08 ± 3.66e-07s
+% Test Extensibility.interface_check ran in: 5.36e-08 ± 2.36e-07s
+% Test Extensibility.trait_check ran in: 1.19e-06 ± 5.39e-07s
+% Test Extensibility.trait_check_optimised ran in: 2.23e-07 ± 4.25e-07s
+% Test Extensibility.trait_check_single ran in: 1.02e-06 ± 4.69e-07s
+% Test Extensibility.trait_check_neg ran in: 2.1e-06 ± 6.82e-07s
+% Test OpCreation.operation_create ran in: 3.14e-06 ± 7.84e-07s
+% Test OpCreation.operation_build ran in: 1.22e-05 ± 1.61e-06s
+% Test OpCreation.operation_create_optimised ran in: 3.76e-07 ± 3.2e-07s
+% Test OpCreation.operation_clone ran in: 0.000764 ± 1.97e-05s
+% Test OpCreation.operation_clone_single ran in: 5.12e-06 ± 1.19e-06s
+% Test OpCreation.operation_constant_init ran in: 2.87e-05 ± 3.87e-06s
+% Test OpCreation.operation_constant_create ran in: 1.99e-06 ± 1.34e-06s
+% Test ConstantFoldingSimple.20 ran in: 0.000939 ± 3.15e-05s
+% Test ConstantFoldingSimpleInlined.20 ran in: 0.000106 ± 2.59e-05s

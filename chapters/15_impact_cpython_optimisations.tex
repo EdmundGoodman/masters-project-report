@@ -1,98 +1,211 @@
 \chapter{Impact of CPython performance enhancements on xDSL pattern rewriting}
 \label{chap:impact-cpython-pattern-rewriting}
 
-
-
-\section{Faster CPython}
-\label{sec:faster-cpython}
-
 % Hook
 \acf{pep} 659 asserts that ``Python widely acknowledged as slow'' \cite{pep659}.
 % Argument
-This comes partially as an inherent trade-off from the benefits of its interpreted runtime and expressive dynamic semantics, meaning it cannot achieve the general-purpose performance of ahead-of-time compiled languages such as C++ or FORTRAN. However, it is feasible for Python implementations to be competitive with fast implementations of other scripting languages with similar trade-offs, such as Javascript's V8 or Lua's LuaJIT. The Faster CPython project is an attempt to achieve this goal in Python's reference implementation. Over the course of the recent CPython major versions, new optimisations have been gradually added as part of this project, resulting in incremental performance gains (\autoref{tab:faster-cpython}).
+This comes partially as an inherent trade-off from the benefits of its interpreted runtime and expressive dynamic semantics, meaning it cannot achieve the general-purpose performance of ahead-of-time compiled languages such as C++ or FORTRAN. However, it is feasible for Python implementations to be competitive with fast implementations of other scripting languages with similar trade-offs, such as JavaScript's V8 or Lua's LuaJIT. The Faster CPython project is an attempt to achieve this goal in Python's reference implementation. Over the course of the recent CPython major versions, new optimisations have been gradually added as part of this project, resulting in incremental performance gains (\autoref{tab:faster-cpython}).
 % Link
-This section discusses the details of these optimisations, and their effect on CPython's performance. % TODO: Change link to be in context of how we extend stuff...
+This section discusses the details of these optimisations, and their effect on user-extensible compiler workloads in xDSL.
 
 
 \begin{table}[H]
   \caption{Incremental improvements of the geometric mean of speedups across the PyPerformance benchmark suite (full results \autoref{chap:pyperformance-version-comparison}), achieved by optimisations to the CPython interpreter.}
   \label{tab:faster-cpython}
-  % TODO: The rows/columns in this table should probably be rethought -- N/A is not a good thing to have!
   \centering
-  \begin{tabular}{lll}
+  \begin{tabular}{llc}
     \toprule
-    \textbf{Python version} & \textbf{Optimisation over previous} & \textbf{PyPerformance speedup} \\
+    \multicolumn{2}{c}{\textbf{Python executable}} \\
+    \cmidrule(r){1-2}
+    \textbf{Implementation} & \textbf{Feature flag} & \textbf{PyPerformance speedup} \\
     \midrule
-    CPython 3.10.17 & N/A & N/A \\
-    CPython 3.11.12 & Specialising adaptive interpreter & $1.26$ \\
-    % CPython 3.12.10 & Comprehension inlining & $x$ \\
-    CPython 3.13.3 & Version bump & $1.17$ \\
-    CPython 3.13.3 & Enabled experimental JIT & $1.05$ \\
-    CPython 3.14.0a7 & Version bump & $x$ \\
-    CPython 3.14.0a7 & Enabled tail call interpreter & $x$ \\
+    CPython 3.10.17 & None & $1\times$ \\
+    CPython 3.11.12 & Specialising adaptive interpreter & $1.26\times$ \\
+    CPython 3.13.3 & None & $1.17\times$ \\
+    CPython 3.13.3 & Experimental JIT & $1.05\times$ \\
+    % CPython 3.14.0a7 & None & $1\times$ \\
+    % CPython 3.14.0a7 & Tail call interpreter & $1\times$ \\
+    % \toprule
+    % \multicolumn{2}{c}{\textbf{Python executable}} & \multicolumn{2}{c}{\textbf{PyPerformance speedup}}\\
+    % \cmidrule(r){1-2} \cmidrule(r){3-4}
+    % \textbf{Implementation} & \textbf{Feature flag} & \textbf{Baseline} & \textbf{Previous} \\
     % \midrule
-    % PyPy 3.11.11 & JIT compilation & $x$ \\
+    % CPython 3.10.17 & None & $1\times$ & $1\times$ \\
+    % CPython 3.11.12 & Specialising adaptive interpreter & $1.26\times$ & $1.26\times$ \\
+    % CPython 3.13.3 & None & $1.17\times$ & $1.34\times$ \\
+    % CPython 3.13.3 & Experimental JIT & $1.05\times$ & $1.33\times$ \\
     \bottomrule
   \end{tabular}
 \end{table}
 
-\subsection{Specialising adaptive interpreter}
-\label{ssec:specialising-adaptive-interpreter}
 
+\section{Specialising adaptive interpreter}
+\label{sec:specialising-adaptive-interpreter}
+
+%% What is the idea?
+% Hook
+Simple interpreters of dynamic languages use generic instructions which can express functionality over a wide array of types. However, this generality incurs a performance cost, with the interpreter needing to select the specific implementation for the current type at runtime.
+% Argument
+In 2009, Williams et al. introduced the concept of instruction specialisation in their paper ``Dynamic Interpretation for Dynamic Scripting Languages'' \cite{williamsDynamicInterpretationDynamic2010}.
+This proposes, and claims an average speedup of $1.3\times$.
+Following this, Mark Shannon applied the idea to the Python language in his doctoral thesis ``The construction of high-performance virtual
+machines for dynamic languages'' \cite{shannonConstructionHighperformanceVirtual2011}, demonstrating its viability through the research \ac{vm} HotPy.
+% Link
+This idea was finally realised in the CPython reference implementation through \ac{pep} 659's specialising adaptive interpreter in the 2022 minor version 3.11 release.
 
 %% How is it implemented?
 % Hook
-The specialising adaptive interpreter is an implementation of \ac{jit} adaptive optimisation (introduced in \autoref{ssec:adaptive-optimisation}) which was added to CPython version 3.11 in 2022.
+The specialising adaptive interpreter is implemented as.
+% Argument
+% Implementation details
+This results in a claimed speedup of $10\%$ -- $60\%$, matching our recorded geometric mean improvement of $26\%$ for the \texttt{pyperformance} benchmarks (\autoref{tab:faster-cpython}).
+% How does this relate to dynamism
+Of these benchmarks, the one with the greatest improvement is \texttt{scimark\_monte\_carlo}, with a $73\%$ speedup. This is because...
+% Link
+This is substantiated by an ablation of the feature across the previously discussed real-world workload and micro-benchmarks (\autoref{tab:specialising-adaptive-interpreter-xdsl}).
+
+\begin{table}[H]
+  \caption{.}
+  \label{tab:specialising-adaptive-interpreter-xdsl}
+  \centering
+  \begin{tabular}{lllc}
+    \toprule
+    & \multicolumn{2}{c}{\textbf{Execution time [s]}} \\
+    \cmidrule(r){2-3}
+    \textbf{Workload}& \textbf{Baseline} & \textbf{Optimised} & \textbf{Speedup} \\
+    \midrule
+    Operation instantiation & $3.77e-06 ± 9.16e-07s$ & $2.84e-06 ± 8.83e-07s$ & $\times$ \\
+    Specialised operation instantiation & $4.77e-07 ± 3.85e-07s$ & $2.65e-07 ± 3.72e-07s$ & $\times$ \\
+    Trait checking & $9.24e-07 ± 5.13e-07s$ & $1.71e-06 ± 7.53e-07s$ & $\times$ \\
+    Specialised trait checking & $2.66e-07 ± 3.4e-08s$ & $1.91e-07 ± 3.34e-07s$ & $\times$ \\
+    Operation traversal & $0.0172 ± 9.31e-05s$ & $0.0141 ± 0.000126s$ & $\times$ \\ % ÷ 32768
+    % ...
+    Constant folding & $ $ & $ $ & $\times$ \\
+    Specialised constant folding & $ $ & $ $ & $\times$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+%% How does it perform in xDSL?
+% Hook
+The most salient contribution of
+% This is (more/less) than the pyperformance baseline, explored in later chapter
 % Argument
 % Link
 
-%% How does it perform?
+
+\section{Experimental JIT compiler}
+\label{sec:experimental-jit-compiler}
+
+
+%% What is the idea?
 % Hook
+The execution loop
 % Argument
 % Link
-
-
-\subsection{Experimental JIT compiler}
-\label{ssec:experimental-jit-compiler}
-
-%% Motivation
-% Hook
 CPython's experimental \ac{jit} compiler is an implementation of the copy-and-patch machine code generation approach (introduced in \autoref{sssec:copy-and-patch-compilation}), which was added to CPython in 3.13 in 2024.
-% Argument
-% What did Python do?
-% Changes to facilitate this
-% Actual changes
-% Link
 
-%% How does it perform?
+%% How is it implemented?
+% Hook
+% Argument
+% Implementation details
+% Overall performance speedup (cited, ours recorded)
+% How does this relate to dynamism
+% Link
+As with the specialising adaptive interpreter, we substantiate these claims by an ablation of the feature across the previously discussed real-world workload and micro-benchmarks (\autoref{tab:experimental-jit-compiler-xdsl}).
+
+\begin{table}[H]
+  \caption{.}
+  \label{tab:experimental-jit-compiler-xdsl}
+  \centering
+  \begin{tabular}{lllc}
+    \toprule
+    & \multicolumn{2}{c}{\textbf{Execution time [ns]}} \\
+    \cmidrule(r){2-3}
+    \textbf{Workload}& \textbf{Baseline} & \textbf{Optimised} & \textbf{Speedup} \\
+    \midrule
+    Operation instantiation & $ $ & $ $ & $\times$ \\
+    Specialised operation instantiation & $ $ & $ $ & $\times$ \\
+    Trait checking & $ $ & $ $ & $\times$ \\
+    Specialised trait checking & $ $ & $ $ & $\times$ \\
+    Operation traversal & $ $ & $ $ & $\times$ \\ % ÷ 32768
+    % ...
+    Constant folding & $ $ & $ $ & $\times$ \\
+    Specialised constant folding & $ $ & $ $ & $\times$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+%% How does it perform in xDSL??
 % Hook
 % Argument
 % Link
 
-\subsection{Tail call interpreter}
-\label{ssec:tail-call-interpreter}
 
-%% Motivation
+
+% This is interesting, but needs more writing/word count and is unrelated to the narrative of dynamism
+
+% \section{Tail call interpreter}
+% \label{sec:tail-call-interpreter}
+
+% %% Motivation
+% % Hook
+% In addition to \ac{jit} optimisations leveraging runtime information, there are other opportunities for improving the implementation of interpreted runtimes.
+% % Argument
+% Interpreters can be modelled as a loop which iterates through a sequence of bytecode instructions, with a switch statement selecting the evaluation logic at each iteration for the current instruction.
+% This leads to challenges \cite{mikepallReSuggestionsImplementing2011}.
+% In addition to their work on copy-and-patch compilation, Haoran Xu's work on interpreted language runtimes introduces another idea to address this problem. Tail calling interpreters
+% \cite{xuDeegenJITCapableVM2024}
+% % Link
+% This concept has recently been included in the most recent CPython minor version release, 3.14, with the final release version expected in November 2025.
+
+% %% How is it implemented?
+% % Hook
+% % Argument
+% % Implementation details
+% % Overall performance speedup (cited, ours recorded)
+% % How does this relate to dynamism
+% % Link
+% As with the previous two approaches, we substantiate these claims by an ablation of the feature across the previously discussed real-world workload and micro-benchmarks (\autoref{tab:tail-call-interpreter-xdsl}).
+
+% \begin{table}[H]
+%   \caption{.}
+%   \label{tab:tail-call-interpreter-xdsl}
+%   \centering
+%   \begin{tabular}{lllc}
+%     \toprule
+%     & \multicolumn{2}{c}{\textbf{Execution time [ns]}} \\
+%     \cmidrule(r){2-3}
+%     \textbf{Workload}& \textbf{Baseline} & \textbf{Optimised} & \textbf{Speedup} \\
+%     \midrule
+%     Operation traversal & \\
+%     Trait checking & \\
+%     Operation instantiation & \\
+%     % ...
+%     Constant folding & \\
+%     \bottomrule
+%   \end{tabular}
+% \end{table}
+
+% %% How does it perform in xDSL??
+% % Hook
+% % Argument
+% % Link
+
+
+
+
+\section{Summary}
+\label{chap:impact-cpython-pattern-summary}
+
+% Cumulative impact
 % Hook
-In addition to \ac{jit} optimisations leveraging runtime information, there are also other opportunities for improving the implementation of interpreted runtimes.
 % Argument
-Interpreters can be modelled as a loop which iterates through a sequence of bytecode instructions, with a switch statement selecting the evaluation logic at each iteration for the current instruction.
 % Link
 
-%% How does it work?
+%% Graph of the three approaches
+
+% Impact on xDSL/dynamism
 % Hook
 % Argument
 % Link
-
-%% How does it perform?
-% Hook
-% Argument
-% Link
-
-
-\section{Specialising adaptive interpreter}
-\section{JIT compilation}
-\section{Tail call interpreter}
-
-
-% \chapter{Ideally final optimisation stuff}
