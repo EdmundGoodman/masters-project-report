@@ -44,6 +44,7 @@ report-submission.tex
 *.synctex.gz
 *.synctex.gz(busy)
 *.pdfsync
+*-SAVE-ERROR
 
 ## Build tool directories for auxiliary files
 # latexrun
