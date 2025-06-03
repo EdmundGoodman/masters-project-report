@@ -200,24 +200,32 @@ def plot_speedup():
     labels = ["Specialising\nadaptive interpreter", "Experimental JIT"]
     pyperformance_means = [1.241, 0.988]
     our_means = [57000 / 43000, 44600 / 47000]
+    our_specialised_means = [6750 / 4620, 1.03] #5400 / 5250]
 
     x = np.arange(len(labels))  # the label locations
-    width = 0.35  # the width of the bars
+    width = 0.25  # 0.35  # the width of the bars
 
     fig, ax = plt.subplots()
     rects1 = ax.bar(
-        x - width / 2,
+        x - width,
         pyperformance_means,
         width,
         label="PyPerformance",
         color=light_blue,
     )
     rects2 = ax.bar(
-        x + width / 2,
+        x,
         our_means,
         width,
-        label="xDSL constant folding",
+        label="xDSL",
         color=dark_blue,
+    )
+    rects3 = ax.bar(
+        x + width,
+        our_specialised_means,
+        width,
+        label="Specialised xDSL",
+        color=dark_green,
     )
 
     # Add faster line
@@ -241,6 +249,7 @@ def plot_speedup():
 
     autolabel(ax, rects1)
     autolabel(ax, rects2)
+    autolabel(ax, rects3)
 
     plt.tight_layout()
     # plt.show()
