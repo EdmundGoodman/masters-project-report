@@ -26,9 +26,7 @@ Methodology used to generate that word count:
 
 \begin{quote}
 \begin{minted}[escapeinside=££,linenos=false]{text}
-    $ make texwordcount
-    texcount -inc report-submission.tex | \
-        grep "Words in text:" | tail -n 1
+    $ texcount -inc -total -sum -brief report-submission.tex
     £\wordcount£
 \end{minted}
 % \begin{verbatim}
@@ -75,9 +73,7 @@ Main chapters word count: \wordcount
 \vspace*{2em}
 \begin{code}
     \begin{minted}[escapeinside=££,linenos=false]{text}
-        $ make texwordcount
-        texcount -inc report-submission.tex | \
-            grep "Words in text:" | tail -n 1
+        $ texcount -inc -total -sum -brief report-submission.tex
         £\wordcount£
     \end{minted}
     % \begin{minted}[escapeinside=££]{text}
@@ -109,7 +105,7 @@ students and staff of the University.
 
 % TODO: This doesn't show up in the submission version!!!
 % Add here things like: Figure X is the work of Y, etc.
-Figure \ref{fig:compilers-lagging} was created by Anton Lydike, based on a slide from Sean Silva's talk at the March 2025 Cambridge Compiler Social. This work relates to the open source xDSL and MLIR projects, and as such builds upon their code. This work makes contributions to the xDSL project, with these contributions receiving code reviews from the maintainers of xDSL.
+Figure \ref{fig:compilers-lagging} was created by Anton Lydike, based on a slide from Sean Silva's talk at the March 2025 Cambridge Compiler Social. This work relates to the open source xDSL and MLIR projects, and as such builds upon their existing codebases. Furthermore, this work makes contributions to the xDSL project, with these contributions having received code reviews from the maintainers of xDSL.
 
 \bigskip
 \textbf{Signed:} \@author

@@ -37,28 +37,75 @@ Following these mitigations, the experimental setup is a fair compromise of leve
 Finally, the ubiqitous use of cloud resources, especially for compilation workloads in build servers, makes this choice and its associated properties representative of real-world applications.
 % Link
 
-\begin{table}[H]
-  \caption{Summary of the experimental setup used for performance measurement.}
-  \label{tab:experimental-setup}
-  \centering
-  \begin{tabular}{lll}
-    \toprule
-    \textbf{Configurable} & \textbf{Configuration} \\
-    \midrule
-    AWS instance type & c5a.4xlarge EC2 \\
-    Operating system & Debian 24.04 (Noble) \\
-    Linux kernel version &  \\
-    \midrule
-    CPU name & AMD EPYC 7R32 \\
-    Logical CPU cores & $16$ \\
-    Clock frequency [MHz] & $2799.99$ \\
-    L1 Data Cache [KiB] & $32$ \\
-    L1 Instruction Cache [KiB] & $32$ \\
-    L2 Unified Cache [KiB] & $512$ \\
-    L3 Unified Cache [KiB] & $16384$ \\
-    RAM [GB] & 16 \\
-    \bottomrule
-  \end{tabular}
+% \begin{table}[H]
+%   \caption{Summary of the experimental setup used for performance measurement.}
+%   \label{tab:experimental-setup}
+%   \centering
+%   \begin{tabular}{lll}
+%     \toprule
+%     \textbf{Configurable} & \textbf{Configuration} \\
+%     \midrule
+%     AWS instance type & c5a.4xlarge EC2 \\
+%     Operating system & Debian 24.04 (Noble) \\
+%     Linux kernel version &  \\
+%     \midrule
+%     CPU name & AMD EPYC 7R32 \\
+%     Logical CPU cores & $16$ \\
+%     Clock frequency [MHz] & $2799.99$ \\
+%     L1 Data Cache [KiB] & $32$ \\
+%     L1 Instruction Cache [KiB] & $32$ \\
+%     L2 Unified Cache [KiB] & $512$ \\
+%     L3 Unified Cache [KiB] & $16384$ \\
+%     RAM [GB] & 16 \\
+%     \bottomrule
+%   \end{tabular}
+% \end{table}
+
+\begin{table}[!htb]
+    \caption{Summary of the experimental setup used for performance measurement.}
+    \begin{subtable}{.5\linewidth}
+      \centering
+        \caption{Hardware configuration.}
+        \label{tab:experimental-setup}
+        \begin{tabular}{lll}
+            \toprule
+            \textbf{Configurable} & \textbf{Configuration} \\
+            \midrule
+            AWS instance type & c5a.4xlarge EC2 \\
+            Operating system & Debian 24.04 \\
+            Linux kernel version & 6.8.0-1029-aws \\
+            \midrule
+            CPU name & AMD EPYC 7R32 \\
+            Logical CPU cores & $16$ \\
+            Clock frequency & $2799.99$ MHz \\
+            L1 Data Cache & $32$ KiB\\
+            L1 Instruction Cache & $32$ KiB\\
+            L2 Unified Cache & $512$ KiB\\
+            L3 Unified Cache & $16384$ KiB\\
+            RAM [GB] & 16 \\
+            \bottomrule
+        \end{tabular}
+    \end{subtable}%
+    \begin{subtable}{.5\linewidth}
+      \centering
+        \caption{Software configuration.}
+        \label{tab:experimental-configuration}
+        \vspace{3em}
+        \begin{tabular}{lll}
+            \toprule
+            \textbf{Configurable} & \textbf{Configuration} \\
+            \midrule
+            CMake version & 3.28.3 \\
+            Ninja version & 1.11.1 \\
+            \midrule
+            Python interpreter & CPython 3.10.17 \\
+            C++ compiler & clang 18.1.8 \\
+            \midrule
+            xDSL commit SHA & \texttt{3fcc65b5} \\
+            MLIR commit SHA & \texttt{6516ae4} \\
+            \bottomrule
+        \end{tabular}
+    \end{subtable}
 \end{table}
 
 % Hook
@@ -68,25 +115,25 @@ As such, we similarly provide a description of the language versions and build t
 % Link
 Experiments in later chapters ablate across both language and framework versions, with these versions being noted explicitly when changed.
 
-\begin{table}[H]
-  \caption{Summary of experimental software configuration used for performance measurement.}
-  \label{tab:experimental-configuration}
-  \centering
-  \begin{tabular}{lll}
-    \toprule
-    \textbf{Configurable} & \textbf{Configuration} \\
-    \midrule
-    CMake version & 3.28.3 \\
-    Ninja version & 1.11.1 \\
-    \midrule
-    Python interpreter & CPython 3.10.17 \\
-    C++ compiler & clang 18.1.8 \\
-    \midrule
-    xDSL commit SHA & \texttt{3fcc65b5} \\
-    MLIR commit SHA & \texttt{6516ae4} \\
-    \bottomrule
-  \end{tabular}
-\end{table}
+% \begin{table}[H]
+%   \caption{Summary of experimental software configuration used for performance measurement.}
+%   \label{tab:experimental-configuration}
+%   \centering
+%   \begin{tabular}{lll}
+%     \toprule
+%     \textbf{Configurable} & \textbf{Configuration} \\
+%     \midrule
+%     CMake version & 3.28.3 \\
+%     Ninja version & 1.11.1 \\
+%     \midrule
+%     Python interpreter & CPython 3.10.17 \\
+%     C++ compiler & clang 18.1.8 \\
+%     \midrule
+%     xDSL commit SHA & \texttt{3fcc65b5} \\
+%     MLIR commit SHA & \texttt{6516ae4} \\
+%     \bottomrule
+%   \end{tabular}
+% \end{table}
 
 
 \subsection{Experimental workloads}
@@ -290,7 +337,7 @@ As such, micro-benchmarking is a useful tool for deeply understanding the perfor
 % Hook
 As discussed in our related work (Section \ref{sec:perf-user-extensible-frameworks}), Amini and Nui's talk ``How Slow is MLIR'' \cite{aminiHowSlowMLIR2024} discusses a set of micro-benchmarks for key operations in the \ac{mlir} compiler, such as traversing the IR and creating operations.
 % Argument
-These micro-benchmarks were used to inform the optimisation of \ac{mlir}'s data structures and for comparison with traditional LLVM-based compilers. The implementation of the micro-benchmarks allude to an underlying design goal in \ac{mlir} by their measurement of asymptotic scaling properties\footnote{\url{https://github.com/joker-eph/llvm-project/blob/6773f8/mlir/unittests/Benchmarks/Cloning.cpp\#L66}}. This design goal is asymptotically optimal performance for its underlying data structures. However, data structures with these characteristics often incur constant-time penalties.
+These micro-benchmarks were used to inform the optimisation of \ac{mlir}'s data structures and for comparison with traditional LLVM-based compilers. The implementation of the micro-benchmarks allude to an underlying design goal in \ac{mlir} by their measurement of asymptotic scaling properties\footnote{\scriptsize{\url{https://github.com/joker-eph/llvm-project/blob/6773f8/mlir/unittests/Benchmarks/Cloning.cpp\#L66}}}. This design goal is asymptotically optimal performance for its underlying data structures. However, data structures with these characteristics often incur constant-time penalties.
 This causes overhead for small workloads, where, unlike the asymptotic case, the cost is not amortised. As such, micro-benchmarks may not be representative of the system's overall performance, revealing possibility for the optimisation of code co-designed using them.
 Despite this, they can still provide useful insight into \ac{mlir}'s performance characteristics.
 % Link
@@ -304,7 +351,7 @@ We implement micro-benchmark workloads for the xDSL equivalent to those for \ac{
 % Hook
 Unfortunately, the implementation and build instructions for the ``How Slow is MLIR?'' micro-benchmarks were not published with the talk.
 % Argument (too informal?)
-However, the source code can be found on a branch of their fork of LLVM\footnote{\url{https://github.com/joker-eph/llvm-project/tree/benchmarks}}. We provide a copy of this source code and instructions for running the benchmarks\footnote{\url{https://github.com/EdmundGoodman/llvm-project-benchmarks}} to enhance the replicability of our results and facilitate further performance experiments.
+However, the source code can be found on a branch of their fork of LLVM\footnote{\scriptsize{\url{https://github.com/joker-eph/llvm-project/tree/benchmarks}}}. We provide a copy of this source code and instructions for running the benchmarks\footnote{\scriptsize{\url{https://github.com/EdmundGoodman/llvm-project-benchmarks}}} to enhance the replicability of our results and facilitate further performance experiments.
 % Link
 This source code can then be used to construct comparable micro-benchmarks in Python.
 
@@ -444,17 +491,17 @@ These methods can be simply benchmarked for an example workload (Listing \ref{li
 However, care must be taken when implementing these benchmarks to ensure they are can be equitably compared. For example, the operations must both have the same number of traits, and the trait being checked must be at the same position in that operation's list of traits.
 If this is not true, one implementation may require fewer iterations to perform its workload, invalidating the comparability of the two results.
 % Link
-Micro-benchmarks of checking traits for both implementations show a slow-down of approximately $240\times$ from \ac{mlir} to xDSL (\autoref{tab:ubenchmark-trait-checks}).
+Micro-benchmarks of checking traits for both implementations show a slow-down of approximately $250\times$ from \ac{mlir} to xDSL (\autoref{tab:ubenchmark-trait-checks}).
 
 \begin{table}[H]
-  \caption{Trait checks in xDSL are approximately $80\times$ slower than in \ac{mlir} in the asymptotic case.}
+  \caption{Trait checks in xDSL are approximately $250\times$ slower than in \ac{mlir} in the asymptotic case.}
   \label{tab:ubenchmark-trait-checks}
   \centering
   \begin{tabular}{cc}
     \toprule
     \textbf{MLIR [ns]} & \textbf{xDSL [ns]}\\
     \midrule
-    $11.7 \pm 0.5$ & $924 \pm 513$ \\
+    $11.7 \pm 0.5$ & $1920 \pm 695$ \\
     \bottomrule
   \end{tabular}
 \end{table}

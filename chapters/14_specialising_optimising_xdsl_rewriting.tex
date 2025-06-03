@@ -289,41 +289,54 @@ As such, it is well-suited for comparing the performance characteristics of stat
 
 %% Specialised performance and lessons learnt
 % Hook
-Through specialisation, we achieve a $3.5\times$ speedup over the original implementation (\autoref{fig:ubenchmark-original-trait-performance}).
+Through specialisation, we achieve a $8\times$ speedup over the original implementation (\autoref{tab:ubenchmark-original-trait-performance}).
 % Argument
 However, this again incurs a cost to xDSL's expressivity, sacrificing polymorphic support for checking traits of both object types and instances. As with operation instantiation, this is contrary to xDSL's design goals.
 Furthermore, this speedup is less dramatic than operation instantiation, as a result of having less overhead in the original implementation, but can be reasoned about in the same manner with our novel profiling tool (full traces in Appendices \ref{listing:bytecode-profiles-hastrait-original}, \ref{listing:bytecode-profiles-hastrait-optimised}). As before, specialisation reduces the number of bytecode instructions from $89$ to $35$, with the number of high-overhead \texttt{CALL} instructions dropping from $11$ to $2$.
 % Link
-In addition to this, the similarity of the two implementations allows us to draw comparisons between the bytecode and assembly instructions.
+% In addition to this, the similarity of the two implementations allows us to draw comparisons between the bytecode and assembly instructions.
 
-%% Compare performance and number of bytecode/assembly operations
-\begin{figure}[H]
-    \centering
-    \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=\textwidth]{images/specialising_optimising_xdsl_rewriting/trait_performance.pdf}
-        \caption{Specialisation yields performance uplifts of up to $3.5\times$, $23\times$ slower than the \ac{mlir} reference implementation.}
-        \label{fig:ubenchmark-original-trait-performance}
-        \vspace{1em}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=\textwidth]{images/specialising_optimising_xdsl_rewriting/trait_instructions.pdf}
-        \caption{Specialisation reduces the bytecode instruction count by $2.5\times$, with complex Python bytecode instructions expressing more functionality than RISC AArch64 assembly.}
-        \label{fig:ubenchmark-original-trait-instructions}
-    \end{subfigure}
-    \caption{Impact of specialising trait checking xDSL on performance and instruction count.}
-    \label{fig:ubenchmark-original-trait-summary}
-\end{figure}
+% %% Compare performance and number of bytecode/assembly operations
+% \begin{figure}[H]
+%     \centering
+%     \begin{subfigure}[b]{0.45\textwidth}
+%         \includegraphics[width=\textwidth]{images/specialising_optimising_xdsl_rewriting/trait_performance.pdf}
+%         \caption{Specialisation yields performance uplifts of up to $3.5\times$, $23\times$ slower than the \ac{mlir} reference implementation.}
+%         \label{fig:ubenchmark-original-trait-performance}
+%         \vspace{1em}
+%     \end{subfigure}
+%     \hfill
+%     \begin{subfigure}[b]{0.45\textwidth}
+%         \includegraphics[width=\textwidth]{images/specialising_optimising_xdsl_rewriting/trait_instructions.pdf}
+%         \caption{Specialisation reduces the bytecode instruction count by $2.5\times$, with complex Python bytecode instructions expressing more functionality than RISC AArch64 assembly.}
+%         \label{fig:ubenchmark-original-trait-instructions}
+%     \end{subfigure}
+%     \caption{Impact of specialising trait checking xDSL on performance and instruction count.}
+%     \label{fig:ubenchmark-original-trait-summary}
+% \end{figure}
 
-% TODO: Does this want to be lifted into the dynamism section -- this might make it easier to link to more substantial data rather than just explaining interpreter/compiler again in gratuitous detail
-% Hook
-Empowered by the similarity of their implementations, we can further apply profiling tools to contrast the emitted instructions by each language runtime.
-% Argument
-For xDSL's Python, we use our novel bytecode profiling tool ByteSight, and for \ac{mlir}'s C++, we use \texttt{valgrind}'s \texttt{callgrind} tool \cite{valgrindtmdevelopersCallgrindCallgraphGenerating}.
-For the same algorithm, Python dispatches only $35$ bytecode instructions in comparison with AArch64 assembly taking $708$ (\autoref{fig:ubenchmark-original-trait-performance}).
-This demonstrates the significant abstraction gap between high-level Python bytecode and the low-level assembly instructions compiled from C++. While Python requires fewer explicit instructions due to its dynamic dispatch and built-in operations handling complex tasks internally, the underlying C++ implementation must execute many more granular assembly instructions to achieve the same computational result.
-% Link
-Despite this, the C++ implementation outperforms the Python implementation, due to these assembly instructions more closely matching the execution model of the target machine.
+\begin{table}[H]
+  \caption{specialising trait checking in xDSL yields performance uplifts of up to $8\times$, $20\times$ slower than the \ac{mlir} reference implementation.}
+  \label{tab:ubenchmark-original-trait-performance}
+  \centering
+  \begin{tabular}{ccc}
+    \toprule
+    \textbf{MLIR [ns]} & \textbf{xDSL [ns]} & \textbf{Optimised xDSL [ns]} \\
+    \midrule
+    $11.7 \pm 0.5$ & $1920 \pm 695$ & $239 \pm 35$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+% % TODO: Does this want to be lifted into the dynamism section -- this might make it easier to link to more substantial data rather than just explaining interpreter/compiler again in gratuitous detail
+% % Hook
+% Empowered by the similarity of their implementations, we can further apply profiling tools to contrast the emitted instructions by each language runtime.
+% % Argument
+% For xDSL's Python, we use our novel bytecode profiling tool ByteSight, and for \ac{mlir}'s C++, we use \texttt{valgrind}'s \texttt{callgrind} tool \cite{valgrindtmdevelopersCallgrindCallgraphGenerating}.
+% For the same algorithm, Python dispatches only $35$ bytecode instructions in comparison with AArch64 assembly taking $708$ (\autoref{fig:ubenchmark-original-trait-performance}).
+% This demonstrates the significant abstraction gap between high-level Python bytecode and the low-level assembly instructions compiled from C++. While Python requires fewer explicit instructions due to its dynamic dispatch and built-in operations handling complex tasks internally, the underlying C++ implementation must execute many more granular assembly instructions to achieve the same computational result.
+% % Link
+% Despite this, the C++ implementation outperforms the Python implementation, due to these assembly instructions more closely matching the execution model of the target machine.
 
 
 
@@ -491,7 +504,7 @@ Instead of one or two helper functions in xDSL's API, aspects of the pattern rew
 As such, the first step in the specialisation process is manually inlining this call stack, which provides two benefits. Firstly, it avoids the non-negligible overhead of function calls discussed in previous micro-benchmarks, and further worsened by the deep call stack of the more complex implementation. Secondly, it reveals logic that is redundant for the implementation of this workload, which is otherwise hidden across the boundaries of xDSL's API.
 The inlined implementation can then be specialised to remove this redundant logic, and further leverage runtime invariants of the integer constant addition workload where possible.
 % Link
-This yields a specialised implementation with reduced overhead, which (\autoref{fig:constant-fold-optimised-viztracer}),
+This yields a specialised implementation with reduced overhead (\autoref{fig:constant-fold-optimised-viztracer}).
 
 
 \begin{figure}[H]

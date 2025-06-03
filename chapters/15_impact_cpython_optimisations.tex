@@ -1,4 +1,5 @@
-\chapter{Impact of CPython performance enhancements on xDSL pattern rewriting}
+% \chapter{Impact of CPython performance enhancements on xDSL pattern rewriting}
+\chapter{CPython optimizations' impact on xDSL pattern rewriting}
 \label{chap:impact-cpython-pattern-rewriting}
 
 % Hook
@@ -10,30 +11,30 @@ This section discusses the details of these optimisations, and their effect on u
 
 
 \begin{table}[H]
-  \caption{Incremental improvements of the geometric mean of speedups across the PyPerformance benchmark suite (full results \autoref{chap:pyperformance-version-comparison}), achieved by optimisations to the CPython interpreter.}
+  \caption{Incremental improvements of the geometric mean of speedups across the PyPerformance benchmark suite (full results \autoref{chap:pyperformance-version-comparison}), achieved by optimisations to the CPython interpreter since CPython 3.10.}
   \label{tab:faster-cpython}
   \centering
-  \begin{tabular}{llc}
-    \toprule
-    \multicolumn{2}{c}{\textbf{Python executable}} \\
-    \cmidrule(r){1-2}
-    \textbf{Implementation} & \textbf{Feature flag} & \textbf{PyPerformance speedup} \\
-    \midrule
-    CPython 3.10.17 & None & $1\times$ \\
-    CPython 3.11.12 & Specialising adaptive interpreter & $1.26\times$ \\
-    CPython 3.13.3 & None & $1.17\times$ \\
-    CPython 3.13.3 & Experimental JIT & $1.05\times$ \\
+  \begin{tabular}{llrr}
+    % \toprule
+    % \multicolumn{2}{c}{\textbf{Python executable}} \\
+    % \cmidrule(r){1-2}
+    % \textbf{Implementation} & \textbf{Feature flags} & \textbf{PyPerformance speedup} \\
+    % \midrule
+    % CPython 3.10.17 & None & $1\times$ \\
+    % CPython 3.11.12 & None & $1.257\times$ \\
+    % CPython 3.13.3 & None & $1.312\times$ \\
+    % CPython 3.13.3 & \texttt{--enable-experimental-jit} & $1.397\times$ \\
     % CPython 3.14.0a7 & None & $1\times$ \\
     % CPython 3.14.0a7 & Tail call interpreter & $1\times$ \\
-    % \toprule
-    % \multicolumn{2}{c}{\textbf{Python executable}} & \multicolumn{2}{c}{\textbf{PyPerformance speedup}}\\
-    % \cmidrule(r){1-2} \cmidrule(r){3-4}
-    % \textbf{Implementation} & \textbf{Feature flag} & \textbf{Baseline} & \textbf{Previous} \\
-    % \midrule
-    % CPython 3.10.17 & None & $1\times$ & $1\times$ \\
-    % CPython 3.11.12 & Specialising adaptive interpreter & $1.26\times$ & $1.26\times$ \\
-    % CPython 3.13.3 & None & $1.17\times$ & $1.34\times$ \\
-    % CPython 3.13.3 & Experimental JIT & $1.05\times$ & $1.33\times$ \\
+    \toprule
+    \multicolumn{2}{c}{\textbf{Python executable}} & \multicolumn{2}{c}{\textbf{PyPerformance speedup}}\\
+    \cmidrule(r){1-2} \cmidrule(r){3-4}
+    \textbf{Implementation} & \textbf{Feature flag} & \textbf{Baseline} & \textbf{Previous} \\
+    \midrule
+    CPython 3.10.17 & None & $1\times$ & $1\times$ \\
+    CPython 3.11.12 & Specialising adaptive interpreter & $1.241\times$ & $1.241\times$ \\
+    CPython 3.13.3 & None & $1.312\times$ & $1.078\times$ \\
+    CPython 3.13.3 & Experimental JIT & $1.295\times$ & $0.988\times$ \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -55,91 +56,124 @@ This idea was finally realised in the CPython reference implementation through \
 
 %% How is it implemented?
 % Hook
-The specialising adaptive interpreter is implemented as.
-% Argument
-% Implementation details
-This results in a claimed speedup of $10\%$ -- $60\%$, matching our recorded geometric mean improvement of $26\%$ for the \texttt{pyperformance} benchmarks (\autoref{tab:faster-cpython}).
-% How does this relate to dynamism
-Of these benchmarks, the one with the greatest improvement is \texttt{scimark\_monte\_carlo}, with a $73\%$ speedup. This is because...
+The specialising adaptive interpreter implements this by replacing instructions which can be optimised by specialisation, such as the generic \texttt{LOAD\_ATTR}, with an adaptive form, such as \texttt{LOAD\_ATTR\_ADAPTIVE}. Each adaptive instruction maintains an internal counter, incrementing it when the observed usage matches a specialisation opportunity, and decrementing when it does not. When this counter exceeds a threshold, the adaptive instruction replaces itself with the appropriate specialised version, in a process known as a quickening. For example \texttt{LOAD\_ATTR\_ADAPTIVE} becomes \texttt{LOAD\_ATTR\_INSTANCE\_VALUE} when the attribute is an instance of the class for previous execution paths of the instruction.
+If the assumptions required for specialisation are violated later, then the interpreter can fall back to the original instruction implementation to ensure correctness.
+The optimisation is transparent to users, as no code changes are required, and the interpreter ensures correctness through its fall-back mechanism.
+The specialising adaptive interpreter's documentation claims a speedup of $10\%$ -- $60\%$ \cite{pep659}, matching our recorded geometric mean improvement of $24\%$ for the \texttt{pyperformance} benchmarks (\autoref{tab:faster-cpython}).
+% Of these benchmarks, the one with the greatest improvement is \texttt{scimark\_monte\_carlo}, with a $66\%$ speedup. The implementation of this benchmark
+% \footnote{\scriptsize{\url{https://github.com/python/pyperformance/blob/ec9e29/.../bm_scimark/run\_benchmark.py\#L201}}}
 % Link
-This is substantiated by an ablation of the feature across the previously discussed real-world workload and micro-benchmarks (\autoref{tab:specialising-adaptive-interpreter-xdsl}).
+This is substantiated by an ablation of the feature across the previously discussed real-world workload and micro-benchmarks.
+
 
 \begin{table}[H]
-  \caption{.}
+  \caption{Execution time per operation improves by a geometric mean speedup of $1.36\times$ across micro-benchmarks and real-world workloads when the specialising adaptive interpreter is used (CPython 3.11).}
   \label{tab:specialising-adaptive-interpreter-xdsl}
   \centering
-  \begin{tabular}{lllc}
+  \begin{tabular}{lrrr}
     \toprule
     & \multicolumn{2}{c}{\textbf{Execution time [s]}} \\
     \cmidrule(r){2-3}
-    \textbf{Workload}& \textbf{Baseline} & \textbf{Optimised} & \textbf{Speedup} \\
+    \textbf{Workload}& \textbf{CPython 3.10} & \textbf{CPython 3.11} & \textbf{Speedup} \\
     \midrule
-    Operation instantiation & $3.77e-06 ± 9.16e-07s$ & $2.84e-06 ± 8.83e-07s$ & $\times$ \\
-    Specialised operation instantiation & $4.77e-07 ± 3.85e-07s$ & $2.65e-07 ± 3.72e-07s$ & $\times$ \\
-    Trait checking & $9.24e-07 ± 5.13e-07s$ & $1.71e-06 ± 7.53e-07s$ & $\times$ \\
-    Specialised trait checking & $2.66e-07 ± 3.4e-08s$ & $1.91e-07 ± 3.34e-07s$ & $\times$ \\
-    Operation traversal & $0.0172 ± 9.31e-05s$ & $0.0141 ± 0.000126s$ & $\times$ \\ % ÷ 32768
-    % ...
-    Constant folding & $ $ & $ $ & $\times$ \\
-    Specialised constant folding & $ $ & $ $ & $\times$ \\
+    Operation instantiation & $3770 \pm 916$ & $2840 \pm 883$ & $1.33\times$ \\
+    Specialised operation instantiation & $477 \pm 385$ & $265 \pm 372$ & $1.8\times$ \\
+    Trait checking & $1920 \pm 695$ & $1710 \pm 753$ & $1.12\times$ \\
+    Specialised trait checking & $266 \pm 34$ & $191 \pm 334$ & $1.39\times$ \\
+    Operation traversal & $525 \pm 3$ & $432 \pm 4$ & $1.21\times$ \\
+    Constant folding & $57000 \pm 1895$ & $43000 \pm 1340$ & $1.33\times$ \\
+    Specialised constant folding & $6750 \pm 1340$ & $4620 \pm 1075$ & $1.46\times$ \\
     \bottomrule
   \end{tabular}
 \end{table}
 
+
 %% How does it perform in xDSL?
 % Hook
-The most salient contribution of
-% This is (more/less) than the pyperformance baseline, explored in later chapter
+We measure the specialising adaptive interpreter to yield a non-negligible speedup of $1.38\times$ across both micro-benchmarks and real-world workloads (\autoref{tab:specialising-adaptive-interpreter-xdsl}).
 % Argument
-% Link
+This speedup is greater than the $1.26\times$ recorded across the \texttt{pyperformance} suite. Since the specialising adaptive interpreter works by quickening highly dynamic instructions into specialised versions, this demonstrates that user-extensible compiler framework workloads are more dynamic than the baseline of \texttt{pyperformance} workloads.
+The documentation of \texttt{pyperformance} states ``the focus is on real-world benchmarks, rather than synthetic benchmarks, using whole applications when possible.'' \cite{collinwinterPythonPyperformance2025}, further widening this conclusion to user-extensible compiler framework workloads being more dynamic than the average of a set workload representative of the real-world use of Python.
+In addition to this, the specialised versions of each workload yield a greater speedup after applying the manual specialisation process described in \autoref{chap:specialising-optimising-pattern-rewriting}. This shows a further benefit of the manual specialisation process in revealing optimisation opportunities by the language runtime.
+
+%% TODO: Not enough space to include the listing needed to explain this!
+% By examining the instructions emitted by these workloads using ByteSight with adaptive instructions enabled, we can see that...
 
 
 \section{Experimental JIT compiler}
 \label{sec:experimental-jit-compiler}
 
-
 %% What is the idea?
 % Hook
-The execution loop
-% Argument
-% Link
+Another bottleneck of simple interpreted language runtimes is the overhead associated with dispatching and executing bytecode operations.
+% Runtime
+To address this, \acf{jit} compilation can translate frequently executed portions of bytecode into native machine code. This avoids interpreter overhead and allows for further low-level optimizations.
 CPython's experimental \ac{jit} compiler is an implementation of the copy-and-patch machine code generation approach (introduced in \autoref{sssec:copy-and-patch-compilation}), which was added to CPython in 3.13 in 2024.
+% Link
+This idea was finally realised in the CPython reference implementation through \ac{pep} 744's experimental \ac{jit} in the 2024 minor version 3.13 release.
 
 %% How is it implemented?
 % Hook
+To implement this, CPython introduced a new internal intermediate representation: tier two opcodes. Tier two opcodes are even more fine-grained that traditional bytecode and as such more amenable to copy-and-patch compilation.
 % Argument
-% Implementation details
-% Overall performance speedup (cited, ours recorded)
-% How does this relate to dynamism
+When compiling CPython, the LLVM toolchain is used to create small re-usable snippets of machine code for the target machine called stencils, which implement the functionality of these tier two opcodes. Then, at runtime, when bytecode is executed frequently it is marked as hot, and translated into a sequence of these more granular tier two opcodes, and transformation passes are applied to optimise them. The \ac{jit} then translates each tier two opcode into executable machine code, by copying and patching runtime information into the holes in the pre-compiled stencils. This machine code can then run directly on the processor, replacing the slower interpreter loop to execute the equivalent bytecode instructions. % Other examples of \ac{jit} compiled interpreters such as V8 and LuaJIT have further levels of optimisation above a baseline.
+The \ac{jit} is currently experimental and disabled by default, but it lays the groundwork for significant future performance enhancements. As such, its performance change for many workloads is minimal or even regressive.
 % Link
-As with the specialising adaptive interpreter, we substantiate these claims by an ablation of the feature across the previously discussed real-world workload and micro-benchmarks (\autoref{tab:experimental-jit-compiler-xdsl}).
+As with the specialising adaptive interpreter, we substantiate these claims by an ablation of the feature across the previously discussed real-world workload and micro-benchmarks.
 
 \begin{table}[H]
-  \caption{.}
+  \caption{Execution time per operation improves by a geometric mean slowdown of $0.971\times$ across micro-benchmarks and real-world workloads for CPython 3.13.3 when the experimental \ac{jit} is enabled.}
   \label{tab:experimental-jit-compiler-xdsl}
   \centering
-  \begin{tabular}{lllc}
+  \begin{tabular}{lrrr}
     \toprule
-    & \multicolumn{2}{c}{\textbf{Execution time [ns]}} \\
+    & \multicolumn{2}{c}{\textbf{Execution time [s]}} \\
     \cmidrule(r){2-3}
-    \textbf{Workload}& \textbf{Baseline} & \textbf{Optimised} & \textbf{Speedup} \\
+    \textbf{Workload}& \textbf{JIT disabled} & \textbf{JIT enabled} & \textbf{Speedup} \\
     \midrule
-    Operation instantiation & $ $ & $ $ & $\times$ \\
-    Specialised operation instantiation & $ $ & $ $ & $\times$ \\
-    Trait checking & $ $ & $ $ & $\times$ \\
-    Specialised trait checking & $ $ & $ $ & $\times$ \\
-    Operation traversal & $ $ & $ $ & $\times$ \\ % ÷ 32768
+    Operation instantiation & $2990 \pm 808$ & $2980 \pm 759$ & $1\times$ \\
+    Specialised operation instantiation & $365 \pm 32$ & $391 \pm 36$ & $0.93\times$ \\
+    Trait checking & $1190 \pm 553$ & $1220 \pm 573$ & $0.98\times$ \\
+    Specialised trait checking & $221 \pm 31$ & $224 \pm 30$ & $0.99\times$ \\
+    Operation traversal & $394 \pm 2$ & $427 \pm 2$ & $0.92\times$ \\ % ÷ 32768
     % ...
-    Constant folding & $ $ & $ $ & $\times$ \\
-    Specialised constant folding & $ $ & $ $ & $\times$ \\
+    Constant folding & $44600 \pm 1330$ & $47000 \pm 1450$ & $0.95\times$ \\
+    Specialised constant folding & $5400 \pm 1225$ & $5250 \pm 1275$ & $1.03\times$ \\
     \bottomrule
   \end{tabular}
 \end{table}
 
 %% How does it perform in xDSL??
 % Hook
+In contrast to the specialising adaptive interpreter, the experimental \ac{jit} regresses performance for nearly all workloads (\autoref{tab:experimental-jit-compiler-xdsl}).
+% Argument
+This aligns with the results recorded for the \texttt{pyperformance} benchmark suite, which similarly regress when the \ac{jit} is enabled.
+As discussed above, this comes as a result of the \ac{jit}'s experimental nature, aiming to provide infrastructure for future optimisations rather than immediate gains.
+% Interestingly, the specialised constant folding workload has a statistically significant performance speedup when the \ac{jit} is enabled. % TODO: Need to explain details of standard deviation uncertainty metric and round everything appropriately!!!
+% Link
+
+
+
+\section{Summary}
+\label{chap:impact-cpython-pattern-summary}
+
+% Cumulative impact
+% Hook
 % Argument
 % Link
+
+%% Graph of the two approaches
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{images/impact_cpython_optimisations/15_summary.pdf}
+    \caption{.}
+    \label{figure:impact-cpython-optimisations}
+\end{figure}
+
+
+
+
+
 
 
 
@@ -191,21 +225,3 @@ As with the specialising adaptive interpreter, we substantiate these claims by a
 % % Hook
 % % Argument
 % % Link
-
-
-
-
-\section{Summary}
-\label{chap:impact-cpython-pattern-summary}
-
-% Cumulative impact
-% Hook
-% Argument
-% Link
-
-%% Graph of the three approaches
-
-% Impact on xDSL/dynamism
-% Hook
-% Argument
-% Link

@@ -22,7 +22,7 @@
 \newcommand{\candidatenumber}{9606J}
 \newcommand{\college}{Clare College}
 \newcommand{\course}{Master of Philosophy in Advanced Computer Science}
-\newcommand{\wordcount}{8949}
+\newcommand{\wordcount}{13852}
 
 \input{chapters/00_preamble}
 \input{chapters/01_glossary}
@@ -33,23 +33,28 @@
 % \submissiontrue
 % For the final version (with your name) leave the above commented.
 
+
+%TC:group table 0 1
+%TC:group tabular 1 1
+%TC:group figure 1 1
+%TC:group code 1 1
 \begin{document}
 
 %TC:ignore
-\pagenumbering{gobble}
+% \pagenumbering{gobble} % https://www.cst.cam.ac.uk/local/phd/typography
 \include{chapters/02_titlepage}
 \include{chapters/03_coverpage}
 \include{chapters/04_abstract}
 \include{chapters/05_acknowledgements}
-\pagenumbering{roman}
+% \pagenumbering{roman}
 \include{chapters/06_frontmatter}
-\pagenumbering{arabic}
+% \pagenumbering{arabic}
 %TC:endignore
 
 \label{firstcontentpage} % start page count here
 \zlabel{firstpdfcontentpage}
 \include{chapters/10_introduction}
-% \include{chapters/11_background}
+\include{chapters/11_background}
 \include{chapters/12_measuring_compiler_performance}
 \include{chapters/13_profiling_python_bytecode}
 \include{chapters/14_specialising_optimising_xdsl_rewriting}

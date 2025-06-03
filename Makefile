@@ -40,7 +40,9 @@ wordcount: $(WORDCOUNT_FILE).pdf
 
 .PHONY: texwordcount
 texwordcount: report-submission.tex
-	texcount -inc report-submission.tex | grep "Words in text:" | tail -n 1
+	texcount -inc -total -sum -brief report-submission.tex
+# texcount -inc -total report-submission.tex | grep -E "Words in text:|Words outside text" | awk -F: '{sum += $$2} END {print sum}'
+# texcount -inc report-submission.tex | grep "Words in text:" | tail -n 1
 
 .PHONY: lexers
 lexers: tools/generate_lexers_json.py
