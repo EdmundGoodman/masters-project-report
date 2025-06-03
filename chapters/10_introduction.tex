@@ -56,8 +56,16 @@ This work examines the performance of the pattern rewriting component of the xDS
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.6\textwidth]{images/introduction/narrative.drawio.pdf}
-    \caption{\textit{(Sketch of figure: will be drawn properly with matplotlib and real data once finalised -- any general feedback appreciated!)} Closing the gap between xDSL (blue language runtime, orange implementation overhead) and \ac{mlir} (green) pattern rewriting performance. xDSL's performance can be improved by changes to both its implementation and language runtime. C++ has less of a performance advantage for \ac{mlir} than other workloads due to the costs associated with dynamism.}
+    \begin{tikzpicture}
+        \node[anchor=south west,inner sep=0] (image) at (0,0) {\includegraphics[width=0.6\textwidth]{images/introduction/narrative.drawio.pdf}};
+        \node[circledstyle, fill=pairedOneLightBlue] at (4.35,5.05) {1};
+        \node[circledstyle, fill=pairedTwoDarkBlue] at (5.55,4.15) {2};
+        \node[circledstyle, fill=pairedThreeLightGreen] at (6.95,2.7) {3};
+        \node[circledstyle, fill=pairedFourDarkGreen] at (8.75,1.95) {4};
+    \end{tikzpicture}
+    % \includegraphics[width=0.6\textwidth]{images/introduction/narrative.drawio.pdf}
+    \caption{Closing the gap between xDSL and \ac{mlir} pattern rewriting performance. xDSL's performance can be improved by changes to both its implementation and language runtime. C++ has less of a performance advantage for \ac{mlir} than other workloads due to the costs associated with dynamism.}
+    % \textit{(Sketch of figure: will be drawn properly with matplotlib and real data once finalised -- any general feedback appreciated!)}
     % TODO: Further think about this to consider making it more conceptual/hooky
     % TODO: If kept, this will have bars labelled with performance figures, but since not final have not done this yet
     \label{fig:narrative}
@@ -66,10 +74,10 @@ This work examines the performance of the pattern rewriting component of the xDS
 %% Overview (~abstract sentence five, which needs re-writing: what we did part one -- specialisation and CPython stuff)
 The performance of a program is constrained both by the details of its implementation and the runtime of its language.
 These two properties are deeply interlinked, making them difficult to measure independently.
-To disentangle them, we manually optimise and specialise xDSL's implementation of pattern rewriting (Label \texttt{(1)} of \autoref{fig:narrative}), resulting in an $5.5\times$ performance uplift. % TODO: align with finalised figure when re-measured
+To disentangle them, we manually optimise and specialise xDSL's implementation of pattern rewriting (\autoref{fig:narrative}, \circledbase{pairedOneLightBlue}{1}), resulting in an $5.5\times$ performance uplift. % TODO: align with finalised figure when re-measured
 We then confirm the performance of the specialisation is constrained only by the language runtime by examination of the dispatched bytecode of micro-benchmarks.
 % TODO: Add further discussion of profiler!!!
-Following this, we quantify the impact of recent performance enhancements made to CPython for this specialised implementation (Label \texttt{(2)} of \autoref{fig:narrative}). % as an increase of $xy\%$.
+Following this, we quantify the impact of recent performance enhancements made to CPython for this specialised implementation (\autoref{fig:narrative}, \circledbase{pairedTwoDarkBlue}{2}). % as an increase of $xy\%$.
 This describes the best-case for the performance of pattern rewriting in xDSL, which can then be compared against \ac{mlir}.
 
 
@@ -81,8 +89,8 @@ This describes the best-case for the performance of pattern rewriting in xDSL, w
 
 %% Overview (~abstract sentence five, which needs re-writing: what we did part three -- cost of dynamism)
 A key difference between the Python and C++ runtimes is their degree of dynamism.
-\ac{mlir}'s C++ runtime incurs overhead when dynamically dispatching functions (Label \texttt{(3)} of \autoref{fig:narrative}), which is worsened by prohibiting ahead-of-time performance optimisations. In contrast, almost every bytecode operation evaluated by the Python interpreter is dynamic, each incurring an overhead.
-As such, we expect the difference in performance between language runtimes (Label \texttt{(4)} of \autoref{fig:narrative}) to be smaller for more dynamic workloads.
+\ac{mlir}'s C++ runtime incurs overhead when dynamically dispatching functions (\autoref{fig:narrative}, \circledbase{pairedThreeLightGreen}{3}), which is worsened by prohibiting ahead-of-time performance optimisations. In contrast, almost every bytecode operation evaluated by the Python interpreter is dynamic, each incurring an overhead.
+As such, we expect the difference in performance between language runtimes (\autoref{fig:narrative}, \circledbase{pairedFourDarkGreen}{4}) to be smaller for more dynamic workloads.
 To corroborate this, we measure the difference in performance between pattern rewriting workloads using xDSL and \ac{mlir}, and assess the contribution of overheads incurred by dynamism.
 This measurement procedure uniquely leverages xDSL's sidekick compilation functionality to ensure the comparability of performance measurements by driving them with the same textual \ac{ir}, even for implementation details internal to each framework.
 Finally, we critically evaluate the degree to which this motivates the use of Python for implementing user-extensible compiler frameworks.
