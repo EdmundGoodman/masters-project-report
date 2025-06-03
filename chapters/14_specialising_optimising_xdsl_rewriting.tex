@@ -54,9 +54,9 @@ As such, specialisation to remove this overhead can vastly reduce the complexity
     \begin{subfigure}[b]{\textwidth}
         \centering
         \begin{tikzpicture}
-            \node[anchor=south west,inner sep=0] (image) at (0,0) {\includegraphics[width=\textwidth]{images/specialising_optimising_xdsl_rewriting/original_empty_create}};
-            \node[circledstyle, fill=pairedOneLightBlue] at (6.25,1.25) {A};
-            \node[circledstyle, fill=pairedTwoDarkBlue] at (14,0.75) {B};
+            \node[anchor=south west,inner sep=0] (image) at (0,0) {\includegraphics[width=\textwidth]{images/specialising_optimising_xdsl_rewriting/original_empty_create_scale.png}};
+            \node[circledstyle, fill=pairedOneLightBlue] at (6.1,1) {A};
+            \node[circledstyle, fill=pairedTwoDarkBlue] at (12.75,0.5) {B};
         \end{tikzpicture}
         \captionsetup{width=0.8\textwidth}
         \caption{The default constructor has a high overhead, calculating known invariants and .}
@@ -64,7 +64,7 @@ As such, specialisation to remove this overhead can vastly reduce the complexity
     \end{subfigure}
     \begin{subfigure}[b]{\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{images/specialising_optimising_xdsl_rewriting/optimised_empty_create}
+        \includegraphics[width=\textwidth]{images/specialising_optimising_xdsl_rewriting/optimised_empty_create_scale.png}
         \captionsetup{width=0.8\textwidth}
         \caption{The same object can be constructed with significantly less logic.}
         \label{fig:ubenchmark-optimised-instantiation-xdsl-viztracer}
@@ -168,14 +168,14 @@ Similarly to the operation instantiation micro-benchmark, this slow-down comes a
     \centering
     \begin{subfigure}[b]{\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{images/specialising_optimising_xdsl_rewriting/original_hastrait.png}
+        \includegraphics[width=\textwidth]{images/specialising_optimising_xdsl_rewriting/original_hastrait_scale.png}
         \captionsetup{width=0.8\textwidth}
         \caption{\mintinline{python}{issubclass} and \mintinline{python}{isinstance} checks, type \mintinline{python}{cast}ing, and constructing iterators constitutes over three quarters of xDSL's \mintinline{python}{has_trait}s runtime.}
         \label{fig:ubenchmark-hastrait-original-viztracer}
     \end{subfigure}
     \begin{subfigure}[b]{\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{images/specialising_optimising_xdsl_rewriting/optimised_hastrait.png}
+        \includegraphics[width=\textwidth]{images/specialising_optimising_xdsl_rewriting/optimised_hastrait_scale.png}
         \captionsetup{width=0.8\textwidth}
         \caption{Specialisation to narrow the interface and optimisation to avoid extraneous work on hot paths can significantly accelerate \mintinline{python}{has_trait}.}
         \label{fig:ubenchmark-hastrait-optimised-viztracer}
@@ -511,14 +511,14 @@ This yields a specialised implementation with reduced overhead (\autoref{fig:con
     \centering
     \begin{subfigure}[b]{\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{images/specialising_optimising_xdsl_rewriting/custom_constant_fold.png}
+        \includegraphics[width=\textwidth]{images/specialising_optimising_xdsl_rewriting/custom_constant_fold_scale.png}
         \captionsetup{width=0.8\textwidth}
         \caption{xDSL's existing pattern rewriting infrastructure has a high performance overhead, executing many extraneous operations with a deep call stack.}
         \label{fig:constant-fold-original-viztracer}
     \end{subfigure}
     \begin{subfigure}[b]{\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{images/specialising_optimising_xdsl_rewriting/optimised_constant_fold.png}
+        \includegraphics[width=\textwidth]{images/specialising_optimising_xdsl_rewriting/optimised_constant_fold_scale.png}
         \captionsetup{width=0.8\textwidth}
         \caption{Through specialisation, this overhead can be significantly reduced, performing the exact workload and only invoking inbuilt functions such as set operations and \mintinline{python}{isinstance} checks.}
         \label{fig:constant-fold-optimised-viztracer}
