@@ -1,230 +1,128 @@
-
-
-\chapter{Examining the impact of dynamism on pattern rewriting in static and dynamic languages}
+\chapter{Quantifying dynamism in compiler framework pattern rewriting}
 \label{chap:dynamism-pattern-rewriting}
 
-
-% A key difference between the Python and C++ runtimes is their degree of dynamism.
-% \ac{mlir}'s C++ runtime incurs overhead when dynamically dispatching functions (Label \texttt{(3)} of \autoref{fig:narrative}), which is worsened by prohibiting ahead-of-time performance optimisations. In contrast, almost every bytecode operation evaluated by the Python interpreter is dynamic, each incurring an overhead.
-% As such, we expect the difference in performance between language runtimes (Label \texttt{(4)} of \autoref{fig:narrative}) to be smaller for more dynamic workloads.
-% To corroborate this, we measure the difference in performance between pattern rewriting workloads using xDSL and \ac{mlir}, and assess the contribution of overheads incurred by dynamism.
-
-
+%% Introduction
 % Hook
+A key difference between the Python and C++ runtimes is their degree of dynamism.
 % Argument
+\ac{mlir}'s C++ runtime incurs overhead when dynamically dispatching functions (\autoref{fig:narrative}, \circledbase{pairedThreeLightGreen}{3}), which is worsened by prohibiting ahead-of-time performance optimisations. In contrast, almost every bytecode operation evaluated by the Python interpreter is dynamic, each incurring an overhead.
+As such, we expect the difference in performance between language runtimes (\autoref{fig:narrative}, \circledbase{pairedFourDarkGreen}{4}) to be smaller for more dynamic workloads.
 % Link
+In this chapter, we quantify this difference by examining simple examples within static and dynamic language runtimes. We then apply this information to understand the difference in performance between pattern rewriting workloads using xDSL and \ac{mlir} through the lens of overhead incurred by dynamism.
+
+
+% \section{Quantifying the performance cost of dynamism in static languages}
+% % Hook
+% Having specialised our micro-benchmarks of xDSL to the most minimal implementation which expresses the desired functionality (\autoref{chap:specialising-optimising-pattern-rewriting}), we can use them to draw comparisons between equivalent \ac{mlir} benchmarks. This allows us to minimise the impact of implementation details, instead measuring the effect of the language runtime on each framework's performance.
+% % Argument
+% Of these micro-benchmarks, operation trait checking is particularly suitable for detailed analysis. This is because both implementations (Listing \ref{listing:ubenchmark-trait-checks-both}) share the same underlying algorithm: iteration over an operations traits, checking the \ac{rtti} of each one.
+% % Link
+% We discuss two notable sources of performance overhead incurred by dynamism in this workload: dynamically dispatching function calls; and checking \ac{rtti} of polymorphic objects. % + object access
 
 
 
+\subsection{Run-time type information}
 
-
-\section{Quantifying the performance impact of dynamism in language runtimes}
-
+%% Introduce the issue
 % Hook
-Dynamism affects performance through a wide variety of mechanisms, in both Python and C++.
+In a ``A history of C++: 1979--1991'', Stroustop states that in the original C++ design he ``deliberately didn't include [mechanisms] for run-time type identification [as] they were almost always misused.'' \cite{stroustrupHistory197919911996}.
 % Argument
+Support for this functionality was later added in C++98 \cite{internationalorganizationforstandardizationISOIEC148821998}, adding support for \texttt{dynamic\_cast}s checked a runtime, and getting the \texttt{typeid} of a polymorphic object. LLVM reimplements a subset of this functionality, providing the \texttt{dyn\_cast} method and \texttt{TypeID} data structure, aiming to ``strike a balance between performance and the setup required to enable its use'' \cite{mlirteamMLIRCodeDocumentation}.
+This is another example of dynamic behaviour, which we again argue incurs additional runtime overhead and precludes optimisations in static languages, closing the gap with dynamic ones.
 % Link
-In this section, we examine and quantify the impact of some of these mechanisms, substantiating the argument that ...
+As before, we justify this be examining the details of this mechanism, using both synthetic examples and our micro-benchmark suite.
+
+%% Experiment setup
+%% Discussion of these results (single number on overhead)
+
+%% Graph
+% If known at runtime -> zero cost + revealed optimisations (cannot easily quantify!)
+% dyn_cast
+% dynamic_cast
+% isinstance
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{images/impact_dynamism/dynamic_cast.pdf}
+    \caption{.}
+    \label{figure:impact-rtti}
+\end{figure}
+
+
+
+
+% %% Where is the issue in the micro-benchmark?
+% % Hook
+% By leveraging Python's dynamic nature, xDSL can invoke the \mintinline{python}{isinstance} function to check the type information each trait. In contrast, \ac{mlir} uses template meta-programming instead of the class hierarchy to define traits. This depends on \mintinline{c++}{TypeID}\footnote{\scriptsize{\url{https://mlir.llvm.org/doxygen/TypeID_8h_source.html}}}, a custom data structure to encode dynamic \ac{rtti} in C++. This is performant, as the \mintinline{c++}{TypeID} data structure is constructed to remedy many of the issues of native C++ \ac{rtti}.
+% % Argument
+% % Link
+
+
+
+
+
 
 \subsection{Cost of dynamic dispatch}
 
-% What is dynamic dispatch and how does it work in C++
+%% Introduce the issue, and where it is in the micro-benchmark
+% Hook
+In static languages such as C++, the exact address of many function calls can be resolved at compile time. In contrast, dynamic languages such as Python must resolve the address of each function call at runtime, incurring an overhead.
+% Also optimisation boundary and stuff
+% Argument
+However, the address of some function calls can only be known at runtime, for example as a result of object polymorphism. This address then must be resolved during execution by the language runtime in both static and dynamic languages. Furthermore, this information being known only at runtime presents and optimisation boundary, precluding common rewrites such as function inlining which contribute to the performance of ahead-of-time compiled languages.
+As such, we argue there the difference between static and dynamic languages is reduced for highly dynamic workloads with insufficient information to resolve function addresses ahead of time.
+% Link
+We justify this by examining the mechanisms of dynamic dispatch in Python and C++, and contrasting them through both synthetic examples and our micro-benchmark suite.
 
+%% How do vtables work and CPython stuff work
+% Hook
+For the common example of method polymorphism, C++ uses a \ac{vtable} to support dynamic dispatch.
+% Argument
+When a virtual function is called on an object, the compiler resolves the address of that function by following an associated pointer to its \ac{vtable}. It then indexes into this data structure to retrieve the function address, which it can then execute. This indirection allows runtime information to be used to resolve the function address, but incurs a small overhead of a pointer dereference.
+In Python, this indirection is present irrespective of whether the function address could be inferred ahead of time. Python objects have a \mintinline{text}{__dict__} mapping storing both their methods and attributes. Similarly to the \ac{vtable}, this is indexed to retrieve the function address at runtime. If the name is not found, the interpreter checks the mapping for each of its parents in the inheritance hierarchy according to its method resolution order. This approach supports dynamic behaviour such as runtime meta-programming, but incurs a higher performance cost than C++.
+% Link
+We can quantify the performance overhead of this \ac{vtable} mechanism through a synthetic example.
 
-% How can we measure this?
-
-\begin{figure}[H]
-    \centering
-    \begin{subfigure}[b]{0.45\textwidth}
-       \centering
-        \begin{minted}[fontsize=\scriptsize,escapeinside=££]{text}
-class Base {
-public:
-    inline int inlineFunction(int a, int b) {
-        return a + b;
-    }
-    static int staticFunction(int a, int b) {
-        return a + b;
-    }
-    virtual int virtualFunction(int a, int b) {
-        return a + b;
-    }
-    int regularFunction(int a, int b) {
-        return a + b;
-    }
-    virtual ~Base() = default;
-};
-
-class Derived : public Base {
-public:
-    int virtualFunction(int a, int b) override {
-        return a + b;
-    }
-};
-        \end{minted}
-        \captionsetup{name=Listing}
-        \caption{.}
-        \label{listing:}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.5\textwidth}
-        \centering
-        \begin{minted}[breakanywhere,fontsize=\scriptsize,escapeinside=££]{text}
-void go() {
-    // Setup
-    int a = 5;
-    int b = 7;
-    int result = 0;
-    Base baseObj;
-    Derived derivedObj;
-    Base* monomorphicPtr = &baseObj;
-    Base* polymorphicPtr = &derivedObj;
-
-    // Examples
-    result = a + b;
-    result = baseObj.inlineFunction(a, b);
-    result = Base::staticFunction(a, b);
-    result = baseObj.regularFunction(a, b);
-    result = baseObj.virtualFunction(a, b);
-    result = derivedObj.virtualFunction(a, b);
-    result = monomorphicPtr->virtualFunction(a, b);
-    result = polymorphicPtr->virtualFunction(a, b);
-}
-        \end{minted}
-        \captionsetup{name=Listing}
-        \caption{.}
-        \label{listing:}
-    \end{subfigure}
-    \vspace{1em}
-    \captionsetup{name=Listing}
-    \caption{.}
-    \label{listing:}
-\end{figure}
-
-% What are our measurement results? How does this quantify performance in dyunamism?
-
-\begin{table}[H]
-  \caption{.}
-  \label{tab:dynamic-dispatch-perf}
-  \centering
-  \begin{tabular}{lllc}
-    \toprule
-    \multicolumn{3}{c}{\textbf{Function}} \\
-    \cmidrule(r){1-3}
-    \textbf{Specifier} & \textbf{Morphism} & \textbf{Indirection} & \textbf{Duration [ns]} \\
-    % \textbf{Invocation type} & \textbf{Duration [ns]} \\
-    \midrule
-    Default & Monomorphic & Direct & $0.614$ \\
-    Inline & Monomorphic & Direct & $0.614$ \\
-    Static & Monomorphic & Direct & $0.613$ \\
-    Virtual & Monomorphic & Pointer & $0.613$ \\
-    Virtual & Polymorphic & Pointer & $1.07$ \\
-    Virtual & Monomorphic & Pointer & $1.98$ \\
-    Virtual & Polymorphic & Pointer & $1.90$ \\
-    % Function & $0.614$ \\
-    % Inline function & $0.614$ \\
-    % Static function & $0.613$ \\
-    % Monomorphic virtual function & $0.613$ \\
-    % Polymorphic virtual function & $1.07$ \\
-    % Indirect monomorphic virtual function & $1.98$ \\
-    % Indirect polymorphic virtual function & $1.9$ \\
-    \bottomrule
-  \end{tabular}
-\end{table}
-
-
-
-\subsection{Dynamism hiding ahead-of-time optimisations}
-
-
-
-\subsection{Runtime type information}
-
-%% C++ RTTI vs LLVM RTTI
-
-%% Python RTTI
-
-% How can we measure this?
-
-
-% What are our measurement results? How does this quantify performance in dyunamism?
-
-
-
-
-
-
-% \subsection{Specialised and unspecialised instructions}
-
+% %% Quantifying with toy example, and how to count in real-world
 % % Hook
-% As discussed in \autoref{sec:specialising-adaptive-interpreter}, Python's specialising adaptive interpreter
+% This shows that...
+% % Argument
+% The pointer dereference cost is small. The hidden optimisation opportunities are bigger. Python is much slower, and a two-step process (LOAD\_METHOD + CALL\_METHOD), where LOAD\_METHOD is slow.
+
+%% TODO: Shout this out better?
+% Hook
+In addition to quantifying the performance of \ac{vtable} accesses, we can also estimate the number of dynamic calls made for a running workload.
+% Argument
+In the ARM instruction set, direct and indirect calls \cite{armlimitedARMCortexRSeries}
+``Because the branch destination is PC-relative, it can be determined exactly at an early stage of the pipeline''. This means that direct calls are more performant, and as such efficient compilers only use indirect calls where address information is not known ahead of time: dynamic control flow.
+Using the \texttt{perf} tool, we can leverage hardware performance counters to total the number of indirect calls made.
+% Link
+
+% %% Where does this occur?
+% % Hook
+% This behaviour
 % % Argument
 % % Link
-% In contrast to the previous examples where introducing more dynamism hinders performance, this is an example of where removing dynamism can result in performance improvements.
+% In other cases, \ac{mlir} is implemented to avoid this overhead. For example, the \mintinline{text}{TypeID::get<Traits>} function uses template meta-programming to monomorphise the generic function calls. However, this approach is only applicable when there is sufficient information at runtime.
 
-% % Specialist something something.....
+% \subsection{Object data access}
+% __slots__ and polymorphism stuff
 
-
-
-
-
-
-\section{Dynamism in xDSL}
-
-% Hook
-% Argument
-% Link
-
-\subsection{Operation trait checks}
-
-% Hook
-Having specialised xDSL's \mintinline{python}{has_trait} method to the most minimal implementation which expresses the desired functionality, we can draw comparisons between equivalent algorithms which predominantly measure the effect of the language runtime.
-% Argument
-Both implementations (Listing \ref{listing:ubenchmark-trait-checks-both}) share the same underlying algorithm: iteration over an operations traits, checking against each one. However, the mechanism used for this algorithm differs significantly between xDSL and MLIR.
-By leveraging Python's dynamic nature, xDSL can invoke the \mintinline{python}{isinstance} function to check each trait. In contrast, MLIR uses template metaprogramming instead of the class hierarchy to define traits. This depends on \mintinline{c++}{TypeID}\footnote{\scriptsize{\url{https://mlir.llvm.org/doxygen/TypeID_8h_source.html}}}, a custom data structure to encode dynamic \ac{rtti} in C++.
-% TODO: Does this need more detail?
-Whilst this implementation incurs complexity (\autoref{fig:ubenchmark-hastrait-dynamism}), it remains performant, as the \mintinline{c++}{TypeID} data structure is constructed to remedy many of the issues of native C++ \ac{rtti}.
-% Link
-However, this dynamism impacts performance beyond just the runtime of the individual function, as it presents an optimisation boundary -- precluding other optimisations which could be applied if the result could be inferred at compile time. % TODO: This really needs to be substantiated somehow, but perhaps not here?
-
-\begin{figure}[H]
-    \centering
-    \begin{subfigure}[b]{\textwidth}
-        \includegraphics[width=\textwidth]{images/impact_dynamism/hastrait_xdsl_viztracer_optimised.png}
-        \caption{\texttt{viztracer} trace of xDSL's optimised \mintinline{python}{has_trait} implementation.}
-        \label{fig:ubenchmark-hastrait-xdsl-viztracer-optimised}
-    \end{subfigure}
-    \begin{subfigure}[b]{\textwidth}
-        \includegraphics[width=\textwidth]{images/impact_dynamism/hastrait_mlir_samply.png}
-        \caption{\texttt{samply} trace of MLIR's \mintinline{c++}{has_trait} method.}
-        \label{fig:ubenchmark-hastrait-mlir-samply}
-    \end{subfigure}
-    \caption{MLIR's dynamic trait checking using C++ RTTI is more complex than xDSL's Python implementation using \mintinline{python}{isinstance}.}
-    \label{fig:ubenchmark-hastrait-dynamism}
-\end{figure}
+\subsection{Hiding ahead of time optimisations}
 
 
-% \subsection{Constant folding}
-
-% Hook
-% Argument
-% Link
-
-% Hook
-% Argument
-% Link
-
-% Hook
-% Argument
-% Link
 
 
-\section{Summary}
 
-% Hook
-% Argument
-% Link
 
-% Hook
-% Argument
-% Link
+
+
+% \section{Dynamism in pattern rewriting}
+
+%% Introduction
+
+%% Something about RTTI
+%% Count up vtable invocations in C++ to argue about dynamic dispatch
+
+%% Estimate lower bound for cost of dynamism
+
+%% Summary
