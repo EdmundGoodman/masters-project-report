@@ -19,7 +19,15 @@
 
 
 
-\section{Quantifying the performance impact of dynamism in language runtimes}
+
+
+% \section{Quantifying the performance cost of dynamism in static languages}
+% % Hook
+% Having specialised our micro-benchmarks of xDSL to the most minimal implementation which expresses the desired functionality (\autoref{chap:specialising-optimising-pattern-rewriting}), we can use them to draw comparisons between equivalent \ac{mlir} benchmarks. This allows us to minimise the impact of implementation details, instead measuring the effect of the language runtime on each framework's performance.
+% % Argument
+% Of these micro-benchmarks, operation trait checking is particularly suitable for detailed analysis. This is because both implementations (Listing \ref{listing:ubenchmark-trait-checks-both}) share the same underlying algorithm: iteration over an operations traits, checking the \ac{rtti} of each one.
+% % Link
+% We discuss two notable sources of performance overhead incurred by dynamism in this workload: dynamically dispatching function calls; and checking \ac{rtti} of polymorphic objects. % + object access
 
 % Hook
 Dynamism affects performance through a wide variety of mechanisms, in both Python and C++.
@@ -31,6 +39,14 @@ In this section, we examine and quantify the impact of some of these mechanisms,
 
 % What is dynamic dispatch and how does it work in C++
 
+% %% How do vtables work and CPython stuff work
+% % Hook
+% For the common example of method polymorphism, C++ uses a \ac{vtable} to support dynamic dispatch.
+% % Argument
+% When a virtual function is called on an object, the compiler resolves the address of that function by following an associated pointer to its \ac{vtable}. It then indexes into this data structure to retrieve the function address, which it can then execute. This indirection allows runtime information to be used to resolve the function address, but incurs a small overhead of a pointer dereference.
+% In Python, this indirection is present irrespective of whether the function address could be inferred ahead of time. Python objects have a \mintinline{text}{__dict__} mapping storing both their methods and attributes. Similarly to the \ac{vtable}, this is indexed to retrieve the function address at runtime. If the name is not found, the interpreter checks the mapping for each of its parents in the inheritance hierarchy according to its method resolution order. This approach supports dynamic behaviour such as runtime meta-programming, but incurs a higher performance cost than C++.
+% % Link
+% We can quantify the performance overhead of this \ac{vtable} mechanism through a synthetic example.
 
 % How can we measure this?
 
@@ -118,8 +134,8 @@ void go() {
     Default & Monomorphic & Direct & $0.614$ \\
     Inline & Monomorphic & Direct & $0.614$ \\
     Static & Monomorphic & Direct & $0.613$ \\
-    Virtual & Monomorphic & Pointer & $0.613$ \\
-    Virtual & Polymorphic & Pointer & $1.07$ \\
+    Virtual & Monomorphic & Direct & $0.613$ \\
+    Virtual & Polymorphic & Direct & $1.07$ \\
     Virtual & Monomorphic & Pointer & $1.98$ \\
     Virtual & Polymorphic & Pointer & $1.90$ \\
     % Function & $0.614$ \\

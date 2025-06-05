@@ -59,7 +59,7 @@ def setGlobalDefaults() -> None:
     matplotlib.rcParams["axes.spines.top"] = False
 
 
-matplotlib.rcParams["figure.figsize"] = 6, 3
+matplotlib.rcParams["figure.figsize"] = 6, 2
 
 # Color palette
 light_gray = "#cacaca"
@@ -124,12 +124,12 @@ def str_from_float(x: float, digits: int = 3, suffix: str = "") -> str:
         return before_decimal
     if len(before_decimal) > digits:
         # we can't even fit the integral part
-        return get_scientific(x, digits)
+        return str(x)# get_scientific(x, digits)
 
     result = result[: digits + 1]  # plus 1 for the decimal point
     if float(result) == 0:
         # we can't even get one significant figure
-        return get_scientific(x, digits)
+        return str(x) #get_scientific(x, digits)
 
     return result[: digits + 1]
 
@@ -156,9 +156,10 @@ def autolabel(
 
     for rect in rects:
         height = rect.get_height()
+        print(height)
         ax.annotate(
             label_from_height(height),
-            xy=(rect.get_x() + rect.get_width() / 2, height),
+            xy=(rect.get_x() + rect.get_width() / 2, max(1.1, height)),
             **(default_kwargs | kwargs),
         )
 
@@ -213,7 +214,7 @@ def plot_performance():
     #
     # Use a horizontal label for improved readability.
     ax.set_ylabel(
-        "Lines of code",
+        "Wall time [ns]",
         rotation="horizontal",
         position=(1, 1.05),
         horizontalalignment="left",
