@@ -21,6 +21,23 @@
   keywords = {debugging,python,python-2-7,reverse-engineering,tracing}
 }
 
+@inproceedings{akerblomMeasuringPolymorphismPython2015,
+  title = {Measuring Polymorphism in Python Programs},
+  booktitle = {Proceedings of the 11th {{Symposium}} on {{Dynamic Languages}}},
+  author = {Åkerblom, Beatrice and Wrigstad, Tobias},
+  date = {2015-10-21},
+  series = {{{DLS}} 2015},
+  pages = {114--128},
+  publisher = {Association for Computing Machinery},
+  location = {New York, NY, USA},
+  doi = {10.1145/2816707.2816717},
+  url = {https://dl.acm.org/doi/10.1145/2816707.2816717},
+  urldate = {2025-06-05},
+  abstract = {Following the increased popularity of dynamic languages and their increased use in critical software, there have been many proposals to retrofit static type system to these languages to improve possibilities to catch bugs and improve performance. A key question for any type system is whether the types should be structural, for more expressiveness, or nominal, to carry more meaning for the programmer. For retrofitted type systems, it seems the current trend is using structural types. This paper attempts to answer the question to what extent this extra expressiveness is needed, and how the possible polymorphism in dynamic code is used in practise. We study polymorphism in 36 real-world open source Python programs and approximate to what extent nominal and structural types could be used to type these programs. The study is based on collecting traces from multiple runs of the programs and analysing the polymorphic degrees of targets at more than 7 million call-sites. Our results show that while polymorphism is used in all programs, the programs are to a great extent monomorphic. The polymorphism found is evenly distributed across libraries and program-specific code and occur both during program start-up and normal execution. Most programs contain a few ``megamorphic'' call-sites where receiver types vary widely. The non-monomorphic parts of the programs can to some extent be typed with nominal or structural types, but none of the approaches can type entire programs.},
+  isbn = {978-1-4503-3690-1},
+  file = {/Users/edjg/Zotero/storage/SPFAPMKW/Åkerblom and Wrigstad - 2015 - Measuring polymorphism in python programs.pdf}
+}
+
 @book{alfred2007compilers,
   title = {Compilers: {{Principles}}, {{Techniques}} \& {{Tools}}},
   author = {Alfred, V Aho and Monica, S Lam and Jeffrey, D Ullman},
@@ -577,6 +594,21 @@
   url = {http://lua-users.org/lists/lua-l/2011-02/msg00742.html},
   urldate = {2025-06-01},
   file = {/Users/edjg/Zotero/storage/676Q8P62/msg00742.html}
+}
+
+@inproceedings{milojkovicItsDuckTyping2017,
+  title = {It's {{Duck}} ({{Typing}}) {{Season}}!},
+  booktitle = {2017 {{IEEE}}/{{ACM}} 25th {{International Conference}} on {{Program Comprehension}} ({{ICPC}})},
+  author = {Milojkovic, Nevena and Ghafari, Mohammad and Nierstrasz, Oscar},
+  date = {2017-05},
+  pages = {312--315},
+  doi = {10.1109/ICPC.2017.10},
+  url = {https://ieeexplore.ieee.org/abstract/document/7961528},
+  urldate = {2025-06-05},
+  abstract = {Duck typing provides a way to reuse code and allow a developer to write more extensible code. At the same time, it scatters the implementation of a functionality over multiple classes and causes difficulties in program comprehension. The extent to which duck typing is used in real programs is not very well understood. We report on a preliminary study of the prevalence of duck typing in more than a thousand dynamically-typed open source software systems developed in Smalltalk. Although a small portion of the call sites in these systems is duck-typed, in half of the analysed systems at least 20\% of methods are duck-typed.},
+  eventtitle = {2017 {{IEEE}}/{{ACM}} 25th {{International Conference}} on {{Program Comprehension}} ({{ICPC}})},
+  keywords = {Algorithm design and analysis,cross-hierarchy polymorphism,duck typing,dynamically-typed languages,Heuristic algorithms,Inference algorithms,Java,Navigation,Open source software},
+  file = {/Users/edjg/Zotero/storage/2ZPHYXVA/Milojkovic et al. - 2017 - It's Duck (Typing) Season!.pdf}
 }
 
 @online{mlirteamMLIRCodeDocumentation,
