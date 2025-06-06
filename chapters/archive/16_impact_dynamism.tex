@@ -1,3 +1,91 @@
+% %% Introduction
+% %
+% % Hook
+% Having quantified the performance impact of causes of dynamism in static languages using synthetic examples and micro-benchmarks, we now examine its impact for pattern rewriting workloads of user-extensible compiler frameworks.
+% % Argument
+% %
+
+
+%% Something about RTTI
+
+%% Count up vtable invocations in C++ to argue about dynamic dispatch
+% Hook
+
+
+% %% Count up vtable invocations in C++ to argue about dynamic dispatch
+% % Hook
+% In addition to quantifying the performance of \ac{vtable} accesses, we can also estimate the number of dynamic calls made for a running workload.
+% % Argument
+% In the ARM instruction set, direct and indirect calls \cite{armlimitedARMCortexRSeries}
+% ``Because the branch destination is PC-relative, it can be determined exactly at an early stage of the pipeline''. This means that direct calls are more performant, and as such efficient compilers only use indirect calls where address information is not known ahead of time: dynamic control flow.
+% Using the DynamoRIO tool
+% ./DynamoRIO-Linux-11.90.20236/bin64/drrun -c ./DynamoRIO-Linux-11.90.20236/samples/bin64/libcountcalls.so -- ./llvm-project-benchmarks/build/tools/mlir/unittests/Benchmarks/MLIR_IR_Benchmark --benchmark_filter=runtimePolymorphicPointerCall
+% Dynamism/runtimePolymorphicPointerCall/10           136 ns          136 ns      5066864
+% Dynamism/runtimePolymorphicPointerCall/64           853 ns          853 ns       821599
+% Dynamism/runtimePolymorphicPointerCall/512         6793 ns         6793 ns       101941
+% Dynamism/runtimePolymorphicPointerCall/4096       54938 ns        54933 ns        12526
+% Dynamism/runtimePolymorphicPointerCall/10000     136118 ns       136109 ns         5134
+% Dynamism/runtimePolymorphicPointerCall_BigO       13.58 N         13.58 N
+% Dynamism/runtimePolymorphicPointerCall_RMS            1 %             1 %
+% Thread 9507 exited - Instrumentation results:
+%   saw 177100 direct calls
+%   saw 297673368 indirect calls
+%   saw 297850463 returns
+
+% Instrumentation results:
+%   saw 177100 direct calls
+%   saw 297673368 indirect calls
+%   saw 297850463 returns
+
+% ./DynamoRIO-Linux-11.90.20236/bin64/drrun -c ./DynamoRIO-Linux-11.90.20236/samples/bin64/libcountcalls.so -- ./llvm-project-benchmarks/build/tools/mlir/unittests/Benchmarks/MLIR_IR_Benchmark --benchmark_filter=regularCallNoinline
+% Dynamism/regularCallNoinline/10           123 ns          123 ns      5656394
+% Dynamism/regularCallNoinline/64           790 ns          790 ns       886599
+% Dynamism/regularCallNoinline/512         6313 ns         6312 ns       110701
+% Dynamism/regularCallNoinline/4096       50578 ns        50572 ns        13703
+% Dynamism/regularCallNoinline/10000     123394 ns       123389 ns         5678
+% Dynamism/regularCallNoinline_BigO       12.34 N         12.34 N
+% Dynamism/regularCallNoinline_RMS            0 %             0 %
+% Thread 9508 exited - Instrumentation results:
+%   saw 322640955 direct calls
+%   saw 10352 indirect calls
+%   saw 322651302 returns
+% Instrumentation results:
+%   saw 322640955 direct calls
+%   saw 10352 indirect calls
+%   saw 322651302 returns
+
+
+% ./DynamoRIO-Linux-11.90.20236/bin64/drrun -c ./DynamoRIO-Linux-11.90.20236/samples/bin64/libcountcalls.so -- ./llvm-project-benchmarks/build/tools/mlir/unittests/Benchmarks/MLIR_IR_Benchmark --benchmark_filter=SimpleConstantFolding
+% Thread 9571 exited - Instrumentation results:
+%   saw 87800889 direct calls
+%   saw 9226759 indirect calls
+%   saw 97027643 returns
+
+% Instrumentation results:
+%   saw 87800889 direct calls
+%   saw 9226759 indirect calls
+%   saw 97027643 returns
+
+%% Estimate lower bound for cost of dynamism
+
+%% Summary
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 % \chapter{Dynamism's impact on pattern rewriting in static and dynamic languages}
 % \chaper{Dynamism and pattern rewriting in static and dynamic languages}
 % \chapter{Understanding dynamism for pattern rewriting in xDSL and MLIR}

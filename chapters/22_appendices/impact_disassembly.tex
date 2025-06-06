@@ -55,11 +55,11 @@ main:
  bl	0 <strtol>
     R_AARCH64_CALL26 strtol
 // ===== Start of function invocation ===== //
-mov	x2, x0
-add	x0, x29, #0x1f
-mov	w1, w19
-bl	0 <main>
-R_AARCH64_CALL26 Base::uninlinedFunc(int, int)
+ mov	x2, x0
+ add	x0, x29, #0x1f
+ mov	w1, w19
+ bl	0 <main>
+    R_AARCH64_CALL26 Base::uninlinedFunc(int, int)
 // ====== End of function invocation ====== //
  ldr	x19, [sp, #16]
  ldp	x29, x30, [sp], #32
