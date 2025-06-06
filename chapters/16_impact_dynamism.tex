@@ -128,7 +128,7 @@ Despite both these direct and indirect costs, Python function invocation remains
 
 %% Why is python slower?
 % Hook
-Python's poor performance comes as a result of...
+% Python's poor performance comes as a result of...
 % Argument
 % Link
 
@@ -153,7 +153,7 @@ In a ``A history of C++: 1979--1991'', Stroustop states that the original C++ de
 Support for this functionality was later added in C++98 \cite{internationalorganizationforstandardizationISOIEC148821998}, including support for \texttt{dynamic\_cast}s checked a runtime, and getting the \texttt{typeid} of a polymorphic object. However, this incurs a runtime cost \cite{goldthwaite2006technical}, and is brittle in the objects to which it can be applied. A such, LLVM reimplements a subset of this functionality, providing the \texttt{dyn\_cast} method and \texttt{TypeID} data structure, aiming to ``strike a balance between performance and the setup required to enable its use'' \cite{mlirteamMLIRCodeDocumentation}.
 This is another example of dynamic behaviour, which we again argue incurs additional runtime overhead and precludes optimisations in static languages, closing the gap with dynamic ones.
 % Link
-As before, we justify this be examining the details of this mechanism, using both synthetic examples and our micro-benchmark suite.
+As before, we justify this be examining the details of this mechanism, using our micro-benchmark suite.
 
 %% Graph
 \begin{figure}[H]
@@ -165,14 +165,11 @@ As before, we justify this be examining the details of this mechanism, using bot
 
 %% Experimental results
 % Hook
-These results show that LLVM's \ac{rtti} implementation.
+We measure the duration of micro-benchmarks exercising xDSL and \ac{mlir}'s \ac{rtti} operations (\autoref{figure:impact-rtti}). LLVM's \ac{rtti} implementation is much more performant than Python, leveraging C++ templates to defer as much computation as possible to compile time. In addition to this, type checking and casting have approximately the same performance cost, as they leverage similar mechanisms.
 % Argument
-Python's \texttt{isinstance} function is faster than \texttt{cast} as the former it is implemented in C as a builtin function, whereas the latter is in Python in the standard library.
-However, the implementation of the \texttt{cast} function is the identity, doing nothing. This is because Python's dynamic duck typing \cite{milojkovicItsDuckTyping2017} does not require restructuring data when casting, allowing some casting operations to be elided if they do not affect control flow.
-% Where is this present in micro-benchmarks
-This synthetic example can be seen in the trait checking micro-benchmark, demonstrating its relevance to user-extensible compiler infrastructure. In \ac{mlir}, LLVM's \mintinline{c++}{TypeID} \ac{rtti} infrastructure is used to compare traits, constrasting Python using \texttt{isinstance} checks (\autoref{listing:ubenchmark-trait-checks-both}).
+In contrast, Python's \texttt{isinstance} function is faster than \texttt{cast} as the former it is implemented in C as a builtin function, whereas the latter is in Python in the standard library, hence relying on the dynamic dispatch machinery discussed above.
+However, the implementation of the \texttt{cast} function is the identity, doing nothing. This is because Python's dynamic duck typing \cite{milojkovicItsDuckTyping2017} does not require restructuring data when casting, allowing casting operations and some type checks to be elided.
 % Link
-
 
 
 
@@ -201,8 +198,53 @@ In addition to quantifying the performance of \ac{vtable} accesses, we can also 
 % Argument
 In the ARM instruction set, direct and indirect calls \cite{armlimitedARMCortexRSeries}
 ``Because the branch destination is PC-relative, it can be determined exactly at an early stage of the pipeline''. This means that direct calls are more performant, and as such efficient compilers only use indirect calls where address information is not known ahead of time: dynamic control flow.
-Using the \texttt{perf} tool, we can leverage hardware performance counters to total the number of indirect calls made.
-% Link
+Using the DynamoRIO tool
+% ./DynamoRIO-Linux-11.90.20236/bin64/drrun -c ./DynamoRIO-Linux-11.90.20236/samples/bin64/libcountcalls.so -- ./llvm-project-benchmarks/build/tools/mlir/unittests/Benchmarks/MLIR_IR_Benchmark --benchmark_filter=runtimePolymorphicPointerCall
+% Dynamism/runtimePolymorphicPointerCall/10           136 ns          136 ns      5066864
+% Dynamism/runtimePolymorphicPointerCall/64           853 ns          853 ns       821599
+% Dynamism/runtimePolymorphicPointerCall/512         6793 ns         6793 ns       101941
+% Dynamism/runtimePolymorphicPointerCall/4096       54938 ns        54933 ns        12526
+% Dynamism/runtimePolymorphicPointerCall/10000     136118 ns       136109 ns         5134
+% Dynamism/runtimePolymorphicPointerCall_BigO       13.58 N         13.58 N
+% Dynamism/runtimePolymorphicPointerCall_RMS            1 %             1 %
+% Thread 9507 exited - Instrumentation results:
+%   saw 177100 direct calls
+%   saw 297673368 indirect calls
+%   saw 297850463 returns
+
+% Instrumentation results:
+%   saw 177100 direct calls
+%   saw 297673368 indirect calls
+%   saw 297850463 returns
+
+% ./DynamoRIO-Linux-11.90.20236/bin64/drrun -c ./DynamoRIO-Linux-11.90.20236/samples/bin64/libcountcalls.so -- ./llvm-project-benchmarks/build/tools/mlir/unittests/Benchmarks/MLIR_IR_Benchmark --benchmark_filter=regularCallNoinline
+% Dynamism/regularCallNoinline/10           123 ns          123 ns      5656394
+% Dynamism/regularCallNoinline/64           790 ns          790 ns       886599
+% Dynamism/regularCallNoinline/512         6313 ns         6312 ns       110701
+% Dynamism/regularCallNoinline/4096       50578 ns        50572 ns        13703
+% Dynamism/regularCallNoinline/10000     123394 ns       123389 ns         5678
+% Dynamism/regularCallNoinline_BigO       12.34 N         12.34 N
+% Dynamism/regularCallNoinline_RMS            0 %             0 %
+% Thread 9508 exited - Instrumentation results:
+%   saw 322640955 direct calls
+%   saw 10352 indirect calls
+%   saw 322651302 returns
+% Instrumentation results:
+%   saw 322640955 direct calls
+%   saw 10352 indirect calls
+%   saw 322651302 returns
+
+
+% ./DynamoRIO-Linux-11.90.20236/bin64/drrun -c ./DynamoRIO-Linux-11.90.20236/samples/bin64/libcountcalls.so -- ./llvm-project-benchmarks/build/tools/mlir/unittests/Benchmarks/MLIR_IR_Benchmark --benchmark_filter=SimpleConstantFolding
+% Thread 9571 exited - Instrumentation results:
+%   saw 87800889 direct calls
+%   saw 9226759 indirect calls
+%   saw 97027643 returns
+
+% Instrumentation results:
+%   saw 87800889 direct calls
+%   saw 9226759 indirect calls
+%   saw 97027643 returns
 
 %% Estimate lower bound for cost of dynamism
 
