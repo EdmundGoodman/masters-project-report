@@ -1,0 +1,193 @@
+\chapter{Disassembly of dynamic dispatch experiments}
+\label{chap:impact-disassembly}
+
+
+\vspace{2em}
+\begin{code}
+    \begin{minted}[fontsize=\scriptsize]{text}
+main:
+ stp	x29, x30, [sp, #-32]!
+ str	x19, [sp, #16]
+ mov	x29, sp
+ ldr	x0, [x1, #8]
+ mov	x19, x1
+ mov	x1, xzr
+ mov	w2, #0xa                   	// #10
+ bl	0 <strtol>
+    R_AARCH64_CALL26 strtol
+ ldr	x8, [x19, #16]
+ mov	x19, x0
+ mov	x1, xzr
+ mov	w2, #0xa                   	// #10
+ mov	x0, x8
+ bl	0 <strtol>
+    R_AARCH64_CALL26 strtol
+// ===== Start of function invocation ===== //
+ sub	w0, w19, w0
+// ====== End of function invocation ====== //
+ ldr	x19, [sp, #16]
+ ldp	x29, x30, [sp], #32
+ ret
+    \end{minted}
+    \caption{Disassembly of inlined function invocation (\autoref{listing:impact-dispatch-definition} \circledbase{pairedTwoDarkBlue}{\scriptsize{1}}).}
+    \label{listing:impact-dispatch-inlined-disassembly}
+\end{code}
+
+
+\vspace{2em}
+\begin{code}
+    \begin{minted}[fontsize=\scriptsize]{text}
+main:
+ stp	x29, x30, [sp, #-32]!
+ str	x19, [sp, #16]
+ mov	x29, sp
+ ldr	x0, [x1, #8]
+ mov	x19, x1
+ mov	x1, xzr
+ mov	w2, #0xa                   	// #10
+ bl	0 <strtol>
+    R_AARCH64_CALL26 strtol
+ ldr	x8, [x19, #16]
+ mov	x19, x0
+ mov	x1, xzr
+ mov	w2, #0xa                   	// #10
+ mov	x0, x8
+ bl	0 <strtol>
+    R_AARCH64_CALL26 strtol
+// ===== Start of function invocation ===== //
+mov	x2, x0
+add	x0, x29, #0x1f
+mov	w1, w19
+bl	0 <main>
+R_AARCH64_CALL26 Base::uninlinedFunc(int, int)
+// ====== End of function invocation ====== //
+ ldr	x19, [sp, #16]
+ ldp	x29, x30, [sp], #32
+ ret
+Base::uninlinedFunc(int, int):
+ sub	w0, w1, w2
+ ret
+    \end{minted}
+    \caption{Disassembly of uninlined function invocation (\autoref{listing:impact-dispatch-definition} \circledbase{pairedThreeLightGreen}{\scriptsize{2}}).}
+    \label{listing:impact-dispatch-uninlined-disassembly}
+\end{code}
+
+
+\vspace{2em}
+\begin{code}
+    \begin{minted}[fontsize=\scriptsize]{text}
+main:
+ sub	sp, sp, #0x30
+ stp	x29, x30, [sp, #16]
+ stp	x20, x19, [sp, #32]
+ add	x29, sp, #0x10
+ ldr	x0, [x1, #8]
+ mov	x19, x1
+ mov	x1, xzr
+ mov	w2, #0xa                   	// #10
+ bl	0 <strtol>
+    R_AARCH64_CALL26 strtol
+ ldr	x8, [x19, #16]
+ mov	x20, x0
+ mov	x1, xzr
+ mov	w2, #0xa                   	// #10
+ mov	x0, x8
+ bl	0 <strtol>
+    R_AARCH64_CALL26 strtol
+ ldr	x8, [x19, #24]
+ mov	x19, x0
+ mov	x1, xzr
+ mov	w2, #0xa                   	// #10
+ mov	x0, x8
+ bl	0 <strtol>
+    R_AARCH64_CALL26 strtol
+// ===== Start of function invocation ===== //
+ adrp	x8, 0 <main>
+    R_AARCH64_ADR_PREL_PG_HI21 vtable for Base+0x10
+ add	x11, x8, #0x0
+    R_AARCH64_ADD_ABS_LO12_NC vtable for Base+0x10
+ cmp	w0, #0x0
+ adrp	x8, 0 <main>
+    R_AARCH64_ADR_PREL_PG_HI21 vtable for Derived+0x10
+ add	x8, x8, #0x0
+    R_AARCH64_ADD_ABS_LO12_NC vtable for Derived+0x10
+ mov	x9, sp
+ add	x10, sp, #0x8
+ stp	x8, x11, [sp]
+ mov	w1, w20
+ csel	x0, x10, x9, gt
+ mov	w2, w19
+ ldr	x8, [x0]
+ ldr	x8, [x8]
+ blr	x8
+// ====== End of function invocation ====== //
+ ldp	x20, x19, [sp, #32]
+ ldp	x29, x30, [sp, #16]
+ add	sp, sp, #0x30
+ ret
+Base::virtualFunc(int, int):
+ sub	w0, w1, w2
+ ret
+Derived::virtualFunc(int, int):
+ sub	w0, w2, w1
+ ret
+    \end{minted}
+    \caption{Disassembly of polymorphic function invocation (\autoref{listing:impact-dispatch-definition} \circledbase{pairedFourDarkGreen}{\scriptsize{3}}).}
+    \label{listing:impact-dispatch-polymorphic-disassembly}
+\end{code}
+
+
+\vspace{2em}
+\begin{code}
+    \begin{minted}[fontsize=\scriptsize]{text}
+//// Trace of `Extensibility.time_invoke_method_baseline` :
+// == microbenchmarks:152 `time_invoke_method_baseline` ==
+// >>> a = 5
+154         0   LOAD_CONST           1   (5)
+            2   STORE_FAST           1   (a)
+// >>> b = 6
+155         4   LOAD_CONST           2   (6)
+            6   STORE_FAST           2   (b)
+// >>> _ = None  # Simulate passing arguments
+156         8   LOAD_CONST           3   (None)
+            10  STORE_FAST           3   (_)
+// >>> Extensibility.EXAMPLE.regularFunction
+157         12  LOAD_GLOBAL          0   (Extensibility)
+            14  LOAD_ATTR            1   (EXAMPLE)
+            16  LOAD_ATTR            2   (regularFunction)
+            18  POP_TOP                  ()
+// >>> return a - b
+158         20  LOAD_FAST            1   (a)
+            22  LOAD_FAST            2   (b)
+            24  BINARY_SUBTRACT          ()
+            26  RETURN_VALUE             ()
+// =============================================
+
+// == microbenchmarks:160 `time_invoke_method` ==
+// >>> a = 5
+162         0   LOAD_CONST           1   (5)
+            2   STORE_FAST           1   (a)
+// >>> b = 6
+163         4   LOAD_CONST           2   (6)
+            6   STORE_FAST           2   (b)
+// >>> return Extensibility.EXAMPLE.regularFunction(a, b)
+164         8   LOAD_GLOBAL          0   (Extensibility)
+            10  LOAD_ATTR            1   (EXAMPLE)
+            12  LOAD_METHOD          2   (regularFunction)
+            14  LOAD_FAST            1   (a)
+            16  LOAD_FAST            2   (b)
+            18  CALL_METHOD          2   ()
+
+    // === microbenchmarks:16 `regularFunction` ====
+    // >>> return a - b
+     17         0   LOAD_FAST            1   (a)
+                2   LOAD_FAST            2   (b)
+                4   BINARY_SUBTRACT          ()
+                6   RETURN_VALUE             ()
+    // =============================================
+            20  RETURN_VALUE             ()
+// =============================================
+    \end{minted}
+    \caption{Bytecode trace of Python method invocation, with the \texttt{CALL\_METHOD} and \texttt{RETURN\_VALUE} opcodes being the target of the measurement by subtracting the elapsed time from that of the baseline inlined implementation.}
+    \label{listing:impact-dispatch-polymorphic-disassembly}
+\end{code}

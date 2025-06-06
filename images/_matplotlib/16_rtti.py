@@ -198,14 +198,19 @@ def autolabel_ms(ax, rects, **kwargs) -> None:
 
 # Plot an example performance plot
 def plot_performance():
-    labels = ["Known", "dyn_cast", "isinstance"]
-    perf_means = [0, 1.21, 30.2]
+    labels = ["cast", "isinstance", "dyn_cast", "isa", "unchecked"]
+    perf_means = [102, 38.6, 40501046 / 10000000, 41350491 / 10000000, 0]
+    perf_errors = [40, 23, perf_means[2] / 100, perf_means[3] / 100, 0]
+    print(perf_means)
 
     x = np.arange(len(labels))  # the label locations
     width = 0.35  # the width of the bars
 
     fig, ax = plt.subplots()
-    rects1 = ax.bar(x, perf_means, width, color=[light_blue, light_blue, dark_blue])
+    rects1 = ax.bar(x, perf_means, width, color=[light_blue, light_blue, dark_blue, dark_blue, dark_blue],
+        yerr=perf_errors,
+        capsize=5,
+        error_kw={"ecolor": "black", "linewidth": 1},)
 
     # Logarithmic Y-Axis
     ax.set_yscale("log")
@@ -226,10 +231,10 @@ def plot_performance():
     ax.set_xticklabels(labels)
 
     # Custom legend
-    red_patch = matplotlib.patches.Patch(color=light_blue, label='C++')
-    blue_patch = matplotlib.patches.Patch(color=dark_blue, label='Python')
+    red_patch = matplotlib.patches.Patch(color=light_blue, label='Python')
+    blue_patch = matplotlib.patches.Patch(color=dark_blue, label='C++')
     # fig.legend(handles=[red_patch, blue_patch], loc="center right", bbox_to_anchor=(0, 1, 1, 0))
-    ax.legend(handles=[red_patch, blue_patch], ncol=100, loc="upper center", bbox_to_anchor=(0, 1, 1, 0))
+    ax.legend(handles=[red_patch, blue_patch], ncol=100, loc="upper right", bbox_to_anchor=(0, 1, 1, 0))
 
     autolabel(ax, rects1)
 

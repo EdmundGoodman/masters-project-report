@@ -465,6 +465,16 @@ IRWalk/vectorTraveralOpCastSuccess/2097152                     8450122 ns      8
 IRWalk/vectorTraveralOpCastSuccess/10000000                   40680953 ns     40678330 ns           17
 IRWalk/vectorTraveralOpCastSuccess_BigO                           4.07 N          4.07 N
 IRWalk/vectorTraveralOpCastSuccess_RMS                               1 %             1 %
+IRWalk/vectorTraveralOpIsaSuccess/10                              7.02 ns         7.02 ns     99761463
+IRWalk/vectorTraveralOpIsaSuccess/64                              47.6 ns         47.6 ns     14778467
+IRWalk/vectorTraveralOpIsaSuccess/512                              420 ns          420 ns      1628629
+IRWalk/vectorTraveralOpIsaSuccess/4096                            4313 ns         4313 ns       161931
+IRWalk/vectorTraveralOpIsaSuccess/32768                          38468 ns        38465 ns        17969
+IRWalk/vectorTraveralOpIsaSuccess/262144                        983971 ns       983943 ns          708
+IRWalk/vectorTraveralOpIsaSuccess/2097152                      8727375 ns      8726866 ns           79
+IRWalk/vectorTraveralOpIsaSuccess/10000000                    41350491 ns     41343429 ns           17
+IRWalk/vectorTraveralOpIsaSuccess_BigO                            4.14 N          4.14 N
+IRWalk/vectorTraveralOpIsaSuccess_RMS                                1 %             1 %
 IRWalk/vectorTraveralWithoutInterfaceCastFail/10                  39.2 ns         39.2 ns     17857367
 IRWalk/vectorTraveralWithoutInterfaceCastFail/64                   254 ns          254 ns      2761824
 IRWalk/vectorTraveralWithoutInterfaceCastFail/512                 2132 ns         2131 ns       328156
@@ -523,76 +533,56 @@ SimpleConstantFolding/folding/4096                            42047737 ns     41
 SimpleConstantFolding/folding/10000                          100531426 ns    100120405 ns            7
 SimpleConstantFolding/folding_BigO                            10083.92 N      10041.57 N
 SimpleConstantFolding/folding_RMS                                    1 %             1 %
-Dynamism/staticCall/10                                            6.26 ns         6.26 ns    112124571
-Dynamism/staticCall/64                                            40.1 ns         40.1 ns     17466028
-Dynamism/staticCall/512                                            322 ns          321 ns      2175745
-Dynamism/staticCall/4096                                          2557 ns         2557 ns       273963
-Dynamism/staticCall/32768                                        20471 ns        20470 ns        34165
-Dynamism/staticCall/262144                                      163609 ns       163594 ns         4269
-Dynamism/staticCall/2097152                                    1312188 ns      1312113 ns          533
-Dynamism/staticCall/10000000                                   6262595 ns      6262255 ns          112
-Dynamism/staticCall_BigO                                          0.63 N          0.63 N
-Dynamism/staticCall_RMS                                              0 %             0 %
-Dynamism/regularCall/10                                           6.26 ns         6.26 ns    111764395
-Dynamism/regularCall/64                                           40.0 ns         40.0 ns     17470002
-Dynamism/regularCall/512                                           321 ns          321 ns      2179870
-Dynamism/regularCall/4096                                         2561 ns         2560 ns       273400
-Dynamism/regularCall/32768                                       20455 ns        20454 ns        34053
-Dynamism/regularCall/262144                                     163783 ns       163770 ns         4263
-Dynamism/regularCall/2097152                                   1310995 ns      1310931 ns          535
-Dynamism/regularCall/10000000                                  6253406 ns      6253148 ns          112
-Dynamism/regularCall_BigO                                         0.63 N          0.63 N
+Dynamism/noCall/10                                                6.14 ns         6.14 ns    113553610
+Dynamism/noCall/64                                                39.4 ns         39.4 ns     17745295
+Dynamism/noCall/512                                                325 ns          325 ns      2157076
+Dynamism/noCall/4096                                              2532 ns         2532 ns       277616
+Dynamism/noCall/32768                                            20200 ns        20199 ns        34687
+Dynamism/noCall/262144                                          161503 ns       161477 ns         4331
+Dynamism/noCall/2097152                                        1321702 ns      1321604 ns          541
+Dynamism/noCall/10000000                                       6161264 ns      6160970 ns          113
+Dynamism/noCall_BigO                                              0.62 N          0.62 N
+Dynamism/noCall_RMS                                                  1 %             1 %
+Dynamism/regularCall/10                                           7.38 ns         7.38 ns     94848237
+Dynamism/regularCall/64                                           40.7 ns         40.7 ns     17091447
+Dynamism/regularCall/512                                           333 ns          333 ns      2155774
+Dynamism/regularCall/4096                                         2537 ns         2537 ns       275792
+Dynamism/regularCall/32768                                       20152 ns        20151 ns        34725
+Dynamism/regularCall/262144                                     161299 ns       161295 ns         4337
+Dynamism/regularCall/2097152                                   1290940 ns      1290854 ns          541
+Dynamism/regularCall/10000000                                  6153182 ns      6152711 ns          114
+Dynamism/regularCall_BigO                                         0.62 N          0.62 N
 Dynamism/regularCall_RMS                                             0 %             0 %
-Dynamism/monomorphicCall/10                                       6.25 ns         6.25 ns    111854530
-Dynamism/monomorphicCall/64                                       40.0 ns         40.0 ns     17499177
-Dynamism/monomorphicCall/512                                       321 ns          321 ns      2183542
-Dynamism/monomorphicCall/4096                                     2559 ns         2559 ns       273615
-Dynamism/monomorphicCall/32768                                   20525 ns        20524 ns        34149
-Dynamism/monomorphicCall/262144                                 163929 ns       163922 ns         4266
-Dynamism/monomorphicCall/2097152                               1311524 ns      1311421 ns          533
-Dynamism/monomorphicCall/10000000                              6250365 ns      6250010 ns          112
-Dynamism/monomorphicCall_BigO                                     0.63 N          0.63 N
-Dynamism/monomorphicCall_RMS                                         0 %             0 %
-Dynamism/polymorphicCall/10                                       6.25 ns         6.24 ns    112007004
-Dynamism/polymorphicCall/64                                       40.0 ns         40.0 ns     17488901
-Dynamism/polymorphicCall/512                                       321 ns          321 ns      2180507
-Dynamism/polymorphicCall/4096                                     2561 ns         2561 ns       273383
-Dynamism/polymorphicCall/32768                                   20489 ns        20488 ns        34229
-Dynamism/polymorphicCall/262144                                 163874 ns       163866 ns         4275
-Dynamism/polymorphicCall/2097152                               1310244 ns      1310168 ns          533
-Dynamism/polymorphicCall/10000000                              6253030 ns      6252564 ns          112
-Dynamism/polymorphicCall_BigO                                     0.63 N          0.63 N
-Dynamism/polymorphicCall_RMS                                         0 %             0 %
-Dynamism/monomorphicPointerCall/10                                20.0 ns         20.0 ns     34899795
-Dynamism/monomorphicPointerCall/64                                 135 ns          135 ns      5160311
-Dynamism/monomorphicPointerCall/512                                976 ns          976 ns       718018
-Dynamism/monomorphicPointerCall/4096                              7695 ns         7694 ns        90986
-Dynamism/monomorphicPointerCall/32768                            61474 ns        61471 ns        11403
-Dynamism/monomorphicPointerCall/262144                          491416 ns       491398 ns         1424
-Dynamism/monomorphicPointerCall/2097152                        3934594 ns      3934387 ns          178
-Dynamism/monomorphicPointerCall/10000000                      18742210 ns     18740882 ns           37
-Dynamism/monomorphicPointerCall_BigO                              1.87 N          1.87 N
-Dynamism/monomorphicPointerCall_RMS                                  0 %             0 %
-Dynamism/polymorphicPointerCall/10                                22.0 ns         22.0 ns     31675166
-Dynamism/polymorphicPointerCall/64                                 137 ns          137 ns      5091049
-Dynamism/polymorphicPointerCall/512                                976 ns          976 ns       717356
-Dynamism/polymorphicPointerCall/4096                              7691 ns         7691 ns        90940
-Dynamism/polymorphicPointerCall/32768                            61518 ns        61514 ns        11392
-Dynamism/polymorphicPointerCall/262144                          492450 ns       492430 ns         1422
-Dynamism/polymorphicPointerCall/2097152                        3935077 ns      3934911 ns          178
-Dynamism/polymorphicPointerCall/10000000                      18776569 ns     18775592 ns           37
-Dynamism/polymorphicPointerCall_BigO                              1.88 N          1.88 N
-Dynamism/polymorphicPointerCall_RMS                                  0 %             0 %
-Dynamism/hasTrait/10                                               120 ns          120 ns      5842524
-Dynamism/hasTrait/64                                               778 ns          778 ns       903406
-Dynamism/hasTrait/512                                             6150 ns         6150 ns       113278
-Dynamism/hasTrait/4096                                           49506 ns        49501 ns        14140
-Dynamism/hasTrait/32768                                         397000 ns       396948 ns         1763
-Dynamism/hasTrait/262144                                       3490670 ns      3490570 ns          200
-Dynamism/hasTrait/2097152                                     28636495 ns     28634484 ns           25
-Dynamism/hasTrait/10000000                                   140535854 ns    140523393 ns            5
-Dynamism/hasTrait_BigO                                           14.04 N         14.04 N
-Dynamism/hasTrait_RMS                                                1 %             1 %
+Dynamism/regularCallNoinline/10                                   16.9 ns         16.9 ns     41368407
+Dynamism/regularCallNoinline/64                                   112 ns          112 ns      6255407
+Dynamism/regularCallNoinline/512                                   799 ns          799 ns       873954
+Dynamism/regularCallNoinline/4096                                 6299 ns         6298 ns       110858
+Dynamism/regularCallNoinline/32768                               50360 ns        50347 ns        13933
+Dynamism/regularCallNoinline/262144                             402420 ns       402348 ns         1741
+Dynamism/regularCallNoinline/2097152                           3215942 ns      3215367 ns          217
+Dynamism/regularCallNoinline/10000000                         15373396 ns     15372190 ns           46
+Dynamism/regularCallNoinline_BigO                                 1.54 N          1.54 N
+Dynamism/regularCallNoinline_RMS                                     0 %             0 %
+Dynamism/regularPointerCall/10                                    6.81 ns         6.80 ns    102257870
+Dynamism/regularPointerCall/64                                    40.7 ns         40.7 ns     16965482
+Dynamism/regularPointerCall/512                                    324 ns          324 ns      2163497
+Dynamism/regularPointerCall/4096                                  2530 ns         2530 ns       276256
+Dynamism/regularPointerCall/32768                                20109 ns        20107 ns        34720
+Dynamism/regularPointerCall/262144                              160961 ns       160944 ns         4351
+Dynamism/regularPointerCall/2097152                            1288637 ns      1288545 ns          543
+Dynamism/regularPointerCall/10000000                           6164348 ns      6164179 ns          114
+Dynamism/regularPointerCall_BigO                                  0.62 N          0.62 N
+Dynamism/regularPointerCall_RMS                                      0 %             0 %
+Dynamism/runtimePolymorphicPointerCall/10                         19.2 ns         19.2 ns     36665574
+Dynamism/runtimePolymorphicPointerCall/64                          129 ns          129 ns      5411307
+Dynamism/runtimePolymorphicPointerCall/512                         958 ns          958 ns       730546
+Dynamism/runtimePolymorphicPointerCall/4096                       7582 ns         7581 ns        92110
+Dynamism/runtimePolymorphicPointerCall/32768                     60403 ns        60399 ns        11566
+Dynamism/runtimePolymorphicPointerCall/262144                   483774 ns       483742 ns         1451
+Dynamism/runtimePolymorphicPointerCall/2097152                 3859047 ns      3858720 ns          181
+Dynamism/runtimePolymorphicPointerCall/10000000               18391560 ns     18390115 ns           38
+Dynamism/runtimePolymorphicPointerCall_BigO                       1.84 N          1.84 N
+Dynamism/runtimePolymorphicPointerCall_RMS                           0 %             0 %
     \end{minted}
     \caption{Results for the ``How Slow is MLIR?'' micro-benchmarks.}
     \label{listing:how-slow-is-mlir-microbenchmark-results}

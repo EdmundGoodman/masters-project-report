@@ -59,7 +59,7 @@ def setGlobalDefaults() -> None:
     matplotlib.rcParams["axes.spines.top"] = False
 
 
-matplotlib.rcParams["figure.figsize"] = 6, 3
+matplotlib.rcParams["figure.figsize"] = 6, 2
 
 # Color palette
 light_gray = "#cacaca"
@@ -124,12 +124,12 @@ def str_from_float(x: float, digits: int = 3, suffix: str = "") -> str:
         return before_decimal
     if len(before_decimal) > digits:
         # we can't even fit the integral part
-        return get_scientific(x, digits)
+        return str(x) #get_scientific(x, digits)
 
     result = result[: digits + 1]  # plus 1 for the decimal point
     if float(result) == 0:
         # we can't even get one significant figure
-        return get_scientific(x, digits)
+        return str(x) #get_scientific(x, digits)
 
     return result[: digits + 1]
 
@@ -158,7 +158,7 @@ def autolabel(
         height = rect.get_height()
         ax.annotate(
             label_from_height(height),
-            xy=(rect.get_x() + rect.get_width() / 2, height),
+            xy=(rect.get_x() + rect.get_width() / 2, max(0.8, height)),
             **(default_kwargs | kwargs),
         )
 
@@ -197,14 +197,36 @@ def autolabel_ms(ax, rects, **kwargs) -> None:
 
 # Plot an example performance plot
 def plot_performance():
-    labels = ["Direct", "Virtual", "Indirect virtual", "Python"]
-    perf_means = [0, 1.21, 30.2]
+    labels = [
+        "Python\nmethod", "Dynamic\ndispatch", "Direct\ndispatch", "Inlined"
+    ]
+    iterations = 10000000
+    overhead = 6138505 / iterations
+    perf_means = [
+        140 - 128,
+        18427326 / iterations - overhead,
+        15373396 / iterations - overhead,
+        0, # 6153182 / iterations - overhead,
+    ]
+    perf_errors = [
+        5,
+        perf_means[-1] / 100,
+        perf_means[-1] / 100,
+        0, # perf_means[0] / 100,
+    ]
+    print(perf_means)
 
     x = np.arange(len(labels))  # the label locations
     width = 0.35  # the width of the bars
 
     fig, ax = plt.subplots()
-    rects1 = ax.bar(x, perf_means, width, color=[light_blue, light_blue, dark_blue])
+    rects1 = ax.bar(
+        x, perf_means, width,
+        # color=[light_blue, light_blue, light_blue, dark_blue],
+        color=[light_blue, dark_blue, dark_blue, dark_blue],
+        yerr=perf_errors,
+        capsize=5,
+        error_kw={"ecolor": "black", "linewidth": 1},)
 
     # Logarithmic Y-Axis
     ax.set_yscale("log")
@@ -225,10 +247,10 @@ def plot_performance():
     ax.set_xticklabels(labels)
 
     # Custom legend
-    red_patch = matplotlib.patches.Patch(color=light_blue, label='C++')
-    blue_patch = matplotlib.patches.Patch(color=dark_blue, label='Python')
+    red_patch = matplotlib.patches.Patch(color=light_blue, label='Python')
+    blue_patch = matplotlib.patches.Patch(color=dark_blue, label='C++')
     # fig.legend(handles=[red_patch, blue_patch], loc="center right", bbox_to_anchor=(0, 1, 1, 0))
-    ax.legend(handles=[red_patch, blue_patch], ncol=100, loc="upper center", bbox_to_anchor=(0, 1, 1, 0))
+    ax.legend(handles=[red_patch, blue_patch], ncol=100, loc="upper right", bbox_to_anchor=(0, 1, 1, 0))
 
     autolabel(ax, rects1)
 

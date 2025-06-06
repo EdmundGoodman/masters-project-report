@@ -27,41 +27,111 @@ We justify this by examining the mechanisms of dynamic dispatch in Python and C+
 
 % Hook
 % Argument
-C++ uses a \ac{vtable} mechanism for method polymorphism, a lookup table which is accessed at runtime through pointer indirection to retrieve the address for the virtual function implementation. In contrast, Python stores methods and attributes in the \mintinline{text}{__dict__} object attribute which is searched at runtime, checking parent classes if needed. While both use indirection for dynamic dispatch, Python's approach enables more dynamic behavior like runtime meta-programming but comes with higher performance costs compared to C++'s more efficient vtable system.
+C++ uses a \ac{vtable} mechanism for method polymorphism, a lookup table which is accessed at runtime through pointer indirection to retrieve the address for the virtual function implementation. In contrast, Python stores methods and attributes in the \mintinline{text}{__dict__} object attribute which is searched at runtime, checking parent classes if needed. While both use indirection for dynamic dispatch, Python's approach enables more dynamic behaviour like runtime meta-programming but comes with higher performance costs compared to C++'s more efficient \ac{vtable} system.
 % Link
-We can quantify the performance overhead of this \ac{vtable} mechanism through a synthetic example.
+We can quantify the performance overhead of this \ac{vtable} mechanism through a synthetic example (Listing \ref{listing:impact-dispatch}).
 
 
 \begin{figure}[H]
     \centering
-    % \includegraphics[width=0.75\textwidth]{images/impact_dynamism/dispatch.pdf}
-    \caption{.}
+    \begin{subfigure}[b]{0.45\textwidth}
+       \centering
+        \begin{minted}[fontsize=\scriptsize,escapeinside=££]{text}
+class Base {
+public:
+    int func(int a, int b) { £\circledbase{pairedTwoDarkBlue}{\scriptsize{1}}£
+        return a - b;
+    }
+    __attribute__((noinline))
+    int uninlinedFunc(int a, int b) { £\circledbase{pairedThreeLightGreen}{\scriptsize{2}}£
+        return a - b;
+    }
+    virtual int virtualFunc(int a, int b) { £\circledbase{pairedFourDarkGreen}{\scriptsize{3}}£
+        return a - b;
+    }
+};
+
+class Derived : public Base {
+public:
+    int virtualFunc(int a, int b) override {
+        return b - a;
+    }
+};
+        \end{minted}
+        \scriptsize{\vspace{1em}}
+        \captionsetup{name=Listing}
+        \caption{Method definitions.}
+        \label{listing:impact-dispatch-definition}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \begin{minted}[breakanywhere,fontsize=\scriptsize,escapeinside=££]{text}
+#include <stdlib.h>
+
+int main(int argc, char *argv[]) {
+    // Values known only at runtime
+    int a = atoi(argv[1]), b = atoi(argv[2]), c = atoi(argv[3]);
+
+    // Setup
+    int result = 0;
+    Base baseObj;
+    Derived derivedObj;
+    Base* polyObj = c > 0 ? &baseObj : &derivedObj; £\circledbase{pairedOneLightBlue}{\scriptsize{4}}£
+
+    // Function invocations
+    result += baseObj.func(a, b);
+    result += baseObj.uninlinedFunc(a, b);
+    result += polyObj->virtualFunc(a, b);
+
+    return result;
+}
+        \end{minted}
+        \captionsetup{name=Listing}
+        \caption{Method invocations.}
+        \label{listing:impact-dispatch-invocation}
+    \end{subfigure}
+    \vspace{1em}
+    \captionsetup{name=Listing}
+    \caption{Synthetic example of direct and dynamic method dispatch in C++.}
+    \label{listing:impact-dispatch}
+\end{figure}
+
+% Hook
+Our experiment
+% Argument
+% Link
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{images/impact_dynamism/dispatch.pdf}
+    \caption{Dynamic dispatch in C++ incurs a $30\%$ overhead in C++ method invocation, but remains an order of magnitude more performant than CPython 3.10 method invocation.}
     \label{figure:impact-dispatch}
 \end{figure}
 
 
-% %% Quantifying with toy example, and how to count in real-world
 % % Hook
-% This shows that...
+From this experiment, we can see taht
 % % Argument
-% The pointer dereference cost is small. The hidden optimisation opportunities are bigger. Python is much slower, and a two-step process (LOAD\_METHOD + CALL\_METHOD), where LOAD\_METHOD is slow.
+The pointer dereference cost is small but non-negligible.
+The hidden optimisation opportunities are bigger.
+Python is much slower, and a two-step process (LOAD\_METHOD + CALL\_METHOD), where LOAD\_METHOD is slow.
 % %% Where does this occur?
 % % Hook
-% This behaviour
-% % Argument
-% % Link
-% In other cases, \ac{mlir} is implemented to avoid this overhead. For example, the \mintinline{text}{TypeID::get<Traits>} function uses template meta-programming to monomorphise the generic function calls. However, this approach is only applicable when there is sufficient information at runtime.
-
-
-\section{Hiding ahead of time optimisations}
-\label{chap:dynamism-pattern-rewriting-hiding}
-
 %% Introduction
 % Hook
 In addition to the direct overhead incurred by dynamism in static languages, runtime information precludes ahead-of-time optimisations which contribute to the difference in performance between static and dynamic languages.
 % Argument
-% Talk about experiment
+% Not categorised, since "indirect" cost by diesen and holzer
+% Examples of how
 % Link
+
+
+This behaviour
+% Argument
+% Link
+In other cases, \ac{mlir} is implemented to avoid this overhead. For example, the \mintinline{text}{TypeID::get<Traits>} function uses template meta-programming to monomorphise the generic function calls. However, this approach is only applicable when there is sufficient information at runtime.
+
 
 
 
@@ -70,11 +140,9 @@ In addition to the direct overhead incurred by dynamism in static languages, run
 
 %% Introduce the issue
 % Hook
-In a ``A history of C++: 1979--1991'', Stroustop states that in the original C++ design he ``deliberately didn't include [mechanisms] for run-time type identification [as] they were almost always misused.'' \cite{stroustrupHistory197919911996}.
+In a ``A history of C++: 1979--1991'', Stroustop states that the original C++ design ``deliberately didn't include [mechanisms] for run-time type identification [as] they were almost always misused.'' \cite{stroustrupHistory197919911996}.
 % Argument
-Support for this functionality was later added in C++98 \cite{internationalorganizationforstandardizationISOIEC148821998}, adding support for \texttt{dynamic\_cast}s checked a runtime, and getting the \texttt{typeid} of a polymorphic object.
-% Note about default not being used and doesn't compile without extra flag, motivating next
-LLVM reimplements a subset of this functionality, providing the \texttt{dyn\_cast} method and \texttt{TypeID} data structure, aiming to ``strike a balance between performance and the setup required to enable its use'' \cite{mlirteamMLIRCodeDocumentation}.
+Support for this functionality was later added in C++98 \cite{internationalorganizationforstandardizationISOIEC148821998}, including support for \texttt{dynamic\_cast}s checked a runtime, and getting the \texttt{typeid} of a polymorphic object. However, this incurs a runtime cost \cite{goldthwaite2006technical}, and is brittle in the objects to which it can be applied. A such, LLVM reimplements a subset of this functionality, providing the \texttt{dyn\_cast} method and \texttt{TypeID} data structure, aiming to ``strike a balance between performance and the setup required to enable its use'' \cite{mlirteamMLIRCodeDocumentation}.
 This is another example of dynamic behaviour, which we again argue incurs additional runtime overhead and precludes optimisations in static languages, closing the gap with dynamic ones.
 % Link
 As before, we justify this be examining the details of this mechanism, using both synthetic examples and our micro-benchmark suite.
@@ -86,34 +154,14 @@ As before, we justify this be examining the details of this mechanism, using bot
     \caption{.}
     \label{figure:impact-rtti}
 \end{figure}
-% \begin{table}[H]
-%   \caption{.}
-%   \label{tab:dynamic-dispatch-perf}
-%   \centering
-%   \begin{tabular}{lllc}
-%     \toprule
-%     \multicolumn{3}{c}{\textbf{Function}} \\
-%     \cmidrule(r){1-3}
-%     \textbf{Specifier} & \textbf{Morphism} & \textbf{Indirection} & \textbf{Duration [ns]} \\
-%     % \textbf{Invocation type} & \textbf{Duration [ns]} \\
-%     \midrule
-%     Default & Monomorphic & Direct & $0.614$ \\
-%     Inline & Monomorphic & Direct & $0.614$ \\
-%     Static & Monomorphic & Direct & $0.613$ \\
-%     Virtual & Monomorphic & Direct & $0.613$ \\
-%     Virtual & Polymorphic & Direct & $1.07$ \\
-%     Virtual & Monomorphic & Pointer & $1.98$ \\
-%     Virtual & Polymorphic & Pointer & $1.90$ \\
-%     \bottomrule
-%   \end{tabular}
-% \end{table}
 
 %% Experimental results
 % Hook
-These results show % (single number...)
+These results show that LLVM's \ac{rtti} implementation.
 % Argument
+Approximately one third of Python's runtime is as a result of its method invocation overhead, quantified as $10$ns in the previous experiment. Despite this, the type checking implementation . This comes as a result of CPython's \texttt{PyObject\_IsInstance} implementation,
 % Duck typing avoids need for type checking -- asserts elided by -O0
-% Also can hide optimisation, since control flow not known
+However, Python's duck typing
 % Where is this present in micro-benchmarks
 This synthetic example can be seen in the trait checking micro-benchmark, demonstrating its relevance to user-extensible compiler infrastructure. In \ac{mlir}, LLVM's \mintinline{c++}{TypeID} \ac{rtti} infrastructure is used to compare traits, constrasting Python using \texttt{isinstance} checks (\autoref{listing:ubenchmark-trait-checks-both}).
 % Link
