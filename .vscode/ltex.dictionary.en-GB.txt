@@ -23,3 +23,8 @@ LuaJIT
 Stroustop
 pairedNegOneLightGray
 monomorphise
+SHAs
+Pliron
+Stoltz
+canonicaliser
+XLA

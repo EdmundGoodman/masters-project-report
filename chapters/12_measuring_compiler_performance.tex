@@ -21,18 +21,18 @@ Accurate performance measurement is a fundamental yet notoriously fickle discipl
 % Argument
 In this section, we discuss our experimental methodology, including: the hardware and software setup; the selection of workloads examined; and additional infrastructure constructed.
 % Link
-Through this, we aim to justify our experimental procedure and facilitate reproducibilty of results.
+Through this, we aim to justify our experimental procedure and facilitate reproducibility of results.
 
 \subsection{Experimental setup}
 \label{ssec:experimental-setup}
 
 % Hook
-All experimental results for this work were measured with the same experimental setup: an AWS EC2 virtual machine (\autoref{tab:experimental-setup}).
+We measured all experimental results for this work with the same experimental setup: an AWS EC2 virtual machine (\autoref{tab:experimental-setup}).
 % Argument
 This choice benefits experimental replicability, making it easy for future researchers to provision their own AWS EC2 instance with a similar machine configuration, and hence performance characteristics.
 However, there are also drawbacks associated with using virtualised cloud infrastructure for performance measurements.
 Unlike bare-metal machines, the added layer of indirection of the hypervisor adds noise and confounding effects to the performance measurements.
-We use the subset of machine configuration available through the hypervisor to minimise noise, for example by pinning workloads to invididual virtual cores and disabling address space randomisation. % Things done by pyperf
+We use the subset of machine configuration available through the hypervisor to minimise noise, for example by pinning workloads to individual virtual cores and disabling address space randomisation. % Things done by pyperf
 Following these mitigations, the experimental setup is a fair compromise of leveraging available resources and empowering reproducibility for slightly reduced experimental precision.
 Finally, the ubiquitous use of cloud resources, especially for compilation workloads in build servers, makes this choice and its associated properties representative of real-world applications.
 % Link
@@ -111,7 +111,7 @@ Finally, the ubiquitous use of cloud resources, especially for compilation workl
 % Hook
 In addition to the underlying experimental hardware, the software configuration of the machine significantly contributes to its performance characteristics.
 % Argument
-As such, we similarly provide a description of the language versions and build tools, along with the exact \texttt{git} SHAs of the compilation frameworks being compared in this chapter (\autoref{tab:experimental-configuration}).
+As such, we similarly provide a description of the language versions and build tools, along with the exact \texttt{git} SHAs of the compilation frameworks that we compare in this chapter (\autoref{tab:experimental-configuration}).
 % Link
 Experiments in later chapters ablate across both language and framework versions, with these versions being noted explicitly when changed.
 
@@ -157,7 +157,7 @@ Without sidekick compilation, for example comparing two more disparate user-exte
 % Argument
 In this case, we define workloads as the combination of a segment of \ac{ir} and a rewriting optimisation transforms it. This can be used to drive both frameworks' command line optimiser tools and internal phases and functions within the frameworks.
 % Simple enough to reason deeply about, but exercises common pattern rewriting dependencies like replacing ops, checking traits, ... (all quite dynamic)
-Although real-world workloads vary in structure, a common use-case for \ac{mlir} is ingesting \ac{ir}, applying rewriting operations to it, and finally passing the transformed \ac{ir} to LLVM for code generation. Since this \ac{ir} is often provided in a binary format in production environments, as opposed to a textual one more commonly used during ddevelopment, rewriting machinery constitutes a high proportion of the executed logic.
+Although real-world workloads vary in structure, a common use-case for \ac{mlir} is ingesting \ac{ir}, applying rewriting operations to it, and finally passing the transformed \ac{ir} to LLVM for code generation. Since this \ac{ir} is often provided in a binary format in production environments, as opposed to a textual one more commonly used during development, rewriting machinery constitutes a high proportion of the executed logic.
 Because of this, workloads representative of these real-world use-cases should exercise common operations in rewriting machinery, such as walking through operations, checking their traits, and replacing them in their parent block. In addition to this, using basic dialects through which most \acs{ir} are lowered such as \texttt{arith} and \texttt{builtin} is similarly beneficial.
 % Link
 As such, we select constant folding as our main experimental workload to fulfil these requirements.
@@ -175,7 +175,7 @@ Stoltz et al. define constant folding as ``a well-known static compiler techniqu
 It has been leveraged for both performance and space improvements since the earliest optimising compilers. Despite this, it remains relevant even over more modern, exotic optimisations due to its simplicity, efficient implementation, and high impact on generated \ac{ir}.
 In addition to this, procedural generation of \ac{ir} which can be constant folded is simply parameterised in length (\autoref{sec:constant-folding-workload-impl}), facilitating experiments examining performance scaling.
 % Link
-An example \ac{ir} segment with three constants is shown below (\autoref{listing:constant-folding-workload-example}).
+We show an example \ac{ir} segment with three constants below (\autoref{listing:constant-folding-workload-example}).
 
 % \vspace{2em}
 
@@ -232,7 +232,7 @@ In addition to their usefulness for understanding and optimising compiler perfor
 % Argument
 Benchmarks can be used to characterise the performance impact of changes to the xDSL codebase, making it easier to avoid unnecessary performance regression.
 As such, we provide a command line interface for developers to run the benchmarks, with further functionality which supports a variety of profiling tools\footnote{\scriptsize{\url{https://github.com/xdslproject/xdsl/blob/main/benchmarks/README.md}}}.
-Furthermore, our benchmarks are constructed to interface with Airspeed Velocity \cite{michaeldroettboomAirspeedvelocityAsv2025}, a tool which runs benchmarks across repository commits. This information is tracked on the xDSL website\footnote{\scriptsize{\url{https://xdsl.dev/xdsl-bench/}}}, providing a dashboard for the performance characteristics of xDSL over time.
+Furthermore, our benchmarks interface with Airspeed Velocity \cite{michaeldroettboomAirspeedvelocityAsv2025}, a tool which runs benchmarks across repository commits. The xDSL website then tracks the results of this tool, providing a dashboard for the performance characteristics of xDSL over time\footnote{\scriptsize{\url{https://xdsl.dev/xdsl-bench/}}}.
 % Link
 
 
@@ -262,8 +262,8 @@ This makes them a good candidate for this simple metric of end-to-end runtime.
 % As such, a good place to start comparing the performance characteristics of \ac{mlir} and xDSL is the end-to-end performance of their command line tools.
 
 % Hook
-End-to-end measurements are well-aligned metrics of performance for real-world workloads, but are limited by their coarse granularity. Conveniently, modern compiler frameworks are structured in a way that facilitates more detailed breakdowns, even for end-to-end runs.
-One of LLVM's key insights was that compilation can be split into a sequence of discrete re-usable phases, avoiding the complex interleaved control logic of previous monolothic compilers.
+End-to-end measurements are well-aligned metrics of performance for real-world workloads, but are limited by their coarse granularity. Conveniently, the structure of modern compiler frameworks facilitates more detailed breakdowns, even for end-to-end runs.
+One of LLVM's key insights was that compilation can be split into a sequence of discrete re-usable phases, avoiding the complex interleaved control logic of previous monolithic compilers.
 % Argument
 As such, compilers having LLVM's pedigree, such as \ac{mlir} and xDSL, can be modelled as a pipeline -- parsing the input, applying optimisation transformations, and generating a lowered output.
 This allows us to break down end-to-end benchmarks into components of finer granularity for free.
@@ -274,9 +274,9 @@ This allows us to break down end-to-end benchmarks into components of finer gran
 % Argument
 For \ac{mlir}, we invoke \mintinline[breaklines, breakafter=-]{text}{mlir-opt constant_folding.mlir --canonicalize --mlir-timing}.
 By default, this prints results to four decimal places, which is insufficiently granular to time printing very short \ac{ir} segments. As such, we modify \ac{mlir}'s implementation to print more decimal places. In order to guarantee statistical significance following this change, we measure across ten repeats. Since we are sampling a single variable, we take the arithmetic mean of these values, with an uncertainty given by their standard deviation.
-For xDSL, we leverage our custom benchmarking infrastructure (\autoref{ssec:infrastructure}), which drives each phase canonicalising the workload and records precise timings. We then calculate the average and uncertainty by the same procedure.
+For xDSL, we leverage our custom benchmarking infrastructure (\autoref{ssec:infrastructure}), which drives each phase canonicalising the workload and records precise timings.
 % Link
-These wall times for each framework and the slowdown between them can then be plotted (\autoref{fig:end-to-end-constant-folding-walltime}).
+We then calculate the average and uncertainty by the same procedure, in order to plot these wall times for each framework and the slowdown between them (\autoref{fig:end-to-end-constant-folding-walltime}).
 
 % Figure: relative performance bar chart
 %% Constant folding example. Short but complex example with lots of rewrites?
@@ -313,9 +313,9 @@ Since the parser represents a majority of the total runtime for both frameworks,
 % Argument
 Despite this, we select the pattern rewriting phase, which implements the canonicaliser, for further investigation.
 % This is because the complexity of modern compilers is focussed on rewrites for optimisation, with both parsing and printing being well understood problems. In addition to this, the parser and printer typically only used for debugging, with the compiler framework predominantly being used for its rewriting capabilities.
-This is because compilers designed to meet the demands of modern workloads are heavily focussed on optimisating \ac{ir} through rewriting. For example, the XLA machine learning compiler takes a binary input representation as input, which it then lowers through \ac{mlir} dialects applying rewrite optimisations in order to generate efficient code targeting accelerator hardware \cite{sabne2020xla}. This process only relies on parsing and printing logic for debugging, as its main code generation flow operates entirely on binary representations.
+This is because compilers designed to meet the demands of modern workloads heavily focus on optimising \ac{ir} through rewriting. For example, the XLA machine learning compiler takes a binary input representation as input, which it then lowers through \ac{mlir} dialects applying rewrite optimisations in order to generate efficient code targeting accelerator hardware \cite{sabne2020xla}. This process only relies on parsing and printing logic for debugging, as its main code generation flow operates entirely on binary representations.
 % Examples of this include XLA \cite{sabne2020xla} emitting \ac{mlir} \ac{ir} in custom dialects, using \ac{mlir}'s rewrite machinery to lower code to the target hardware.
-As such, optimising these components is a less attractive research direction, as it would only effect the performance of development and testing infrastructure.
+As such, optimising these components is a less attractive research direction, as it would only affect the performance of development and testing infrastructure.
 Furthermore, the rewriter is a much more dynamic workload, with its control flow necessarily determined at runtime based on the contents of the \ac{ir} being optimised.
 % Link
 This further makes it a more suitable candidate for examination through the lens of the impact of dynamism on user-extensible compiler frameworks.
@@ -355,14 +355,14 @@ Unfortunately, the implementation and build instructions for the ``How Slow is M
 % Argument (too informal?)
 However, the source code can be found on a branch of their fork of LLVM\footnote{\scriptsize{\url{https://github.com/joker-eph/llvm-project/tree/benchmarks}}}. We provide a copy of this source code and instructions for running the benchmarks\footnote{\scriptsize{\url{https://github.com/EdmundGoodman/llvm-project-benchmarks}}} to enhance the replicability of our results and facilitate further performance experiments.
 % Link
-This source code can then be used to construct comparable micro-benchmarks in Python.
+We then use this source code to construct comparable micro-benchmarks in Python.
 
 %% Design of our microbenchmarks
 % Hook
 A key design goal of our micro-benchmarks for xDSL is parity with those provided for \ac{mlir}, ensuring the validity their direct comparison.
 % Argument
-As such, their implementation was derived from the \ac{mlir} benchmarks, matching test data and function invocations as closely as possible.
-In addition to being fairly comparable, it is critical that the micro-benchmark results are statistically significant. This is particularly challenging as their execution time approaches the $1$ns resolution of the most granular system counters on the benchmarking machine. As such, we measure the total time taken to execute the functions under test $32768$ times, evaluating the individual duration by dividing by the number of iterations. As with the traditional benchmarks, this process is repeated ten times, calculating the arithmetic mean and standard deviation as the value and its uncertainty respectively.
+As such, we derive their implementation from the \ac{mlir} benchmarks, matching test data and function invocations as closely as possible.
+In addition to being fairly comparable, it is critical that the micro-benchmark results are statistically significant. This is particularly challenging as their execution time approaches the $1$ns resolution of the most granular system counters on the benchmarking machine. As such, we measure the total time taken to execute the functions under test $32768$ times, evaluating the individual duration by dividing by the number of iterations. As with the traditional benchmarks, we repeat this process ten times, calculating the arithmetic mean and standard deviation as the value and its uncertainty respectively.
 % Link
 In the following sections, we discuss the implementations of a number of micro-benchmarks, facilitating discussion of the insights they give into compiler performance across implementations and language runtimes in later chapters.
 
@@ -446,7 +446,7 @@ In \ac{mlir}, the creation and building mechanisms have approximately the same p
 Traits are a key property of \ac{mlir} and xDSL's operations, providing a mechanism to abstract implementation details and properties.
 % Argument
 In order to allow users of the frameworks to leverage an operation's trait information, both \ac{mlir} and xDSL provide helper methods to check whether an operation has a certain trait.
-These methods are used very frequently in common tasks. For example, when pattern rewriting over a block of IR, the traits of the block's constituent operations are often used by the matching engine to identify valid rewrites.
+These methods are used frequently in common tasks. For example, when pattern rewriting over a block of IR, the matching engine uses the traits of the block's constituent operations to identify valid rewrites.
 % Link
 
 \begin{figure}[H]
@@ -490,7 +490,7 @@ These methods are used very frequently in common tasks. For example, when patter
 % Hook
 These methods can be simply benchmarked for an example workload (Listing \ref{listing:ubenchmark-trait-checks-bench}).
 % Argument
-However, care must be taken when implementing these benchmarks to ensure they are can be equitably compared. For example, the operations must both have the same number of traits, and the trait being checked must be at the same position in that operation's list of traits.
+However, care must be taken when implementing these benchmarks to ensure they are can be equitably compared. For example, the operations must both have the same number of traits, and the target trait must be at the same position in that operation's internal data structure.
 If this is not true, one implementation may require fewer iterations to perform its workload, invalidating the comparability of the two results.
 % Link
 Micro-benchmarks of checking traits for both implementations show a slow-down of approximately $250\times$ from \ac{mlir} to xDSL (\autoref{tab:ubenchmark-trait-checks}).

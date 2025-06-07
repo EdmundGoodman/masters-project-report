@@ -63,24 +63,23 @@ For example, LLVM's low-level \ac{ir} is not well suited to the high-level optim
 Its key contribution is providing multiple levels of abstraction in the form of dialects, contrasting the fixed low-level abstraction of LLVM \ac{ir}. This allows different problem domains to define their own operations and transformation passes while sharing common infrastructure. This facilitates efficiently expressing optimisations at the most appropriate abstraction level, which can be each by applied by lowering from high-level domain-specific representations to low-level hardware-specific ones. The provision of common infrastructure including documentation generation, parsing and printing logic, and location tracking further reduces the engineering effort required to develop complex optimisations and support custom hardware targets.
 \ac{mlir} is implemented in C++, providing desirable performance characteristics, but having long build times and a verbose syntax.
 % Link
-This issue of syntax is partially mitigated by declarative dialects such as \ac{irdl}, which can express functionality which would otherwise be implemented in C++.
+% This issue of syntax is partially mitigated by declarative dialects such as \ac{irdl}, which can express functionality which would otherwise be implemented in C++.
 
 
-% \subsection{IR definition language (IRDL)}
-% \label{ssec:irdl}
+% TODO: Probably need pattern rewriting, can get away without irdl
+% % \subsection{Pattern rewriting optimisations}
+% % \label{ssec:pattern-rewriting}
+% % Hook
+% Pattern rewriting is a key idiom in \ac{mlir}.
+% % Argument
+% % Link
 
-% Hook
-\ac{irdl} \cite{fehrIRDLIRDefinition2022a}.
-% Argument
-% Link
-
-% \subsection{Pattern rewriting optimisations}
-% \label{ssec:pattern-rewriting}
-
-% Hook
-Pattern rewriting is a key idiom in \ac{mlir}.
-% Argument
-% Link
+% % \subsection{IR definition language (IRDL)}
+% % \label{ssec:irdl}
+% % Hook
+% \ac{irdl} \cite{fehrIRDLIRDefinition2022a}.
+% % Argument
+% % Link
 
 \section{xDSL}
 \label{sec:xdsl}
@@ -146,18 +145,6 @@ In contrast, pattern rewriting in user-extensible compiler frameworks relies on 
 This dynamic, pointer-chasing workload incurs overhead and precludes many optimisations leveraged by ahead-of-time statically compiled languages such as C++ to accelerate their performance for other workloads.
 % Link
 % One crux of our research is extending the academic basis surrounding static and dynamic languages to quantitatively examine the difference in their performance for highly dynamic workloads.
-
-
-
-
-
-% Object orientated optimisations (virtual dispatch in C++/objective-C)
-% Why is JS faster than Python - more constrained
-
-% Cranelift and arrays instead of linked lists for pattern rewriting (https://cfallin.org/blog/2020/09/18/cranelift-isel-1/)
-
-
-
 
 
 
