@@ -6,7 +6,7 @@
 In this chapter, we measure the runtime performance of two user-extensible compiler frameworks: \ac{mlir} and xDSL.
 % Argument
 The usefulness of these measurements are three-fold. First, we provide insight into the performance of the current versions \ac{mlir} and xDSL in relation to each other. % interesting in its own right, and as a baseline for optimisation
-Second, we identify the components of xDSL's implementation which contribute most to its overall runtime, and as such are the best targets for optimisation (\autoref{chap:specialising-optimising-pattern-rewriting}) as a corrollary of Amdahl's law \cite{amdahlValiditySingleProcessor1967}.
+Second, we identify the components of xDSL's implementation which contribute most to its overall runtime, and as such are good targets for optimisation (\autoref{chap:specialising-optimising-pattern-rewriting}).
 Finally, we isolate small, self-contained components of the implementation which are comparable between \ac{mlir} and xDSL, through which the impact of dynamism can be examined (\autoref{chap:dynamism-pattern-rewriting}).
 % Link
 
@@ -34,7 +34,7 @@ However, there are also drawbacks associated with using virtualised cloud infras
 Unlike bare-metal machines, the added layer of indirection of the hypervisor adds noise and confounding effects to the performance measurements.
 We use the subset of machine configuration available through the hypervisor to minimise noise, for example by pinning workloads to invididual virtual cores and disabling address space randomisation. % Things done by pyperf
 Following these mitigations, the experimental setup is a fair compromise of leveraging available resources and empowering reproducibility for slightly reduced experimental precision.
-Finally, the ubiqitous use of cloud resources, especially for compilation workloads in build servers, makes this choice and its associated properties representative of real-world applications.
+Finally, the ubiquitous use of cloud resources, especially for compilation workloads in build servers, makes this choice and its associated properties representative of real-world applications.
 % Link
 
 % \begin{table}[H]
@@ -72,7 +72,7 @@ Finally, the ubiqitous use of cloud resources, especially for compilation worklo
             \textbf{Configurable} & \textbf{Configuration} \\
             \midrule
             AWS instance type & c5a.4xlarge EC2 \\
-            Operating system & Debian 24.04 \\
+            Operating system & Ubuntu 24.04 \\
             Linux kernel version & 6.8.0-1029-aws \\
             \midrule
             CPU name & AMD EPYC 7R32 \\
@@ -148,14 +148,16 @@ This guarantees directly comparable performance measurements at the pipeline pha
 Without sidekick compilation, for example comparing two more disparate user-extensible compiler frameworks such as \ac{mlir} and Pliron \cite{vaivaswathanagarajVaivaswathaPliron2025}, this comparison would be constrained to only end-to-end measurement, obscuring the impact of variables such as dynamism on the performance properties.
 % Link
 
+\newpage % Avoid orphan
+
 %% Want to pick things which are simple enough to examine in detail but complex enough to exercise interesting properties of the machine.
 % Hook
 % \ac{mlir}'s textual \ac{ir} is incredibly expressive, facilitating representation of algorithms of varying complexity across a wide range of abstraction levels.
-\ac{mlir}'s facilitates the representation of algorithms of varying complexity across a wide range of abstraction levels.
+\ac{mlir} facilitates the representation of algorithms of varying complexity across a wide range of abstraction levels.
 % Argument
-In this case, we consider workloads to be the combination of a rewriting optimisation and a segment of \ac{ir} which optimises it. This can be used to drive both the two frameworks' command line optimiser tools and internal phases and functions within the frameworks.
+In this case, we define workloads as the combination of a segment of \ac{ir} and a rewriting optimisation transforms it. This can be used to drive both frameworks' command line optimiser tools and internal phases and functions within the frameworks.
 % Simple enough to reason deeply about, but exercises common pattern rewriting dependencies like replacing ops, checking traits, ... (all quite dynamic)
-Although real-world workloads vary in structure, a common use-case for \ac{mlir} is ingesting \ac{ir}, applying rewriting operations to it, and finally passing the transformed \ac{ir} to LLVM for code generation. As outside of development this \ac{ir} is often provided in a binary format as opposed to a textual one, rewriting machinery constitutes a high proportion of the executed logic.
+Although real-world workloads vary in structure, a common use-case for \ac{mlir} is ingesting \ac{ir}, applying rewriting operations to it, and finally passing the transformed \ac{ir} to LLVM for code generation. Since this \ac{ir} is often provided in a binary format in production environments, as opposed to a textual one more commonly used during ddevelopment, rewriting machinery constitutes a high proportion of the executed logic.
 Because of this, workloads representative of these real-world use-cases should exercise common operations in rewriting machinery, such as walking through operations, checking their traits, and replacing them in their parent block. In addition to this, using basic dialects through which most \acs{ir} are lowered such as \texttt{arith} and \texttt{builtin} is similarly beneficial.
 % Link
 As such, we select constant folding as our main experimental workload to fulfil these requirements.
@@ -229,12 +231,9 @@ In order to facilitate the efficient and reproducible measurement of xDSL's perf
 In addition to their usefulness for understanding and optimising compiler performance, the benchmarks composing the performance experiments also provide an opportunity to augment the development process of the xDSL project.
 % Argument
 Benchmarks can be used to characterise the performance impact of changes to the xDSL codebase, making it easier to avoid unnecessary performance regression.
-As such, we provide a command line interface for developers to run the benchmarks, with further functionality which supports a variety of profiling tools.
-Furthermore, our benchmarks are constructed to interface with Airspeed Velocity \cite{michaeldroettboomAirspeedvelocityAsv2025}, a tool which runs benchmarks across repository commits. This information is tracked on the xDSL website \url{https://xdsl.dev/xdsl-bench/}, providing a dashboard for the performance characteristics of xDSL over time.
+As such, we provide a command line interface for developers to run the benchmarks, with further functionality which supports a variety of profiling tools\footnote{\scriptsize{\url{https://github.com/xdslproject/xdsl/blob/main/benchmarks/README.md}}}.
+Furthermore, our benchmarks are constructed to interface with Airspeed Velocity \cite{michaeldroettboomAirspeedvelocityAsv2025}, a tool which runs benchmarks across repository commits. This information is tracked on the xDSL website\footnote{\scriptsize{\url{https://xdsl.dev/xdsl-bench/}}}, providing a dashboard for the performance characteristics of xDSL over time.
 % Link
-
-
-
 
 
 
@@ -263,8 +262,8 @@ This makes them a good candidate for this simple metric of end-to-end runtime.
 % As such, a good place to start comparing the performance characteristics of \ac{mlir} and xDSL is the end-to-end performance of their command line tools.
 
 % Hook
-End-to-end measurements are well-aligned metrics of performance for real-world workloads, but are limited by their coarse granularity. Conveniently, modern compiler frameworks are structured in a way that facilitates more detailed metrics even for end-to-end runs.
-One of LLVM's key insights was that compilation can be split into a sequence of discrete steps, avoiding the complex interleaved control logic of previous state-of-the-art compilers.
+End-to-end measurements are well-aligned metrics of performance for real-world workloads, but are limited by their coarse granularity. Conveniently, modern compiler frameworks are structured in a way that facilitates more detailed breakdowns, even for end-to-end runs.
+One of LLVM's key insights was that compilation can be split into a sequence of discrete re-usable phases, avoiding the complex interleaved control logic of previous monolothic compilers.
 % Argument
 As such, compilers having LLVM's pedigree, such as \ac{mlir} and xDSL, can be modelled as a pipeline -- parsing the input, applying optimisation transformations, and generating a lowered output.
 This allows us to break down end-to-end benchmarks into components of finer granularity for free.
@@ -305,16 +304,18 @@ These wall times for each framework and the slowdown between them can then be pl
 Despite its simplicity, this initial experiment reveals a number of interesting insights.
 % Argument
 Firstly, the slow-down from xDSL to \ac{mlir} for the first two passes is approximately $50\times$. This provides an initial baseline for the overhead incurred by the combination of xDSL's language runtime and implementation details over the \ac{mlir} implementation.
-Secondly, the slow-down for the printer is much lower that the other two phases, at only $3\times$.
+Secondly, the slow-down for the printer is much lower than the other two phases, at only $3\times$.
 This is because the constant folded output is very short, containing only two \ac{ir} instructions (\autoref{listing:constant-folding-workload-folded}) for any length input of that schema. As such, the overhead of writing to the standard output is greater than the processing time for those few operations. In contrast, the logic implement parsing and canonicalisation rewrites is much longer than any fixed overhead they incur, such as the parser reading the \ac{ir} from a file.
 % Link
 
 % Hook
-Since the parser represents a majority of the total runtime for both frameworks, it appears an attractive candidate for optimisation as a corollary of Amdahl's law. This is because improving it by a fixed proportion would result in the greatest runtime reduction than any other pipeline phase.
+Since the parser represents a majority of the total runtime for both frameworks, it appears an attractive candidate for optimisation as a corollary of Amdahl's law \cite{amdahlValiditySingleProcessor1967}. This is because improving it by a fixed proportion would result in the greatest runtime reduction than any other pipeline phase.
 % Argument
 Despite this, we select the pattern rewriting phase, which implements the canonicaliser, for further investigation.
-This is because the complexity of modern compilers is focussed on rewrites for optimisation, with both parsing and printing being well understood problems. In addition to this, the parser and printer typically only used for debugging, with the compiler framework predominantly being used for its rewriting capabilities. Examples of this include XLA \cite{sabne2020xla} emitting \ac{mlir} \ac{ir} in custom dialects, using \ac{mlir}'s rewrite machinery to lower code to the target hardware.
-As such, optimising these components is a less attractive research direction, as it would only affect the performance of development and testing infrastructure.
+% This is because the complexity of modern compilers is focussed on rewrites for optimisation, with both parsing and printing being well understood problems. In addition to this, the parser and printer typically only used for debugging, with the compiler framework predominantly being used for its rewriting capabilities.
+This is because compilers designed to meet the demands of modern workloads are heavily focussed on optimisating \ac{ir} through rewriting. For example, the XLA machine learning compiler takes a binary input representation as input, which it then lowers through \ac{mlir} dialects applying rewrite optimisations in order to generate efficient code targeting accelerator hardware \cite{sabne2020xla}. This process only relies on parsing and printing logic for debugging, as its main code generation flow operates entirely on binary representations.
+% Examples of this include XLA \cite{sabne2020xla} emitting \ac{mlir} \ac{ir} in custom dialects, using \ac{mlir}'s rewrite machinery to lower code to the target hardware.
+As such, optimising these components is a less attractive research direction, as it would only effect the performance of development and testing infrastructure.
 Furthermore, the rewriter is a much more dynamic workload, with its control flow necessarily determined at runtime based on the contents of the \ac{ir} being optimised.
 % Link
 This further makes it a more suitable candidate for examination through the lens of the impact of dynamism on user-extensible compiler frameworks.
@@ -331,7 +332,7 @@ Micro-benchmarking refers measuring the performance of fast, granular, and isola
 The term was coined by Saavedra et al. in their 1995 paper \cite{saavedraPerformanceCharacterizationOptimizing1995} ``Performance Characterization of Optimizing Compilers''. As such, we are in good company in our application of micro-benchmarking approaches to this problem domain.
 Micro-benchmarks have many desirable properties. Since they run quickly, they can cheaply be repeated for statistical confidence.
 Furthermore, their fine granularity makes them tractable to reason about -- providing useful information to optimise the component of the system they measure.
-However, a key difficulty of micro-benchmarking is ensuring alignment with overall system performance. For example, the selection of code paths to micro-benchmark may introduce bias, making them less representative of the overall system. In addition to this, their performance may be inflated as a consequence of warmed caches and JIT optimisations across repeats, which would not occur during normal operation.
+However, a key difficulty of micro-benchmarking is ensuring alignment with overall system performance. For example, the selection of code paths to micro-benchmark may introduce bias, making them less representative of the overall system. In addition to this, their performance may be inflated as a consequence of warmed caches and JIT optimisations across repeats, which would not occur during normal operation \cite{barrettVirtualMachineWarmup2017}.
 % Link
 As such, micro-benchmarking is a useful tool for deeply understanding the performance of software, but must be used carefully to ensure the validity of its results.
 
