@@ -421,7 +421,7 @@ In \ac{mlir}, the creation and building mechanisms have approximately the same p
   \caption{Operation instantiation in xDSL is approximately $25\times$ slower than in \ac{mlir} when creating instructions in the asymptotic case, but is up to $90\times$ slower when using the builder API.}
   \label{tab:ubenchmark-op-creation}
   \centering
-  \begin{tabular}{lcc}
+  \begin{tabular}{lrr}
     \toprule
     \textbf{Mechanism} & \textbf{MLIR [ns]} & \textbf{xDSL [ns]}\\
     \midrule
@@ -588,7 +588,7 @@ When directly iterating over the arrays, xDSL is $22\times$ slower than \ac{mlir
   \caption{Operation traversal using xDSL's API is approximately $100\times$ slower than in MLIR in the asymptotic case, but only approximately $22\times$ when directly operating on the data structures.}
   \label{tab:ubenchmark-op-traversal}
   \centering
-  \begin{tabular}{lcc}
+  \begin{tabular}{lrr}
     \toprule
     \textbf{Mechanism} & \textbf{MLIR [ns/iter]} & \textbf{xDSL [ns/iter]}\\
     \midrule

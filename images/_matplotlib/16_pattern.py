@@ -15,8 +15,11 @@ with the following changes.
 - Increase output figure dpi
 """
 
+import enum
 import matplotlib
+import matplotlib.colors
 import matplotlib.figure
+import matplotlib.patches
 import matplotlib.pyplot as plt
 import numpy as np
 import math
@@ -28,7 +31,7 @@ PARENT_DIRECTORY = Path(__file__).parent
 from typing import Callable
 
 
-def setGlobalDefaults() -> None:
+def setGlobalDefaults():
     ## Use TrueType fonts instead of Type 3 fonts
     #
     # Type 3 fonts embed bitmaps and are not allowed in camera-ready submissions
@@ -59,7 +62,7 @@ def setGlobalDefaults() -> None:
     matplotlib.rcParams["axes.spines.top"] = False
 
 
-matplotlib.rcParams["figure.figsize"] = 6, 2
+matplotlib.rcParams["figure.figsize"] = 5, 2.5
 
 # Color palette
 light_gray = "#cacaca"
@@ -74,7 +77,7 @@ black = "#000000"
 white = "#ffffff"
 
 
-def save(figure: matplotlib.figure.Figure, name: Path) -> None:
+def save(figure: matplotlib.figure.Figure, name: Path):
     # Do not emit a creation date, creator name, or producer. This will make the
     # content of the pdfs we generate more deterministic.
     metadata = {"CreationDate": None, "Creator": None, "Producer": None}
@@ -93,7 +96,7 @@ def save(figure: matplotlib.figure.Figure, name: Path) -> None:
 # precision of the mantissa will be reduced as necessary,
 # as much as possible to get it within *digits*, but this
 # can't be guaranteed for very large numbers.
-def get_scientific(x: float, digits: int) -> None:
+def get_scientific(x: float, digits: int):
     # get scientific without leading zeros or + in exp
     def get(x: float, prec: int) -> str:
         result = f"{x:.{prec}e}"
@@ -124,12 +127,12 @@ def str_from_float(x: float, digits: int = 3, suffix: str = "") -> str:
         return before_decimal
     if len(before_decimal) > digits:
         # we can't even fit the integral part
-        return str(x)# get_scientific(x, digits)
+        return get_scientific(x, digits)
 
     result = result[: digits + 1]  # plus 1 for the decimal point
     if float(result) == 0:
         # we can't even get one significant figure
-        return str(x) #get_scientific(x, digits)
+        return get_scientific(x, digits)
 
     return result[: digits + 1]
 
@@ -142,7 +145,7 @@ def autolabel(
     xoffset=0,
     yoffset=1,
     **kwargs,
-) -> None:
+):
     # kwargs is directly passed to ax.annotate and overrides defaults below
     assert "xytext" not in kwargs, "use xoffset and yoffset instead of xytext"
     for i, rect in enumerate(rects):
@@ -157,17 +160,16 @@ def autolabel(
             textcoords="offset points",
         )
         height = rect.get_height()
-        print(height)
         ax.annotate(
             label_from_height(height),
-            xy=(rect.get_x() + rect.get_width() / 2, max(3.5, height)),
+            xy=(rect.get_x() + rect.get_width() / 2, height),
             **(default_kwargs | kwargs),
         )
 
 
 # utility to print times as 1h4m, 1d15h, 143.2ms, 10.3s etc.
-def str_from_ms(ms: float) -> None:
-    def maybe_val_with_unit(val: float, unit: str) -> str:
+def str_from_ms(ms):
+    def maybe_val_with_unit(val, unit):
         return f"{val}{unit}" if val != 0 else ""
 
     if ms < 1000:
@@ -193,28 +195,26 @@ def str_from_ms(ms: float) -> None:
     return f"{d}d{maybe_val_with_unit(h, 'h')}"
 
 
-def autolabel_ms(ax, rects, **kwargs) -> None:
+def autolabel_ms(ax, rects, **kwargs):
     autolabel(ax, rects, label_from_height=str_from_ms, **kwargs)
 
 
-# Plot an example performance plot
+# Plot an example speedup plot
 def plot_performance():
-    labels = ["cast", "isinstance", "dyn_cast", "isa", "unchecked"]
-    perf_means = [102, 38.6, 40501046 / 10000000, 41350491 / 10000000, 0]
-    perf_errors = [40, 23, perf_means[2] / 100, perf_means[3] / 100, 0]
-    print(perf_means)
+    labels = ["MLIR\nruntime", "Direct\noverhead", "Indirect\noverhead"]
+    perf_means = [10300, 1296, 3974.4]
+    perf_errors = [100, 100, 100]
 
     x = np.arange(len(labels))  # the label locations
     width = 0.35  # the width of the bars
 
     fig, ax = plt.subplots()
-    rects1 = ax.bar(x, perf_means, width, color=[light_blue, light_blue, dark_blue, dark_blue, dark_blue],
-        yerr=perf_errors,
+    rects1 = ax.bar(x, perf_means, width, color=[light_blue, dark_blue, dark_blue],yerr=perf_errors,
         capsize=5,
         error_kw={"ecolor": "black", "linewidth": 1},)
 
     # Logarithmic Y-Axis
-    ax.set_yscale("log")
+    # ax.set_yscale("log")
 
     # Y-Axis Label
     #
@@ -231,17 +231,16 @@ def plot_performance():
     ax.set_xticks(x)
     ax.set_xticklabels(labels)
 
-    # Custom legend
-    red_patch = matplotlib.patches.Patch(color=light_blue, label='Python')
-    blue_patch = matplotlib.patches.Patch(color=dark_blue, label='C++')
-    # fig.legend(handles=[red_patch, blue_patch], loc="center right", bbox_to_anchor=(0, 1, 1, 0))
-    ax.legend(handles=[red_patch, blue_patch], ncol=100, loc="upper right", bbox_to_anchor=(0, 1, 1, 0))
 
-    autolabel(ax, rects1, yoffset=[9, 11, 1, 1, 1])
+    red_patch = matplotlib.patches.Patch(color=light_blue, label='Workload')
+    blue_patch = matplotlib.patches.Patch(color=dark_blue, label='Overhead')
+    ax.legend(handles=[red_patch, blue_patch], ncol=100, loc="lower right", bbox_to_anchor=(0, 1, 1, 0))
+
+    autolabel(ax, rects1, yoffset=[1.5, 1.5, 1.5]) #, xoffset=10, yoffset=2)
 
     fig.tight_layout()
     # plt.show()
-    save(fig, PARENT_DIRECTORY / "../impact_dynamism/dynamic_cast.pdf")
+    save(fig, PARENT_DIRECTORY / "../impact_dynamism/pattern.pdf")
 
 
 def main():

@@ -145,16 +145,17 @@ def autolabel(
 ) -> None:
     # kwargs is directly passed to ax.annotate and overrides defaults below
     assert "xytext" not in kwargs, "use xoffset and yoffset instead of xytext"
-    default_kwargs = dict(
-        xytext=(xoffset, yoffset),
-        fontsize="smaller",
-        rotation=0,
-        ha="center",
-        va="bottom",
-        textcoords="offset points",
-    )
-
-    for rect in rects:
+    for i, rect in enumerate(rects):
+        xoffset_ = xoffset[i] if isinstance(xoffset, list) else xoffset
+        yoffset_ = yoffset[i] if isinstance(yoffset, list) else yoffset
+        default_kwargs = dict(
+            xytext=(xoffset_, yoffset_),
+            fontsize="smaller",
+            rotation=0,
+            ha="center",
+            va="bottom",
+            textcoords="offset points",
+        )
         height = rect.get_height()
         ax.annotate(
             label_from_height(height),
@@ -252,7 +253,7 @@ def plot_performance():
     # fig.legend(handles=[red_patch, blue_patch], loc="center right", bbox_to_anchor=(0, 1, 1, 0))
     ax.legend(handles=[red_patch, blue_patch], ncol=100, loc="upper right", bbox_to_anchor=(0, 1, 1, 0))
 
-    autolabel(ax, rects1)
+    autolabel(ax, rects1, yoffset=[9, 1, 1, 1])
 
     fig.tight_layout()
     # plt.show()

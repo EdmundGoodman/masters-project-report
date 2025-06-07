@@ -204,12 +204,50 @@ However, pattern rewriting workloads are much larger, and as such are not feasib
 This lower bound of overhead per dispatch can then be multiplied by the number of dynamic dispatches to estimate the overall cost for pattern rewriting.
 % In the ARM instruction set, direct and indirect calls \cite{armlimitedARMCortexRSeries}
 % ``Because the branch destination is PC-relative, it can be determined exactly at an early stage of the pipeline''. This means that direct calls are more performant, and as such efficient compilers only use indirect calls where address information is not known ahead of time: dynamic control flow.
-We use the DynamoRIO \cite{brueningInfrastructureAdaptiveDynamic2003} tool to instrument these workloads, using the \texttt{countcalls} sample to count the number of direct and indirect calls.
-% We can use this information to provide a lower bound for the cost of dynamic dispatch in the 
+We use the DynamoRIO \cite{brueningInfrastructureAdaptiveDynamic2003} tool to instrument these workloads, using the \texttt{countcalls} sample to count the number of direct and indirect calls respectively (\autoref{tab:dynamorio-constant-folding}).
 % Link
 
-%% Estimating overhead
+%% Table
+\begin{table}[H]
+  \caption{$17\%$ of calls are dynamically dispatched when constant folding integer addition over 20 operations (implementation \autoref{sec:specialising-pattern-rewriting-workload}, DynamoRIO results \autoref{chap:dynamorio-calls}).}
+  \label{tab:dynamorio-constant-folding}
+  \centering
+  \begin{tabular}{cc}
+    \toprule
+    \textbf{Direct calls} & \textbf{Indirect calls}\\
+    \midrule
+    75140 & 4320 \\
+    % Direct method dispatch & & \\
+    % Dynamic method dispatch & & \\
+    % \ac{mlir} constant folding & 75140 & 4320 \\ % 182378 - 107238
+    % xDSL specialised constant folding & 0 & \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+%% Estimating overhead in static languages
+% Hook
+We can then combine this information with our lower bound for the performance overhead of dynamic dispatch from synthetic examples to estimate the overhead due to dynamism in pattern rewriting workloads (\autoref{figure:impact-rtti}).
+% Argument
+% Link
 
 %% Performance graph
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{images/impact_dynamism/pattern.pdf}
+    \caption{.}
+    \label{figure:impact-rtti}
+\end{figure}
+
+%% Contrasting with Python
+% Hook
+% Argument
+% Link
+
+\section{Motivating dynamic languages for user-extensible compiler infrastructures}
+\label{chap:dynamism-pattern-rewriting-motivating}
 
 %% Summary
+% Hook
+% Argument
+% Link

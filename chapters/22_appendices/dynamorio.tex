@@ -1,0 +1,59 @@
+\chapter{DynamoRIO call results}
+\label{chap:dynamorio-calls}
+
+
+\begin{code}
+    \begin{minted}[fontsize=\scriptsize]{text}
+ ../../DynamoRIO-Linux-11.90.20236/bin64/drrun -c ../../DynamoRIO-Linux-11.90.20236/samples/bin64/libcountcalls.so -- ./tools/mlir/unittests/Benchmarks/MLIR_IR_Benchmark --benchmark_filter=SimpleConstantFolding
+Client countcalls is running
+2025-06-06T15:09:26+00:00
+Running ./tools/mlir/unittests/Benchmarks/MLIR_IR_Benchmark
+Run on (16 X 2799.81 MHz CPU s)
+CPU Caches:
+  L1 Data 32 KiB (x8)
+  L1 Instruction 32 KiB (x8)
+  L2 Unified 512 KiB (x8)
+  L3 Unified 16384 KiB (x2)
+Load Average: 0.33, 0.19, 0.09
+Thread 2350 exited - Instrumentation results:
+  saw 182378 direct calls
+  saw 10348 indirect calls
+  saw 192721 returns
+
+Instrumentation results:
+  saw 182378 direct calls
+  saw 10348 indirect calls
+  saw 192721 returns
+    \end{minted}
+    \caption{DynamoRIO call tracing for constant folding under micro-benchmarking infrastructure only.}
+    \label{listing:dynamorio-calls-workload}
+\end{code}
+
+
+\vspace{2em}
+\begin{code}
+    \begin{minted}[fontsize=\scriptsize]{text}
+$ ../../DynamoRIO-Linux-11.90.20236/bin64/drrun -c ../../DynamoRIO-Linux-11.90.20236/samples/bin64/libcountcalls.so -- ./tools/mlir/unittests/Benchmarks/MLIR_IR_Benchmark --benchmark_filter=SimpleConstantFolding
+Client countcalls is running
+2025-06-06T15:10:45+00:00
+Running ./tools/mlir/unittests/Benchmarks/MLIR_IR_Benchmark
+Run on (16 X 2799.81 MHz CPU s)
+CPU Caches:
+  L1 Data 32 KiB (x8)
+  L1 Instruction 32 KiB (x8)
+  L2 Unified 512 KiB (x8)
+  L3 Unified 16384 KiB (x2)
+Load Average: 0.39, 0.22, 0.11
+Thread 2366 exited - Instrumentation results:
+  saw 107238 direct calls
+  saw 6028 indirect calls
+  saw 113261 returns
+
+Instrumentation results:
+  saw 107238 direct calls
+  saw 6028 indirect calls
+  saw 113261 returns
+    \end{minted}
+    \caption{DynamoRIO call tracing for micro-benchmarking infrastructure only.}
+    \label{listing:dynamorio-calls-baseline}
+\end{code}

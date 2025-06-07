@@ -4,11 +4,35 @@
 % of evaluation, and it's often useful to separate this out into its own
 % chapter.
 
-\chapter{Summary and conclusions}
+\chapter{Conclusion}
+\label{chap:conclusion}
 
-As you might imagine: summarizes the dissertation, and draws any
-conclusions. Depending on the length of your work, and how well you
-write, you may not need a summary here.
+% As you might imagine: summarizes the dissertation, and draws any
+% conclusions. Depending on the length of your work, and how well you
+% write, you may not need a summary here.
 
-You will generally want to draw some conclusions, and point to
-potential future work.
+% You will generally want to draw some conclusions, and point to
+% potential future work.
+
+%% Summary of contributions
+% Hook
+% Argument
+% - ``An examination of the current and best-case performance for pattern rewriting workloads in the CPython language runtime''
+We present performance measurements for the implementation of user-extensible compiler frameworks in dynamic languages through the proxy of xDSL, and contrast this with a replication of existing work measuring the performance of \ac{mlir} as a proxy for static language implementations. These measurements find a $xytimes$ -- $ab\times$ slowdown for dynamic languages, but capture the implementation details of the proxies in addition to the language runtimes. % with the difference in optimisation effort between industry-standard \ac{mlir} and ongoing research project xDSL obscuring the signal
+To address this, we present specialised versions of micro-benchmarks and a pattern rewriting workload, which. This specialisation process reduces the slowdown between frameworks to $\times$.
+% - ``A tool to examine CPython bytecode dispatch in program runs, facilitating the analysis of costs incurred by dynamism''
+This effort revealed a gap in the tooling provision for highly granular profiling of Python code, leading to our development of ByteSight, a native tracing performance profiler for Python bytecode. ByteSight facilitates developing specialised implementations without extraneous computation, and allows ...
+% - ``An exploration of optimisation techniques to shrink the performance gap between dynamic and static languages for pattern rewriting workloads''
+Using this tool, we examine optimisation techniques for dynamic language runtimes such as instruction specialisation and \ac{jit} compilation, comparing their impact between highly dynamic compiler frameworks with Python's representative suite of real-world workloads. We find that dynamic workloads exacerbate the impact of these optimisations, with instruction specialisation yielding a $10\%$ greater speedup of dynamic over static workloads. This further reduces the slowdown between frameworks to $\times$.
+% - ``A quantitative comparison of the performance of user-extensible compiler frameworks implemented in static and dynamic languages, focussing on the impact of dynamism''
+% Finally, we...
+% Link
+
+
+%% Overall summary and impact
+% Hook
+% Argument
+Our work identifies inherent dynamism in user-extensible compiler infrastructures, and quantifies the performance cost it incurs in their ahead-of-time compiled implementation.
+We contrast this with implementations in dynamic languages, empirically demonstrating that the performance overhead typically associated with such languages is lessened by both the workload's dynamic nature, and modern optimisation approaches to dynamic language runtimes.
+This contribution challenges the status quo of implementing user-extensible compiler frameworks in static, ahead-of-time compiled languages, typified by LLVM's \ac{mlir}. Instead, we motivate the use of dynamic languages to implement these frameworks,  showing that implementations such as xDSL present a desirable balance of performance with flexibility and fast build times.
+% Link
