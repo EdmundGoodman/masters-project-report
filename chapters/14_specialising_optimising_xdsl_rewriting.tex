@@ -11,14 +11,16 @@ However, the experiments so far measure a combination of the effects of dynamism
 In order to use the frameworks for our aims, our measurements must be as independent of implementation details as possible.
 
 % Hook
-In this chapter, we disentangle these effects by specialising the xDSL framework to implement only a single workload.
+In this chapter, we investigate the performance implications of language dynamism in user-extensible compiler frameworks by examining the impact of specialisation on the xDSL framework. By manually eliminating extraneous computation for specific workloads, we establish a performance baseline for pattern rewriting in xDSL that more accurately reflects the inherent costs of dynamism, independent of implementation overheads.
 % Argument
-To do this, we manually identify and remove computation performed by the framework which is unnecessary to its execution of this workload. For example, the framework may calculate and check values that are known as runtime invariants for the selected workload. Checking properties of empty fields is one such example. Since this checking does not contribute to the workload's behaviour, it can be removed. Another example is functionality which improves the expressivity of the framework's API, such as runtime type checks to support polymorphism of arguments. Since the workload only uses a single facet of this API, this can also be removed.
-% One common example of this is functionality which improves the expressivity of the framework, such as runtime type checks to support polymorphism of arguments. A second example is calculating and checking values which are known as runtime invariants for the selected workload, such as checking properties of empty fields.
-% In this process, we manually identify and remove computation performed by the framework which is unnecessary to its execution of this workload. This computation broadly falls into two categories. The first is functionality which improves the expressivity of the framework, such as runtime type checks to support polymorphism of arguments. The second is calculating and checking values which are known as runtime invariants for the selected workload. % DONE: Does it make sense to split these into categories, almost the same thing in some sense -- no!
+To do this, we manually identify and remove computation performed by the framework which is unnecessary to its execution of this workload. For example, the framework may calculate and check values that are known as runtime invariants for the selected workload, for instance when checking properties of attributes known to be empty.
+Since this checking does not contribute to the workload's behaviour, it can be removed. Another example is functionality which improves the expressivity of the framework's API, such as runtime type checks to support polymorphism of arguments. Since the workload only uses a single facet of this API, this can also be removed.
 By eliminating the performance overheads from these unnecessary computations, we reach an implementation representative of the best-case performance of Python for this workload.
 % Link
-The benefits of this specialisation are twofold. Firstly it reveals inefficiencies in xDSL which can be optimised to improve the general performance of the framework. Secondly, it provides a true performance baseline for dynamic languages irrespective of implementation details which can be used to quantify the impact of dynamism in \autoref{chap:dynamism-pattern-rewriting}.
+This specialisation process yields an efficient pattern rewriting workload using xDSL's data structures. This demonstrates the best-case performance of CPython as a proxy for dynamic languages for such applications, facilitating comparison with C++ for insight into the relationship between performance and dynamism in user-extensible compiler infrastructures.
+% The benefits of this specialisation are twofold.
+% Firstly it reveals inefficiencies in xDSL which can be optimised to improve the general performance of the framework.
+% Secondly, it provides a performance baseline for dynamic languages irrespective of implementation details which can be used to quantify the impact of dynamism in \autoref{chap:dynamism-pattern-rewriting}.
 
 
 \section{Micro-benchmarks}
@@ -28,11 +30,10 @@ The benefits of this specialisation are twofold. Firstly it reveals inefficienci
 % Hook
 An important component of our experimental suite is micro-benchmarks, measuring the performance of procedures fundamental to xDSL and \ac{mlir}.
 % Argument
-The small size of these micro-benchmarked procedures makes them tractable first targets for manual specialisation and optimisation, with the performance impact of this process easily characterised by repeating the micro-benchmark.
+Re-using these micro-benchmarks for specialisation allows the isolation of specific dynamic language features, and further provides a mechanism to precisely measure the impact of specialisation. % Their small size makes them tractable first targets for manual specialisation and optimisation, with the performance impact of this process easily characterised by repeating their measurement.
 By manually examining the traces of their execution, we can identify and eliminate any unnecessary computation in the current implementation.
 % Link
 Having done this, we re-run the micro-benchmarks to quantify the performance of the specialised implementation, facilitating comparison of the language runtime only for user-extensible compiler framework workloads.
-% In this section, we examine the specialisation process for these micro-benchmarks in detail. % TODO: Add more stuff here!!
 
 
 \subsection{Operation instantiation}
@@ -43,7 +44,7 @@ Having done this, we re-run the micro-benchmarks to quantify the performance of 
 The first micro-benchmark discussed in \autoref{sec:ubenchmark} was instantiating operations, one of the central data structures in both xDSL and \ac{mlir}.
 % Argument
 The idiomatic way to do this in xDSL is directly instantiating a new Python object.
-This invokes the \mintinline{text}{__new__} method to construct an empty class, then the \mintinline{text}{__init__} method to initialise it, and optionally \mintinline{python3}{__post_init__} following initialisation.
+% This invokes the \mintinline{text}{__new__} method to construct an empty class, then the \mintinline{text}{__init__} method to initialise it, and optionally \mintinline{python3}{__post_init__} following initialisation.
 In xDSL, this instantiation process includes a large amount of logic (\autoref{fig:ubenchmark-original-instantiation-xdsl-viztracer}), including verifying attributes and building properties of the operation.
 However, in many instances this verification is unneeded as it is already known as a runtime invariant, and the building process can similarly be simplified as the structure can be inferred.
 % Link
@@ -59,17 +60,17 @@ As such, specialisation to remove this overhead can vastly reduce the complexity
             \node[circledstyle, fill=pairedTwoDarkBlue] at (12.75,0.5) {B};
         \end{tikzpicture}
         \captionsetup{width=0.8\textwidth}
-        \caption{The default constructor has a high overhead, calculating known invariants and .}
+        \caption{The default constructor has a high overhead, including checking known invariants and building empty properties.}
         \label{fig:ubenchmark-original-instantiation-xdsl-viztracer}
     \end{subfigure}
     \begin{subfigure}[b]{\textwidth}
         \centering
         \includegraphics[width=\textwidth]{images/specialising_optimising_xdsl_rewriting/optimised_empty_create_scale.png}
         \captionsetup{width=0.8\textwidth}
-        \caption{The same object can be constructed with significantly less logic.}
+        \caption{The same object can be constructed with significantly less logic after specialisation.}
         \label{fig:ubenchmark-optimised-instantiation-xdsl-viztracer}
     \end{subfigure}
-    \caption{\texttt{viztracer} traces of xDSL instantiating an \texttt{EmptyOp} before (top) and after (bottom) specialisation.}
+    \caption{Profiling the instantiation of an \texttt{EmptyOp} before (top) and after (bottom) specialisation with \texttt{viztracer} reveals unnecessary computation.}
     \label{fig:ubenchmark-instantiation-xdsl-viztracer}
 \end{figure}
 
@@ -80,9 +81,9 @@ Examining the above trace, we can visually identify components which take a larg
 For example, the xDSL constructor for \mintinline{python3}{IRDLOperation}s invokes logic with significant overhead building and filtering properties of the operation \circledbase{pairedOneLightBlue}{A}. However, in this workload of the empty operation, this logic does not change the constructed object. Because of this, eliding this logic results in a specialised version of the operation which generates the same output using less computation by applying domain knowledge.
 In addition to this, \ac{mlir}'s core operations are not \ac{irdl} based, unlike xDSL, meaning this overhead is implementation specific.
 Similarly, the post-constructor includes logic for context-managed builders \circledbase{pairedTwoDarkBlue}{B}, which is again unrelated to the empty operation case and not present in \ac{mlir}.
-% Link
 To avoid this overhead through specialisation, we move from the idiomatic constructor (Listing \ref{listing:ubenchmark-xdsl-constant-constructor}) to directly modifying xDSL's underlying data structures (Listing \ref{listing:ubenchmark-xdsl-constant-direct}).
-
+% Link
+Finally, we leverage an implementation detail of CPython's data model: the \mintinline{python}{__slots__} attribute \cite{}. Slots store attributes in a fixed-size array on the object with direct indexing instead using the default \mintinline{text}{__dict__} mapping from attribute name to value, optimising both lookup speed and space.
 
 \begin{figure}[H]
     \begin{subfigure}[b]{0.5\textwidth}
@@ -90,6 +91,7 @@ To avoid this overhead through specialisation, we move from the idiomatic constr
         \begin{minted}[fontsize=\footnotesize]{text}
             EmptyOp()
         \end{minted}
+        \footnotesize\vspace{4em}
         \caption{Instantiation with constructors.}
         \vspace{1em}
         \label{listing:ubenchmark-xdsl-constant-constructor}
@@ -99,42 +101,43 @@ To avoid this overhead through specialisation, we move from the idiomatic constr
         \centering
         \begin{minted}[breakanywhere,fontsize=\footnotesize]{text}
             empty_op = EmptyOp.__new__(EmptyOp)
-            empty_op._operands = tuple()
-            empty_op.results = tuple()
+            empty_op._operands = ()
+            empty_op.results = ()
             empty_op.properties = {}
             empty_op.attributes = {}
-            empty_op._successors = tuple()
-            empty_op.regions = tuple()
+            empty_op._successors = ()
+            empty_op.regions = ()
         \end{minted}
         \caption{Instantiation by direct manipulation of xDSL's data structures.}
         \label{listing:ubenchmark-xdsl-constant-direct}
     \end{subfigure}
     \captionsetup{name=Listing}
-    \caption{Approaches to instantiating an empty operation.}
+    \caption{Unspecialised (left) and specialised (right) approaches to instantiating an \texttt{EmptyOp} differ in both length and performance.}
+    % \caption{Profiling the instantiation of an \texttt{EmptyOp} before (top) and after (bottom) specialisation with \texttt{viztracer} reveals unnecessary computation.}
     \label{listing:ubenchmark-xdsl-constant}
 \end{figure}
 
 %% Specialised performance and lessons learnt
 % Hook
-Through specialising the implementation to the workload of this micro-benchmark we can achieve significant performance improvements of up to $26\times$ (\autoref{tab:ubenchmark-instantiation-optimised}).
+Through specialising the implementation to the workload of this micro-benchmark we can achieve significant performance improvements of up to $26\times$ (\autoref{tab:ubenchmark-instantiation-optimised}). % TODO: Talk more about why this is interesting -- it represents some proportion of the "accidental dynamism" which can be removed by C++ optimisation
 % Argument
 % This process comes with the drawback of making the API much more complex
 However, the performance improvement comes at the cost of a significantly more complex implementation, contrary to xDSL's design goals of a simple expressive API.
 % Drop runtime by performing fewer, quicker operations
 We can quantify one cause of this improvement as the specialised code executing fewer, faster bytecode instructions by leveraging our novel bytecode profiling tool (full traces in Appendices \ref{listing:bytecode-profiles-op-build-original}, \ref{listing:bytecode-profiles-op-build-optimised}).
 For example, specialisation reduces the number of bytecode instructions executed from $466$ to only $29$. Function calls have a much longer duration than other instructions, with their mutation of the call stack taking up to three times longer than loading from a variable. Again leveraging our tool, we can see that specialisation reduces the number of function calls from $65$ to $5$, further contributing to the performance uplift.
-By examination of its emitted bytecode (Listing \ref{listing:bytecode-profiles-op-build-optimised}), we can be confident in the optimality of the specialised implementation, as it only constructs the object and sets required fields, performing no other extraneous logic.
+By examination of its emitted bytecode (Listing \ref{listing:bytecode-profiles-op-build-optimised}), we can be confident in the optimality of the specialised implementation, as it only constructs the object and sets required fields, performing no other extraneous logic. % TODO: "we can be confident in the optimality of the specialised implementation" is a strong claim. Perhaps "near-optimal" or "highly optimised" would be more appropriate, or clarify the scope of "optimality" (e.g., optimal within the constraints of Python's runtime for this specific workload).
 
 %% Compare performance
 \begin{table}[H]
-  \caption{Specialising instantiating empty operations in xDSL yields performance uplifts of up to $26\times$, only $3\times$ slower than the \ac{mlir} reference implementation.}
+  \caption{Specialising \texttt{EmptyOp} instantiation in xDSL yields performance uplifts of up to $34\times$, only $2.5\times$ slower than the \ac{mlir} reference implementation.}
   \label{tab:ubenchmark-instantiation-optimised}
   \centering
   \begin{tabular}{ccc}
     \toprule
     \textbf{MLIR [ns]} & \textbf{xDSL [ns]} & \textbf{Optimised xDSL [ns]} \\
     \midrule
-    $153 \pm 0.5$ & $12700 \pm 1810$ & $477 \pm 385$ \\
+    $153 \pm 0.5$ & $12700 \pm 1810$ & $378 \pm 42$ \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -180,7 +183,7 @@ Similarly to the operation instantiation micro-benchmark, this slow-down comes a
         \caption{Specialisation to narrow the interface and optimisation to avoid extraneous work on hot paths can significantly accelerate \mintinline{python}{has_trait}.}
         \label{fig:ubenchmark-hastrait-optimised-viztracer}
     \end{subfigure}
-    \caption{\texttt{viztracer} traces of xDSL's \mintinline{python}{has_trait} method.}
+    \caption{Profiling the \texttt{has\_trait} method before (top) and after (bottom) specialisation with \texttt{viztracer} reveals unnecessary computation.}
     \label{fig:ubenchmark-hastrait-viztracer}
 \end{figure}
 
@@ -188,7 +191,7 @@ Similarly to the operation instantiation micro-benchmark, this slow-down comes a
 % Hook
 Examining the implementation of this micro-benchmark (Listing \ref{listing:ubenchmark-trait-checks-xdsl}), we can again identify opportunities for specialisation and optimisation.
 % Argument
-The execution trace shows that checking the whether an operation is unregistered $\circledbase{pairedOneLightBlue}{1}$ accounts for over one third of the micro-benchmark runtime. Through specialisation under the runtime invariant that all operations are registered, this check can be removed -- reducing computation. Furthermore, this inspires a general optimisation to xDSL to avoid this check by overloading \mintinline{python}{UnregisteredOp.has_trait} rather than checking on all code paths.
+The execution trace shows that checking whether an operation is unregistered $\circledbase{pairedOneLightBlue}{1}$ accounts for over one third of the micro-benchmark runtime. Through specialisation under the runtime invariant that all operations are registered, this check can be removed -- reducing computation. Furthermore, this inspires a general optimisation to xDSL to avoid this check by overloading \mintinline{python}{UnregisteredOp.has_trait} rather than checking on all code paths.
 In addition to this, function invocation in Python incurs a performance cost due to the overhead of modifying the stack frame. As such, inlining the call to \mintinline{python}{get_trait} \circledbase{pairedTwoDarkBlue}{2} is another beneficial specialisation.
 Finally, argument types are dynamically checked \circledbase{pairedThreeLightGreen}{3} and cast \circledbase{pairedFourDarkGreen}{4}, incurring a performance overhead. However, the type of these arguments are runtime invariants of the caller, so the checks can be specialised away.
 % Link
@@ -419,8 +422,8 @@ def match_and_rewrite(self, op: Operation, rewriter: PatternRewriter, /):
     # Ensure both operands are constants £\circledbase{pairedTwoDarkBlue}{\scriptsize{2}}£
     lhs_op = op.operands[0].op
     rhs_op = op.operands[1].op
-    assert lhs_op.has_trait(ConstantLike)
-    assert rhs_op.has_trait(ConstantLike)
+    if lhs_op.has_trait(ConstantLike) or rhs_op.has_trait(ConstantLike):
+        return
 
     # Calculate the result of the addition £\circledbase{pairedThreeLightGreen}{\scriptsize{3}}£
     lhs = lhs_op.value.value.data
@@ -523,7 +526,8 @@ This yields a specialised implementation with reduced overhead (\autoref{fig:con
         \caption{Through specialisation, this overhead can be significantly reduced, performing the exact workload and only invoking inbuilt functions such as set operations and \mintinline{python}{isinstance} checks.}
         \label{fig:constant-fold-optimised-viztracer}
     \end{subfigure}
-    \caption{\texttt{viztracer} traces of xDSL's integer addition constant folding pattern rewrite.}
+    \caption{Profiling constant folding pattern rewrites of integer addition before (top) and after (bottom) specialisation with \texttt{viztracer} reveals unnecessary computation.}
+    % \caption{\texttt{viztracer} traces of xDSL's integer addition constant folding pattern rewrite.}
     \label{fig:constant-fold-viztracer}
 \end{figure}
 
@@ -560,7 +564,7 @@ implementation.}
     \hfill
     \begin{subfigure}[b]{0.45\textwidth}
         \includegraphics[width=\textwidth]{images/specialising_optimising_xdsl_rewriting/constant_loc.pdf}
-        \caption{Specialisation increases the implementation length of the rewriter by $7\times$.} % TODO: Could also add cognitive complexity?
+        \caption{Specialisation increases the implementation length of the rewriter by $7\times$.} % TODO: here too comparing python number of lines to C++ seems pretty dodgy, I'm not sure that it's actually helping you make any points you want to make, unless I'm missing something.
         \label{fig:constant-fold-loc}
         \vspace{1em}
 %         \includegraphics[width=\textwidth]{images/specialising_optimising_xdsl_rewriting/constant_instructions.pdf}
@@ -613,24 +617,35 @@ However, some are more generic to any use case of xDSL, and as such can be appli
 Despite this, we demonstrate that the specialisation process lead to generalisable optimisations with measurable performance impact.
 Through this, we enable performance improvement over time, which can be quantified using our previously introduced measurement infrastructure (\autoref{ssec:infrastructure}).
 % Link
-In this section, we discuss two salient examples of the generalised optimisations.
+In this section, we discuss three salient examples of the generalised optimisations.
 
-%% Removing overhead in functions
-% Link
+% The goal is demonstrating that specialised optimisations can be generalised into meaningful PRs, yielding an overall improvement to xDSL, a nod to the original project goal of making xDSL faster.
+
+% Hook
 During the specialisation process of trait checking (\autoref{ssec:specialising-ubenchmarks-trait}), we saw that the implementation of xDSL's \texttt{has\_trait} helper function introduces significant overhead by checking the infrequent case of unregistered operations on the hot path of execution.
 % Argument
-Since this functionality was not used by the target workload, this could be elided by specialisation for performance. However, it also reveals an optimisation which can be applied to the general case:
+Since this functionality was not used by the target workload, this could be elided by specialisation for performance. However, it also reveals an optimisation which can be applied to the general case, resulting in a $2.1\times$ speedup on micro-benchmarks and $1.15\times$ speedup within the specialised constant folding workload\footnote{\scriptsize{\url{https://github.com/xdslproject/xdsl/pull/4242}}}.
+Similarly, the specialisation of operation instantiation (\autoref{ssec:specialising-ubenchmarks-instantiation}) revealed the performance impact of managing the scope of implicit builders, even when they are not being used. As before, this can be generalised to change xDSL's approach from always invoking logic to handle implicit builders irrespective of whether they are used, to only for operation instantiations which use them, resulting in a $1.06\times$ speedup on micro-benchmarks and $1.01\times$ speedup within the specialised constant folding workload\footnote{\scriptsize{\url{https://github.com/xdslproject/xdsl/pull/4163}}}.
+% Slots
 % Link
-This optimisation was applied in \href{https://github.com/xdslproject/xdsl/pull/4242}{PR \#4242}, resulting in a $2.1\times$ speedup on micro-benchmarks and $1.15\times$ speedup within the specialised constant folding workload. % Effect becomes dominated by noise for unspecialised constant folding, which takes an order of magnitude longer.
+% What this tells about dynamism
 
-%% Removing implicit builders
-% Link
-Similarly, the specialisation of operation instantiation (\autoref{ssec:specialising-ubenchmarks-instantiation}) revealed the performance impact of managing the scope of implicit builders, even when they are not being used.
-% Argument
-As before, this can be generalised to change xDSL's approach from always invoking logic to handle implicit builders irrespective of whether they are used, to only for operation instantiations which use them.
-% Link
-This optimisation was applied in \href{https://github.com/xdslproject/xdsl/pull/4163}{PR \#4163}, resulting in a $1.06\times$ speedup on micro-benchmarks and $1.01\times$ speedup within the specialised constant folding workload. % Effect becomes dominated by noise for unspecialised constant folding, which takes an order of magnitude longer.
+% %% Removing overhead in functions
+% % Link
+% During the specialisation process of trait checking (\autoref{ssec:specialising-ubenchmarks-trait}), we saw that the implementation of xDSL's \texttt{has\_trait} helper function introduces significant overhead by checking the infrequent case of unregistered operations on the hot path of execution.
+% % Argument
+% Since this functionality was not used by the target workload, this could be elided by specialisation for performance. However, it also reveals an optimisation which can be applied to the general case:
+% % Link
+% This optimisation was applied in \href{https://github.com/xdslproject/xdsl/pull/4242}{PR \#4242}, resulting in a $2.1\times$ speedup on micro-benchmarks and $1.15\times$ speedup within the specialised constant folding workload. % Effect becomes dominated by noise for unspecialised constant folding, which takes an order of magnitude longer.
 
+% %% Removing implicit builders
+% % Link
+% Similarly, the specialisation of operation instantiation (\autoref{ssec:specialising-ubenchmarks-instantiation}) revealed the performance impact of managing the scope of implicit builders, even when they are not being used.
+% % Argument
+% As before, this can be generalised to change xDSL's approach from always invoking logic to handle implicit builders irrespective of whether they are used, to only for operation instantiations which use them.
+% % Link
+% This optimisation was applied in \href{https://github.com/xdslproject/xdsl/pull/4163}{PR \#4163}, resulting in a $1.06\times$ speedup on micro-benchmarks and $1.01\times$ speedup within the specialised constant folding workload. % Effect becomes dominated by noise for unspecialised constant folding, which takes an order of magnitude longer.
+% TODO: PR numbers are definitely way too deep in the weeds, this belongs at best in a footnote/appendix. I would first try to formulate what the user can take away from this wrt your research question, and only go into detail insofar as it helps you make your point. What is the point of this paragraph? What's the point of the one above? How can you rephrase them to be more on-message wrt what you are trying to say in this chapter?
 
 %% Optional stretch goal to be filled in later...?
 %% `__slots__` (stretch dataclasses stuff -> custom dataclass like thing without most of the overhead as a helper, replaces frozen dataclasses (what functionality is used here: https://github.com/python/cpython/blob/main/Lib/dataclasses.py and what can we rip out???))
@@ -642,10 +657,11 @@ This optimisation was applied in \href{https://github.com/xdslproject/xdsl/pull/
 
 %% Final performance figures
 % Hook
+% TODO: This paragraph is missing what the point was, how it relates to your thesis, and generally the research perspective.
 Through empirical measurement, we approach the best-case performance of Python for pattern rewriting in user-extensible compiler infrastructure.
 % Argument
 We demonstrate that specialised Python implementations of real-world pattern rewriting workloads can improve xDSL's performance by $8\times$, to be only $14\times$ slower than the equivalent \ac{mlir} implementation. This specialisation avoids computation which is redundant for the selected workload, and avoids costs associated with function invocation.
 % In addition to this, for some workloads we find that Python's performance can further approach C++,
 We further show that this specialisation process reveals optimisations that can be generalised to improve xDSL beyond the individual workload.
 %
-In the next chapters, we leverage this best-case performance specialisation as a baseline to examine the effect of both recent improvements to CPython's runtime, and the cost of dynamism in comparison with statcially compiled languages.
+In the next chapters, we leverage this best-case performance specialisation as a baseline to examine the effect of both recent improvements to CPython's runtime, and the cost of dynamism in comparison with statically compiled languages.
