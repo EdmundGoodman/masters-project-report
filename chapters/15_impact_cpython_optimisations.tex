@@ -5,7 +5,7 @@
 \label{chap:impact-cpython-pattern-rewriting}
 
 % Hook
-\acf{pep} 659 asserts that ``Python widely acknowledged as slow'' \cite{pep659}.
+\acf{pep} 659 asserts that ``Python is widely acknowledged as slow'' \cite{pep659}.
 % Argument
 This comes partially as an inherent trade-off from the benefits of its interpreted runtime and expressive dynamic semantics, meaning it cannot achieve the general-purpose performance of ahead-of-time compiled languages such as C++ or FORTRAN. However, it is feasible for Python implementations to be competitive with fast implementations of other scripting languages with similar trade-offs, such as JavaScript's V8 or Lua's LuaJIT. The Faster CPython project is an attempt to achieve this goal in Python's reference implementation. Over the course of the recent CPython major versions, new optimisations have been gradually added as part of this project, resulting in incremental performance gains (\autoref{tab:faster-cpython}).
 % Link
