@@ -14,8 +14,9 @@
 %% Context (~abstract sentence one: topic of compilers/MLIR)
 Compilers are a critical component of computing systems, providing an abstraction % for expressivity, performance, and portability (review: first sentence too long)
 from high-level programming languages to the underlying machine ISA.
-Early compilers were hand-crafted, resulting in complex and language-specific implementations. % TODO: This needs to be rephrased!!! No early and no hand-crafted, focus on lack of modularity
-The LLVM compiler framework \cite{lattnerLLVMCompilationFramework2004} addressed these problems of complexity and re-usability with a novel and language-independent textual \ac{ir} in \ac{ssa} form, which could be analysed and transformed by a sequence of passes.
+In the 20\textsuperscript{th} century, compilers were typically monolothic and specific to individual languages, resulting in very poor re-usability.
+% Early compilers were hand-crafted, resulting in complex and language-specific implementations. % DONE: This needs to be rephrased!!! No early and no hand-crafted, focus on lack of modularity
+The LLVM compiler framework \cite{lattnerLLVMCompilationFramework2004} addressed these problems with a novel and language-independent textual \ac{ir} in \ac{ssa} form, which could be analysed and transformed by a sequence of passes.
 Recently, \ac{mlir} \cite{lattnerMLIRScalingCompiler2021a}, has furthered these goals by enabling users to cheaply extend compilers with their own abstractions. %, and automatically provides common infrastructure such as parsing and printing logic for them.
 
 
@@ -48,8 +49,6 @@ This work examines the performance of the pattern rewriting component of the xDS
 
 
 
-
-
 %%% "give a brief overview of what you actually did"
 
 %% Pareto curve of performance and dynamism of workload?
@@ -65,18 +64,15 @@ This work examines the performance of the pattern rewriting component of the xDS
     \end{tikzpicture}
     % \includegraphics[width=0.6\textwidth]{images/introduction/narrative.drawio.pdf}
     \caption{Closing the gap between xDSL and \ac{mlir} pattern rewriting performance. xDSL's performance can be improved by changes to both its implementation and language runtime. C++ has less of a performance advantage for \ac{mlir} than other workloads due to the costs associated with dynamism.}
-    % \textit{(Sketch of figure: will be drawn properly with matplotlib and real data once finalised -- any general feedback appreciated!)}
-    % TODO: Further think about this to consider making it more conceptual/hooky
-    % TODO: If kept, this will have bars labelled with performance figures, but since not final have not done this yet
     \label{fig:narrative}
 \end{figure}
 
 %% Overview (~abstract sentence five, which needs re-writing: what we did part one -- specialisation and CPython stuff)
 The performance of a program is constrained both by the details of its implementation and the runtime of its language.
 These two properties are deeply interlinked, making them difficult to measure independently.
-To disentangle them, we manually optimise and specialise xDSL's implementation of pattern rewriting (\autoref{fig:narrative}, \circledbase{pairedOneLightBlue}{1}), resulting in an $5.5\times$ performance uplift. % TODO: align with finalised figure when re-measured
+To disentangle them, we manually optimise and specialise xDSL's implementation of pattern rewriting (\autoref{fig:narrative}, \circledbase{pairedOneLightBlue}{1}), resulting in an $11\times$ performance uplift. % TODO: check alignment with finalised figure when re-measured
 We then confirm the performance of the specialisation is constrained only by the language runtime by examination of the dispatched bytecode of micro-benchmarks.
-% TODO: Add further discussion of profiler!!!
+This bytecode examination process revealed a gap in the provision of fine grained performance profilers for Python. To address this gap, we developed ByteSight, native tracing performance profiler for Python bytecode. % TODO: Consider adding "This tool facilitated...?"
 Following this, we quantify the impact of recent performance enhancements made to CPython for this specialised implementation (\autoref{fig:narrative}, \circledbase{pairedTwoDarkBlue}{2}). % as an increase of $xy\%$.
 This describes the best-case for the performance of pattern rewriting in xDSL, which can then be compared against \ac{mlir}.
 

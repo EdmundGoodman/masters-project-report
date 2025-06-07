@@ -14,6 +14,15 @@
 % rest of the dissertation.
 
 %% The state of modern compiler development/usage
+% Hook
+Compilers are the interface between application code and the underlying hardware on which it is executed.
+% Argument
+With the end of Dennard scaling and the slow-down of Moore's law \cite{esmaeilzadehDarkSiliconEnd2012}, the design of computer hardware increasingly relies on heterogeneous accelerator hardware to achieve performance goals within power and area budgets \cite{fuchsAcceleratorWallLimits2019}.
+This has been accompanied by a stratospheric increase in the amount of compute being used for the training and inference of large machine learning models \cite{desislavovTrendsAIInference2023}.
+Together, these two factors make the development of compilers which can perform high-level optimisations and target exotic accelerator hardware critical for delivering the performance goals of modern applications.
+Since both the optimisations and underlying hardware are fast-changing, the development velocity of the compiler is crucial to deliver state-of-the-art models with delay (\autoref{fig:compilers-lagging}).
+% Link
+This motivates the development of shared compiler infrastructure which facilitates development velocity, for example by having short build times, a simple syntax, and a convenient API.
 
 \begin{figure}[H]
     \centering
@@ -22,50 +31,67 @@
     \label{fig:compilers-lagging}
 \end{figure}
 
+% Hook
+Early compilers such as Grace Hopper's A0 and the ALGOL compiler were standalone programs, specific to individual languages \cite{knuthEarlyDevelopmentProgramming1980}.
+% Argument
+After this, the \ac{gcc}  project introduced a shared infrastructure for compiling several languages, including C, C++, and FORTRAN, but its monolithic and tightly-coupled design limited the reusability of its components \cite{stallmanUsingGnuCompiler2009}.
+% Link
+The release of LLVM, a modular, library-based compiler framework, rejected these limitations.
 
-\section{The LLVM compiler infrastructure}
+\section{The LLVM project}
 \label{sec:llvm}
 
+% Hook
+In 2004, Lattner and Adve published ``LLVM: A Compilation Framework for
+Lifelong Program Analysis and Transformation'' \cite{lattnerLLVMCompilationFramework2004}.
+% Argument
+LLVM productised a collection of good ideas in compiler research including \ac{ssa},  inter-procedural analysis, and a low-level \ac{ir} into a convenient framework.
 % SSA
-% Peephole optimisation
+% LLVM IR
+% Transformation passes
+These desirable properties lead to LLVM's widespread adoption, being used as a backend for many languages including C++, Rust, and Swift.
+However, the demands of modern workloads present a number of challenges for LLVM.
+% Link
+For example, LLVM's low-level \ac{ir} is not well suited to the high-level optimisations required for \ac{dag} representations of machine learning workloads. In addition to this key infrastructure such as parsing and printing must be implemented by hand, slowing development velocity.
 
-
-% \subsection{User-extensible compiler infrastructure}
-% To some degree LLVM cna be extended with intrinsics, but want to be able to define out own abstractions and stuff -> segues into MLIR
-
-
-\section{MLIR}
+\section{Multi-level intermediate representation (MLIR)}
 \label{sec:mlir}
 
-\subsection{IRDL}
-\label{ssec:irdl}
+% Hook
+\acf{mlir} addresses these modern challenges, providing ``compiler infrastructure for the end of Moore's law'' \cite{lattnerMLIRScalingCompiler2021a}.
+% Argument
+Its key contribution is providing multiple levels of abstraction in the form of dialects, contrasting the fixed low-level abstraction of LLVM \ac{ir}. This allows different problem domains to define their own operations and transformation passes while sharing common infrastructure. This facilitates efficiently expressing optimisations at the most appropriate abstraction level, which can be each by applied by lowering from high-level domain-specific representations to low-level hardware-specific ones. The provision of common infrastructure including documentation generation, parsing and printing logic, and location tracking further reduces the engineering effort required to develop complex optimisations and support custom hardware targets.
+\ac{mlir} is implemented in C++, providing desirable performance characteristics, but having long build times and a verbose syntax.
+% Link
+This issue of syntax is partially mitigated by declarative dialects such as \ac{irdl}, which can express functionality which would otherwise be implemented in C++.
 
-\subsection{Pattern rewriting optimisations}
-\label{ssec:pattern-rewriting}
 
+% \subsection{IR definition language (IRDL)}
+% \label{ssec:irdl}
 
+% Hook
+\ac{irdl} \cite{fehrIRDLIRDefinition2022a}.
+% Argument
+% Link
+
+% \subsection{Pattern rewriting optimisations}
+% \label{ssec:pattern-rewriting}
+
+% Hook
+Pattern rewriting is a key idiom in \ac{mlir}.
+% Argument
+% Link
 
 \section{xDSL}
 \label{sec:xdsl}
 
-
-
-
-
-
-
-
-
-\section{Python internals}
-\label{sec:python-internals}
-
-% A brief overview of how Python works, talking about bytecode and stuff
-
-
-
-
-
-
+% Hook
+xDSL is a Python-native compiler framework, originally written as a re-implementation of \ac{mlir}'s data structures and associated logic.
+% Argument
+It prioritises developer productivity through Python's easy-to-use syntax and fast build times, instead sacrificing some runtime performance provided by C++. This makes it suitable for teaching and
+% It leverages \ac{irdl} to provide an intuitive API for defining operations in Python's object model.
+As a result of its similar data structures and shared textual \ac{ir}, xDSL can be used as a side-kick compiler for \ac{mlir}, facilitating modular replacement of individual components of its pipeline.
+% Link
 
 
 
@@ -136,14 +162,15 @@ This dynamic, pointer-chasing workload incurs overhead and precludes many optimi
 
 
 
+\section{Python internals}
+\label{sec:python-internals}
 
-
-
-
-
-
-
-
+%% Python reference implementation, interpreter loop, bytecode, dynamism
+% Hook
+The Python language has many implementations, with the canonical reference implementation CPython being...
+% Argument
+% Possibly something about JIT compilers like PyPy and Faster CPython, and something about PyPerformance benchmarks.
+% Link
 
 
 
@@ -167,32 +194,16 @@ Whilst \acf{jit} compilation can refer to any program translation occurring at r
 % Argument
 % Link
 
-% V8 or something?
-
-% \subsubsection{PyPy}
-% \label{sssec:pypy}
-
-% Hook
-% Argument
-% Link
-
-% \subsubsection{Numba, JAX, and PyTorch}
-% \label{sssec:numba-jax-pytorch}
-
-% Hook
-% Argument
-% Link
 
 \subsubsection{Copy-and-patch compilation}
 \label{sssec:copy-and-patch-compilation}
 
 %% Motivation
 % Hook
-\ac{jit} compilers
-% A major bottleneck for traditional \ac{jit} compilation to machine code is the slow runtimes of optimising compilers.
+A major bottleneck for traditional \ac{jit} compilation to machine code is the slow runtimes of optimising compilers.
 % Argument
 % Link
-In their paper ``Copy-and-Patch Compilation'', Kjolstad and Xu present a novel approach to avoid this runtime cost.
+In their paper ``Copy-and-Patch Compilation'', Xu an Kjolstad present a novel approach to avoid this runtime cost \cite{xuCopyandpatchCompilationFast2021a}.
 
 %% Discuss
 % Hook
@@ -202,9 +213,7 @@ Copy-and-patch compilation uses binary
 
 % Figure
 
-% \subsubsection{Lua JIT}
-% \label{sssec:lua-jit}
-
+%% Deegen and luajit remake
 % Hook
 % Argument
 % Link
