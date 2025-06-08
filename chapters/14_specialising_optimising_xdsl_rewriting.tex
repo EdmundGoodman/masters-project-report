@@ -126,7 +126,7 @@ However, the performance improvement comes at the cost of a significantly more c
 % Drop runtime by performing fewer, quicker operations
 We can quantify one cause of this improvement as the specialised code executing fewer, faster bytecode instructions by leveraging our novel bytecode profiling tool (full traces in Appendices \ref{listing:bytecode-profiles-op-build-original}, \ref{listing:bytecode-profiles-op-build-optimised}).
 For example, specialisation reduces the number of bytecode instructions executed from $466$ to only $29$. Function calls have a much longer duration than other instructions, with their mutation of the call stack taking up to three times longer than loading from a variable. Again leveraging our tool, we can see that specialisation reduces the number of function calls from $65$ to $5$, further contributing to the performance uplift.
-By examination of its emitted bytecode (Listing \ref{listing:bytecode-profiles-op-build-optimised}), we can be confident in the optimality of the specialised implementation, as it only constructs the object and sets required fields, performing no other extraneous logic. % TODO: "we can be confident in the optimality of the specialised implementation" is a strong claim. Perhaps "near-optimal" or "highly optimised" would be more appropriate, or clarify the scope of "optimality" (e.g., optimal within the constraints of Python's runtime for this specific workload).
+By examination of its emitted bytecode (Listing \ref{listing:bytecode-profiles-op-build-optimised}), we can be confident the specialised implementation is near-optimal within the constraints of Python's runtime, as it only constructs the object and sets required fields, performing no other extraneous logic.
 
 %% Compare performance
 \begin{table}[H]
@@ -141,18 +141,6 @@ By examination of its emitted bytecode (Listing \ref{listing:bytecode-profiles-o
     \bottomrule
   \end{tabular}
 \end{table}
-
-
-% %% Doesn't exactly match MLIR, because dynamism means it doesn't incur heavy RTTI machinery
-% % TODO: Move this into dynamism section!!!!!!!
-% % Hook
-% The specialised implementation achieves a slowdown of only $3\times$ from \ac{mlir}, which is surprising...
-% % Argument
-% % Link
-% Despite this, the specialised implementation approaches the upper bound of performance for this workload as a result of the constraints of the language runtime, making it suitable for the comparison of dynamic and static language runtimes.
-
-
-
 
 
 
@@ -331,53 +319,6 @@ Furthermore, this speedup is less dramatic than operation instantiation, as a re
   \end{tabular}
 \end{table}
 
-% % TODO: Does this want to be lifted into the dynamism section -- this might make it easier to link to more substantial data rather than just explaining interpreter/compiler again in gratuitous detail
-% % Hook
-% Empowered by the similarity of their implementations, we can further apply profiling tools to contrast the emitted instructions by each language runtime.
-% % Argument
-% For xDSL's Python, we use our novel bytecode profiling tool ByteSight, and for \ac{mlir}'s C++, we use \texttt{valgrind}'s \texttt{callgrind} tool \cite{valgrindtmdevelopersCallgrindCallgraphGenerating}.
-% For the same algorithm, Python dispatches only $35$ bytecode instructions in comparison with AArch64 assembly taking $708$ (\autoref{fig:ubenchmark-original-trait-performance}).
-% This demonstrates the significant abstraction gap between high-level Python bytecode and the low-level assembly instructions compiled from C++. While Python requires fewer explicit instructions due to its dynamic dispatch and built-in operations handling complex tasks internally, the underlying C++ implementation must execute many more granular assembly instructions to achieve the same computational result.
-% % Link
-% Despite this, the C++ implementation outperforms the Python implementation, due to these assembly instructions more closely matching the execution model of the target machine.
-
-
-
-
-
-
-
-%% ======================================================== %%
-%% This subsection would just repeat the points made above? %%
-%% ======================================================== %%
-% \subsection{What does specialisation do?}
-% \label{ssec:specialising-what-do}
-% %% What does specialisation do
-% % Hook
-% From the above two micro-benchmarks, we have empirically demonstrated that specialisation to workloads improves their performance, approaching the best-case .
-% % Argument
-% The mechanism for this is simple: specialisation uses extra information in the form of runtime invariants to avoid work at runtime, reducing the number of bytecode instructions the interpreter needs to execute.
-% % Relate into JIT compilation and stuff
-% % Link
-% Having demonstrated and understood the effectiveness of specialisation for small workloads, we can now leverage it for a non-trivial example of pattern rewriting.
-%% Summary table??
-% \begin{table}[H]
-% %   \caption{Specialisation improves xDSL's operation instantiation performance by $26\times$, lifting it from $83\times$ to $3\times$ slower than \ac{mlir}.}
-%   \caption{Specialisation improves xDSL's performance for micro-benchmarks.}
-%   \label{tab:ubenchmark-instantiation-optimised}
-%   \centering
-%   \begin{tabular}{cccc}
-%     \toprule
-%     \textbf{} & \textbf{MLIR [ns]} & \textbf{xDSL [ns]} & \textbf{Specialised xDSL [ns]} \\
-%     \midrule
-%     Operation instantiation & $153 \pm 0.5$ & $12700 \pm 1810$ & $477 \pm 385$ \\
-%     % Operation instantiation & $357 \pm 0.5$ & $33400 \pm 3680$ & $1830 \pm 774$ \\
-%     Trait checking & $11.7 \pm 0.5$ & $924 \pm 513$ & $266 \pm 34$\\
-%     \bottomrule
-%   \end{tabular}
-% \end{table}
-
-
 
 
 
@@ -406,7 +347,7 @@ For our first benchmarks of the two frameworks, we measured the end-to-end perfo
 However, canonicalization passes are fairly complex, encompassing a suite of common optimisations, many of which are not applicable to our \ac{ir} workload. This complexity is detrimental to manual specialisation, resulting in more code requiring transformation by hand.
 As such, we implement a simple pattern rewriting pass for constant folding over the addition of integers (\autoref{listing:constant-folding-impl}). This pass captures common idioms in pattern rewriting, making it a fair proxy for more complex workloads, but is also sufficiently simple to rewrite by hand into a fully specialised form.
 The rewriter first matches against the integer addition operation to fold \circledbase{pairedOneLightBlue}{1}, exercising operation type checks. Next, it checks the invariant of our workload that both addition operands are constant \circledbase{pairedTwoDarkBlue}{\scriptsize{2}}, exercising trait lookups. After this, it gets the value of each operand, exercising operation properties \circledbase{pairedThreeLightGreen}{\scriptsize{3}}. Finally, it replaces the matched operation with a new one, exercising the rewriting mechanism \circledbase{pairedFourDarkGreen}{\scriptsize{4}}.
-% Link   % TODO: Think of some link
+% Link
 
 %% Listing showing the two implementations
 \begin{figure}[H]

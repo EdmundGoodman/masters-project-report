@@ -17,14 +17,14 @@ This section discusses the details of these optimisations, and their effect on u
 
 %% What is the idea?
 % Hook
-Simple interpreters of dynamic languages use generic instructions which can express functionality over a wide array of types. However, this generality incurs a performance cost, with the interpreter needing to select the specific implementation for the current type at runtime.
+Simple interpreters of dynamic languages use generic instructions which can express functionality over a wide array of types. However, this incurs an overhead selecting the specific implementation for the current type at runtime.
 % Argument
 In 2009, Williams et al. introduced the concept of instruction specialisation in their paper ``Dynamic Interpretation for Dynamic Scripting Languages'' \cite{williamsDynamicInterpretationDynamic2010}.
 This proposes a novel dynamic \ac{ir} for Lua, whose operations can be specialised to a more performant implementation based on types and control flow encountered at runtime, claiming an average speedup of $1.3\times$.
 Following this, Mark Shannon applied the idea to the Python language in his doctoral thesis ``The construction of high-performance virtual
 machines for dynamic languages'' \cite{shannonConstructionHighperformanceVirtual2011}, demonstrating its viability through the research \ac{vm} HotPy.
 % Link
-This idea was finally realised in the CPython reference implementation through \ac{pep} 659's specialising adaptive interpreter in the 2022 minor version 3.11 release.
+This idea was realised in the CPython through \ac{pep} 659's specialising adaptive interpreter in the 2022 minor version 3.11 release.
 
 %% NOTE: Lifted later to pack pages more efficiently
 \begin{table}[H]
@@ -180,8 +180,7 @@ In recent years, Faster CPython has introduced two key optimisations which lever
 The first is the specialising adaptive interpreter, which profiles how generic bytecode instructions are used, allowing speculative quickening into a more specialised form. The second is the experimental \ac{jit}, which identifies hot code paths at runtime and translates them into optimised native machine code.
 Beyond these dynamic optimisations which we examine in detail, Faster CPython also makes other optimisations unrelated to dynamism in the language runtime, such as the tail-calling interpreter \cite{joshhabermanTailCallingInterpreter2025} and memory layout optimisations which further improve performance.
 % What performance impact does this have on pyperformance and xDSL constant foldng
-Through our empirical measurement, we show that the highly dynamic workload of the xDSL user-extensible compile framework exacerbates the impact of both of these dynamic optimisations (\autoref{figure:impact-cpython-optimisations}). This can be seen by constant folding in xDSL having a greater speedup than PyPerformance with the specialising adaptive interpreter, but a worse slow-down with the experimental \ac{jit}.
-In addition to this, we show that specialisation of the workloads (\autoref{chap:specialising-optimising-pattern-rewriting}) reveals further optimisation opportunities, increasing the impact of both of these dynamic optimisations.
+Through our empirical measurement, we show that the highly dynamic workload of the xDSL user-extensible compile framework exacerbates the impact of both of these dynamic optimisations (\autoref{figure:impact-cpython-optimisations}).
 % Link
 
 %% Graph of the two approaches
@@ -192,6 +191,10 @@ In addition to this, we show that specialisation of the workloads (\autoref{chap
     \label{figure:impact-cpython-optimisations}
 \end{figure}
 
+
+
+This can be seen by constant folding in xDSL having a greater speedup than PyPerformance with the specialising adaptive interpreter, but a worse slow-down with the experimental \ac{jit}.
+In addition to this, we show that specialisation of the workloads (\autoref{chap:specialising-optimising-pattern-rewriting}) reveals further optimisation opportunities, increasing the impact of both of these dynamic optimisations.
 
 
 

@@ -173,6 +173,19 @@ However, the implementation of the \texttt{cast} function is the identity, doing
 
 
 
+
+
+% % TODO: Does this want to be lifted into the dynamism section -- this might make it easier to link to more substantial data rather than just explaining interpreter/compiler again in gratuitous detail
+% % Hook
+% Empowered by the similarity of their implementations, we can further apply profiling tools to contrast the emitted instructions by each language runtime.
+% % Argument
+% For xDSL's Python, we use our novel bytecode profiling tool ByteSight, and for \ac{mlir}'s C++, we use \texttt{valgrind}'s \texttt{callgrind} tool \cite{valgrindtmdevelopersCallgrindCallgraphGenerating}.
+% For the same algorithm, Python dispatches only $35$ bytecode instructions in comparison with AArch64 assembly taking $708$ (\autoref{fig:ubenchmark-original-trait-performance}).
+% This demonstrates the significant abstraction gap between high-level Python bytecode and the low-level assembly instructions compiled from C++. While Python requires fewer explicit instructions due to its dynamic dispatch and built-in operations handling complex tasks internally, the underlying C++ implementation must execute many more granular assembly instructions to achieve the same computational result.
+% % Link
+% Despite this, the C++ implementation outperforms the Python implementation, due to these assembly instructions more closely matching the execution model of the target machine.
+
+
 % \section{Object data access}
 % \label{sec:dynamism-pattern-rewriting-access}
 
