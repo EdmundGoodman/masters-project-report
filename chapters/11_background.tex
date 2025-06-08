@@ -34,9 +34,9 @@ This motivates the development of shared compiler infrastructure which facilitat
 % Hook
 Early compilers such as Grace Hopper's A0 and the ALGOL compiler were standalone programs, specific to individual languages \cite{knuthEarlyDevelopmentProgramming1980}.
 % Argument
-After this, the \ac{gcc}  project introduced a shared infrastructure for compiling several languages, including C, C++, and FORTRAN, but its monolithic and tightly-coupled design limited the reusability of its components \cite{stallmanUsingGnuCompiler2009}.
+After this, the \ac{gcc}  project introduced a shared infrastructure for the compilers of several languages, including C, C++, and FORTRAN, but its monolithic and tightly-coupled design limited the reusability of its components \cite{stallmanUsingGnuCompiler2009}, presenting a research gap in the field.
 % Link
-The release of LLVM, a modular, library-based compiler framework, rejected these limitations.
+% The release of LLVM, a modular, library-based compiler framework, rejected these limitations.
 
 \section{The LLVM project}
 \label{sec:llvm}
@@ -45,14 +45,13 @@ The release of LLVM, a modular, library-based compiler framework, rejected these
 In 2004, Lattner and Adve published ``LLVM: A Compilation Framework for
 Lifelong Program Analysis and Transformation'' \cite{lattnerLLVMCompilationFramework2004}.
 % Argument
-LLVM productised a collection of good ideas in compiler research including \ac{ssa},  inter-procedural analysis, and a low-level \ac{ir} into a convenient framework.
+LLVM productised a collection of good ideas in compiler research including low-level \ac{ir} in \ac{ssa} and inter-procedural analysis into a convenient framework.
 % SSA
-% LLVM IR
-% Transformation passes
-These desirable properties lead to LLVM's widespread adoption, being used as a backend for many languages including C++, Rust, and Swift.
-However, the demands of modern workloads present a number of challenges for LLVM.
+LLVM's \ac{ir} is a language and machine independent \ac{risc}-like instruction set in \acf{ssa}. The makes the framework re-usable across different frontends and backends, while simplifying analysis and optimisation by ensuring variables are defined exactly once. The framework's applies these optimisations in modular transformation passes, which can be composed to implement sophisticated optimisation pipelines, with each pass operating on the same \ac{ir} structures and maintaining invariants through the compilation process.
+These desirable properties lead to LLVM's widespread adoption, %, being used as a backend for many languages including C++, Rust, and Swift. However,
+but the demands of modern workloads present a number of challenges for LLVM.
 % Link
-For example, LLVM's low-level \ac{ir} is not well suited to the high-level optimisations required for \ac{dag} representations of machine learning workloads. In addition to this key infrastructure such as parsing and printing must be implemented by hand, slowing development velocity.
+For example, LLVM's low-level \ac{ir} is not well suited to the high-level rewrites required to optimise \ac{dag} representations of machine learning workloads. In addition to this key infrastructure such as parsing and printing must be implemented by hand, slowing development velocity.
 
 \section{Multi-level intermediate representation (MLIR)}
 \label{sec:mlir}
@@ -60,26 +59,12 @@ For example, LLVM's low-level \ac{ir} is not well suited to the high-level optim
 % Hook
 \acf{mlir} addresses these modern challenges, providing ``compiler infrastructure for the end of Moore's law'' \cite{lattnerMLIRScalingCompiler2021a}.
 % Argument
-Its key contribution is providing multiple levels of abstraction in the form of dialects, contrasting the fixed low-level abstraction of LLVM \ac{ir}. This allows different problem domains to define their own operations and transformation passes while sharing common infrastructure. This facilitates efficiently expressing optimisations at the most appropriate abstraction level, which can be each by applied by lowering from high-level domain-specific representations to low-level hardware-specific ones. The provision of common infrastructure including documentation generation, parsing and printing logic, and location tracking further reduces the engineering effort required to develop complex optimisations and support custom hardware targets.
-\ac{mlir} is implemented in C++, providing desirable performance characteristics, but having long build times and a verbose syntax.
+Its key contribution is providing multiple levels of abstraction in the form of dialects, contrasting the fixed low-level abstraction of LLVM \ac{ir}. This allows different problem domains to define their own operations and transformation passes while sharing common infrastructure. This facilitates efficiently expressing optimisations at the most appropriate abstraction level, which can be each by applied by lowering from high-level domain-specific representations to low-level hardware-specific ones. Lowering extensively leverages pattern rewriting, a declarative way to express transformations as patterns which match \ac{ir} constructs and replace them with lowered versions.
+The provision of common infrastructure including documentation generation, parsing and printing logic, and location tracking further reduces the engineering effort required to develop complex optimisations and support custom hardware targets.
 % Link
+\ac{mlir} is implemented in C++, providing desirable performance characteristics, but having long build times and a verbose syntax.
 % This issue of syntax is partially mitigated by declarative dialects such as \ac{irdl}, which can express functionality which would otherwise be implemented in C++.
 
-
-% TODO: Probably need pattern rewriting, can get away without irdl
-% % \subsection{Pattern rewriting optimisations}
-% % \label{ssec:pattern-rewriting}
-% % Hook
-% Pattern rewriting is a key idiom in \ac{mlir}.
-% % Argument
-% % Link
-
-% % \subsection{IR definition language (IRDL)}
-% % \label{ssec:irdl}
-% % Hook
-% \ac{irdl} \cite{fehrIRDLIRDefinition2022a}.
-% % Argument
-% % Link
 
 \section{xDSL}
 \label{sec:xdsl}
@@ -87,15 +72,16 @@ Its key contribution is providing multiple levels of abstraction in the form of 
 % Hook
 xDSL is a Python-native compiler framework, originally written as a re-implementation of \ac{mlir}'s data structures and associated logic.
 % Argument
-It prioritises developer productivity through Python's easy-to-use syntax and fast build times, instead sacrificing some runtime performance provided by C++. This makes it suitable for teaching and
-% It leverages \ac{irdl} to provide an intuitive API for defining operations in Python's object model.
-As a result of its similar data structures and shared textual \ac{ir}, xDSL can be used as a side-kick compiler for \ac{mlir}, facilitating modular replacement of individual components of its pipeline.
+As a result of its similar data structures and shared textual \ac{ir}, xDSL can be used as a side-kick compiler for \ac{mlir}, facilitating modular replacement of individual components of its pipeline. This is achieved with a DSL implementation in Python of \ac{irdl}, an \ac{mlir} dialect for declaratively defining other dialects.
+In contrast to \ac{mlir}, xDSL prioritises developer productivity through Python's easy-to-use syntax and fast build times, instead sacrificing some ahead-of-time optimisations provided by C++.
 % Link
+This tradeoff is beneficial for modern compiler developers, where improvements to developer productivity is critical to minimise delay for state-of-the-art workloads (\autoref{fig:compilers-lagging}). In addition to this, this thesis argues that the loss of ahead-of-time optimisations is less impactful for highly dynamic workloads such as user-extensible compiler infrastructures.
 
 
 
 \section{Static and dynamic languages}
 \label{sec:static-dynamic-languages}
+
 
 %% Define dynamism and dynamic/static languages
 % Hook
@@ -140,7 +126,6 @@ Furthermore, runtime behaviour may differ significantly across inputs for some w
 In addition to considering support for dynamism as a property of a programming language, it can be helpful to classify a workload as dynamic or static.
 % Argument
 For example, \ac{gemm} operations which underpin modern machine learning systems rely on streaming data in a statically known order. This is well-suited to ahead-of-time compilation, as it is amenable to optimisation passes requiring no runtime information, such as code motion or vectorisation.
-% TODO: Should this take my research domain as an example, or pick something else dynamic and can introduce my domain outside related work?
 In contrast, pattern rewriting in user-extensible compiler frameworks relies on pointer chasing data structures with a high degree of dynamism. This is because the \ac{ssa} representation of the code being rewritten is structured as a doubly linked list, with the applications of the rewriting semantics to this list known only dynamically at runtime.
 This dynamic, pointer-chasing workload incurs overhead and precludes many optimisations leveraged by ahead-of-time statically compiled languages such as C++ to accelerate their performance for other workloads.
 % Link
@@ -149,18 +134,18 @@ This dynamic, pointer-chasing workload incurs overhead and precludes many optimi
 
 
 
-\section{Python internals}
+\section{CPython internals}
 \label{sec:python-internals}
 
 %% Python reference implementation, interpreter loop, bytecode, dynamism
 % Hook
-The Python language has many implementations, with the canonical reference implementation CPython being...
+Python is a high-level, dynamically typed-checked programming language, known for its readable syntax and extensive library support \cite{guidovanrossumPythonCpython2025}.
 % Argument
-% Possibly something about JIT compilers like PyPy and Faster CPython, and something about PyPerformance benchmarks.
+The language has many implementations, from its reference implementation CPython to alternatives such as PyPy's \ac{jit} compiler \cite{thepypyteamPypyPypy2025}.
+CPython operates by compiling Python source code into a stack-based \ac{ir} called bytecode. This bytecode is then executed by a virtual machine in an interpreter loop, fetching and evaluating the compiled sequence of instructions one at a time. This approach limits performance compared with static ahead-of-time compiled languages such as C++ by the overhead of the virtual machine and having fewer opportunities for ahead-of-time optimisation. However, it also provides great flexibility, supporting Python's dynamic type system and runtime meta-programming capabilities.
 % Link
-
-
-
+The Faster CPython project is an ongoing effort to improve the performance of Python by applying techniques such as adaptive optimisation and \ac{jit} compilation.
+When improving the performance of a language implementation, it is critical to have a suite of programs to measure progress. In Python, this is provided by PyPerformance, ``an authoritative source of benchmarks for all Python implementations'' \cite{collinwinterPythonPyperformance2025}.
 
 
 
@@ -170,41 +155,27 @@ The Python language has many implementations, with the canonical reference imple
 % Hook
 In their paper ``A Brief History of Just-In-Time'', Aycock defines \acf{jit} compilation as ``translation that occurs after a program begins execution'' \cite{aycockBriefHistoryJustintime2003}.
 % Argument
-He goes on to argue that \ac{jit} compilation approaches aim to accrue the benefits of both ahead-of-time compilation and interpretation, combining the runtime performance traditionally associated with compilation with the portability and access to runtime information of interpretation.
+He argues that \ac{jit} compilation approaches aim to accrue the benefits of both ahead-of-time compilation and interpretation, combining the performance traditionally associated with compilation with the portability and access to runtime information of interpretation.
 % Link
 
 \subsection{JIT compilation to machine code}
 \label{ssec:jit-compilation-machine-code}
 
 % Hook
-Whilst \acf{jit} compilation can refer to any program translation occurring at runtime, it is often overloaded to specifically refer to the dynamic generation of machine code.
+Whilst \acf{jit} compilation can refer to any program translation occurring at runtime, it often refers specifically to the dynamic generation of machine code just before execution.
 % Argument
+Compilation during runtime exposes information from actual program behaviour which is not available to traditional ahead-of-time compilers.
 % Link
-
-
-\subsubsection{Copy-and-patch compilation}
-\label{sssec:copy-and-patch-compilation}
+This allows \ac{jit} compilers to effectively optimise the generated machine code, and unblocks the optimisation of dynamic runtimes for which there is insufficient information to optimise ahead-of-time.
 
 %% Motivation
 % Hook
-A major bottleneck for traditional \ac{jit} compilation to machine code is the slow runtimes of optimising compilers.
+A major bottleneck for traditional \ac{jit} compilation is the speed of compiler optimisation passes, which can lead to delays during program execution.
 % Argument
+In their paper ``Copy-and-Patch Compilation'', Xu and Kjolstad present a novel approach to avoid this runtime cost \cite{xuCopyandpatchCompilationFast2021a}, while still generating high quality machine code.
+Instead of compiling code from scratch at runtime, a library of machine code stencils for common operations is constructed ahead of time, with holes left for runtime-specific information such as memory addresses. During program execution, the \ac{jit} then ``patches'' these holes to generate executable machine code without incurring the heavy runtime cost of traditional optimising compilers such as LLVM.
 % Link
-In their paper ``Copy-and-Patch Compilation'', Xu an Kjolstad present a novel approach to avoid this runtime cost \cite{xuCopyandpatchCompilationFast2021a}.
-
-%% Discuss
-% Hook
-Copy-and-patch compilation uses binary
-% Argument
-% Link
-
-% Figure
-
-%% Deegen and luajit remake
-% Hook
-% Argument
-% Link
-
+%% TODO: Could talk about Deegen and luajit remake?
 
 
 \subsection{Adaptive optimisation}
@@ -214,12 +185,7 @@ Copy-and-patch compilation uses binary
 % Hook
 In addition to generating machine code on-the-fly, runtime information can be used to adapt program execution to the current workload.
 % Argument
-% Link
-
-%% Motivation/intuition for the optimisation
-% Hook
 A significant overhead in the performance of dynamically typed languages is checking types at runtime, which is required to select the matching operation implementation for the type.
-% Argument
 Whilst this type information cannot be known ahead of time in dynamically typed languages, information collected at runtime can be used to optimised the type-checking process. This adaptive optimisation approach relies on the assumption that if a variable has had a fixed type for a sufficient span of time previously, it is likely that it will have the same type in future. For example, whilst a variable being used as an integer counter in a loop can take any value, if its type in the earlier iterations has always been an integer, it is likely to remain an integer throughout later iterations.
 % Link
 In an interpreted language, this assumption can be leveraged to replace general instructions with faster, specialised variants. A concrete implementation of this is Python's specialising adaptive interpreter, discussed in \autoref{sec:specialising-adaptive-interpreter}.

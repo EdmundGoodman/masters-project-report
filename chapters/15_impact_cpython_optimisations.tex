@@ -61,7 +61,7 @@ This idea was finally realised in the CPython reference implementation through \
 The specialising adaptive interpreter implements this by replacing instructions which can be optimised by specialisation, such as the generic \texttt{LOAD\_ATTR}, with an adaptive form, such as \texttt{LOAD\_ATTR\_ADAPTIVE}. Each adaptive instruction maintains an internal counter, incrementing it when the observed usage matches a specialisation opportunity, and decrementing when it does not. When this counter exceeds a threshold, the adaptive instruction replaces itself with the appropriate specialised version, in a process known as a quickening. For example \texttt{LOAD\_ATTR\_ADAPTIVE} becomes \texttt{LOAD\_ATTR\_INSTANCE\_VALUE} when the attribute is an instance of the class for previous execution paths of the instruction.
 If the assumptions required for specialisation are violated later, then the interpreter can fall back to the original instruction implementation to ensure correctness.
 The optimisation is transparent to users, as no code changes are required, and the interpreter ensures correctness through its fall-back mechanism.
-The specialising adaptive interpreter's documentation claims a speedup of $10\%$ -- $60\%$ \cite{pep659}, matching our recorded geometric mean improvement of $24\%$ for the \texttt{pyperformance} benchmarks (\autoref{tab:faster-cpython}).
+The specialising adaptive interpreter's documentation claims a speedup of $10\%$ -- $60\%$ \cite{pep659}, matching our recorded geometric mean improvement of $24\%$ for the PyPerformance benchmarks (\autoref{tab:faster-cpython}).
 % Of these benchmarks, the one with the greatest improvement is \texttt{scimark\_monte\_carlo}, with a $66\%$ speedup. The implementation of this benchmark
 % \footnote{\scriptsize{\url{https://github.com/python/pyperformance/blob/ec9e29/.../bm_scimark/run\_benchmark.py\#L201}}}
 % Link
@@ -101,8 +101,8 @@ This is substantiated by an ablation of the feature across the previously discus
 % Hook
 We measure the specialising adaptive interpreter to yield a non-negligible speedup of $1.38\times$ across both micro-benchmarks and real-world workloads (\autoref{tab:specialising-adaptive-interpreter-xdsl}).
 % Argument
-This speedup is greater than the $1.26\times$ recorded across the \texttt{pyperformance} suite. Since the specialising adaptive interpreter works by quickening highly dynamic instructions into specialised versions, this demonstrates that user-extensible compiler framework workloads are more dynamic than the baseline of \texttt{pyperformance} workloads.
-The documentation of \texttt{pyperformance} states ``the focus is on real-world benchmarks, rather than synthetic benchmarks, using whole applications when possible.'' \cite{collinwinterPythonPyperformance2025}, further widening this conclusion to user-extensible compiler framework workloads being more dynamic than the average of a set workload representative of the real-world use of Python.
+This speedup is greater than the $1.26\times$ recorded across the PyPerformance suite. Since the specialising adaptive interpreter works by quickening highly dynamic instructions into specialised versions, this demonstrates that user-extensible compiler framework workloads are more dynamic than the baseline of PyPerformance workloads.
+The documentation of PyPerformance states ``the focus is on real-world benchmarks, rather than synthetic benchmarks, using whole applications when possible.'' \cite{collinwinterPythonPyperformance2025}, further widening this conclusion to user-extensible compiler framework workloads being more dynamic than the average of a set workload representative of the real-world use of Python.
 In addition to this, the specialised versions of each workload yield a greater speedup after applying the manual specialisation process described in \autoref{chap:specialising-optimising-pattern-rewriting}. This shows a further benefit of the manual specialisation process in revealing optimisation opportunities by the language runtime.
 
 %% TODO: Not enough space to include the listing needed to explain this!
@@ -117,7 +117,7 @@ In addition to this, the specialised versions of each workload yield a greater s
 Another bottleneck of simple interpreted language runtimes is the overhead associated with dispatching and executing bytecode operations.
 % Runtime
 To address this, \acf{jit} compilation can translate frequently executed portions of bytecode into native machine code. This avoids interpreter overhead and allows for further low-level optimizations.
-CPython's experimental \ac{jit} compiler is an implementation of the copy-and-patch machine code generation approach (introduced in \autoref{sssec:copy-and-patch-compilation}), which was added to CPython in 3.13 in 2024.
+CPython's experimental \ac{jit} compiler is an implementation of the copy-and-patch machine code generation approach (introduced in \autoref{ssec:jit-compilation-machine-code}), which was added to CPython in 3.13 in 2024.
 % Link
 This idea was finally realised in the CPython reference implementation through \ac{pep} 744's experimental \ac{jit} in the 2024 minor version 3.13 release.
 
@@ -163,7 +163,7 @@ As with the specialising adaptive interpreter, we substantiate these claims by a
 % Hook
 In contrast to the specialising adaptive interpreter, the experimental \ac{jit} regresses performance for nearly all workloads (\autoref{tab:experimental-jit-compiler-xdsl}).
 % Argument
-This aligns with the results recorded for the \texttt{pyperformance} benchmark suite, which similarly regress when the \ac{jit} is enabled.
+This aligns with the results recorded for the PyPerformance benchmark suite, which similarly regress when the \ac{jit} is enabled.
 As discussed above, this comes as a result of the \ac{jit}'s experimental nature, aiming to provide infrastructure for future optimisations rather than immediate gains.
 % Link
 
@@ -180,7 +180,7 @@ In recent years, Faster CPython has introduced two key optimisations which lever
 The first is the specialising adaptive interpreter, which profiles how generic bytecode instructions are used, allowing speculative quickening into a more specialised form. The second is the experimental \ac{jit}, which identifies hot code paths at runtime and translates them into optimised native machine code.
 Beyond these dynamic optimisations which we examine in detail, Faster CPython also makes other optimisations unrelated to dynamism in the language runtime, such as the tail-calling interpreter \cite{joshhabermanTailCallingInterpreter2025} and memory layout optimisations which further improve performance.
 % What performance impact does this have on pyperformance and xDSL constant foldng
-Through our empirical measurement, we show that the highly dynamic workload of the xDSL user-extensible compile framework exacerbates the impact of both of these dynamic optimisations (\autoref{figure:impact-cpython-optimisations}). This can be seen by constant folding in xDSL having a greater speedup than \texttt{pyperformance} with the specialising adaptive interpreter, but a worse slow-down with the experimental \ac{jit}.
+Through our empirical measurement, we show that the highly dynamic workload of the xDSL user-extensible compile framework exacerbates the impact of both of these dynamic optimisations (\autoref{figure:impact-cpython-optimisations}). This can be seen by constant folding in xDSL having a greater speedup than PyPerformance with the specialising adaptive interpreter, but a worse slow-down with the experimental \ac{jit}.
 In addition to this, we show that specialisation of the workloads (\autoref{chap:specialising-optimising-pattern-rewriting}) reveals further optimisation opportunities, increasing the impact of both of these dynamic optimisations.
 % Link
 
