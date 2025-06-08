@@ -179,66 +179,6 @@ However, the implementation of the \texttt{cast} function is the identity, doing
 %% TODO: Depending on how re-worked the specialising chapter gets, I could add another section discussing using runtime invariants to make Python less dynamic, which would quantify __slots__
 
 
-
-
-
-
-
-
-\section{Dynamism in pattern rewriting}
-\label{chap:dynamism-pattern-rewriting-summary}
-
-
-%% Introduction
-% Hook (what we have done, and how this lets us do more)
-Having quantified the impacts of dynamism on the performance of static languages for synthetic examples and micro-benchmarks, we can then apply this knowledge to pattern rewriting workloads.
-% Argument
-Through this, we empirically demonstrate their high degree of dynamism, and the impact that this has on both static and dynamic language implementations through the proxies of the \ac{mlir} and xDSL frameworks.
-% Hook
-
-%% Counting dynamism in constant folding
-% Hook
-As discussed above (\autoref{sec:dynamism-pattern-rewriting-dispatch}), one cause of dynamism in programs is dynamic dispatch, which we quantified as having both a direct and indirect cost for synthetic examples that could be analysed manually.
-% Argument
-However, pattern rewriting workloads are much larger, and as such are not feasible to manually analyse in the same way. We address this by using the information from our synthetic example, which provides a lower bound for the direct and indirect cost incurred by each of these dispatches. % TODO: justify lower bound
-This lower bound of overhead per dispatch can then be multiplied by the number of dynamic dispatches to estimate the overall cost for pattern rewriting.
-% In the ARM instruction set, direct and indirect calls \cite{armlimitedARMCortexRSeries}
-% ``Because the branch destination is PC-relative, it can be determined exactly at an early stage of the pipeline''. This means that direct calls are more performant, and as such efficient compilers only use indirect calls where address information is not known ahead of time: dynamic control flow.
-We use the DynamoRIO \cite{brueningInfrastructureAdaptiveDynamic2003} tool to instrument these workloads, using the \texttt{countcalls} sample to count the number of direct and indirect calls respectively (\autoref{tab:dynamorio-constant-folding}).
-% Link
-
-%% Table
-\begin{table}[H]
-  \caption{$17\%$ of calls are dynamically dispatched when constant folding integer addition over 20 operations (implementation \autoref{sec:specialising-pattern-rewriting-workload}, DynamoRIO results \autoref{chap:dynamorio-calls}).}
-  \label{tab:dynamorio-constant-folding}
-  \centering
-  \begin{tabular}{cc}
-    \toprule
-    \textbf{Direct calls} & \textbf{Indirect calls}\\
-    \midrule
-    75140 & 4320 \\
-    % Direct method dispatch & & \\
-    % Dynamic method dispatch & & \\
-    % \ac{mlir} constant folding & 75140 & 4320 \\ % 182378 - 107238
-    % xDSL specialised constant folding & 0 & \\
-    \bottomrule
-  \end{tabular}
-\end{table}
-
-%% Estimating overhead in static languages
-% Hook
-We can then combine this information with our lower bound for the performance overhead of dynamic dispatch from synthetic examples to estimate the overhead due to dynamism in pattern rewriting workloads (\autoref{figure:impact-rtti}).
-% Argument
-% Link
-
-%% Performance graph
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.75\textwidth]{images/impact_dynamism/pattern.pdf}
-    \caption{.}
-    \label{figure:impact-rtti}
-\end{figure}
-
 %% Contrasting with Python
 % Hook
 % Argument

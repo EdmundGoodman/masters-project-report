@@ -202,7 +202,7 @@ def autolabel_ms(ax, rects, **kwargs):
 # Plot an example speedup plot
 def plot_performance():
     labels = ["MLIR\nruntime", "Direct\noverhead", "Indirect\noverhead"]
-    perf_means = [10300, 1296, 3974.4]
+    perf_means = [10300, (5623 - 5605) * (1.22-0.92), (5623 - 5605) * 0.92]
     perf_errors = [100, 100, 100]
 
     x = np.arange(len(labels))  # the label locations
@@ -239,8 +239,8 @@ def plot_performance():
     autolabel(ax, rects1, yoffset=[1.5, 1.5, 1.5]) #, xoffset=10, yoffset=2)
 
     fig.tight_layout()
-    # plt.show()
-    save(fig, PARENT_DIRECTORY / "../impact_dynamism/pattern.pdf")
+    plt.show()
+    # save(fig, PARENT_DIRECTORY / "../impact_dynamism/pattern.pdf")
 
 
 def main():
