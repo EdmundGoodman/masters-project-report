@@ -20,7 +20,7 @@ This section discusses the details of these optimisations, and their effect on u
 Simple interpreters of dynamic languages use generic instructions which can express functionality over a wide array of types. However, this generality incurs a performance cost, with the interpreter needing to select the specific implementation for the current type at runtime.
 % Argument
 In 2009, Williams et al. introduced the concept of instruction specialisation in their paper ``Dynamic Interpretation for Dynamic Scripting Languages'' \cite{williamsDynamicInterpretationDynamic2010}.
-This proposes, and claims an average speedup of $1.3\times$.
+This proposes a novel dynamic \ac{ir} for Lua, whose operations can be specialised to a more performant implementation based on types and control flow encountered at runtime, claiming an average speedup of $1.3\times$.
 Following this, Mark Shannon applied the idea to the Python language in his doctoral thesis ``The construction of high-performance virtual
 machines for dynamic languages'' \cite{shannonConstructionHighperformanceVirtual2011}, demonstrating its viability through the research \ac{vm} HotPy.
 % Link
@@ -126,7 +126,7 @@ This idea was finally realised in the CPython reference implementation through \
 To implement this, CPython introduced a new internal intermediate representation: tier two opcodes. Tier two opcodes are even more fine-grained that traditional bytecode and as such more amenable to copy-and-patch compilation.
 % Argument
 When compiling CPython, the LLVM toolchain is used to create small re-usable snippets of machine code for the target machine called stencils, which implement the functionality of these tier two opcodes. At runtime, when bytecode is executed frequently it is marked as hot. Hot bytecode is then translated into a sequence of these more granular tier two opcodes, and optimised by applying transformation passes. The \ac{jit} then translates each tier two opcode into executable machine code by copying and patching runtime information into the holes in the pre-compiled stencils. This machine code can then run directly on the processor, replacing the slower interpreter loop to execute the equivalent bytecode instructions. % Other examples of \ac{jit} compiled interpreters such as V8 and LuaJIT have further levels of optimisation above a baseline.
-The \ac{jit} is currently experimental and disabled by default, but lays the groundwork for significant future performance enhancements. As such, its performance change for many workloads is minimal or even regressive.
+The \ac{jit} is experimental and disabled by default in CPython 3.13, but lays the groundwork for significant future performance enhancements. As such, its performance change for many workloads is minimal or even regressive.
 % Link
 As with the specialising adaptive interpreter, we substantiate these claims by an ablation of the feature across the previously discussed real-world workload and micro-benchmarks.
 
