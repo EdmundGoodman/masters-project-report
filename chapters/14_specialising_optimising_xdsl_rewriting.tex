@@ -307,7 +307,7 @@ Furthermore, this speedup is less dramatic than operation instantiation, as a re
 % \end{figure}
 
 \begin{table}[H]
-  \caption{specialising trait checking in xDSL yields performance uplifts of up to $8\times$, $20\times$ slower than the \ac{mlir} reference implementation.}
+  \caption{Specialising trait checking in xDSL yields performance uplifts of up to $8\times$, $20\times$ slower than the \ac{mlir} reference implementation.}
   \label{tab:ubenchmark-original-trait-performance}
   \centering
   \begin{tabular}{ccc}
@@ -478,47 +478,54 @@ This yields a specialised implementation with reduced overhead (\autoref{fig:con
 
 %% How much did we get/lose out of this?
 % Link
-Through specialising the constant folding implemenation, we achieve a $8\times$ speedup over the original implementation (\autoref{fig:constant-fold-summary}).
+Through specialising the constant folding implemenation, we achieve a $8\times$ speedup over the original implementation (\autoref{fig:constant-fold-performance}).
 % Argument
-However, this performance uplift comes at the cost of ease of implementation, increasing the constant folding implementation length by $7\times$ (\autoref{fig:constant-fold-loc}).
+However, this performance uplift comes at the cost of ease of implementation, increasing the constant folding implementation length by $7\times$.
 As with the specialised micro-benchmarks, we can leverage our novel bytecode profiling tool to explain this improvement in terms of dispatched bytecode instructions, with the workload dropping from $5465$ to $977$ instructions required to implement its functionality.
 By examining the implementation and its emitted bytecode instructions, we are confident that it is close to optimal for the workload within the context of xDSL's data structures.
 In combination with the modifications made to \ac{mlir} to similarly avoid extraneous computation, these two implementations are both directly comparable and complex enough to be representative of real-world workloads.
 % Link
 This facilitates their later use for exploring the impact of dynamism on such workloads.
 
-
-
 % TODO? Further weaknesses of workload so large hard to reason about and MLIR itself has implementation details adding overhead -- but does demonstrate xDSL can be improved and lower bound C++ performance
 
-%% Figure or table comparing performance
 \begin{figure}[H]
     \centering
-    \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=\textwidth]{images/specialising_optimising_xdsl_rewriting/constant_performance.pdf}
-        \caption{Specialisation yields performance uplifts of
+    \includegraphics[width=0.75\textwidth]{images/specialising_optimising_xdsl_rewriting/constant_performance.pdf}
+    \caption{Specialisation of constant folding over integer addition in xDSL yields performance uplifts of
 up to $8\times$, $14\times$ slower than the MLIR reference
 implementation.}
-        \label{fig:constant-fold-performance}
-        % \vspace{1em}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=\textwidth]{images/specialising_optimising_xdsl_rewriting/constant_loc.pdf}
-        \caption{Specialisation increases the implementation length of the rewriter by $7\times$.} % TODO: here too comparing python number of lines to C++ seems pretty dodgy, I'm not sure that it's actually helping you make any points you want to make, unless I'm missing something.
-        \label{fig:constant-fold-loc}
-        \vspace{1em}
-%         \includegraphics[width=\textwidth]{images/specialising_optimising_xdsl_rewriting/constant_instructions.pdf}
-%         \caption{Specialisation reduces the bytecode instruc-
-% tion count by $5.5\times$, with complex Python byte-
-% code instructions expressing more functionality
-% than RISC AArch64 assembly.}
-%         \label{fig:constant-fold-instructions}
-    \end{subfigure}
-    \caption{Impact of specialising constant folding of integer addition in xDSL on performance and implementation length.}
-    % \caption{Impact of specialising constant folding of integer addition in xDSL on performance and instruction count.}
-    \label{fig:constant-fold-summary}
+    \label{fig:constant-fold-performance}
 \end{figure}
+
+%% Figure or table comparing performance
+% \begin{figure}[H]
+%     \centering
+%     \begin{subfigure}[b]{0.45\textwidth}
+%         \includegraphics[width=\textwidth]{images/specialising_optimising_xdsl_rewriting/constant_performance.pdf}
+%         \caption{Specialisation yields performance uplifts of
+% up to $8\times$, $14\times$ slower than the MLIR reference
+% implementation.}
+%         \label{fig:constant-fold-performance}
+%         % \vspace{1em}
+%     \end{subfigure}
+%     \hfill
+%     \begin{subfigure}[b]{0.45\textwidth}
+%         \includegraphics[width=\textwidth]{images/specialising_optimising_xdsl_rewriting/constant_loc.pdf}
+%         \caption{Specialisation increases the implementation length of the rewriter by $7\times$.} % DONE: here too comparing python number of lines to C++ seems pretty dodgy, I'm not sure that it's actually helping you make any points you want to make, unless I'm missing something.
+%         \label{fig:constant-fold-loc}
+%         \vspace{1em}
+% %         \includegraphics[width=\textwidth]{images/specialising_optimising_xdsl_rewriting/constant_instructions.pdf}
+% %         \caption{Specialisation reduces the bytecode instruc-
+% % tion count by $5.5\times$, with complex Python byte-
+% % code instructions expressing more functionality
+% % than RISC AArch64 assembly.}
+% %         \label{fig:constant-fold-instructions}
+%     \end{subfigure}
+%     \caption{Impact of specialising constant folding of integer addition in xDSL on performance and implementation length.}
+%     % \caption{Impact of specialising constant folding of integer addition in xDSL on performance and instruction count.}
+%     \label{fig:constant-fold-summary}
+% \end{figure}
 % \begin{table}[H]
 %   \caption{.}
 %   \label{tab:constant-folding-optimised}
@@ -558,9 +565,11 @@ However, some are more generic to any use case of xDSL, and as such can be appli
 Despite this, we demonstrate that the specialisation process lead to generalisable optimisations with measurable performance impact.
 Through this, we enable performance improvement over time, which can be quantified using our previously introduced measurement infrastructure (\autoref{ssec:infrastructure}).
 % Link
-In this section, we discuss three salient examples of the generalised optimisations.
+In this section, we discuss two salient examples of these generalised optimisations.
 
+% TODO: PR numbers are definitely way too deep in the weeds, this belongs at best in a footnote/appendix. I would first try to formulate what the user can take away from this wrt your research question, and only go into detail insofar as it helps you make your point. What is the point of this paragraph? What's the point of the one above? How can you rephrase them to be more on-message wrt what you are trying to say in this chapter?
 % The goal is demonstrating that specialised optimisations can be generalised into meaningful PRs, yielding an overall improvement to xDSL, a nod to the original project goal of making xDSL faster.
+% Merged paragraph and removed references to PRs, can probably go a bit further to get it even tighter
 
 % Hook
 During the specialisation process of trait checking (\autoref{ssec:specialising-ubenchmarks-trait}), we saw that the implementation of xDSL's \texttt{has\_trait} helper function introduces significant overhead by checking the infrequent case of unregistered operations on the hot path of execution.
@@ -597,12 +606,20 @@ Similarly, the specialisation of operation instantiation (\autoref{ssec:speciali
 
 
 %% Final performance figures
+% % Hook
+% Through empirical measurement, we approach the best-case performance of Python for pattern rewriting in user-extensible compiler infrastructure.
+% % Argument
+% We demonstrate that specialised Python implementations of real-world pattern rewriting workloads can improve xDSL's performance by $8\times$, to be only $14\times$ slower than the equivalent \ac{mlir} implementation. This specialisation avoids computation which is redundant for the selected workload, and avoids costs associated with function invocation.
+% % In addition to this, for some workloads we find that Python's performance can further approach C++,
+% We further show that this specialisation process reveals optimisations that can be generalised to improve xDSL beyond the individual workload.
+% %
+% In the next chapters, we leverage this best-case performance specialisation as a baseline to examine the effect of both recent improvements to CPython's runtime, and the cost of dynamism in comparison with statically compiled languages.
+
 % Hook
-% TODO: This paragraph is missing what the point was, how it relates to your thesis, and generally the research perspective.
-Through empirical measurement, we approach the best-case performance of Python for pattern rewriting in user-extensible compiler infrastructure.
+To evaluate whether dynamic languages approach the performance of ahead-of-time compiled languages for implementing user-extensible compiler frameworks, we empirically measure Python's best-case performance for pattern rewriting tasks.
 % Argument
-We demonstrate that specialised Python implementations of real-world pattern rewriting workloads can improve xDSL's performance by $8\times$, to be only $14\times$ slower than the equivalent \ac{mlir} implementation. This specialisation avoids computation which is redundant for the selected workload, and avoids costs associated with function invocation.
-% In addition to this, for some workloads we find that Python's performance can further approach C++,
-We further show that this specialisation process reveals optimisations that can be generalised to improve xDSL beyond the individual workload.
-%
-In the next chapters, we leverage this best-case performance specialisation as a baseline to examine the effect of both recent improvements to CPython's runtime, and the cost of dynamism in comparison with statically compiled languages.
+By examining specialised implementations of micro-benchmarks and real-world pattern rewriting workloads, we demonstrate that xDSL can achieve performance within $14\times$ of equivalent \ac{mlir} implementations. This represents an $8\times$ improvement over baseline Python performance.
+This specialisation process both eliminates workload-specific redundant computation and avoids costs associated with function invocation, while further revealing generalisable optimisations that benefit xDSL beyond individual workloads.
+Furthermore, this best-case performance analysis establishes an empirical upper bound for dynamic language performance in compiler infrastructure.
+% Link
+In the next chapters, we leverage this performance ceiling as a baseline to examine the effect of both recent improvements to CPython's runtime, and the cost of dynamism in comparison with statically compiled languages.
