@@ -83,7 +83,7 @@ In addition to this, \ac{mlir}'s core operations are not \ac{irdl} based, unlike
 Similarly, the post-constructor includes logic for context-managed builders \circledbase{pairedTwoDarkBlue}{B}, which is again unrelated to the empty operation case and not present in \ac{mlir}.
 To avoid this overhead through specialisation, we move from the idiomatic constructor (Listing \ref{listing:ubenchmark-xdsl-constant-constructor}) to directly modifying xDSL's underlying data structures (Listing \ref{listing:ubenchmark-xdsl-constant-direct}).
 % Link
-Finally, we leverage an implementation detail of CPython's data model: the \mintinline{python}{__slots__} attribute \cite{}. Slots store attributes in a fixed-size array on the object with direct indexing instead using the default \mintinline{text}{__dict__} mapping from attribute name to value, optimising both lookup speed and space.
+Finally, we leverage an implementation detail of CPython's data model: the \mintinline{python}{__slots__} attribute \cite{pythonsoftwarefoundation3324DataModel}. Slots store attributes in a fixed-size array on the object with direct indexing instead using the default \mintinline{text}{__dict__} mapping from attribute name to value, optimising both lookup speed and space.
 
 \begin{figure}[H]
     \begin{subfigure}[b]{0.5\textwidth}
