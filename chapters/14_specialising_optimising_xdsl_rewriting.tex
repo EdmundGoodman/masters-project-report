@@ -491,7 +491,7 @@ This facilitates their later use for exploring the impact of dynamism on such wo
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.75\textwidth]{images/specialising_optimising_xdsl_rewriting/constant_performance.pdf}
+    \includegraphics[width=0.7\textwidth]{images/specialising_optimising_xdsl_rewriting/constant_performance.pdf}
     \caption{Specialisation of constant folding over integer addition in xDSL yields performance uplifts of
 up to $8\times$, $14\times$ slower than the MLIR reference
 implementation.}
@@ -618,7 +618,7 @@ Similarly, the specialisation of operation instantiation (\autoref{ssec:speciali
 % Hook
 To evaluate whether dynamic languages approach the performance of ahead-of-time compiled languages for implementing user-extensible compiler frameworks, we empirically measure Python's best-case performance for pattern rewriting tasks.
 % Argument
-By examining specialised implementations of micro-benchmarks and real-world pattern rewriting workloads, we demonstrate that xDSL can achieve performance within $14\times$ of equivalent \ac{mlir} implementations. This represents an $8\times$ improvement over baseline Python performance.
+By examining specialised implementations of micro-benchmarks and real-world pattern rewriting workloads, we demonstrate that xDSL can achieve performance within $14\times$ of equivalent \ac{mlir} implementations. This represents an $8\times$ improvement over xDSL's original implementation, capturing optimisations which can be made automatically by ahead-of-time compilers but not dynamic language runtimes.
 This specialisation process both eliminates workload-specific redundant computation and avoids costs associated with function invocation, while further revealing generalisable optimisations that benefit xDSL beyond individual workloads.
 Furthermore, this best-case performance analysis establishes an empirical upper bound for dynamic language performance in compiler infrastructure.
 % Link

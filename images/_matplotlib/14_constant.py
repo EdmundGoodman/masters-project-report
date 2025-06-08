@@ -62,7 +62,7 @@ def setGlobalDefaults():
     matplotlib.rcParams["axes.spines.top"] = False
 
 
-matplotlib.rcParams["figure.figsize"] = 5, 2.75
+matplotlib.rcParams["figure.figsize"] = 5, 2.5
 
 # Color palette
 light_gray = "#cacaca"
@@ -231,7 +231,10 @@ def plot_performance():
     ax.set_xticks(x)
     ax.set_xticklabels(labels)
 
-    ax.legend(ncol=100, loc="lower right", bbox_to_anchor=(0, 1, 1, 0))
+    # Custom legend
+    red_patch = matplotlib.patches.Patch(color=light_blue, label='Python')
+    blue_patch = matplotlib.patches.Patch(color=dark_blue, label='C++')
+    ax.legend(handles=[red_patch, blue_patch], ncol=100, loc="lower right", bbox_to_anchor=(0, 1, 1, 0))
 
     autolabel(ax, rects1, yoffset=[3, 3, 1]) #, xoffset=10, yoffset=2)
 
@@ -327,8 +330,8 @@ def plot_loc():
 
 def main():
     plot_performance()
-    plot_instructions()
-    plot_loc()
+    # plot_instructions()
+    # plot_loc()
 
 
 if __name__ == "__main__":
