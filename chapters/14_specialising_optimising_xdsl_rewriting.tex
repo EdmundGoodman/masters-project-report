@@ -119,7 +119,7 @@ Finally, we leverage an implementation detail of CPython's data model: the \mint
 
 %% Specialised performance and lessons learnt
 % Hook
-Through specialising the implementation to the workload of this micro-benchmark we can achieve significant performance improvements of up to $26\times$ (\autoref{tab:ubenchmark-instantiation-optimised}). % TODO: Talk more about why this is interesting -- it represents some proportion of the "accidental dynamism" which can be removed by C++ optimisation
+Through specialising the implementation to the workload of this micro-benchmark we can achieve significant performance improvements of up to $26\times$ (\autoref{tab:ubenchmark-instantiation-optimised}). A proportion of this speedup is captured by optimisations which C++ is able to make ahead-of-time, but that are invalidated by Python's dynamism. % DONE: Talk more about why this is interesting -- it represents some proportion of the "accidental dynamism" which can be removed by C++ optimisation
 % Argument
 % This process comes with the drawback of making the API much more complex
 However, the performance improvement comes at the cost of a significantly more complex implementation, contrary to xDSL's design goals of a simple expressive API.
