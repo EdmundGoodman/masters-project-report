@@ -20,7 +20,7 @@ Compilers are the interface between application code and the underlying hardware
 With the end of Dennard scaling and the slow-down of Moore's law \cite{esmaeilzadehDarkSiliconEnd2012}, the design of computer hardware increasingly relies on heterogeneous accelerator hardware to achieve performance goals within power and area budgets \cite{fuchsAcceleratorWallLimits2019}.
 This has been accompanied by a stratospheric increase in the amount of compute being used for the training and inference of large machine learning models \cite{desislavovTrendsAIInference2023}.
 Together, these two factors make the development of compilers which can perform high-level optimisations and target exotic accelerator hardware critical for delivering the performance goals of modern applications.
-Since both the optimisations and underlying hardware are fast-changing, the development velocity of the compiler is crucial to deliver state-of-the-art models with delay (\autoref{fig:compilers-lagging}).
+Since both the optimisations and underlying hardware are fast-changing, the development velocity of the compiler is crucial to deliver state-of-the-art models with delay (\autoref{fig:compilers-lagging}) \cite{seansilvaHighVelocityArchitectureMLIR2025}.
 % Link
 This motivates the development of shared compiler infrastructure which increases development velocity, for example by having short build times, a simple syntax, and a convenient API.
 
@@ -34,7 +34,8 @@ This motivates the development of shared compiler infrastructure which increases
 % Hook
 Early compilers such as Grace Hopper's A0 and the ALGOL compiler were standalone programs, specific to individual languages \cite{knuthEarlyDevelopmentProgramming1980}.
 % Argument
-After this, the \ac{gcc}  project introduced a shared infrastructure for the compilers of several languages, including C, C++, and FORTRAN, but its monolithic and tightly-coupled design limited the reusability of its components \cite{stallmanUsingGnuCompiler2009}, presenting a research gap in the field.
+Researchers then generalised these standalone programs into shared infrastructure, for example with the SUIF project \cite{wilsonSUIFInfrastructureResearch1994}.
+The \ac{gcc} project adopted these ideas, providing a popular and open-source shared infrastructure for the compilers of several languages, including C, C++, and FORTRAN. However, its monolithic and tightly-coupled design limited the reusability of its components \cite{stallmanUsingGnuCompiler2009}, presenting a research gap in the field.
 % Link
 % The release of LLVM, a modular, library-based compiler framework, rejected these limitations.
 
@@ -43,15 +44,12 @@ After this, the \ac{gcc}  project introduced a shared infrastructure for the com
 
 % Hook
 In 2004, Lattner and Adve published ``LLVM: A Compilation Framework for
-Lifelong Program Analysis and Transformation'' \cite{lattnerLLVMCompilationFramework2004}.
+Lifelong Program Analysis and Transformation'' \cite{lattnerLLVMCompilationFramework2004}, productising a collection of good ideas in compiler design.
 % Argument
-LLVM productised a collection of good ideas in compiler research including low-level \ac{ir} in \ac{ssa} and inter-procedural analysis into a convenient framework.
-% SSA
-LLVM's \ac{ir} is a language and machine independent \ac{risc}-like instruction set in \acf{ssa}. The makes the framework re-usable across different frontends and backends, while simplifying analysis and optimisation by ensuring variables are defined exactly once. The framework's applies these optimisations in modular transformation passes, which can be composed to implement sophisticated optimisation pipelines, with each pass operating on the same \ac{ir} structures and maintaining invariants through the compilation process.
-These desirable properties lead to LLVM's widespread adoption, %, being used as a backend for many languages including C++, Rust, and Swift. However,
-but the demands of modern workloads present a number of challenges for LLVM.
+One of LLVM's key contributions was a human-readable textual \ac{ir}, contrasting the binary \ac{ir}s of \texttt{gcc} at the time. This \ac{ir} has a language- and target-independent \ac{risc}-like instruction set in \ac{ssa} form \cite{cytronEfficientlyComputingStatic1991}, making LLVM re-usable across different frontends and backends, while benefitting from shared infrastructure. Modular transformation passes can be defined to modify this \ac{ir}. These passes can be composed to implement sophisticated optimisation pipelines, as each pass operates on the same \ac{ir} structures.
+These desirable properties lead to LLVM's widespread adoption, but the demands of modern workloads present a number of challenges for LLVM.
 % Link
-For example, LLVM's low-level \ac{ir} is not well suited to the high-level rewrites required to optimise \ac{dag} representations of machine learning workloads. In addition to this key infrastructure such as parsing and printing must be implemented by hand, slowing development velocity.
+For example, LLVM's low-level \ac{ir} is not well suited to abstract over the high-level operation rewrites required to optimise machine learning workloads. In addition to this key infrastructure such as parsing and printing must be implemented by hand, slowing development velocity.
 
 \section{Multi-level intermediate representation (MLIR)}
 \label{sec:mlir}

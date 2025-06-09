@@ -22,6 +22,7 @@ Recently, \ac{mlir} \cite{lattnerMLIRScalingCompiler2021a}, has furthered these 
 
 %% Context/Motivation (~abstract sentence one/two/three: extensible compiler frameworks, how this impacts performance, and that MLIR accept it)
 Compiler extensibility is critical for handling the heterogeneous hardware and exotic optimisations of modern workloads.
+% TODO: Needs rewriting to shift away from extensibility and towards dynamic hetergeneous data structures
 However, this extensibility comes at a cost, presenting an optimisation boundary between the user and framework code. This boundary arises from the dynamic dispatch of these extensions, precluding optimisations such as ahead-of-time code motion.
 This is compounded by the dynamic nature of the data structures and algorithms used by the compiler. For example, pattern rewriting in \ac{mlir} operates on a linked list representation of \ac{ssa} values -- a dynamic, pointer-chasing workload.
 This further inhibits optimisations, both as a result of dynamism and not being amenable to other transformations such as vectorisation.
@@ -35,10 +36,10 @@ These factors motivate challenging the status quo of LLVM and MLIR implementing 
 %%% "what was the hoped-for outcome (aims)"
 
 %% Motivation/aim (~abstract sentence four: why not use dynamic languages/xDSL?)
-% This challenge takes the form of xDSL 
+% This challenge takes the form of xDSL
 xDSL \cite{fehrXDSLSidekickCompilation2025} is a reimplementation of \ac{mlir}'s core data structures and \ac{ir} definitions in Python, a dynamically typed, interpreted language.
 Using Python allows xDSL to take \ac{mlir}'s goal of user extensibility to even further extremes by leveraging its dynamic features such as runtime meta-programming.
-In addition to this, xDSL's interpreted nature avoiding \ac{mlir}'s infamously long build times, and its dynamic typing matching the dynamic nature of the user-extensible compiler framework workload.
+In addition to this, xDSL's interpreted nature avoids \ac{mlir}'s long build times, and its dynamic typing matching the dynamic nature of the user-extensible compiler framework workload.
 % xDSL's implementation in Python avoids the long build times of \ac{mlir} as a result of being interpreted. %, and its expressive syntax and minimal boilerplate allows compiler designers to focus on their task as opposed to the underlying language and framework.
 % In addition to this, Python's dynamic typing matches the dynamic nature of the user-extensible compiler framework workload.
 However, using Python also has drawbacks, most notably in relation to runtime performance.
