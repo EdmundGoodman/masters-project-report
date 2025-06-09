@@ -263,10 +263,10 @@ This makes them a good candidate for this simple metric of end-to-end runtime.
 
 % Hook
 End-to-end measurements are well-aligned metrics of performance for real-world workloads, but are limited by their coarse granularity. Conveniently, the structure of modern compiler frameworks facilitates more detailed breakdowns, even for end-to-end runs.
-One of LLVM's key insights was that compilation can be split into a sequence of discrete re-usable phases, avoiding the complex interleaved control logic of previous monolithic compilers.
+LLVM's key contribution of a human-readable textual \ac{ir} facilitates splitting compilation into a sequence of discrete re-usable phases, which can be measured independently. % Old/wrong: One of LLVM's key insights was that compilation can be split into a sequence of discrete re-usable phases, avoiding the complex interleaved control logic of previous monolithic compilers.
 % Argument
 As such, compilers having LLVM's pedigree, such as \ac{mlir} and xDSL, can be modelled as a pipeline -- parsing the input, applying optimisation transformations, and generating a lowered output.
-This allows us to break down end-to-end benchmarks into components of finer granularity for free.
+This allows us to break down end-to-end benchmarks into components of finer granularity. % for free.
 % Link
 
 %% Methodology
@@ -309,7 +309,7 @@ The constant folded output is very short, containing only two \ac{ir} instructio
 % Link
 
 % Hook
-Since the parser represents a majority of the total runtime for both frameworks, it appears an attractive candidate for optimisation as a corollary of Amdahl's law \cite{amdahlValiditySingleProcessor1967}. 
+Since the parser represents a majority of the total runtime for both frameworks, it appears an attractive candidate for optimisation as a corollary of Amdahl's law \cite{amdahlValiditySingleProcessor1967}.
 Of any pipeline phase, improving the parser by a fixed proportion yields the greatest runtime reduction.
 % Argument
 Despite this, we select the pattern rewriting phase, which implements the canonicaliser, for further investigation.
@@ -386,10 +386,11 @@ In both \ac{mlir} and xDSL, there are two main ways an operation can be construc
             // Setup
             OpBuilder b(ctx.get());
 
-            // Benchmarks
-            OperationState opState(unknownLoc, "testbench.empty"); £\circledbase{pairedOneLightBlue}{\footnotesize{1}}£
+            // Benchmark £\circledbase{pairedOneLightBlue}{\footnotesize{1}}£
+            OperationState opState(unknownLoc, "testbench.empty");
             Operation::create(opState);
-            b.create<EmptyOp>(unknownLoc); £\circledbase{pairedTwoDarkBlue}{\footnotesize{2}}£
+            // Benchmark £\circledbase{pairedTwoDarkBlue}{\footnotesize{2}}£
+            b.create<EmptyOp>(unknownLoc);
         \end{minted}
         \caption{``How Slow is MLIR?'' C++ implementation.}
         \label{listing:ubenchmark-op-creation-bench-mlir}
@@ -398,9 +399,10 @@ In both \ac{mlir} and xDSL, there are two main ways an operation can be construc
     \begin{subfigure}[b]{0.45\textwidth}
         \centering
         \begin{minted}[fontsize=\footnotesize,escapeinside=££]{text}
-            # Benchmarks
-            EmptyOp.create() £\circledbase{pairedOneLightBlue}{\footnotesize{1}}£
-            EmptyOp()  £\circledbase{pairedTwoDarkBlue}{\footnotesize{2}}£
+            # Benchmark £\circledbase{pairedOneLightBlue}{\footnotesize{1}}£
+            EmptyOp.create()
+            # Benchmark £\circledbase{pairedTwoDarkBlue}{\footnotesize{2}}£
+            EmptyOp()
         \end{minted}
         \footnotesize\vspace{3.5em}
         \caption{xDSL Python implementation.}
@@ -415,7 +417,7 @@ In both \ac{mlir} and xDSL, there are two main ways an operation can be construc
 % Hook
 The performance characteristics of these implementations differ significantly (\autoref{tab:ubenchmark-op-creation}).
 % Argument
-In \ac{mlir}, the creation and building mechanisms have approximately the same performance, taking around $150$ns to instantiate an operation. In contrast, xDSL's operation building is much slower than direct creation, jumping from $20\times$ to $80\times$ slower. This comes as a result of the trade-off xDSL makes between performance and expressivity, with its builder including a large section of inference and verification logic as a wrapper around the create method.
+In \ac{mlir}, the creation and building mechanisms have approximately the same performance, taking around $150$ns to instantiate an operation. In contrast, xDSL's operation building is much slower than direct creation, jumping from $20\times$ to $80\times$ slower. This comes as a result of the trade-off xDSL makes between performance and expressivity, with its builder including a large section of inference and verification logic as a wrapper around the create method. While \ac{mlir} disables this verification logic for release builds, it is always enabled in xDSL, facilitating its use case of development and prototyping. We examine the performance impact of disabling verification in the later discussion of workload specialisation (\autoref{chap:specialising-optimising-pattern-rewriting}).
 % Link
 
 
@@ -523,7 +525,7 @@ Micro-benchmarks of checking traits for both implementations show a slow-down of
 \label{ssec:ubenchmark-operation-traversal}
 
 % Hook
-Pattern rewriting in \ac{mlir} and xDSL typically consists of walking over a region of \ac{ir}, and trying to match the rewrite pattern against each traversed operation.
+Pattern rewriting in \ac{mlir} and xDSL typically consists of walking over a region of \ac{ir}, trying to match the rewrite pattern against each traversed operation.
 % Argument
 Because of this use in rewriting, operation traversal is another good target for micro-benchmarking.
 % Because of this operation traversal is another fundamental procedure in both xDSL and \ac{mlir}, again making it a good target for micro-benchmarking.
@@ -583,7 +585,7 @@ Similarly to operation instantiation, there are three ways operations in a block
 
 The performance characteristics of these implementations differ significantly, especially between traversal methods (\autoref{tab:ubenchmark-op-traversal}).
 % Argument
-When directly iterating over the arrays, xDSL is $22\times$ slower than \ac{mlir} per iteration. This represents the baseline of performance overhead incurred by the language runtime. In contrast, when traversing operations using helper methods provided by xDSL's API, there is a $100\times$ slowdown. This comes as a result of overhead incurred by xDSL's implementation, and the overhead of various nested method calls for the interpreter.
+When directly iterating over the arrays, xDSL is $22\times$ slower than \ac{mlir} per iteration. This represents the baseline of performance overhead incurred by the language runtime. In contrast, when traversing operations using helper methods provided by xDSL's API, there is a $100\times$ slowdown. This comes as a result of overhead incurred by xDSL's implementation, and the overhead of various nested method calls for the interpreter. These nested method calls create an idiomatic Python iterator construct and invoke its \mintinline{text}{__next__} function for each iteration, invoking signficant overhead manipulating the Python stack, in contrast to the inlined direct iteration possible in C++ and causing the significant slowdown.
 % Link
 
 \begin{table}[H]

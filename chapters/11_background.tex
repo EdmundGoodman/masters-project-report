@@ -57,12 +57,17 @@ For example, LLVM's low-level \ac{ir} is not well suited to abstract over the hi
 % Hook
 \acf{mlir} addresses these modern challenges, providing ``compiler infrastructure for the end of Moore's law'' \cite{lattnerMLIRScalingCompiler2021a}.
 % Argument
-Its key contribution is providing multiple levels of abstraction in the form of dialects, contrasting the fixed low-level abstraction of LLVM \ac{ir}. This allows different problem domains to define their own operations and transformation passes while sharing common infrastructure. This facilitates efficiently expressing optimisations at the most appropriate abstraction level, which can be each by applied by lowering from high-level domain-specific representations to low-level hardware-specific ones. Lowering extensively leverages pattern rewriting, a declarative way to express transformations as patterns which match \ac{ir} constructs and replace them with lowered versions.
+Its key contribution is allowing users to easily define multiple levels of abstraction supporting heterogeneous recursively nested structures, referred to as dialects. This contrasts the fixed low-level abstractions and homogeneous flat structures of LLVM \ac{ir}, which is less dynamic as a result of having a shape known at runtime. As a result of this, \ac{mlir} allows different problem domains to define their own operations and transformation passes while sharing common infrastructure. This facilitates efficiently expressing optimisations at the most appropriate abstraction level, which can be each by applied by lowering from high-level domain-specific representations to low-level hardware-specific ones. Lowering extensively leverages pattern rewriting, a declarative way to express transformations as patterns which match \ac{ir} constructs and replace them with lowered versions.
 The provision of common infrastructure including documentation generation, parsing and printing logic, and location tracking further reduces the engineering effort required to develop complex optimisations and support custom hardware targets.
-% Link
 \ac{mlir} is implemented in C++, providing desirable performance characteristics, but having long build times and a verbose syntax.
-% This issue of syntax is partially mitigated by declarative dialects such as \ac{irdl}, which can express functionality which would otherwise be implemented in C++.
+% Link
+This issue of syntax is partially mitigated by declarative dialects such as \acs{irdl}, which can express functionality which would otherwise be implemented in C++.
 
+% TODO ...
+% % Hook
+% \ac{irdl} is a \ac{mlir} dialect for declaratively defining other dialects.
+% % Argument
+% % Link
 
 \section{xDSL}
 \label{sec:xdsl}
@@ -70,7 +75,7 @@ The provision of common infrastructure including documentation generation, parsi
 % Hook
 xDSL is a Python-native compiler framework, originally written as a re-implementation of \ac{mlir}'s data structures and associated logic.
 % Argument
-As a result of its similar data structures and shared textual \ac{ir}, xDSL can be used as a side-kick compiler for \ac{mlir}, facilitating modular replacement of individual components of its pipeline. This is achieved with a DSL implementation in Python of \ac{irdl}, an \ac{mlir} dialect for declaratively defining other dialects.
+As a result of its similar data structures and shared textual \ac{ir}, xDSL can be used as a side-kick compiler for \ac{mlir}, facilitating modular replacement of individual components of its pipeline. This is achieved with a DSL implementation in Python of \ac{irdl}.
 In contrast to \ac{mlir}, xDSL prioritises developer productivity through Python's easy-to-use syntax and fast build times, instead sacrificing some ahead-of-time optimisations provided by C++.
 % Link
 This tradeoff is beneficial for modern compiler developers, where improvements to developer productivity is critical to minimise delay for state-of-the-art workloads (\autoref{fig:compilers-lagging}). In addition to this, this thesis argues that the loss of ahead-of-time optimisations is less impactful for highly dynamic workloads such as user-extensible compiler infrastructures.
