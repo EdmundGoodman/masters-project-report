@@ -10,9 +10,10 @@
 
 %% Context (~abstract sentence one: topic of compilers/MLIR)
 Compilers are a critical component of computing systems, providing an abstraction from high-level programming languages to the underlying machine ISA.
-In the 20\textsuperscript{th} century, compilers were typically monolithic and specific to individual languages, resulting in poor re-usability.
-The LLVM compiler framework \cite{lattnerLLVMCompilationFramework2004} addressed these problems with a novel and language-independent textual \ac{ir} in \ac{ssa} form \cite{cytronEfficientlyComputingStatic1991}, which could be analysed and transformed by a sequence of passes.
-Recently, \ac{mlir} \cite{lattnerMLIRScalingCompiler2021a}, has furthered these goals by enabling users to cheaply extend compilers with their own abstractions. %, and automatically provides common infrastructure such as parsing and printing logic for them.
+Released in 1987, \texttt{gcc} was a popular open-source compiler \cite{stallmanUsingGnuCompiler2009}, but its monolithic and tightly-coupled design impacted its re-usability.
+% In the 20\textsuperscript{th} century, compilers were typically monolithic and specific to individual languages, resulting in poor re-usability.
+The LLVM compiler framework \cite{lattnerLLVMCompilationFramework2004} addressed these problems with a human-readable and language-independent textual \ac{ir} in \ac{ssa} form \cite{cytronEfficientlyComputingStatic1991}, which could be analysed and transformed by a sequence of passes, made available as a re-usable C++ library.
+Recently, \ac{mlir} \cite{lattnerMLIRScalingCompiler2021a}, has furthered these goals by enabling users to cheaply extend compilers with their own abstractions.
 
 
 
