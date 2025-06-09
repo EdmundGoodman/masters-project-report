@@ -113,7 +113,7 @@ These dynamic aspects of languages influence the details of their implementation
 
 %% Optimisation opportunities in dynamic and static languages
 % Hook
-Ahead-of-time compilers rely on static mechanisms such as data-flow analysis find valid optimisations.
+Ahead-of-time compilers rely on static mechanisms such as data-flow analysis to find valid optimisations.
 % Argument
 As they are run ahead of time, these static analyses have less information to reason about the dynamic runtime behaviour. In this dynamic case, some traditional optimisations cannot be guaranteed to be correct, and hence cannot be leveraged to improve program performance. For example, a function which is dynamically dispatched at runtime cannot be optimised through the code motion optimisation of function inlining, as the implementation which will be invoked is not known ahead of time.
 Earlier work aims to address this, for example H\"olze and Ungar's paper ``Optimizing dynamically-dispatched calls with run-time type feedback'' \cite{holzleOptimizingDynamicallydispatchedCalls1994}. The authors provide an experimental compiler implementing ``type feedback'', a profile-guided optimisation which inlines dynamically dispatched calls in object-orientated languages.
@@ -126,7 +126,7 @@ Furthermore, runtime behaviour may differ significantly across inputs for some w
 In addition to considering support for dynamism as a property of a programming language, it can be helpful to classify a workload as dynamic or static.
 % Argument
 For example, \ac{gemm} operations which underpin modern machine learning systems rely on streaming data in a statically known order. This is well-suited to ahead-of-time compilation, as it is amenable to optimisation passes requiring no runtime information, such as code motion or vectorisation.
-In contrast, pattern rewriting in user-extensible compiler frameworks relies on pointer chasing data structures with a high degree of dynamism. This is because the \ac{ssa} representation of the code being rewritten is structured as a doubly linked list, with the applications of the rewriting semantics to this list known only dynamically at runtime.
+In contrast, pattern rewriting in user-extensible compiler frameworks relies on pointer chasing data structures with a high degree of dynamism. The \ac{ssa} representation of the code being rewritten is structured as a doubly linked list, with the applications of the rewriting semantics to this list known only dynamically at runtime.
 This dynamic, pointer-chasing workload incurs overhead and precludes many optimisations leveraged by ahead-of-time statically compiled languages such as C++ to accelerate their performance for other workloads.
 % Link
 % One crux of our research is extending the academic basis surrounding static and dynamic languages to quantitatively examine the difference in their performance for highly dynamic workloads.
@@ -142,7 +142,7 @@ This dynamic, pointer-chasing workload incurs overhead and precludes many optimi
 Python is a high-level, dynamically typed-checked programming language, known for its readable syntax and extensive library support \cite{guidovanrossumPythonCpython2025}.
 % Argument
 The language has many implementations, from its reference implementation CPython to alternatives such as PyPy's \ac{jit} compiler \cite{thepypyteamPypyPypy2025}.
-CPython operates by compiling Python source code into a stack-based \ac{ir} called bytecode. This bytecode is then executed by a virtual machine in an interpreter loop, fetching and evaluating the compiled sequence of instructions one at a time. This approach limits performance compared with static ahead-of-time compiled languages such as C++ by the overhead of the virtual machine and having fewer opportunities for ahead-of-time optimisation. However, it also provides great flexibility, supporting Python's dynamic type system and runtime meta-programming capabilities.
+CPython operates by compiling Python source code into a stack-based bytecode. This bytecode is executed by a virtual machine in an interpreter loop, fetching and evaluating the compiled sequence of instructions one at a time. This approach limits performance compared with static ahead-of-time compiled languages such as C++ by the overhead of the virtual machine and having fewer opportunities for ahead-of-time optimisation. However, it also provides great flexibility, supporting Python's dynamic type system and runtime meta-programming capabilities.
 % Link
 The Faster CPython project is an ongoing effort to improve the performance of Python by applying techniques such as adaptive optimisation and \ac{jit} compilation.
 When improving the performance of a language implementation, it is critical to have a suite of programs to measure progress. In Python, this is provided by PyPerformance, ``an authoritative source of benchmarks for all Python implementations'' \cite{collinwinterPythonPyperformance2025}.
@@ -162,7 +162,7 @@ He argues that \ac{jit} compilation approaches aim to accrue the benefits of bot
 \label{ssec:jit-compilation-machine-code}
 
 % Hook
-Whilst \acf{jit} compilation can refer to any program translation occurring at runtime, it often refers specifically to the dynamic generation of machine code just before execution.
+While \acf{jit} compilation can refer to any program translation occurring at runtime, it often refers specifically to the dynamic generation of machine code just before execution.
 % Argument
 Compilation during runtime exposes information from actual program behaviour which is not available to traditional ahead-of-time compilers.
 % Link
@@ -173,7 +173,7 @@ This allows \ac{jit} compilers to effectively optimise the generated machine cod
 A major bottleneck for traditional \ac{jit} compilation is the speed of compiler optimisation passes, which can lead to delays during program execution.
 % Argument
 In their paper ``Copy-and-Patch Compilation'', Xu and Kjolstad present a novel approach to avoid this runtime cost \cite{xuCopyandpatchCompilationFast2021a}, while still generating high quality machine code.
-Instead of compiling code from scratch at runtime, a library of machine code stencils for common operations is constructed ahead of time, with holes left for runtime-specific information such as memory addresses. During program execution, the \ac{jit} then ``patches'' these holes to generate executable machine code without incurring the heavy runtime cost of traditional optimising compilers such as LLVM.
+Instead of compiling code from scratch at runtime, a library of machine code stencils for common operations is constructed ahead of time, with holes left for runtime-specific information such as memory addresses. During program execution, the \ac{jit} then ``patches'' these holes to generate executable machine code without incurring the runtime cost of traditional optimising compilers such as LLVM.
 % Link
 %% TODO: Could talk about Deegen and luajit remake?
 

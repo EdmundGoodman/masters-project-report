@@ -50,7 +50,7 @@ As such, we chose to leverage \mintinline{python}{sys.settrace}, accepting the c
 Our tool captures bytecode level profiling information through a custom callback function which records a sequence of timestamps associated with the traced events.
 % Argument
 From this set of timestamps, we can calculate the execution duration of each emitted opcode. This constitutes profiling information of a higher granularity than existing Python performance profilers.
-In spite of its name, we leverage the \mintinline{python}{sys.settrace} function as opposed to its sister function \mintinline{python}{sys.setprofile}. This is because \mintinline{python}{sys.settrace} has supported emitting trace events for opcodes since Python 3.7, whereas \mintinline{python}{sys.setprofile} only emits events at the function granularity.
+In spite of its name, we leverage the \mintinline{python}{sys.settrace} function as opposed to its sister function \mintinline{python}{sys.setprofile}. We do this because \mintinline{python}{sys.settrace} has supported emitting trace events for opcodes since Python 3.7, whereas \mintinline{python}{sys.setprofile} only emits events at the function granularity.
 % Link
 This approach of leveraging CPython's API provides benefits of robustness across versions and easy installation, but also causes a number of challenges for accurate and precise measurement of very short events.
 
@@ -235,7 +235,7 @@ Finally, we can combine this with our initial observation to infer our goal of o
 % Hook
 Beyond the careful co-design of the tracing measurement logic with CPython's implementation, there are a number of confounding effects which must be mitigated to ensure accurate measurement.
 % Argument
-Firstly, for the profiling information to be useful, the resolution of the most accurate system clock must be sufficient to resolve differences bytecode execution time. On our experimental hardware (\autoref{ssec:experimental-setup}) this was true, having a $1$ns timer able to resolve differences in opcodes taking around $10$ns to execute. However, this is not the case for modern Apple Silicon devices. This is because their most accurate system timer, \texttt{mach\_absolute\_time} \cite{appleinc.Mach_absolute_time}, has a resolution of only $40$ns and is hence unable to resolve individual bytecode instruction durations of approximately $10$ns. This is a physical limitation on measuring such necessarily fast events, and as such can only be resolved by selecting appropriate hardware.
+Firstly, for the profiling information to be useful, the resolution of the most accurate system clock must be sufficient to resolve differences bytecode execution time. On our experimental hardware (\autoref{ssec:experimental-setup}) this was true, having a $1$ns timer able to resolve differences in opcodes taking around $10$ns to execute. However, this is not the case for modern Apple Silicon devices. Their most accurate system timer, \texttt{mach\_absolute\_time} \cite{appleinc.Mach_absolute_time}, has a resolution of only $40$ns and is hence unable to resolve individual bytecode instruction durations of approximately $10$ns. This is a physical limitation on measuring such necessarily fast events, and as such can only be resolved by selecting appropriate hardware.
 Secondly, the CPython language runtime periodically runs housekeeping tasks such as garbage collection, disrupting the flow of bytecode execution and hence adding random noise to our measurements. These can effects can be minimised using techniques from existing performance measurement work such as \texttt{timeit} \cite{pythonsoftwarefoundationTimeitMeasureExecution} or \texttt{pyperf} \cite{victorstinnerPsfPyperf2025}, for example by disabling garbage collection for the duration of profiling.
 % Link
 Finally, we repeat and aggregate our experimental measurements for statistical confidence, further minimising machine noise to ensure clean and reliable profiling results.
@@ -322,7 +322,7 @@ bytesight.profile_bytecode(
 ByteSight provides straightforward mechanism to show the bytecode trace of any Python function.
 % Argument
 This facilitates debugging control flows in highly dynamic code, which often suffer from ``spooky action at a distance'', and is educational for the internal workings of Python's interpreter.
-This functionality easily accessible by installation from \ac{pypi}, contrasting previous approaches which required either re-compiling the Python interpreter or manually implementing the same approach each time.
+This functionality is easily accessible by installation from \ac{pypi}, contrasting previous approaches which required either re-compiling the Python interpreter or manually implementing the same approach each time.
 Beyond this, the profiling information of the duration of each opcode is not provided by any existing tools to the author's knowledge. This information provides insight into the relationship between performance and dynamism in Python, and is more generally helpful for understanding and optimising performance critical code which cannot be deferred to a low-level language through \ac{ffi} bindings.
 % Link
 In the context of our research, this tool unblocks our work in later chapters characterising and optimising the performance of xDSL.

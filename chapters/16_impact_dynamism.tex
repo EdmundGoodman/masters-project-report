@@ -19,7 +19,7 @@ In this chapter, we quantify this difference by examining synthetic examples wit
 In static languages such as C++, the exact address function calls can often be resolved at compile time. In contrast, dynamic languages such as Python must resolve the address of each function call at runtime, incurring an overhead.
 % Also optimisation boundary and stuff
 % Argument
-However, the address of some function calls can only be known at runtime, for example as a result of object polymorphism. This address then must be resolved during execution by the language runtime in both static and dynamic languages. Furthermore, this information being known only at runtime presents and optimisation boundary, precluding common rewrites such as function inlining which contribute to the performance of ahead-of-time compiled languages.
+However, the address of some function calls can only be known at runtime, for example as a result of object polymorphism. This address then must be resolved during execution by the language runtime in both static and dynamic languages. Furthermore, this information being known only at runtime presents an optimisation boundary, precluding common rewrites such as function inlining which contribute to the performance of ahead-of-time compiled languages.
 Driesen and H\"olzle quantify the former and acknowledge the latter cost in their work ``The Direct Cost of Virtual Function Calls in C++'' \cite{driesenDirectCostVirtual1996}, which found that C++ programs spent a median of $5.2\%$ of their time in dispatch code. % TODO: Possibly pick a different metric from the paper, and lift to related work!
 We argue further that the difference between static and dynamic languages is reduced for highly dynamic workloads with insufficient information to resolve function addresses ahead of time.
 % Link
@@ -167,8 +167,8 @@ As before, we justify this be examining the details of this mechanism, using our
 % Hook
 We measure the duration of micro-benchmarks exercising xDSL and \ac{mlir}'s \ac{rtti} operations (\autoref{figure:impact-rtti}). LLVM's \ac{rtti} implementation is much more performant than Python, leveraging C++ templates to defer as much computation as possible to compile time. In addition to this, type checking and casting have approximately the same performance cost, as they leverage similar mechanisms.
 % Argument
-In contrast, Python's \texttt{isinstance} function is faster than \texttt{cast}, as the former it is implemented in C as a builtin function, whereas the latter is in Python in the standard library, hence relying on the dynamic dispatch machinery discussed above.
-However, the implementation of the \texttt{cast} function is the identity, doing nothing. This is because Python's dynamic duck typing \cite{milojkovicItsDuckTyping2017} does not require restructuring data when casting, allowing casting operations and some type checks to be elided.
+In contrast, Python's \texttt{isinstance} function is faster than \texttt{cast}, as the former is implemented in C as a builtin function, whereas the latter is in Python in the standard library, hence relying on the dynamic dispatch machinery discussed above.
+However, the implementation of the \texttt{cast} function is the identity, doing nothing. Python's dynamic duck typing \cite{milojkovicItsDuckTyping2017} does not require restructuring data when casting, allowing casting operations and some type checks to be elided.
 % Link
 
 

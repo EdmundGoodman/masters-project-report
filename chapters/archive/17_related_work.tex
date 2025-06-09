@@ -111,7 +111,7 @@ This makes the approach less suitable for applications which cannot be partition
 % Hook
 Our work examines user-extensible compiler frameworks, which we argue contain bottlenecking components such as the pattern rewriter which cannot be split in this way.
 % Argument
-This is because user defined extensions make frequent interactions across a wide API surface, and operate on large data structures -- resulting in a disproportionate cost from crossing \ac{ffi} boundaries. This contrasts linear algebra workloads such as those supported by NumPy, where large batches of computation are dispatched by only one interaction across the boundary.
+User defined extensions make frequent interactions across a wide API surface, and operate on large data structures -- resulting in a disproportionate cost from crossing \ac{ffi} boundaries. This contrasts linear algebra workloads such as those supported by NumPy, where large batches of computation are dispatched by only one interaction across the boundary.
 In addition to this, compiler optimisation workloads are less amenable to ahead-of-time compiled optimisations such as vectorisations, further reducing the benefit of leveraging low-level compiled languages.
 % Link
 Our research extends the state-of-the-art by examining these cases where existing best practices are not applicable.
