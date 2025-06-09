@@ -5,7 +5,8 @@
 % Hook
 A key difference between the Python and C++ runtimes is their degree of dynamism.
 % Argument
-\ac{mlir}'s C++ runtime incurs overhead when dynamically dispatching functions (\autoref{fig:narrative}, \circledbase{pairedThreeLightGreen}{3}), which is worsened by prohibiting ahead-of-time performance optimisations. In contrast, almost every bytecode operation evaluated by the Python interpreter is dynamic, each incurring an overhead.
+\ac{mlir}'s C++ runtime incurs overhead when dynamically dispatching functions (\autoref{fig:narrative}, \circledbase{pairedThreeLightGreen}{3}), which is worsened by prohibiting ahead-of-time performance optimisations.
+In contrast, Python dynamically evaluates each bytecode operation individually in its interpreter loop, incurring an overhead each time % OLD: In contrast, almost every bytecode operation evaluated by the Python interpreter is dynamic, each incurring an overhead.
 As such, we expect the difference in performance between language runtimes (\autoref{fig:narrative}, \circledbase{pairedFourDarkGreen}{4}) to be smaller for more dynamic workloads.
 % Link
 In this chapter, we quantify this difference by examining synthetic examples within static and dynamic language runtimes. We then apply this information to understand the difference in performance between pattern rewriting workloads using xDSL and \ac{mlir} through the lens of overhead incurred by dynamism.
@@ -168,7 +169,7 @@ As before, we justify this be examining the details of this mechanism, using our
 We measure the duration of micro-benchmarks exercising xDSL and \ac{mlir}'s \ac{rtti} operations (\autoref{figure:impact-rtti}). LLVM's \ac{rtti} implementation is much more performant than Python, leveraging C++ templates to defer as much computation as possible to compile time. In addition to this, type checking and casting have approximately the same performance cost, as they leverage similar mechanisms.
 % Argument
 In contrast, Python's \texttt{isinstance} function is faster than \texttt{cast}, as the former is implemented in C as a builtin function, whereas the latter is in Python in the standard library, hence relying on the dynamic dispatch machinery discussed above.
-However, the implementation of the \texttt{cast} function is the identity, doing nothing. Python's dynamic duck typing \cite{milojkovicItsDuckTyping2017} does not require restructuring data when casting, allowing casting operations and some type checks to be elided.
+However, the implementation of the \texttt{cast} function is the identity, doing nothing unless explicitly overridden. Python's dynamic duck typing \cite{milojkovicItsDuckTyping2017} does not require restructuring data when casting, allowing casting operations and some type checks to be elided. Despite this, the \texttt{cast} function incurs a high overhead, as a result of the cost of function invocation in Python.
 % Link
 
 

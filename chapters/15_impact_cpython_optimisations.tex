@@ -24,7 +24,7 @@ This proposes a novel dynamic \ac{ir} for Lua, whose operations can be specialis
 Following this, Mark Shannon applied the idea to the Python language in his doctoral thesis ``The construction of high-performance virtual
 machines for dynamic languages'' \cite{shannonConstructionHighperformanceVirtual2011}, demonstrating its viability through the research \ac{vm} HotPy.
 % Link
-This idea was realised in the CPython through \ac{pep} 659's specialising adaptive interpreter in the 2022 minor version 3.11 release.
+This idea was realised in the CPython through \ac{pep} 659's specialising adaptive interpreter, enabled by default in the 2022 minor version 3.11 release.
 
 %% NOTE: Lifted later to pack pages more efficiently
 \begin{table}[H]
@@ -49,7 +49,7 @@ This idea was realised in the CPython through \ac{pep} 659's specialising adapti
     \textbf{Implementation} & \textbf{Feature flag} & \textbf{Baseline} & \textbf{Previous} \\
     \midrule
     CPython 3.10.17 & None & $1\times$ & $1\times$ \\
-    CPython 3.11.12 & Specialising adaptive interpreter & $1.241\times$ & $1.241\times$ \\
+    CPython 3.11.12 & None & $1.241\times$ & $1.241\times$ \\
     CPython 3.13.3 & None & $1.312\times$ & $1.078\times$ \\
     CPython 3.13.3 & Experimental JIT & $1.295\times$ & $0.988\times$ \\
     \bottomrule
@@ -101,7 +101,9 @@ This is substantiated by an ablation of the feature across the previously discus
 % Hook
 We measure the specialising adaptive interpreter to yield a non-negligible speedup of $1.38\times$ across both micro-benchmarks and real-world workloads (\autoref{tab:specialising-adaptive-interpreter-xdsl}).
 % Argument
-This speedup is greater than the $1.26\times$ recorded across the PyPerformance suite. Since the specialising adaptive interpreter works by quickening highly dynamic instructions into specialised versions, this demonstrates that user-extensible compiler framework workloads are more dynamic than the baseline of PyPerformance workloads.
+This speedup is greater than the $1.26\times$ recorded across the PyPerformance suite.
+Since the specialising adaptive interpreter works by quickening highly dynamic instructions into specialised versions, this demonstrates that xDSL as a proxy for user-extensible compiler framework workloads is more dynamic than the baseline of PyPerformance workloads.
+% OLD: Since the specialising adaptive interpreter works by quickening highly dynamic instructions into specialised versions, this demonstrates that user-extensible compiler framework workloads are more dynamic than the baseline of PyPerformance workloads.
 The documentation of PyPerformance states ``the focus is on real-world benchmarks, rather than synthetic benchmarks, using whole applications when possible.'' \cite{collinwinterPythonPyperformance2025}, further widening this conclusion to user-extensible compiler framework workloads being more dynamic than the average of a set workload representative of the real-world use of Python.
 In addition to this, the specialised versions of each workload yield a greater speedup after applying the manual specialisation process described in \autoref{chap:specialising-optimising-pattern-rewriting}. This shows a further benefit of the manual specialisation process in revealing optimisation opportunities by the language runtime.
 
@@ -119,7 +121,7 @@ Another bottleneck of simple interpreted language runtimes is the overhead assoc
 To address this, \acf{jit} compilation can translate frequently executed portions of bytecode into native machine code. This avoids interpreter overhead and allows for further low-level optimizations.
 CPython's experimental \ac{jit} compiler is an implementation of the copy-and-patch machine code generation approach (introduced in \autoref{ssec:jit-compilation-machine-code}), which was added to CPython in 3.13 in 2024.
 % Link
-This idea was finally realised in the CPython reference implementation through \ac{pep} 744's experimental \ac{jit} in the 2024 minor version 3.13 release.
+This idea was finally realised in the CPython reference implementation through \ac{pep} 744's experimental \ac{jit}, optionally enabled by a feature flag in the 2024 minor version 3.13 release.
 
 %% How is it implemented?
 % Hook
