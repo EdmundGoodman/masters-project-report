@@ -22,13 +22,9 @@ Recently, \ac{mlir} \cite{lattnerMLIRScalingCompiler2021a}, has furthered these 
 
 %% Context/Motivation (~abstract sentence one/two/three: extensible compiler frameworks, how this impacts performance, and that MLIR accept it)
 Compiler extensibility is critical for handling the heterogeneous hardware and exotic optimisations of modern workloads.
-% TODO: Needs rewriting to shift away from extensibility and towards dynamic hetergeneous data structures
-However, this extensibility comes at a cost, with \ac{mlir}'s recursive structures and support for dynamic definitions of their contents presenting an optimisation boundary of invariants known only at runtime. This boundary precludes common ahead-of-time optimisations such as ahead-of-time code motion.
-This is compounded by the dynamic nature of the data structures and algorithms used by the compiler. For example, pattern rewriting in \ac{mlir} operates on a linked list representation of \ac{ssa} values -- a dynamic, pointer-chasing workload.
+To implement this, \ac{mlir} uses dynamic, pointer-chasing data structures and algorithms to represent its \ac{ir}. For example, pattern rewriting in \ac{mlir} traverses and pattern matches on a linked list representation of \ac{ssa} values.
 This further inhibits optimisations, both as a result of dynamism and not being amenable to other transformations such as vectorisation.
 These factors motivate challenging the status quo of LLVM and MLIR implementing user-extensible compiler frameworks in static, ahead-of-time compiled languages.
-
-
 
 
 
@@ -49,30 +45,33 @@ This work examines the performance of the pattern rewriting component of the xDS
 
 %%% "give a brief overview of what you actually did"
 
-%% Pareto curve of performance and dynamism of workload?
+%% Overview (~abstract sentence five, which needs re-writing: what we did part one -- specialisation and CPython stuff)
+The performance of a program is constrained both by the details of its implementation and the runtime of its language.
+These two properties are deeply interlinked, making them difficult to measure independently.
+To disentangle them, we manually optimise and specialise xDSL's implementation of pattern rewriting (\autoref{fig:narrative}, \circledbase{pairedOneLightBlue}{1}), resulting in an $7\times$ performance uplift.
+We then confirm that the performance of the specialisation is constrained only by the language runtime by examination of the dispatched bytecode of micro-benchmarks.
+This bytecode examination process revealed a gap in the provision of fine grained performance profilers for Python. To address this gap, we developed ByteSight, native tracing performance profiler for Python bytecode.
+We then use this tool to quantify the impact of recent performance enhancements made to CPython for this specialised implementation (\autoref{fig:narrative}, \circledbase{pairedTwoDarkBlue}{2}).
+This describes the best-case for the performance of pattern rewriting in xDSL, which can then be compared against \ac{mlir}.
 
-\begin{figure}
+\begin{figure}[H]
     \centering
     \begin{tikzpicture}
-        \node[anchor=south west,inner sep=0] (image) at (0,0) {\includegraphics[width=0.6\textwidth]{images/introduction/narrative.drawio.pdf}};
-        \node[circledstyle, fill=pairedOneLightBlue] at (4.35,5.05) {1};
-        \node[circledstyle, fill=pairedTwoDarkBlue] at (5.55,4.15) {2};
-        \node[circledstyle, fill=pairedThreeLightGreen] at (6.95,2.7) {3};
-        \node[circledstyle, fill=pairedFourDarkGreen] at (8.75,1.95) {4};
+        % \node[anchor=south west,inner sep=0] (image) at (0,0) {\includegraphics[width=0.6\textwidth]{images/introduction/narrative.drawio.pdf}};
+        \node[anchor=south west,inner sep=0] (image) at (0,0) {\includegraphics[width=0.75\textwidth]{images/introduction/narrative.drawio.pdf}};
+        % \node[circledstyle, fill=pairedOneLightBlue] at (4.35,5.05) {1};
+        \node[circledstyle, fill=pairedOneLightBlue] at (5.45,6.325) {1};
+        % \node[circledstyle, fill=pairedTwoDarkBlue] at (5.55,4.15) {2};
+        \node[circledstyle, fill=pairedTwoDarkBlue] at (6.95,5.2) {2};
+        % \node[circledstyle, fill=pairedThreeLightGreen] at (6.95,2.7) {3};
+        \node[circledstyle, fill=pairedThreeLightGreen] at (8.7,3.35) {3};
+        % \node[circledstyle, fill=pairedFourDarkGreen] at (8.75,1.95) {4};
+        \node[circledstyle, fill=pairedFourDarkGreen] at (10.8,2.4) {4};
     \end{tikzpicture}
     % \includegraphics[width=0.6\textwidth]{images/introduction/narrative.drawio.pdf}
     \caption{Closing the gap between xDSL and \ac{mlir} pattern rewriting performance. xDSL's performance can be improved by changes to both its implementation and language runtime. C++ has less of a performance advantage for \ac{mlir} than other workloads due to the costs associated with dynamism.}
     \label{fig:narrative}
 \end{figure}
-
-%% Overview (~abstract sentence five, which needs re-writing: what we did part one -- specialisation and CPython stuff)
-The performance of a program is constrained both by the details of its implementation and the runtime of its language.
-These two properties are deeply interlinked, making them difficult to measure independently.
-To disentangle them, we manually optimise and specialise xDSL's implementation of pattern rewriting (\autoref{fig:narrative}, \circledbase{pairedOneLightBlue}{1}), resulting in an $11\times$ performance uplift. % TODO: check alignment with finalised figure when re-measured
-We then confirm that the performance of the specialisation is constrained only by the language runtime by examination of the dispatched bytecode of micro-benchmarks.
-This bytecode examination process revealed a gap in the provision of fine grained performance profilers for Python. To address this gap, we developed ByteSight, native tracing performance profiler for Python bytecode. % TODO: Consider adding "This tool facilitated...?"
-Following this, we quantify the impact of recent performance enhancements made to CPython for this specialised implementation (\autoref{fig:narrative}, \circledbase{pairedTwoDarkBlue}{2}). % as an increase of $xy\%$.
-This describes the best-case for the performance of pattern rewriting in xDSL, which can then be compared against \ac{mlir}.
 
 
 %% Overview (~abstract sentence five, which needs re-writing: what we did part two -- custom CPython optimisations)
@@ -82,8 +81,8 @@ This describes the best-case for the performance of pattern rewriting in xDSL, w
 
 
 %% Overview (~abstract sentence five, which needs re-writing: what we did part three -- cost of dynamism)
-A key difference between the Python and C++ runtimes is their degree of dynamism.
-\ac{mlir}'s C++ runtime incurs overhead when dynamically dispatching functions (\autoref{fig:narrative}, \circledbase{pairedThreeLightGreen}{3}), which is worsened by prohibiting ahead-of-time performance optimisations. In contrast, almost every bytecode operation evaluated by the Python interpreter is dynamic, each incurring an overhead.
+A key difference between the Python and C++ runtimes is their degree of language dynamism.
+\ac{mlir}'s C++ runtime incurs overhead when dynamically dispatching functions (\autoref{fig:narrative}, \circledbase{pairedThreeLightGreen}{3}), which is worsened by prohibiting ahead-of-time performance optimisations. In contrast, almost every bytecode operation evaluated by the Python interpreter is dynamic, each incurring an overhead checking runtime information.
 As such, we expect the difference in performance between language runtimes (\autoref{fig:narrative}, \circledbase{pairedFourDarkGreen}{4}) to be smaller for more dynamic workloads.
 To corroborate this, we measure the difference in performance between pattern rewriting workloads using xDSL and \ac{mlir}, and assess the contribution of overheads incurred by dynamism.
 This measurement procedure uniquely leverages xDSL's sidekick compilation functionality to ensure the comparability of performance measurements by driving them with the same textual \ac{ir}, even for implementation details internal to each framework.
