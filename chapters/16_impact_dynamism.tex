@@ -168,7 +168,7 @@ As before, we justify this be examining the details of this mechanism, using our
 We measure the duration of micro-benchmarks exercising xDSL and \ac{mlir}'s \ac{rtti} operations (\autoref{figure:impact-rtti}). LLVM's \ac{rtti} implementation is much more performant than Python, leveraging C++ templates to defer as much computation as possible to compile time. In addition to this, type checking and casting have approximately the same performance cost, as they leverage similar mechanisms.
 % Argument
 In contrast, Python's \texttt{isinstance} function is faster than \texttt{cast}, as the former is implemented in C as a builtin function, whereas the latter is in Python in the standard library, hence relying on the dynamic dispatch machinery discussed above.
-However, the implementation of the \texttt{cast} function is the identity, doing nothing unless explicitly overridden. Python's dynamic duck typing \cite{milojkovicItsDuckTyping2017} does not require restructuring data when casting, allowing casting operations and some type checks to be elided. Despite this, the \texttt{cast} function incurs a high overhead, as a result of the cost of function invocation in Python.
+However, the implementation of the \texttt{cast} function is the identity, doing nothing unless explicitly overridden. Python's dynamic duck typing \cite{milojkovicItsDuckTyping2017} does not require restructuring data when casting, allowing casting operations and some type checks to be elided. Despite this, the \texttt{cast} function incurs a high overhead. In CPython, even empty function calls require at least two expensive bytecode operations, and they cannot be optimised away as they may be overridden dynamically at runtime.
 % Link
 
 

@@ -32,7 +32,7 @@ Finally, we quantify the impact of dynamism on the performance of static and dyn
 %% Overall summary and impact
 % Hook
 % Argument
-Our work identifies inherent dynamism in user-extensible compiler infrastructures, and quantifies the performance cost it incurs in their ahead-of-time compiled implementation.
+Our work identifies dynamism in user-extensible compiler infrastructures as a result of the heterogeneous data structures used to represent \ac{ir}, whose structure and contents is known only at runtime. It then quantifies the performance cost this dynamism incurs in their ahead-of-time compiled implementation.
 We contrast this with implementations in dynamic languages, empirically demonstrating that the performance overhead typically associated with such languages is lessened by both the workload's dynamic nature, and modern optimisation approaches to dynamic language runtimes.
 This contribution challenges the status quo of implementing user-extensible compiler frameworks in static, ahead-of-time compiled languages, typified by LLVM's \ac{mlir} in C++. Instead, we motivate the use of dynamic languages for these frameworks, showing that implementations such as xDSL which follow this approach present a desirable balance of framework performance with the developer productivity required to deliver modern workloads without delay.
 % Link

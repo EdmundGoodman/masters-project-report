@@ -521,87 +521,87 @@ Micro-benchmarks of checking traits for both implementations show a slow-down of
 % However, whilst trait checking is a frequent operation, it alone is not representative of the overall performance of compiler frameworks. As such, further micro-benchmarks and examining representative workloads is required.
 
 
-\subsection{Operation traversal}
-\label{ssec:ubenchmark-operation-traversal}
+% \subsection{Operation traversal}
+% \label{ssec:ubenchmark-operation-traversal}
 
-% Hook
-Pattern rewriting in \ac{mlir} and xDSL typically consists of walking over a region of \ac{ir}, trying to match the rewrite pattern against each traversed operation.
-% Argument
-Because of this use in rewriting, operation traversal is another good target for micro-benchmarking.
-% Because of this operation traversal is another fundamental procedure in both xDSL and \ac{mlir}, again making it a good target for micro-benchmarking.
-Similarly to operation instantiation, there are three ways operations in a block can be traversed: directly iterating over the internal operation array \circledbase{pairedOneLightBlue}{1}; directly iterating over the iterable provided by the block \circledbase{pairedTwoDarkBlue}{2}; and using the recursive walk helper method \circledbase{pairedThreeLightGreen}{3} (Listing \ref{listing:ubenchmark-op-traversal-bench}).
-% Link
+% % Hook
+% Pattern rewriting in \ac{mlir} and xDSL typically consists of walking over a region of \ac{ir}, trying to match the rewrite pattern against each traversed operation.
+% % Argument
+% Because of this use in rewriting, operation traversal is another good target for micro-benchmarking.
+% % Because of this operation traversal is another fundamental procedure in both xDSL and \ac{mlir}, again making it a good target for micro-benchmarking.
+% Similarly to operation instantiation, there are three ways operations in a block can be traversed: directly iterating over the internal operation array \circledbase{pairedOneLightBlue}{1}; directly iterating over the iterable provided by the block \circledbase{pairedTwoDarkBlue}{2}; and using the recursive walk helper method \circledbase{pairedThreeLightGreen}{3} (Listing \ref{listing:ubenchmark-op-traversal-bench}).
+% % Link
 
-%% Listing
-\begin{figure}[H]
-    \centering
-    \begin{subfigure}[b]{0.45\textwidth}
-       \centering
-        \begin{minted}[breakanywhere,fontsize=\footnotesize,escapeinside=££]{text}
-            // Setup
-            OpBuilder b = OpBuilder::atBlockBegin( moduleOp->getBody());
-            Block *block = moduleOp->getBody();
-            for (int j = 0; j < 32768; ++j) {
-                ops.push_back(b.create<EmptyOp>(
-                    unknownLoc));
-            }
+% %% Listing
+% \begin{figure}[H]
+%     \centering
+%     \begin{subfigure}[b]{0.45\textwidth}
+%        \centering
+%         \begin{minted}[breakanywhere,fontsize=\footnotesize,escapeinside=££]{text}
+%             // Setup
+%             OpBuilder b = OpBuilder::atBlockBegin( moduleOp->getBody());
+%             Block *block = moduleOp->getBody();
+%             for (int j = 0; j < 32768; ++j) {
+%                 ops.push_back(b.create<EmptyOp>(
+%                     unknownLoc));
+%             }
 
-            // Benchmarks
-            for (Operation *op : ops) { }; £\circledbase{pairedOneLightBlue}{\footnotesize{1}}£
-            for (Operation &op : *block) { }; £\circledbase{pairedTwoDarkBlue}{\footnotesize{2}}£
-            block->walk([](Operation *op) { }); £\circledbase{pairedThreeLightGreen}{\footnotesize{3}}£
-        \end{minted}
-        \caption{``How Slow is MLIR?'' C++ implementation.}
-        \label{listing:ubenchmark-op-traversal-bench-mlir}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.45\textwidth}
-        \centering
-        \begin{minted}[fontsize=\footnotesize,escapeinside=££]{text}
-            # Setup
-            EXAMPLE_BLOCK = Block(ops=(
-                EmptyOp() for _ in range(32768)
-            ))
+%             // Benchmarks
+%             for (Operation *op : ops) { }; £\circledbase{pairedOneLightBlue}{\footnotesize{1}}£
+%             for (Operation &op : *block) { }; £\circledbase{pairedTwoDarkBlue}{\footnotesize{2}}£
+%             block->walk([](Operation *op) { }); £\circledbase{pairedThreeLightGreen}{\footnotesize{3}}£
+%         \end{minted}
+%         \caption{``How Slow is MLIR?'' C++ implementation.}
+%         \label{listing:ubenchmark-op-traversal-bench-mlir}
+%     \end{subfigure}
+%     \hfill
+%     \begin{subfigure}[b]{0.45\textwidth}
+%         \centering
+%         \begin{minted}[fontsize=\footnotesize,escapeinside=££]{text}
+%             # Setup
+%             EXAMPLE_BLOCK = Block(ops=(
+%                 EmptyOp() for _ in range(32768)
+%             ))
 
-            # Benchmarks
-            for op in EXAMPLE_BLOCK: £\circledbase{pairedOneLightBlue}{\footnotesize{1}}£
-                pass
-            for op in EXAMPLE_BLOCK.ops: £\circledbase{pairedTwoDarkBlue}{\footnotesize{2}}£
-                pass
-            for op in EXAMPLE_BLOCK.walk(): £\circledbase{pairedThreeLightGreen}{\footnotesize{3}}£
-                pass
-        \end{minted}
-        \footnotesize\vspace{1em}
-        \caption{xDSL Python implementation.}
-        \label{listing:ubenchmark-op-traversal-bench-xdsl}
-    \end{subfigure}
-    \vspace{1em}
-    \captionsetup{name=Listing}
-    \caption{Micro-benchmark implementations for methods traversing operations in a block.}
-    \label{listing:ubenchmark-op-traversal-bench}
-\end{figure}
+%             # Benchmarks
+%             for op in EXAMPLE_BLOCK: £\circledbase{pairedOneLightBlue}{\footnotesize{1}}£
+%                 pass
+%             for op in EXAMPLE_BLOCK.ops: £\circledbase{pairedTwoDarkBlue}{\footnotesize{2}}£
+%                 pass
+%             for op in EXAMPLE_BLOCK.walk(): £\circledbase{pairedThreeLightGreen}{\footnotesize{3}}£
+%                 pass
+%         \end{minted}
+%         \footnotesize\vspace{1em}
+%         \caption{xDSL Python implementation.}
+%         \label{listing:ubenchmark-op-traversal-bench-xdsl}
+%     \end{subfigure}
+%     \vspace{1em}
+%     \captionsetup{name=Listing}
+%     \caption{Micro-benchmark implementations for methods traversing operations in a block.}
+%     \label{listing:ubenchmark-op-traversal-bench}
+% \end{figure}
 
-% Hook
+% % Hook
 
-The performance characteristics of these implementations differ significantly, especially between traversal methods (\autoref{tab:ubenchmark-op-traversal}).
-% Argument
-When directly iterating over the arrays, xDSL is $22\times$ slower than \ac{mlir} per iteration. This represents the baseline of performance overhead incurred by the language runtime. In contrast, when traversing operations using helper methods provided by xDSL's API, there is a $100\times$ slowdown. This comes as a result of overhead incurred by xDSL's implementation, and the overhead of various nested method calls for the interpreter. These nested method calls create an idiomatic Python iterator construct and invoke its \mintinline{text}{__next__} function for each iteration, invoking signficant overhead manipulating the Python stack, in contrast to the inlined direct iteration possible in C++ and causing the significant slowdown.
-% Link
+% The performance characteristics of these implementations differ significantly, especially between traversal methods (\autoref{tab:ubenchmark-op-traversal}).
+% % Argument
+% When directly iterating over the arrays, xDSL is $22\times$ slower than \ac{mlir} per iteration. This represents the baseline of performance overhead incurred by the language runtime. In contrast, when traversing operations using helper methods provided by xDSL's API, there is a $100\times$ slowdown. This comes as a result of overhead incurred by xDSL's implementation, and the overhead of various nested method calls for the interpreter. These nested method calls create an idiomatic Python iterator construct and invoke its \mintinline{text}{__next__} function for each iteration, invoking signficant overhead manipulating the Python stack, in contrast to the inlined direct iteration possible in C++ and causing the significant slowdown.
+% % Link
 
-\begin{table}[H]
-  \caption{Operation traversal using xDSL's API is approximately $100\times$ slower than in MLIR in the asymptotic case, but only approximately $22\times$ when directly operating on the data structures.}
-  \label{tab:ubenchmark-op-traversal}
-  \centering
-  \begin{tabular}{lrr}
-    \toprule
-    \textbf{Mechanism} & \textbf{MLIR [ns/iter]} & \textbf{xDSL [ns/iter]}\\
-    \midrule
-    \circledbase{pairedOneLightBlue}{1} Array iteration & $0.45 \pm 0.05$ & $9.98 \pm 0.2$ \\  % TODO: This indicates long-tail skewed outliers?
-    \circledbase{pairedTwoDarkBlue}{2} Block iteration & $2.47 \pm 0.05$ & $202.9 \pm 0.4$ \\
-    \circledbase{pairedThreeLightGreen}{3} Recursive walk & $5.38 \pm 0.01$ & $521.9 \pm 0.9$ \\
-    \bottomrule
-  \end{tabular}
-\end{table}
+% \begin{table}[H]
+%   \caption{Operation traversal using xDSL's API is approximately $100\times$ slower than in MLIR in the asymptotic case, but only approximately $22\times$ when directly operating on the data structures.}
+%   \label{tab:ubenchmark-op-traversal}
+%   \centering
+%   \begin{tabular}{lrr}
+%     \toprule
+%     \textbf{Mechanism} & \textbf{MLIR [ns/iter]} & \textbf{xDSL [ns/iter]}\\
+%     \midrule
+%     \circledbase{pairedOneLightBlue}{1} Array iteration & $0.45 \pm 0.05$ & $9.98 \pm 0.2$ \\  % TODO: This indicates long-tail skewed outliers?
+%     \circledbase{pairedTwoDarkBlue}{2} Block iteration & $2.47 \pm 0.05$ & $202.9 \pm 0.4$ \\
+%     \circledbase{pairedThreeLightGreen}{3} Recursive walk & $5.38 \pm 0.01$ & $521.9 \pm 0.9$ \\
+%     \bottomrule
+%   \end{tabular}
+% \end{table}
 
 
 

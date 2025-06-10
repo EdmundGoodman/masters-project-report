@@ -61,13 +61,12 @@ Its key contribution is allowing users to easily define multiple levels of abstr
 The provision of common infrastructure including documentation generation, parsing and printing logic, and location tracking further reduces the engineering effort required to develop complex optimisations and support custom hardware targets.
 \ac{mlir} is implemented in C++, providing desirable performance characteristics, but having long build times and a verbose syntax.
 % Link
-This issue of syntax is partially mitigated by declarative dialects such as \acs{irdl}, which can express functionality which would otherwise be implemented in C++.
 
-% TODO ...
-% % Hook
-% \ac{irdl} is a \ac{mlir} dialect for declaratively defining other dialects.
-% % Argument
-% % Link
+% Hook
+These issues are partially mitigated by \ac{irdl}, ``a domain-specific language to define \acp{ir}'' \cite{fehrIRDLIRDefinition2022a}, implemented as a \ac{ssa}-based dialect of \ac{mlir} itself.
+% Argument
+\ac{irdl} provides a declarative system for defining dialects, operations, and types which can be dynamically loaded at runtime, avoiding the need for verbose C++ implementations which require recompilation.
+% Link
 
 \section{xDSL}
 \label{sec:xdsl}
@@ -76,10 +75,9 @@ This issue of syntax is partially mitigated by declarative dialects such as \acs
 xDSL is a Python-native compiler framework, originally written as a re-implementation of \ac{mlir}'s data structures and associated logic.
 % Argument
 As a result of its similar data structures and shared textual \ac{ir}, xDSL can be used as a side-kick compiler for \ac{mlir}, facilitating modular replacement of individual components of its pipeline. This is achieved with a DSL implementation in Python of \ac{irdl}.
-In contrast to \ac{mlir}, xDSL prioritises developer productivity through Python's easy-to-use syntax and fast build times, instead sacrificing some ahead-of-time optimisations provided by C++.
+In contrast to \ac{mlir}, xDSL prioritises developer productivity through Python's easy-to-use syntax and fast build times, along with first-class support for user-extensibility which allows adding new operations at runtime. xDSL's implementation in Python incurs a performance cost over C++, as a consequence of the overhead of its virtual machine, and lack of support for ahead-of-time optimisations.
 % Link
-This tradeoff is beneficial for modern compiler developers, where improvements to developer productivity is critical to minimise delay for state-of-the-art workloads (\autoref{fig:compilers-lagging}). In addition to this, this thesis argues that the loss of ahead-of-time optimisations is less impactful for highly dynamic workloads such as user-extensible compiler infrastructures.
-
+This trade-off has benefits for modern compiler developers, where improvements to developer productivity are critical to minimise delay for state-of-the-art workloads (\autoref{fig:compilers-lagging}). In addition to this, this thesis argues that the loss of ahead-of-time optimisations is less impactful for highly dynamic workloads such as compiler infrastructures.
 
 
 \section{Dynamic languages and workloads}
