@@ -184,6 +184,30 @@
   file = {/Users/edjg/Zotero/storage/2PSMWKHJ/Berger et al. - 2023 - Triangulating Python Performance Issues with SCALENE .pdf}
 }
 
+@article{blackburnMythsRealitiesPerformance2004,
+  title = {Myths and Realities: The Performance Impact of Garbage Collection},
+  shorttitle = {Myths and Realities},
+  author = {Blackburn, Stephen M. and Cheng, Perry and McKinley, Kathryn S.},
+  date = {2004-06-01},
+  journaltitle = {SIGMETRICS Perform. Eval. Rev.},
+  volume = {32},
+  number = {1},
+  pages = {25--36},
+  issn = {0163-5999},
+  doi = {10.1145/1012888.1005693},
+  url = {https://dl.acm.org/doi/10.1145/1012888.1005693},
+  urldate = {2025-06-10},
+  abstract = {This paper explores and quantifies garbage collection behavior for three whole heap collectors and generational counterparts: copying semi-space, mark-sweep, and reference counting, the canonical algorithms from which essentially all other collection algorithms are derived. Efficient implementations in MMTk, a Java memory management toolkit, in IBM's Jikes RVM share all common mechanisms to provide a clean experimental platform. Instrumentation separates collector and program behavior, and performance counters measure timing and memory behavior on three architectures.Our experimental design reveals key algorithmic features and how they match program characteristics to explain the direct and indirect costs of garbage collection as a function of heap size on the SPEC JVM benchmarks. For example, we find that the contiguous allocation of copying collectors attains significant locality benefits over free-list allocators. The reduced collection costs of the generational algorithms together with the locality benefit of contiguous allocation motivates a copying nursery for newly allocated objects. These benefits dominate the overheads of generational collectors compared with non-generational and no collection, disputing the myth that "no garbage collection is good garbage collection." Performance is less sensitive to the mature space collection algorithm in our benchmarks. However the locality and pointer mutation characteristics for a given program occasionally prefer copying or mark-sweep. This study is unique in its breadth of garbage collection algorithms and its depth of analysis.},
+  file = {/Users/edjg/Zotero/storage/ZET69QNH/Blackburn et al. - 2004 - Myths and realities the performance impact of garbage collection.pdf}
+}
+
+@article{bloomCriteriaEvaluatingPerformance,
+  title = {Criteria for {{Evaluating}} the {{Performance}} of {{Compilers}}},
+  author = {Bloom, Burton H and Clark, Mac H and Feldman, Clare G and Coe, Robert K},
+  langid = {english},
+  file = {/Users/edjg/Zotero/storage/ADRFPYNM/Bloom et al. - Criteria for Evaluating the Performance of Compilers.pdf}
+}
+
 @inproceedings{brueningInfrastructureAdaptiveDynamic2003,
   title = {An Infrastructure for Adaptive Dynamic Optimization},
   booktitle = {International {{Symposium}} on {{Code Generation}} and {{Optimization}}, 2003. {{CGO}} 2003.},
@@ -197,6 +221,14 @@
   eventtitle = {International {{Symposium}} on {{Code Generation}} and {{Optimization}}, 2003. {{CGO}} 2003.},
   keywords = {Abstracts,Application software,Computer science,Instruments,Laboratories,Optimizing compilers,Performance analysis,Runtime,Software libraries,Software performance},
   file = {/Users/edjg/Zotero/storage/2TK9SA4U/Bruening et al. - 2003 - An infrastructure for adaptive dynamic optimization.pdf}
+}
+
+@online{bytecodeallianceCranelift,
+  title = {Cranelift},
+  author = {{Bytecode Alliance}},
+  url = {https://cranelift.dev/},
+  urldate = {2025-06-10},
+  file = {/Users/edjg/Zotero/storage/X4USSXTW/cranelift.dev.html}
 }
 
 @inproceedings{callahanInterproceduralConstantPropagation1986,
@@ -346,6 +378,23 @@
   file = {/Users/edjg/Zotero/storage/RXHCMB74/Desislavov et al. - 2023 - Trends in AI inference energy consumption Beyond the performance-vs-parameter laws of deep learning.pdf}
 }
 
+@inproceedings{drescherFastTemplateBasedCode2024,
+  title = {Fast {{Template-Based Code Generation}} for {{MLIR}}},
+  booktitle = {Proceedings of the 33rd {{ACM SIGPLAN International Conference}} on {{Compiler Construction}}},
+  author = {Drescher, Florian and Engelke, Alexis},
+  date = {2024-02-20},
+  series = {{{CC}} 2024},
+  pages = {1--12},
+  publisher = {Association for Computing Machinery},
+  location = {New York, NY, USA},
+  doi = {10.1145/3640537.3641567},
+  url = {https://dl.acm.org/doi/10.1145/3640537.3641567},
+  urldate = {2025-06-10},
+  abstract = {Fast compilation is essential for JIT-compilation use cases like dynamic languages or databases as well as development productivity when compiling static languages. Template-based compilation allows fast compilation times, but in existing approaches, templates are generally handwritten, limiting flexibility and causing substantial engineering effort. In this paper, we introduce an approach based on MLIR that derives code templates for the instructions of any dialect automatically ahead-of-time. Template generation re-uses the existing compilation path present in the MLIR lowering of the instructions and thereby inherently supports code generation from different abstraction levels in a single step. Our results on compiling database queries and standard C programs show a compile-time improvement of 10–30x compared to LLVM -O0 with only moderate run-time slowdowns of 1–3x, resulting in an overall improvement of 2x in a JIT-compilation-based database setting.},
+  isbn = {979-8-4007-0507-6},
+  file = {/Users/edjg/Zotero/storage/XLZLB3DV/Drescher and Engelke - 2024 - Fast Template-Based Code Generation for MLIR.pdf}
+}
+
 @inproceedings{driesenDirectCostVirtual1996,
   title = {The Direct Cost of Virtual Function Calls in {{C}}++},
   booktitle = {Proceedings of the 11th {{ACM SIGPLAN}} Conference on {{Object-oriented}} Programming, Systems, Languages, and Applications},
@@ -371,6 +420,55 @@
   urldate = {2024-10-21},
   abstract = {It's 2022. Moore's Law and Dennard scaling have run out of steam, making it harder than ever to achieve high performance - especially in Python. This talk first explains in detail the unique challenges that Python poses to programmers. It then presents Scalene, a novel high-performance CPU, GPU and memory profiler for Python that does many things that past Python profilers do not and cannot do. Scalene both runs orders of magnitude faster than other profilers while delivering more accurate and more actionable information that's especially valuable to Python programmers. Emery Berger Professor, University of Massachusetts Amherst @emeryberger Emery Berger is a Professor of Computer Sciences at the University of Massachusetts Amherst, the flagship campus of the UMass system. Professor Berger and his collaborators have built numerous widely adopted software systems including Hoard, a fast and scalable memory manager that accelerates multithreaded applications (on which the Mac OS X memory manager is based); DieHard/DieHarder, error-avoiding and secure memory managers that influenced Windows, and Coz, a "causal profiler" that ships with modern Linux distros. He is also the developer and maintainer of CSrankings.org. His honors include an NSF CAREER Award, Most Influential Paper Awards at OOPSLA, at PLDI, and ASPLOS; five CACM Research Highlights, and Best Paper Awards at FAST, OOPSLA, and SOSP; he is an ACM Fellow. Professor Berger served six years as an elected member of the SIGPLAN Executive Committee; a decade as Associate Editor of TOPLAS; he was Program Chair for PLDI 2016 and co-Program Chair of ASPLOS 2021. ------- Sponsored by: ------- Stream is the \# 1 Chat API for custom messaging apps. Activate your free 30-day trial to explore Stream Chat. https://gstrm.io/tsl},
   venue = {Strange Loop Conference}
+}
+
+@inproceedings{engelkeCompileTimeAnalysisCompiler2024,
+  title = {Compile-{{Time Analysis}} of {{Compiler Frameworks}} for {{Query Compilation}}},
+  booktitle = {2024 {{IEEE}}/{{ACM International Symposium}} on {{Code Generation}} and {{Optimization}} ({{CGO}})},
+  author = {Engelke, Alexis and Schwarz, Tobias},
+  date = {2024-03},
+  pages = {233--244},
+  issn = {2643-2838},
+  doi = {10.1109/CGO57630.2024.10444856},
+  url = {https://ieeexplore.ieee.org/abstract/document/10444856},
+  urldate = {2025-06-10},
+  abstract = {Low compilation times are highly important in contexts of Just-in-time compilation. This not only applies to language runtimes for Java, WebAssembly, or JavaScript, but is also crucial for database systems that employ query compilation as the primary measure for achieving high throughput in combination with low query execution time. We present a performance comparison and detailed analysis of the compile times of the JIT compilation back-ends provided by GCC, LLVM, Cranelift, and a single-pass compiler in the context of database queries. Our results show that LLVM achieves the highest execution performance, but can compile substantially faster when tuning for low compilation time. Cranelift achieves a similar run-time performance to unoptimized LLVM, but compiles just 20–35\% faster and is outperformed by the single-pass compiler, which compiles code 16x faster than Cranelift at similar execution performance.},
+  eventtitle = {2024 {{IEEE}}/{{ACM International Symposium}} on {{Code Generation}} and {{Optimization}} ({{CGO}})},
+  keywords = {Codes,Database systems,Fast compilation,Java,JIT compilation,LLVM,Optimization,Query Compilation,Runtime,Throughput,Tuning},
+  file = {/Users/edjg/Zotero/storage/3S6ZJFDH/Engelke and Schwarz - 2024 - Compile-Time Analysis of Compiler Frameworks for Query Compilation.pdf}
+}
+
+@inproceedings{engelkeInstrewLeveragingLLVM2020,
+  title = {Instrew: Leveraging {{LLVM}} for High Performance Dynamic Binary Instrumentation},
+  shorttitle = {Instrew},
+  booktitle = {Proceedings of the 16th {{ACM SIGPLAN}}/{{SIGOPS International Conference}} on {{Virtual Execution Environments}}},
+  author = {Engelke, Alexis and Schulz, Martin},
+  date = {2020-03-17},
+  series = {{{VEE}} '20},
+  pages = {172--184},
+  publisher = {Association for Computing Machinery},
+  location = {New York, NY, USA},
+  doi = {10.1145/3381052.3381319},
+  url = {https://dl.acm.org/doi/10.1145/3381052.3381319},
+  urldate = {2025-06-10},
+  abstract = {Dynamic binary instrumentation frameworks are popular tools to enhance programs with additional analysis, debugging, or profiling facilities or to add optimizations or translations without requiring recompilation or access to source code. They analyze the binary code, translate into a---typically low-level---intermediate representation, add the needed instrumentation or transformation and then generate new code on-demand and at run-time. Most tools thereby focus on a fast code rewriting process at the cost of lower quality code, leading to a significant slowdown in the instrumented code. Further, most tools run in the application's address space, making their development cumbersome.We propose a novel dynamic binary instrumentation framework, Instrew, which closes these gaps by (a) leveraging the LLVM compiler infrastructure for high-quality code optimization and generation and (b) enables process isolation between the target code and the instrumenter. Instead of using our own non-portable and low-level intermediate representation, our framework directly lifts the original machine code into LLVM-IR, where instrumentation and behavioral changes may be performed, and from which high quality code can be produced. Results on the SPEC CPU2017 benchmarks show that the rewriting overhead is only 1/5 of the overhead incurred using the state-of-the-art toolchain Valgrind.},
+  isbn = {978-1-4503-7554-2},
+  file = {/Users/edjg/Zotero/storage/3W8NKCF8/Engelke and Schulz - 2020 - Instrew leveraging LLVM for high performance dynamic binary instrumentation.pdf}
+}
+
+@inproceedings{engelkeUsingLLVMOptimized2017,
+  title = {Using {{LLVM}} for {{Optimized Lightweight Binary Re-Writing}} at {{Runtime}}},
+  booktitle = {2017 {{IEEE International Parallel}} and {{Distributed Processing Symposium Workshops}} ({{IPDPSW}})},
+  author = {Engelke, Alexis and Weidendorfer, Josef},
+  date = {2017-05},
+  pages = {785--794},
+  doi = {10.1109/IPDPSW.2017.103},
+  url = {https://ieeexplore.ieee.org/abstract/document/7965122},
+  urldate = {2025-06-10},
+  abstract = {Providing new parallel programming models/abstractions as a set of library functions has the huge advantage that it allows for an relatively easy incremental porting path for legacy HPC applications, in contrast to the huge effort needed when novel concepts are only provided in new programming languages or language extensions. However, performance issues are to be expected with fine granular usage of library functions. In previous work, we argued that binary rewriting can bridge the gap by tightly coupling application and library functions at runtime. We showed that runtime specialization at the binary level, starting from a compiled, generic stencil code can help in approaching performance of manually written, statically compiled version. In this paper, we analyze the benefits of post-processing the re-written binary code using standard compiler optimizations as provided by LLVM. To this end, we present our approach for efficiently converting x86-64 binary code to LLVM-IR. Using the mentioned generic code for arbitrary 2d stencils, we present performance numbers with and without LLVM postprocessing. We find that we can now achieve the performance of variants specialized by hand.},
+  eventtitle = {2017 {{IEEE International Parallel}} and {{Distributed Processing Symposium Workshops}} ({{IPDPSW}})},
+  keywords = {Binary codes,Binary Transformation,Decoding,Dynamic Code Generation,Dynamic Optimization,High Performance Computing,Libraries,Optimization,Registers,Runtime,Standards},
+  file = {/Users/edjg/Zotero/storage/WTWXVFVX/Engelke and Weidendorfer - 2017 - Using LLVM for Optimized Lightweight Binary Re-Writing at Runtime.pdf}
 }
 
 @article{esmaeilzadehDarkSiliconEnd2012,
@@ -495,6 +593,20 @@
   file = {/Users/edjg/Zotero/storage/S7HA4J9C/Harris-Birtill and Harris-Birtill - 2021 - Understanding computation time a critical discussion of time as a computational performance metric.pdf}
 }
 
+@book{hennessyComputerArchitectureQuantitative2012,
+  title = {Computer {{Architecture}}: {{A Quantitative Approach}}},
+  shorttitle = {Computer {{Architecture}}},
+  author = {Hennessy, John L. and Patterson, David A.},
+  date = {2012},
+  publisher = {Elsevier},
+  abstract = {Computer Architecture: A Quantitative Approach, Fifth Edition, explores the ways that software and technology in the cloud are accessed by digital media, such as cell phones, computers, tablets, and other mobile devices. The book, which became a part of Intel's 2012 recommended reading list for developers, covers the revolution of mobile computing. It also highlights the two most important factors in architecture today: parallelism and memory hierarchy. This fully updated edition is comprised of six chapters that follow a consistent framework: explanation of the ideas in each chapter; a crosscutting issues section, which presents how the concepts covered in one chapter connect with those given in other chapters; a putting it all together section that links these concepts by discussing how they are applied in real machine; and detailed examples of misunderstandings and architectural traps commonly encountered by developers and architects. Formulas for energy, static and dynamic power, integrated circuit costs, reliability, and availability are included. The book also covers virtual machines, SRAM and DRAM technologies, and new material on Flash memory. Other topics include the exploitation of instruction-level parallelism in high-performance processors, superscalar execution, dynamic scheduling and multithreading, vector architectures, multicore processors, and warehouse-scale computers (WSCs). There are updated case studies and completely new exercises. Additional reference appendices are available online. This book will be a valuable reference for computer architects, programmers, application developers, compiler and system software developers, computer system designers and application developers.   Part of Intel's 2012 Recommended Reading List for Developers Updated to cover the mobile computing revolution Emphasizes the two most important topics in architecture today: memory hierarchy and parallelism in all its forms. Develops common themes throughout each chapter: power, performance, cost, dependability, protection, programming models, and emerging trends ("What's Next") Includes three review appendices in the printed text. Additional reference appendices are available online. Includes updated Case Studies and completely new exercises.},
+  isbn = {978-0-12-383872-8},
+  langid = {english},
+  pagetotal = {858},
+  keywords = {Computers / Computer Architecture},
+  file = {/Users/edjg/Zotero/storage/4TJ2CFD6/Hennessy and Patterson - 2012 - Computer Architecture A Quantitative Approach.pdf}
+}
+
 @inproceedings{holzleOptimizingDynamicallydispatchedCalls1994,
   title = {Optimizing Dynamically-Dispatched Calls with Run-Time Type Feedback},
   booktitle = {Proceedings of the {{ACM SIGPLAN}} 1994 Conference on {{Programming}} Language Design and Implementation},
@@ -518,6 +630,19 @@
   date = {1998},
   url = {https://www.iso.org/standard/25845.html},
   urldate = {2025-06-04}
+}
+
+@online{iwonakotlarskaOptimisingCompilerPerformance2024,
+  title = {Optimising {{Compiler Performance}}: {{A Case For Devirtualisation}}},
+  shorttitle = {Optimising {{Compiler Performance}}},
+  author = {{Iwona Kotlarska}},
+  date = {2024-05-21T09:32:00+00:00},
+  url = {https://www.hudsonrivertrading.com/hrtbeat/optimising-compiler-performance-a-case-for-devirtualisation/},
+  urldate = {2025-06-10},
+  abstract = {In the realm of high frequency trading, speed is critical. Programmers working on production systems at firms such as HRT must write code that is highly performant without compromising correctness. To achieve that, we should be aware of how compilers work, the ways they can optimise our code, and potential limitations. Let’s dive a bit deeper into one type of optimisation that compilers perform - devirtualisation.},
+  langid = {american},
+  organization = {Hudson River Trading},
+  file = {/Users/edjg/Zotero/storage/W93MSM2J/optimising-compiler-performance-a-case-for-devirtualisation.html}
 }
 
 @online{joshhabermanTailCallingInterpreter2025,
@@ -757,6 +882,23 @@
   file = {/Users/edjg/Zotero/storage/K55IK6MP/numbers-everyone-should-know.html}
 }
 
+@inproceedings{pecimuthDiagnosingCompilerPerformance2023,
+  title = {Diagnosing {{Compiler Performance}} by {{Comparing Optimization Decisions}}},
+  booktitle = {Proceedings of the 20th {{ACM SIGPLAN International Conference}} on {{Managed Programming Languages}} and {{Runtimes}}},
+  author = {Pečimúth, Andrej and Leopoldseder, David and Tůma, Petr},
+  date = {2023-10-19},
+  series = {{{MPLR}} 2023},
+  pages = {47--61},
+  publisher = {Association for Computing Machinery},
+  location = {New York, NY, USA},
+  doi = {10.1145/3617651.3622994},
+  url = {https://dl.acm.org/doi/10.1145/3617651.3622994},
+  urldate = {2025-06-10},
+  abstract = {Modern compilers apply a set of optimization passes aiming to speed up the generated code. The combined effect of individual optimizations is difficult to predict. Thus, changes to a compiler's code may hinder the performance of generated code as an unintended consequence.   Performance regressions in compiled code are often related to misapplied optimizations. The regressions are hard to investigate, considering the vast number of compilation units and applied optimizations. A compilation unit consists of a root method and inlined methods. Thus, a method may be part of several compilation units and may be optimized differently in each. Moreover, inlining decisions are not invariant across runs of the virtual machine (VM).   We propose to solve the problem of diagnosing performance regressions by capturing the compiler's optimization decisions. We do so by representing the applied optimization phases, optimization decisions, and inlining decisions in the form of trees. This paper introduces an approach utilizing tree edit distance (TED) to detect optimization differences in a semi-automated way. We present an approach to compare optimization decisions in differently inlined methods. We employ these techniques to pinpoint the causes of performance problems in various benchmarks of the Graal compiler.},
+  isbn = {979-8-4007-0380-5},
+  file = {/Users/edjg/Zotero/storage/MIAP4ZXT/Pečimúth et al. - 2023 - Diagnosing Compiler Performance by Comparing Optimization Decisions.pdf}
+}
+
 @report{pep659,
   type = {PEP},
   title = {Specializing {{Adaptive Interpreter}}},
@@ -872,6 +1014,19 @@
   date = {2008},
   institution = {MS. Thesis, Blekinge Institute of Technology, Sweden},
   file = {/Users/edjg/Zotero/storage/AUBRPYLN/Saeed and Saeed - 2008 - Systematic review of verification & validation in dynamic languages.pdf}
+}
+
+@online{schwarzTPDEFastAdaptable2025,
+  title = {{{TPDE}}: {{A Fast Adaptable Compiler Back-End Framework}}},
+  shorttitle = {{{TPDE}}},
+  author = {Schwarz, Tobias and Kamm, Tobias and Engelke, Alexis},
+  date = {2025-05-28},
+  url = {https://arxiv.org/abs/2505.22610v1},
+  urldate = {2025-06-10},
+  abstract = {Fast machine code generation is especially important for fast start-up just-in-time compilation, where the compilation time is part of the end-to-end latency. However, widely used compiler frameworks like LLVM do not prioritize fast compilation and require an extra IR translation step increasing latency even further; and rolling a custom code generator is a substantial engineering effort, especially when targeting multiple architectures. Therefore, in this paper, we present TPDE, a compiler back-end framework that adapts to existing code representations in SSA form. Using an IR-specific adapter providing canonical access to IR data structures and a specification of the IR semantics, the framework performs one analysis pass and then performs the compilation in just a single pass, combining instruction selection, register allocation, and instruction encoding. The generated target instructions are primarily derived code written in high-level language through LLVM's Machine IR, easing portability to different architectures while enabling optimizations during code generation. To show the generality of our framework, we build a new back-end for LLVM from scratch targeting x86-64 and AArch64. Performance results on SPECint 2017 show that we can compile LLVM-IR 8--24x faster than LLVM -O0 while being on-par in terms of run-time performance. We also demonstrate the benefits of adapting to domain-specific IRs in JIT contexts, particularly WebAssembly and database query compilation, where avoiding the extra IR translation further reduces compilation latency.},
+  langid = {english},
+  organization = {arXiv.org},
+  file = {/Users/edjg/Zotero/storage/52UXUPYC/Schwarz et al. - 2025 - TPDE A Fast Adaptable Compiler Back-End Framework.pdf}
 }
 
 @unpublished{seansilvaHighVelocityArchitectureMLIR2025,

@@ -60,16 +60,22 @@ Next, they provide a set of micro-benchmarks for key functionality provided by \
 % Link
 While these results provides valuable insights into \ac{mlir}'s performance characteristics, further research is needed to fully understand the trade-offs between expressiveness and efficiency.
 
+%% General compiler performance
+% Hook
+In addition to performance measurements of the LLVM \ac{mlir} framework specifically, there is a body of research examining the performance of compilers more generally.
+% Argument
+In their 2024 paper, Engelke and Schwarz compare compile-times across frameworks for query compilation \cite{engelkeCompileTimeAnalysisCompiler2024}, finding Cranelift's \cite{bytecodeallianceCranelift} non-pointer chasing data structures yield a $20-35\%$ speedup over LLVM, supporting our hypothesis on the performance impact of dynamism. Engelke's earlier work also touches on compiler performance, proposing low-overhead approaches to binary instrumentation \cite{engelkeInstrewLeveragingLLVM2020}, rewriting at runtime \cite{engelkeUsingLLVMOptimized2017}, and \ac{jit} compilation \cite{schwarzTPDEFastAdaptable2025} \cite{drescherFastTemplateBasedCode2024}.
+% Link
+However, this body of research is much smaller in volume than the literature examining the performance of compiler generated code, despite its critical importance for developer productivity.
+
 
 %% Lack of other works/our differentiation
 % Hook
-Our work differentiates itself from existing research in two ways.
+Our work differentiates itself from this existing research in two ways.
 % Argument
-Firstly, existing research focusses only on the performance characteristics of LLVM and \ac{mlir}. We extend this to also examine xDSL's performance.
+Firstly, the above work focusses only on the performance characteristics of popular frameworks including LLVM, \ac{mlir}, and Cranelift. We extend this to also examine xDSL's performance.
 Secondly, having performance measurements and instrumentation for both \ac{mlir} and xDSL, we further extend the domain by contrasting the two frameworks through the lens of dynamism and its impact on performance.
 % Link
-
-
 
 
 
@@ -94,7 +100,7 @@ Reliable and accurate performance measurement is notoriously difficult.
 As such, its careful execution constitutes the main contribution of systems papers and theses \cite{crapeperformance} \cite{harris2021understanding}.
 % Argument
 This difficulty comes from both sides of the hardware-software interface.
-For example, hardware optimisations such as hierarchical caches, branch predictors, and power management schemes introduce noise, making performance measurements less predictable and consistent. Similar confounding effects come from software, from process scheduling in the operating system to garbage collection in language runtimes.
+For example, hardware optimisations such as hierarchical caches, branch predictors, and power management schemes exhibit complex emergent behaviour \cite{hennessyComputerArchitectureQuantitative2012}, making performance measurements less predictable and consistent. Similar confounding effects come from software, from process scheduling in the operating system to garbage collection in language runtimes \cite{blackburnMythsRealitiesPerformance2004}.
 Beyond this, advanced interpreters leverage runtime performance information for adaptive specialisation and JIT compilation, further muddling measurements. This phenomenon is explored by Barrett et al.'s ``Virtual Machine Warmup Blows Hot and Cold'' \cite{barrettVirtualMachineWarmup2017}, where interpreter virtual machine warmup is shown to be highly variable, with benchmarks taking over 2000 iterations to reach a steady state.
 As such, accurate measurement of the performance characteristics of a Python program is more involved than the na\"ive approach of taking the wall time it takes to execute -- requiring additional tools and techniques to guarantee reliable results.
 Fortunately, Python's strong ecosystem provides a wide variety of tools to achieve this goal, from the simple standard library \texttt{timeit} utility to the \texttt{pyperf} \cite{victorstinnerPsfPyperf2025} package, with more complex control over confounding effects such as warm-ups and CPU isolation.
@@ -121,7 +127,7 @@ For example, Python's standard library provides the \texttt{profile} module, a P
 Beyond the standard library, profilers such as \texttt{pyinstrument} use statistical sampling rather than tracing to reduce overhead incurred by performance measurement \cite{rickerbyPyinstrument2025}.
 In addition to this, the recent OSDI best paper winner ``Triangulating Python Performance Issues with SCALENE'' \cite{bergerTriangulatingPythonPerformance2023a} introduces another profiler which focusses on the \ac{ffi} boundary between C and Python, a key bottleneck for the best practice of delegating computation to fast low-level implementations.
 This delegation is particularly effective for structured workloads such as linear algebra, but is less suitable for highly dynamic workloads.
-As such, profilers for pure Python are still important for these applications.
+% As such, profilers for pure Python are still important for these applications.
 Furthermore, profiling information at a finer granularity than the function level is often needed to deeply the performance of a program.
 % Link
 \texttt{line\_profiler} provides this functionality to a line level \cite{robertkernPyutilsLine_profiler2025}, but this is still one level of abstraction over the increasingly complex implementation of CPython's interpreter.
@@ -135,6 +141,47 @@ ByteSight extends existing work outputting and rewriting bytecode sequences \cit
 This contribution also unblocks other work in this thesis, facilitating close examination of specialised implementations and providing information about the performance of dynamic bytecode instructions.
 
 
+
 \section{Impact of dynamism on program performance}
 \label{sec:impact-dynamism-related-work}
-% TODO: Lift and fill!
+
+%% Define dynamism and dynamic/static languages
+% Hook
+Programming language design is a game of trade-offs, with a wide variety of design choices incurring differing benefits and costs.
+% Argument
+One such choice is the degree of dynamism, defined by Williams et al. as ``allowing properties of programs to be defined at run-time'' \cite{williamsDynamicInterpretationDynamic2010}. As such, static languages fix properties ahead of time, whereas dynamic languages offer more flexibility at runtime.
+% Link
+
+%% Introduce mechanisms of dynamically/statically typed languages
+% Hook
+One common mechanism providing dynamism in programming languages is dynamic typing. This refers to programming languages where type-checking is performed at runtime, and variables can change type during the course of execution.
+% Argument
+In their essay ``The next 7000 programming languages'' \cite{chatleyNext7000Programming2019}, Chatley et al. discuss how the landscape of programming languages has changed since Landin's seminal 1966 paper ``The next 700 programming languages'' \cite{landinNext700Programming1966}. At the time of Landin's paper, there was already a split between dynamically typed languages such as Lisp and statically languages such as C and Algol. Lisp's runtime type checks incurred performance overhead and unexpected runtime type errors, but provided much greater expressivity and hence more productive development than static languages of the time. These trade-offs between static and dynamic languages remain much the same today, with Chatley et al. arguing that dynamically typed languages' expressivity results in ``excellent library support'', as they are better equipped to express structured data without a fixed schema.
+% Link
+
+% TODO: More citations here!!
+%% Introduce other mechanisms of dynamism
+% Hook
+Beyond dynamic typing, there are a wide variety of other mechanisms by which programming languages can provide dynamism.
+% Argument
+One mechanism is runtime meta-programming, which refers to code which can introspect and manipulate its own behaviour at runtime. An example of this is monkey-patching in Python, which allows the programmatic modification of objects at runtime.
+Another mechanism is late binding, which refers to resolving method calls at runtime when they are invoked, as opposed to being statically linked ahead of time. Interestingly, ahead-of-time compiled languages typically considered static such as C++ provide this dynamic behaviour in the case of polymorphism. When a method is invoked on an object in an inheritance hierarchy, the correct implementation to execute is resolved at runtime using C++'s vtable mechanism.
+% Link
+These dynamic aspects of languages influence the details of their implementation, and the degree to which they can be optimised.
+
+%% Optimisation opportunities in dynamic and static languages
+% Hook
+Ahead-of-time compilers rely on static mechanisms such as data-flow analysis to find valid optimisations.
+% Argument
+As they are run ahead of time, these static analyses have less information to reason about the dynamic runtime behaviour. In this dynamic case, some traditional optimisations cannot be guaranteed to be correct, and hence cannot be leveraged to improve program performance. For example, a function which is dynamically dispatched at runtime cannot be optimised through the code motion optimisation of function inlining, as the implementation which will be invoked is not known ahead of time.
+Earlier work aims to address this, for example H\"olze and Ungar's paper ``Optimizing dynamically-dispatched calls with run-time type feedback'' \cite{holzleOptimizingDynamicallydispatchedCalls1994}. The authors provide an experimental compiler implementing ``type feedback'', a profile-guided optimisation which inlines dynamically dispatched calls in object-orientated languages.
+However, such approaches are specific to individual aspects of the language runtime, and being ahead of time can only optimise for a prediction of the runtime behaviour.
+% Link
+Furthermore, runtime behaviour may differ significantly across inputs for some workloads, making this prediction less representative of real-world behaviour.
+
+
+%% Lack of other works/our differentiation
+% Hook
+% Our work extends this...
+% Argument
+% Link

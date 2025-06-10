@@ -23,7 +23,7 @@ Recently, \ac{mlir} \cite{lattnerMLIRScalingCompiler2021a}, has furthered these 
 %% Context/Motivation (~abstract sentence one/two/three: extensible compiler frameworks, how this impacts performance, and that MLIR accept it)
 Compiler extensibility is critical for handling the heterogeneous hardware and exotic optimisations of modern workloads.
 % TODO: Needs rewriting to shift away from extensibility and towards dynamic hetergeneous data structures
-However, this extensibility comes at a cost, presenting an optimisation boundary between the user and framework code. This boundary arises from the dynamic dispatch of these extensions, precluding optimisations such as ahead-of-time code motion.
+However, this extensibility comes at a cost, with \ac{mlir}'s recursive structures and support for dynamic definitions of their contents presenting an optimisation boundary of invariants known only at runtime. This boundary precludes common ahead-of-time optimisations such as ahead-of-time code motion.
 This is compounded by the dynamic nature of the data structures and algorithms used by the compiler. For example, pattern rewriting in \ac{mlir} operates on a linked list representation of \ac{ssa} values -- a dynamic, pointer-chasing workload.
 This further inhibits optimisations, both as a result of dynamism and not being amenable to other transformations such as vectorisation.
 These factors motivate challenging the status quo of LLVM and MLIR implementing user-extensible compiler frameworks in static, ahead-of-time compiled languages.

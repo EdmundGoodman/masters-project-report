@@ -32,3 +32,4 @@ Aycock
 SUIF
 introspecting
 Lopoukhine
+Cranelift
