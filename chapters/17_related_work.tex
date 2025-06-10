@@ -142,15 +142,8 @@ This contribution also unblocks other work in this thesis, facilitating close ex
 
 
 
-\section{Impact of dynamism on program performance}
+\section{Dynamism in programming languages}
 \label{sec:impact-dynamism-related-work}
-
-%% Define dynamism and dynamic/static languages
-% Hook
-Programming language design is a game of trade-offs, with a wide variety of design choices incurring differing benefits and costs.
-% Argument
-One such choice is the degree of dynamism, defined by Williams et al. as ``allowing properties of programs to be defined at run-time'' \cite{williamsDynamicInterpretationDynamic2010}. As such, static languages fix properties ahead of time, whereas dynamic languages offer more flexibility at runtime.
-% Link
 
 %% Introduce mechanisms of dynamically/statically typed languages
 % Hook
@@ -165,9 +158,9 @@ In their essay ``The next 7000 programming languages'' \cite{chatleyNext7000Prog
 Beyond dynamic typing, there are a wide variety of other mechanisms by which programming languages can provide dynamism.
 % Argument
 One mechanism is runtime meta-programming, which refers to code which can introspect and manipulate its own behaviour at runtime. An example of this is monkey-patching in Python, which allows the programmatic modification of objects at runtime.
-Another mechanism is late binding, which refers to resolving method calls at runtime when they are invoked, as opposed to being statically linked ahead of time. Interestingly, ahead-of-time compiled languages typically considered static such as C++ provide this dynamic behaviour in the case of polymorphism. When a method is invoked on an object in an inheritance hierarchy, the correct implementation to execute is resolved at runtime using C++'s vtable mechanism.
+Another mechanism is late binding, which refers to resolving method calls at runtime when they are invoked, as opposed to being statically linked ahead of time. Interestingly, ahead-of-time compiled languages typically considered static such as C++ provide this dynamic behaviour in the case of polymorphism. When a method is invoked on an object in an inheritance hierarchy, the correct implementation to execute is resolved at runtime using C++'s \ac{vtable} mechanism. Driesen and H\"olzle quantify the performance overhead of this process in their paper ``The Direct Cost of Virtual Function Calls in C++'' \cite{driesenDirectCostVirtual1996}, measuring both a direct cost as a result of the \ac{vtable} indirection, and an indirect cost from precluded optimisation opportunities.
 % Link
-These dynamic aspects of languages influence the details of their implementation, and the degree to which they can be optimised.
+This shows that the dynamic aspects of languages influence the details of their implementation, and the degree to which they can be optimised.
 
 %% Optimisation opportunities in dynamic and static languages
 % Hook
@@ -182,6 +175,6 @@ Furthermore, runtime behaviour may differ significantly across inputs for some w
 
 %% Lack of other works/our differentiation
 % Hook
-% Our work extends this...
+Our work applies this body of research to understand the impact of dynamic language features on the performance of dynamic workloads.
 % Argument
 % Link

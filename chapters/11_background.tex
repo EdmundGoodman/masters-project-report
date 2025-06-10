@@ -82,21 +82,24 @@ This tradeoff is beneficial for modern compiler developers, where improvements t
 
 
 
-\section{Static and dynamic languages}
+\section{Dynamic languages and workloads}
 \label{sec:static-dynamic-languages}
 
-%% What is dynamism in our context? Forward reference related work?
+%% Define dynamism and dynamic/static languages
 % Hook
+Programming language design is a game of trade-offs, with a wide variety of design choices incurring differing benefits and costs.
 % Argument
+One such choice is the degree of dynamism, defined by Williams et al. as ``allowing properties of programs to be defined at run-time'' \cite{williamsDynamicInterpretationDynamic2010}. As such, static languages fix properties ahead of time, whereas dynamic languages offer more flexibility at runtime.
+The literature of programming language design discusses these trade-offs for features including dynamic dispatch and runtime meta-programming (\autoref{sec:impact-dynamism-related-work}).
 % Link
 
 %% Dynamism of workloads
 % Hook
 In addition to considering support for dynamism as a property of a programming language, it can be helpful to classify a workload as dynamic or static.
 % Argument
-For example, \ac{gemm} operations which underpin modern machine learning systems rely on streaming data in a statically known order. This is well-suited to ahead-of-time compilation, as it is amenable to optimisation passes requiring no runtime information, such as code motion or vectorisation. % cite 60000 emery berger
+For example, \ac{gemm} operations which underpin modern machine learning systems rely on streaming data in a statically known order. This is well-suited to ahead-of-time compilation, as it is amenable to optimisation passes requiring no runtime information, such as code motion or vectorisation \cite{emerybergerPythonPerformanceMatters2022}.
 In contrast, pattern rewriting in user-extensible compiler frameworks relies on pointer chasing data structures with a high degree of dynamism. The \ac{ssa} representation of the code being rewritten is structured as a doubly linked list, with the applications of the rewriting semantics to this list known only dynamically at runtime.
-This dynamic, pointer-chasing workload incurs overhead and precludes many optimisations leveraged by ahead-of-time statically compiled languages such as C++ to accelerate their performance for other workloads.
+This dynamic, pointer-chasing workload is inherently memory bound, having irregular access patterns not amenable to traditional cache hierarchies \cite{wangEvaluatingSynchronizationOverhead2025}. Furthermore, it precludes many optimisations leveraged by ahead-of-time statically compiled languages such as C++ to accelerate their performance for other workloads.
 % Link
 
 

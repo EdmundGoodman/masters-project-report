@@ -21,7 +21,6 @@ In static languages such as C++, the exact address function calls can often be r
 % Also optimisation boundary and stuff
 % Argument
 However, the address of some function calls can only be known at runtime, for example as a result of object polymorphism. This address then must be resolved during execution by the language runtime in both static and dynamic languages. Furthermore, this information being known only at runtime presents an optimisation boundary, precluding common rewrites such as function inlining which contribute to the performance of ahead-of-time compiled languages.
-Driesen and H\"olzle quantify the former and acknowledge the latter cost in their work ``The Direct Cost of Virtual Function Calls in C++'' \cite{driesenDirectCostVirtual1996}, which found that C++ programs spent a median of $5.2\%$ of their time in dispatch code. % TODO: Possibly pick a different metric from the paper, and lift to related work!
 We argue further that the difference between static and dynamic languages is reduced for highly dynamic workloads with insufficient information to resolve function addresses ahead of time.
 % Link
 We justify this by examining the mechanisms of dynamic dispatch in Python and C++, and contrasting them through both synthetic examples and our micro-benchmark suite.
