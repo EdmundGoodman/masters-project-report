@@ -483,7 +483,7 @@ Through specialising the constant folding implemenation, we achieve a $8\times$ 
 However, this performance uplift comes at the cost of ease of implementation, increasing the constant folding implementation length by $7\times$.
 As with the specialised micro-benchmarks, we can leverage our novel bytecode profiling tool to explain this improvement in terms of dispatched bytecode instructions, with the workload dropping from $5465$ to $977$ instructions required to implement its functionality.
 By examining the implementation and its emitted bytecode instructions, we are confident that it is close to optimal for the workload within the context of xDSL's data structures.
-In combination with the modifications made to \ac{mlir} to similarly avoid extraneous computation, these two implementations are both directly comparable and complex enough to be representative of real-world workloads.
+In combination with the modifications made to \ac{mlir} to similarly avoid extraneous computation, these two implementations are both directly comparable and complex enough to be representative of real-world workloads. Comparison cannot be made with the unmodified version, as \ac{mlir}'s implementation of pattern rewriting applies constant folding within the framework machinery, clobbering any user-defined constant folding pass.
 % Link
 This facilitates their later use for exploring the impact of dynamism on such workloads.
 
