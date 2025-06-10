@@ -14,6 +14,21 @@ The following section describes the procedure and provides the raw results from 
 
 \vspace{2em}
 
+\ifsubmission
+\begin{code}
+    \begin{minted}[fontsize=\footnotesize]{text}
+        cmake -G Ninja ../llvm \
+           -DLLVM_ENABLE_PROJECTS=mlir \
+           -DLLVM_TARGETS_TO_BUILD="host" \
+           -DLLVM_ENABLE_BENCHMARKS=ON \
+           -DCMAKE_BUILD_TYPE=Release \
+           -DCMAKE_C_COMPILER=clang-18 -DCMAKE_CXX_COMPILER=clang++-18
+       ./tools/mlir/unittests/Benchmarks/MLIR_IR_Benchmark
+    \end{minted}
+    \caption{Bash commands to downloads, compiler, and run the benchmarks from ``How Slow is MLIR''.}
+    \label{listing:bash-mlir-ubench-run}
+\end{code}
+\else
 \begin{code}
     \begin{minted}[fontsize=\footnotesize]{text}
         git clone https://github.com/EdmundGoodman/llvm-project-benchmarks --depth 1
@@ -30,6 +45,7 @@ The following section describes the procedure and provides the raw results from 
     \caption{Bash commands to downloads, compiler, and run the benchmarks from ``How Slow is MLIR''.}
     \label{listing:bash-mlir-ubench-run}
 \end{code}
+\fi
 
 \vspace{2em}
 

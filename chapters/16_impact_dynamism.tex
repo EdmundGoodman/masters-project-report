@@ -1,4 +1,4 @@
-\chapter{Quantifying dynamism in compiler framework pattern rewriting}
+\chapter{Dynamism in compiler frameworks}
 \label{chap:dynamism-pattern-rewriting}
 
 %% Introduction
@@ -6,7 +6,7 @@
 A key difference between the Python and C++ runtimes is their degree of dynamism.
 % Argument
 \ac{mlir}'s C++ runtime incurs overhead when dynamically dispatching functions (\autoref{fig:narrative}, \circledbase{pairedThreeLightGreen}{3}), which is worsened by prohibiting ahead-of-time performance optimisations.
-In contrast, Python dynamically evaluates each bytecode operation individually in its interpreter loop, incurring an overhead each time % OLD: In contrast, almost every bytecode operation evaluated by the Python interpreter is dynamic, each incurring an overhead.
+In contrast, Python dynamically evaluates each bytecode operation individually in its interpreter loop, incurring an overhead each time. % OLD: In contrast, almost every bytecode operation evaluated by the Python interpreter is dynamic, each incurring an overhead.
 As such, we expect the difference in performance between language runtimes (\autoref{fig:narrative}, \circledbase{pairedFourDarkGreen}{4}) to be smaller for more dynamic workloads.
 % Link
 In this chapter, we quantify this difference by examining synthetic examples within static and dynamic language runtimes. We then apply this information to understand the difference in performance between pattern rewriting workloads using xDSL and \ac{mlir} through the lens of overhead incurred by dynamism.
@@ -199,7 +199,8 @@ However, the implementation of the \texttt{cast} function is the identity, doing
 % Link
 
 
-\section{Motivating dynamic languages for user-extensible compiler infrastructures}
+% \section{Motivating dynamic languages for user-extensible compiler infrastructures}
+\section{Dynamic languages for user-extensible compilers}
 \label{chap:dynamism-pattern-rewriting-motivating}
 
 %% Summary

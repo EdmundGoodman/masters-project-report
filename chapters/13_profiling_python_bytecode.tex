@@ -1,4 +1,4 @@
-\chapter{Performance profiling at the bytecode level} % for fun and profit
+\chapter{Profiling at the bytecode level} % for fun and profit
 \label{chap:profiling-bytecode}
 
 %% Top-level summary
@@ -25,8 +25,8 @@ One reason for this conspicuous absence of bytecode level profilers is the diffi
 % Hook
 ByteSight, our novel tool for the performance profiling of CPython bytecode, addresses this gap in the existing provision.
 % Argument
-ByteSight is a tracing profiler which operates on the bytecode level of the Python interpreter. It is implemented natively in Python using only the standard library, and its source code is available under the MIT license on GitHub. % s\footnote{\url{https://github.com/EdmundGoodman/bytesight}}. % TODO: This might de-anonymise me, do I need to elide it?
-It does not require patches to Python's language implementation. This makes it portable, robust across language versions, and simple to install from the \ac{pypi}. % check acf here...
+ByteSight is a tracing profiler which operates on the bytecode level of the Python interpreter. It is implemented natively in Python using only the standard library, and its source code is available under the MIT licence on GitHub.\ifsubmission\else\footnote{\scriptsize{\url{https://github.com/EdmundGoodman/bytesight}}}\fi
+It does not require patches to Python's language implementation. This makes it portable, robust across language versions, and simple to install from the \acf{pypi}.
 % Link
 In this chapter, we discuss the approach and the challenges of its implementation, along with providing examples of its use.
 

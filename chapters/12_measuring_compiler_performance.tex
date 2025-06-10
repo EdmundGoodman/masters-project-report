@@ -1,4 +1,4 @@
-\chapter{Measuring compiler framework performance}
+\chapter{Compiler framework performance}
 \label{chap:measuring-compiler-performance}
 
 %% Introduction
@@ -101,7 +101,7 @@ Finally, the ubiquitous use of cloud resources, especially for compilation workl
             Python interpreter & CPython 3.10.17 \\
             C++ compiler & clang 18.1.8 \\
             \midrule
-            xDSL commit SHA & \texttt{3fcc65b5} \\
+            xDSL commit SHA & \texttt{e1b12a2} \\
             MLIR commit SHA & \texttt{6516ae4} \\
             \bottomrule
         \end{tabular}
@@ -354,7 +354,7 @@ We implement micro-benchmark workloads for the xDSL equivalent to those for \ac{
 % Hook
 Unfortunately, the implementation and build instructions for the ``How Slow is MLIR?'' micro-benchmarks were not published with the talk.
 % Argument (too informal?)
-However, the source code can be found on a branch of their fork of LLVM\footnote{\scriptsize{\url{https://github.com/joker-eph/llvm-project/tree/benchmarks}}}. We provide a copy of this source code and instructions for running the benchmarks\footnote{\scriptsize{\url{https://github.com/EdmundGoodman/llvm-project-benchmarks}}} to enhance the replicability of our results and facilitate further performance experiments.
+However, the source code can be found on a branch of their fork of LLVM\footnote{\scriptsize{\url{https://github.com/joker-eph/llvm-project/tree/benchmarks}}}. We provide a copy of this source code and instructions for running the benchmarks\ifsubmission\else\footnote{\scriptsize{\url{https://github.com/EdmundGoodman/llvm-project-benchmarks}}}\fi to enhance the replicability of our results and facilitate further performance experiments.
 % Link
 We then use this source code to construct comparable micro-benchmarks in Python.
 
