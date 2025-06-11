@@ -78,20 +78,20 @@ This is substantiated by an ablation of the feature across the previously discus
     \cmidrule(r){2-3}
     \textbf{Workload}& \textbf{CPython 3.10} & \textbf{CPython 3.11} & \textbf{Speedup} \\
     \midrule
-    Operation instantiation & $3800 \pm 900$ & $2800 \pm 900$ & $1.33\times$ \\
-    Specialised operation instantiation & $480 \pm 40$ & $270 \pm 40$ & $1.8\times$ \\
-    Trait checking & $1900 \pm 700$ & $1700 \pm 800$ & $1.12\times$ \\
-    Specialised trait checking & $270 \pm 30$ & $190 \pm 30$ & $1.39\times$ \\
-    Operation traversal & $525 \pm 3$ & $432 \pm 4$ & $1.21\times$ \\
-    Constant folding & $57000 \pm 2000$ & $43000 \pm 1000$ & $1.33\times$ \\
-    Specialised constant folding & $7000 \pm 1000$ & $5000 \pm 1000$ & $1.46\times$ \\
-    % Operation instantiation & $3770 \pm 916$ & $2840 \pm 883$ & $1.33\times$ \\
-    % Specialised operation instantiation & $477 \pm 385$ & $265 \pm 372$ & $1.8\times$ \\
-    % Trait checking & $1920 \pm 695$ & $1710 \pm 753$ & $1.12\times$ \\
-    % Specialised trait checking & $266 \pm 34$ & $191 \pm 334$ & $1.39\times$ \\
+    % Operation instantiation & $3800 \pm 900$ & $2800 \pm 900$ & $1.33\times$ \\
+    % Specialised operation instantiation & $480 \pm 40$ & $270 \pm 40$ & $1.8\times$ \\
+    % Trait checking & $1900 \pm 700$ & $1700 \pm 800$ & $1.12\times$ \\
+    % Specialised trait checking & $270 \pm 30$ & $190 \pm 30$ & $1.39\times$ \\
     % Operation traversal & $525 \pm 3$ & $432 \pm 4$ & $1.21\times$ \\
-    % Constant folding & $57000 \pm 1895$ & $43000 \pm 1340$ & $1.33\times$ \\
-    % Specialised constant folding & $6750 \pm 1340$ & $4620 \pm 1075$ & $1.46\times$ \\
+    % Constant folding & $57000 \pm 2000$ & $43000 \pm 1000$ & $1.33\times$ \\
+    % Specialised constant folding & $7000 \pm 1000$ & $5000 \pm 1000$ & $1.46\times$ \\
+    Operation instantiation & $3770 \pm 916$ & $2840 \pm 883$ & $1.33\times$ \\
+    Specialised operation instantiation & $477 \pm 385$ & $265 \pm 372$ & $1.8\times$ \\
+    Trait checking & $1920 \pm 695$ & $1710 \pm 753$ & $1.12\times$ \\
+    Specialised trait checking & $266 \pm 34$ & $191 \pm 334$ & $1.39\times$ \\
+    Operation traversal & $525 \pm 3$ & $432 \pm 4$ & $1.21\times$ \\
+    Constant folding & $57000 \pm 1895$ & $43000 \pm 1340$ & $1.33\times$ \\
+    Specialised constant folding & $6750 \pm 1340$ & $4620 \pm 1075$ & $1.46\times$ \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -143,20 +143,20 @@ As with the specialising adaptive interpreter, we substantiate these claims by a
     \cmidrule(r){2-3}
     \textbf{Workload}& \textbf{JIT disabled} & \textbf{JIT enabled} & \textbf{Speedup} \\
     \midrule
-    Operation instantiation & $3000 \pm 800$ & $3000 \pm 800$ & $1\times$ \\
-    Specialised operation instantiation & $370 \pm 30$ & $390 \pm 40$ & $0.93\times$ \\
-    Trait checking & $1200 \pm 600$ & $1200 \pm 600$ & $0.98\times$ \\
-    Specialised trait checking & $220 \pm 30$ & $220 \pm 30$ & $0.99\times$ \\
-    Operation traversal & $390 \pm 2$ & $427 \pm 2$ & $0.92\times$ \\ % ÷ 32768
-    Constant folding & $45000 \pm 1000$ & $47000 \pm 1000$ & $0.95\times$ \\
-    Specialised constant folding & $5000 \pm 1000$ & $5000 \pm 1000$ & $1.03\times$ \\
-    % Operation instantiation & $2990 \pm 808$ & $2980 \pm 759$ & $1\times$ \\
-    % Specialised operation instantiation & $365 \pm 32$ & $391 \pm 36$ & $0.93\times$ \\
-    % Trait checking & $1190 \pm 553$ & $1220 \pm 573$ & $0.98\times$ \\
-    % Specialised trait checking & $221 \pm 31$ & $224 \pm 30$ & $0.99\times$ \\
-    % Operation traversal & $394 \pm 2$ & $427 \pm 2$ & $0.92\times$ \\ % ÷ 32768
-    % Constant folding & $44600 \pm 1330$ & $47000 \pm 1450$ & $0.95\times$ \\
-    % Specialised constant folding & $5400 \pm 1225$ & $5250 \pm 1275$ & $1.03\times$ \\
+    % Operation instantiation & $3000 \pm 800$ & $3000 \pm 800$ & $1\times$ \\
+    % Specialised operation instantiation & $370 \pm 30$ & $390 \pm 40$ & $0.93\times$ \\
+    % Trait checking & $1200 \pm 600$ & $1200 \pm 600$ & $0.98\times$ \\
+    % Specialised trait checking & $220 \pm 30$ & $220 \pm 30$ & $0.99\times$ \\
+    % Operation traversal & $390 \pm 2$ & $427 \pm 2$ & $0.92\times$ \\ % ÷ 32768
+    % Constant folding & $45000 \pm 1000$ & $47000 \pm 1000$ & $0.95\times$ \\
+    % Specialised constant folding & $5000 \pm 1000$ & $5000 \pm 1000$ & $1.03\times$ \\
+    Operation instantiation & $2990 \pm 808$ & $2980 \pm 759$ & $1\times$ \\
+    Specialised operation instantiation & $365 \pm 32$ & $391 \pm 36$ & $0.93\times$ \\
+    Trait checking & $1190 \pm 553$ & $1220 \pm 573$ & $0.98\times$ \\
+    Specialised trait checking & $221 \pm 31$ & $224 \pm 30$ & $0.99\times$ \\
+    Operation traversal & $394 \pm 2$ & $427 \pm 2$ & $0.92\times$ \\ % ÷ 32768
+    Constant folding & $44600 \pm 1330$ & $47000 \pm 1450$ & $0.95\times$ \\
+    Specialised constant folding & $5400 \pm 1225$ & $5250 \pm 1275$ & $1.03\times$ \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -181,8 +181,6 @@ In recent years, Faster CPython has introduced two key optimisations which lever
 % What are the optimisations
 The first is the specialising adaptive interpreter, which profiles how generic bytecode instructions are used, allowing speculative quickening into a more specialised form. The second is the experimental \ac{jit}, which identifies hot code paths at runtime and translates them into optimised native machine code.
 Beyond these dynamic optimisations which we examine in detail, Faster CPython also makes other optimisations unrelated to dynamism in the language runtime, such as the tail-calling interpreter \cite{joshhabermanTailCallingInterpreter2025} and memory layout optimisations which further improve performance.
-% What performance impact does this have on pyperformance and xDSL constant foldng
-Through our empirical measurement, we show that the highly dynamic workload of the xDSL user-extensible compile framework exacerbates the impact of both of these dynamic optimisations (\autoref{figure:impact-cpython-optimisations}).
 % Link
 
 %% Graph of the two approaches
@@ -194,9 +192,9 @@ Through our empirical measurement, we show that the highly dynamic workload of t
 \end{figure}
 
 
-
+Through our empirical measurement, we show that the pointer-chasing, variable control flow workload of the xDSL user-extensible compile framework exacerbates the impact of both of these optimisations leveraging runtime information (\autoref{figure:impact-cpython-optimisations}).
 This can be seen by constant folding in xDSL having a greater speedup than PyPerformance with the specialising adaptive interpreter, but a worse slow-down with the experimental \ac{jit}.
-In addition to this, we show that specialisation of the workloads (\autoref{chap:specialising-optimising-pattern-rewriting}) reveals further optimisation opportunities, increasing the impact of both of these dynamic optimisations.
+In addition to this, we show that specialisation of the workloads (\autoref{chap:specialising-optimising-pattern-rewriting}) reveals further optimisation opportunities, increasing the impact of both of these optimisations.
 
 
 

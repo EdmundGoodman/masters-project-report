@@ -57,15 +57,15 @@ For example, LLVM's low-level \ac{ir} is not well suited to abstract over the hi
 % Hook
 \acf{mlir} addresses these modern challenges, providing ``compiler infrastructure for the end of Moore's law'' \cite{lattnerMLIRScalingCompiler2021a}.
 % Argument
-Its key contribution is allowing users to easily define multiple levels of abstraction supporting heterogeneous recursively nested structures, referred to as dialects. This contrasts the fixed low-level abstractions and homogeneous flat structures of LLVM \ac{ir}, whose shape is known at runtime, resulting in less dynamic dispatch and control flow. As a result of this, \ac{mlir} allows different problem domains to define their own operations and transformation passes while sharing common infrastructure. This facilitates efficiently expressing optimisations at the most appropriate abstraction level, which can then each be applied, lowering from high-level domain-specific representations to low-level hardware-specific ones. Lowering extensively leverages pattern rewriting, a declarative way to express transformations as patterns which match \ac{ir} constructs and replace them with lowered versions.
+Its key contribution is allowing users to easily define multiple levels of abstraction supporting heterogeneous recursively nested structures, referred to as dialects. This contrasts the fixed low-level abstractions and homogeneous flat structures of LLVM \ac{ir}, whose shape is known at runtime, resulting in less dynamic dispatch and control flow. As a result of this, \ac{mlir} allows different problem domains to define their own operations and transformation passes while sharing common infrastructure. This facilitates efficiently expressing optimisations at the most appropriate abstraction level, which can then each be applied, lowering from high-level domain-specific representations to low-level hardware-specific ones. Lowering leverages pattern rewriting, a declarative way to express transformations as patterns which match \ac{ir} constructs and replace them with lowered versions. Traits abstract across properties shared by \ac{ir} components \cite{mlirteamTraitsMLIR}, facilitating these user-extensible pattern rewrites on custom dialects.
 The provision of common infrastructure including documentation generation, parsing and printing logic, and location tracking further reduces the engineering effort required to develop complex optimisations and support custom hardware targets.
-\ac{mlir} is implemented in C++, providing desirable performance characteristics, but having long build times and a verbose syntax.
 % Link
 
 % Hook
-These issues are partially mitigated by \ac{irdl}, ``a domain-specific language to define \acp{ir}'' \cite{fehrIRDLIRDefinition2022a}, implemented as a \ac{ssa}-based dialect of \ac{mlir} itself.
+\ac{mlir} is implemented in C++, providing desirable performance characteristics, but having a verbose syntax and long build times.
+This is partially mitigated by \ac{irdl}, ``a domain-specific language to define \acp{ir}'' \cite{fehrIRDLIRDefinition2022a}, implemented as a \ac{ssa}-based dialect of \ac{mlir}.
 % Argument
-\ac{irdl} provides a declarative system for defining dialects, operations, and types which can be dynamically loaded at runtime, avoiding the need for verbose C++ implementations which require recompilation.
+\ac{irdl} provides a declarative system for defining dialects, operations, and types which can be dynamically loaded at runtime.
 % Link
 
 \section{xDSL}
@@ -97,9 +97,8 @@ In addition to considering support for dynamism as a property of a programming l
 % Argument
 For example, \ac{gemm} operations which underpin modern machine learning systems rely on streaming data in a statically known order. This is well-suited to ahead-of-time compilation, as it is amenable to optimisation passes requiring no runtime information, such as code motion or vectorisation \cite{emerybergerPythonPerformanceMatters2022}.
 In contrast, pattern rewriting in user-extensible compiler frameworks relies on pointer chasing data structures with a high degree of dynamism. The \ac{ssa} representation of the code being rewritten is structured as a doubly linked list, with the applications of the rewriting semantics to this list known only dynamically at runtime.
-This dynamic, pointer-chasing workload is inherently memory bound, having irregular access patterns not amenable to traditional cache hierarchies \cite{wangEvaluatingSynchronizationOverhead2025}. Furthermore, it precludes many optimisations leveraged by ahead-of-time statically compiled languages such as C++ to accelerate their performance for other workloads.
+This dynamic, pointer-chasing workload is inherently memory bound, having irregular access patterns with high latencies \cite{wangEvaluatingSynchronizationOverhead2025}. As such, optimisations to computational throughput have minimal impact on overall performance, as the bandwidth ceiling upper bounds performance \cite{williamsRooflineInsightfulVisual2009a}. Furthermore, it precludes many optimisations leveraged by ahead-of-time statically compiled languages such as C++ to accelerate their performance for other workloads.
 % Link
-
 
 
 \section{CPython internals}

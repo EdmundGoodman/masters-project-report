@@ -45,16 +45,20 @@ The first micro-benchmark discussed in \autoref{sec:ubenchmark} was instantiatin
 % Argument
 The idiomatic way to do this in xDSL is directly instantiating a new Python object.
 % This invokes the \mintinline{text}{__new__} method to construct an empty class, then the \mintinline{text}{__init__} method to initialise it, and optionally \mintinline{python3}{__post_init__} following initialisation.
-In xDSL, this instantiation process includes a large amount of logic (\autoref{fig:ubenchmark-original-instantiation-xdsl-viztracer}), including verifying attributes and building properties of the operation.
+In xDSL, this process includes a large amount of logic (\autoref{fig:ubenchmark-instantiation-xdsl-viztracer}, top trace), including verifying attributes and building properties of the operation.
 However, in many instances this verification is unneeded as it is already known as a runtime invariant, and the building process can similarly be simplified as the structure can be inferred.
 % Link
-As such, specialisation to remove this overhead can vastly reduce the complexity and hence improve performance (\autoref{fig:ubenchmark-optimised-instantiation-xdsl-viztracer}).
+As such, specialisation to remove this overhead can vastly reduce the complexity and hence improve performance (\autoref{fig:ubenchmark-instantiation-xdsl-viztracer}, bottom trace).
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{images/specialising_optimising_xdsl_rewriting/annotated_create.drawio.pdf}
+        \begin{tikzpicture}
+            \node[anchor=south west,inner sep=0] (image) at (0,0) {\includegraphics[width=\textwidth]{images/specialising_optimising_xdsl_rewriting/annotated_create.drawio.pdf}};
+            \node[circledstyle, fill=pairedOneLightBlue] at (6.1,1.75) {A};
+            \node[circledstyle, fill=pairedTwoDarkBlue] at (12.6,1.25) {B};
+        \end{tikzpicture}
     \captionsetup{width=0.8\textwidth}
-    \caption{.}
+    \caption{The unspecialised \texttt{EmptyOp} constructor (top) has a high overhead, including checking known invariants and building empty properties. This overhead can be avoided through specialisation to construct the same operation (bottom).}
     \label{fig:ubenchmark-instantiation-xdsl-viztracer}
     % \begin{subfigure}[b]{\textwidth}
     %     \centering
@@ -85,9 +89,9 @@ Examining the above trace, we can visually identify components which take a larg
 For example, the xDSL constructor for \mintinline{python3}{IRDLOperation}s invokes logic with significant overhead building and filtering properties of the operation \circledbase{pairedOneLightBlue}{A}. However, in this workload of the empty operation, this logic does not change the constructed object. Because of this, eliding this logic results in a specialised version of the operation which generates the same output using less computation by applying domain knowledge.
 In addition to this, \ac{mlir}'s core operations are not \ac{irdl} based, unlike xDSL, meaning this overhead is implementation specific.
 Similarly, the post-constructor includes logic for context-managed builders \circledbase{pairedTwoDarkBlue}{B}, which is again unrelated to the empty operation case and not present in \ac{mlir}.
-To avoid this overhead through specialisation, we move from the idiomatic constructor (Listing \ref{listing:ubenchmark-xdsl-constant-constructor}) to directly modifying xDSL's underlying data structures (Listing \ref{listing:ubenchmark-xdsl-constant-direct}).
+To avoid this overhead through specialisation, we move from the idiomatic constructor which initialises values to their defaults (Listing \ref{listing:ubenchmark-xdsl-constant-constructor}) to directly modifying xDSL's underlying data structures (Listing \ref{listing:ubenchmark-xdsl-constant-direct}), where we initialise the defaults explicitly and without unneeded computation.
 % Link
-Finally, we leverage an implementation detail of CPython's data model: the \mintinline{python}{__slots__} attribute \cite{pythonsoftwarefoundation3324DataModel}. Slots store attributes in a fixed-size array on the object with direct indexing instead using the default \mintinline{text}{__dict__} mapping from attribute name to value, optimising both lookup speed and space.
+Finally, we leverage an implementation detail of CPython's data model: the \mintinline{text}{__slots__} attribute \cite{pythonsoftwarefoundation3324DataModel}. Slots store attributes in a fixed-size array on the object with direct indexing instead using the default \mintinline{text}{__dict__} mapping from attribute name to value, optimising both lookup speed and space.
 
 \begin{figure}[H]
     \begin{subfigure}[b]{0.5\textwidth}
@@ -123,7 +127,7 @@ Finally, we leverage an implementation detail of CPython's data model: the \mint
 
 %% Specialised performance and lessons learnt
 % Hook
-Through specialising the implementation to the workload of this micro-benchmark we can achieve significant performance improvements of up to $26\times$ (\autoref{tab:ubenchmark-instantiation-optimised}). A proportion of this speedup is captured by optimisations which C++ is able to make ahead-of-time, but that are invalidated by Python's dynamism. % DONE: Talk more about why this is interesting -- it represents some proportion of the "accidental dynamism" which can be removed by C++ optimisation
+Through specialising the implementation to the workload of this micro-benchmark we can achieve significant performance improvements of up to $26\times$ (\autoref{tab:ubenchmark-instantiation-optimised}). A proportion of this speedup is captured by optimisations which C++ is able to make ahead-of-time, but that are invalidated by Python's dynamism. The most salient of these possible optimisations is function inlining calls for the constructor implementation, which would eliminate a significant overhead visible in the Python trace (\autoref{fig:ubenchmark-instantiation-xdsl-viztracer}). In addition to this, there are further opportunities for optimisations such as instruction combination for more efficient computation, and dead code elimination for compile time invariants \cite{llvmprojectLLVMsAnalysisTransform}.
 % Argument
 % This process comes with the drawback of making the API much more complex
 However, the performance improvement comes at the cost of a significantly more complex implementation, contrary to xDSL's design goals of a simple expressive API.

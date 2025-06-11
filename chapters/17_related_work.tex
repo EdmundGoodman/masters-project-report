@@ -25,16 +25,16 @@
 % Hook
 % TODO: Think of a snazzy topic sentence
 % Argument
-In this section, we discuss existing bodies of work underpinning our thesis, and identify research gaps which our contributions aim to fill.
+In this chapter, we survey existing literature analysing the performance of compiler frameworks and the Python language, along with the role of dynamism in programming language design. From this, we show the research gaps which this thesis aims to address.
 % Link
 
 
-\section{User-extensible compiler framework performance}
+\section{Compiler framework performance}
 \label{sec:perf-user-extensible-frameworks}
 
 %% General vibe of the community?
 % Hook
-While compiler designers naturally focus on optimizing the performance of compiled code, the execution time of the compiler itself (henceforth referred to as compiler performance) also has a significant impact on developer productivity.
+While compiler designers naturally focus on optimizing the performance of compiled code, the execution time of the compiler itself also has a significant impact on developer productivity.
 % Argument
 For very large projects such as Firefox, which contains over twenty million lines of code \cite{bastienabadieEngineeringCodeQuality}, small changes to compiler performance can result in minutes gained or lost for each compilation -- significantly impacting developer productivity. Although there has been considerable engineering effort devoted to compiler performance, academic research continues to focus primarily on improving the compiled output rather than the compilation process itself.
 % Link
@@ -62,7 +62,7 @@ While these results provides valuable insights into \ac{mlir}'s performance char
 
 %% General compiler performance
 % Hook
-In addition to performance measurements of the LLVM \ac{mlir} framework specifically, there is a body of research examining the performance of compilers more generally.
+In addition to performance measurements of the LLVM and \ac{mlir} frameworks specifically, there is a body of research examining the performance of compilers more generally.
 % Argument
 In their 2024 paper, Engelke and Schwarz compare compile-times across frameworks for query compilation \cite{engelkeCompileTimeAnalysisCompiler2024}, finding Cranelift's \cite{bytecodeallianceCranelift} non-pointer chasing data structures yield a $20-35\%$ speedup over LLVM, supporting our hypothesis on the performance impact of dynamism. Engelke's earlier work also touches on compiler performance, proposing low-overhead approaches to binary instrumentation \cite{engelkeInstrewLeveragingLLVM2020}, rewriting at runtime \cite{engelkeUsingLLVMOptimized2017}, and \ac{jit} compilation \cite{schwarzTPDEFastAdaptable2025} \cite{drescherFastTemplateBasedCode2024}.
 % Link
@@ -103,7 +103,7 @@ This difficulty comes from both sides of the hardware-software interface.
 For example, hardware optimisations such as hierarchical caches, branch predictors, and power management schemes exhibit complex emergent behaviour \cite{hennessyComputerArchitectureQuantitative2012}, making performance measurements less predictable and consistent. Similar confounding effects come from software, from process scheduling in the operating system to garbage collection in language runtimes \cite{blackburnMythsRealitiesPerformance2004}.
 Beyond this, advanced interpreters leverage runtime performance information for adaptive specialisation and JIT compilation, further muddling measurements. This phenomenon is explored by Barrett et al.'s ``Virtual Machine Warmup Blows Hot and Cold'' \cite{barrettVirtualMachineWarmup2017}, where interpreter virtual machine warmup is shown to be highly variable, with benchmarks taking over 2000 iterations to reach a steady state.
 As such, accurate measurement of the performance characteristics of a Python program is more involved than the na\"ive approach of taking the wall time it takes to execute -- requiring additional tools and techniques to guarantee reliable results.
-Fortunately, Python's strong ecosystem provides a wide variety of tools to achieve this goal, from the simple standard library \texttt{timeit} utility to the \texttt{pyperf} \cite{victorstinnerPsfPyperf2025} package, with more complex control over confounding effects such as warm-ups and CPU isolation.
+Fortunately, Python's strong ecosystem provides a wide variety of tools to achieve this goal, from the simple standard library \texttt{timeit} utility \cite{pythonsoftwarefoundationTimeitMeasureExecution} to the \texttt{pyperf} package \cite{victorstinnerPsfPyperf2025}, with more complex control over confounding effects such as warm-ups and CPU isolation.
 % Link
 Our work leverages these tools to make accurate measurements of compiler framework performance.
 
@@ -156,8 +156,8 @@ In their essay ``The next 7000 programming languages'' \cite{chatleyNext7000Prog
 % Hook
 Beyond dynamic typing, there are a wide variety of other mechanisms by which programming languages can provide dynamism.
 % Argument
-One mechanism is runtime meta-programming, which refers to code which can introspect and manipulate its own behaviour at runtime. An example of this is monkey-patching in Python, which allows the programmatic modification of objects at runtime.
-Another mechanism is late binding, which refers to resolving method calls at runtime when they are invoked, as opposed to being statically linked ahead of time. Interestingly, ahead-of-time compiled languages typically considered static such as C++ provide this dynamic behaviour in the case of polymorphism. When a method is invoked on an object in an inheritance hierarchy, the correct implementation to execute is resolved at runtime using C++'s \ac{vtable} mechanism. Driesen and H\"olzle quantify the performance overhead of this process in their paper ``The Direct Cost of Virtual Function Calls in C++'' \cite{driesenDirectCostVirtual1996}, measuring both a direct cost as a result of the \ac{vtable} indirection, and an indirect cost from precluded optimisation opportunities.
+One mechanism is runtime meta-programming, which refers to code which can introspect and manipulate its own behaviour at runtime. An example of this is monkey-patching in Python, which allows the programmatic modification of objects at runtime \cite{Hunt2023}.
+Another mechanism is late binding, which refers to resolving method calls at runtime when they are invoked, as opposed to being statically linked ahead of time. Interestingly, ahead-of-time compiled languages typically considered static such as C++ provide this dynamic behaviour in the case of polymorphism. When a method is invoked on an object in an inheritance hierarchy, the correct implementation to execute is resolved at runtime using C++'s \ac{vtable} mechanism \cite{liangUnderstandVtableAssembly}. Driesen and H\"olzle quantify the performance overhead of this process in their paper ``The Direct Cost of Virtual Function Calls in C++'' \cite{driesenDirectCostVirtual1996}, measuring both a direct cost as a result of the \ac{vtable} indirection, and an indirect cost from precluded optimisation opportunities.
 % Link
 This shows that the dynamic aspects of languages influence the details of their implementation, and the degree to which they can be optimised.
 
@@ -165,8 +165,8 @@ This shows that the dynamic aspects of languages influence the details of their 
 % Hook
 Ahead-of-time compilers rely on static mechanisms such as data-flow analysis to find valid optimisations.
 % Argument
-As they are run ahead of time, these static analyses have less information to reason about the dynamic runtime behaviour. In this dynamic case, some traditional optimisations cannot be guaranteed to be correct, and hence cannot be leveraged to improve program performance. For example, a function which is dynamically dispatched at runtime cannot be optimised through the code motion optimisation of function inlining, as the implementation which will be invoked is not known ahead of time.
-Earlier work aims to address this, for example H\"olze and Ungar's paper ``Optimizing dynamically-dispatched calls with run-time type feedback'' \cite{holzleOptimizingDynamicallydispatchedCalls1994}. The authors provide an experimental compiler implementing ``type feedback'', a profile-guided optimisation which inlines dynamically dispatched calls in object-orientated languages.
+As they are run ahead of time, these static analyses have less information to reason about the dynamic runtime behaviour. In this dynamic case, some traditional optimisations cannot be guaranteed to be correct, and hence cannot be leveraged to improve program performance. For example, H\"olze and Ungar's paper ``Optimizing dynamically-dispatched calls with run-time type feedback'' \cite{holzleOptimizingDynamicallydispatchedCalls1994} argues that a function which is dynamically dispatched at runtime cannot be optimised through the code motion optimisation of function inlining, as the implementation which will be invoked is not known ahead of time.
+The authors then aim to address this with an experimental compiler implementing ``type feedback'', a profile-guided optimisation which inlines dynamically dispatched calls in object-orientated languages. This mirrors later work on instruction specialisation by Williams et al. \cite{williamsDynamicInterpretationDynamic2010} which lead to Python's specialising adaptive interpreter \cite{pep659}.
 However, such approaches are specific to individual aspects of the language runtime, and being ahead of time can only optimise for a prediction of the runtime behaviour.
 % Link
 Furthermore, runtime behaviour may differ significantly across inputs for some workloads, making this prediction less representative of real-world behaviour.
