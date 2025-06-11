@@ -103,7 +103,7 @@ In order to infer opcode durations from the event timestamps emitted tracing fun
 % Argument
 In more recent Python versions such as CPython 3.13, aspects of the tracing infrastructure have been refactored. However, since both the API provided by the standard library and the position of the tracing logic in the evaluation loop remain the same, the procedure remains applicable to these newer versions.
 % In background (\autoref{}) we introduced the structure of python's interpreter
-Code objects in CPython are executed by the \texttt{\_PyEval\_EvalFrameDefault} function (\autoref{listing:cpython-evaluation-overview-code}). This begins with initialisation to ready for evaluation \circledbase{pairedOneLightBlue}{a}, then enters an unbounded evaluation loop \circledbase{pairedTwoDarkBlue}{b}. This loop decodes the next bytecode instruction \circledbase{pairedThreeLightGreen}{c}, then switches on it to select the appropriate logic to execute \circledbase{pairedFourDarkGreen}{d}, and repeats until an exception is thrown or the code object terminates.
+Code objects in CPython are executed by the \texttt{\_PyEval\_EvalFrameDefault} function (Listing \ref{listing:cpython-evaluation-overview-code}). This begins with initialisation to ready for evaluation \circledbase{pairedOneLightBlue}{a}, then enters an unbounded evaluation loop \circledbase{pairedTwoDarkBlue}{b}. This loop decodes the next bytecode instruction \circledbase{pairedThreeLightGreen}{c}, then switches on it to select the appropriate logic to execute \circledbase{pairedFourDarkGreen}{d}, and repeats until an exception is thrown or the code object terminates.
 % Link
 Having an understanding of the evaluation loop, we can next discuss how it is instrumented for tracing.
 

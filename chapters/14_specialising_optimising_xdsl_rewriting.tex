@@ -52,26 +52,30 @@ As such, specialisation to remove this overhead can vastly reduce the complexity
 
 \begin{figure}[H]
     \centering
-    \begin{subfigure}[b]{\textwidth}
-        \centering
-        \begin{tikzpicture}
-            \node[anchor=south west,inner sep=0] (image) at (0,0) {\includegraphics[width=\textwidth]{images/specialising_optimising_xdsl_rewriting/original_empty_create_scale.png}};
-            \node[circledstyle, fill=pairedOneLightBlue] at (6.1,1) {A};
-            \node[circledstyle, fill=pairedTwoDarkBlue] at (12.75,0.5) {B};
-        \end{tikzpicture}
-        \captionsetup{width=0.8\textwidth}
-        \caption{The default constructor has a high overhead, including checking known invariants and building empty properties.}
-        \label{fig:ubenchmark-original-instantiation-xdsl-viztracer}
-    \end{subfigure}
-    \begin{subfigure}[b]{\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{images/specialising_optimising_xdsl_rewriting/optimised_empty_create_scale.png}
-        \captionsetup{width=0.8\textwidth}
-        \caption{The same object can be constructed with significantly less logic after specialisation.}
-        \label{fig:ubenchmark-optimised-instantiation-xdsl-viztracer}
-    \end{subfigure}
-    \caption{Profiling the instantiation of an \texttt{EmptyOp} before (top) and after (bottom) specialisation with \texttt{viztracer} reveals unnecessary computation.}
+    \includegraphics[width=\textwidth]{images/specialising_optimising_xdsl_rewriting/annotated_create.drawio.pdf}
+    \captionsetup{width=0.8\textwidth}
+    \caption{.}
     \label{fig:ubenchmark-instantiation-xdsl-viztracer}
+    % \begin{subfigure}[b]{\textwidth}
+    %     \centering
+    %     \begin{tikzpicture}
+    %         \node[anchor=south west,inner sep=0] (image) at (0,0) {\includegraphics[width=\textwidth]{images/specialising_optimising_xdsl_rewriting/original_empty_create_scale.png}};
+    %         \node[circledstyle, fill=pairedOneLightBlue] at (6.1,1) {A};
+    %         \node[circledstyle, fill=pairedTwoDarkBlue] at (12.75,0.5) {B};
+    %     \end{tikzpicture}
+    %     \captionsetup{width=0.8\textwidth}
+    %     \caption{The default constructor has a high overhead, including checking known invariants and building empty properties.}
+    %     \label{fig:ubenchmark-original-instantiation-xdsl-viztracer}
+    % \end{subfigure}
+    % \begin{subfigure}[b]{\textwidth}
+    %     \centering
+    %     \includegraphics[width=\textwidth]{images/specialising_optimising_xdsl_rewriting/optimised_empty_create_scale.png}
+    %     \captionsetup{width=0.8\textwidth}
+    %     \caption{The same object can be constructed with significantly less logic after specialisation.}
+    %     \label{fig:ubenchmark-optimised-instantiation-xdsl-viztracer}
+    % \end{subfigure}
+    % \caption{Profiling the instantiation of an \texttt{EmptyOp} before (top) and after (bottom) specialisation with \texttt{viztracer} reveals unnecessary computation.}
+    % \label{fig:ubenchmark-instantiation-xdsl-viztracer}
 \end{figure}
 
 %% Describe specialisation/optimisation
@@ -345,7 +349,7 @@ These specialised implementations can then be taken as performance baselines for
 For our first benchmarks of the two frameworks, we measured the end-to-end performance of canonicalization passes applied to an \ac{ir} with many foldable constants (\autoref{sssec:experimental-workload-constant-folding}).
 % Argument
 However, canonicalization passes are fairly complex, encompassing a suite of common optimisations, many of which are not applicable to our \ac{ir} workload. This complexity is detrimental to manual specialisation, resulting in more code requiring transformation by hand.
-As such, we implement a simple pattern rewriting pass for constant folding over the addition of integers (\autoref{listing:constant-folding-impl}). This pass captures common idioms in pattern rewriting, making it a fair proxy for more complex workloads, but is also sufficiently simple to rewrite by hand into a fully specialised form.
+As such, we implement a simple pattern rewriting pass for constant folding over the addition of integers (Listing \ref{listing:constant-folding-impl}). This pass captures common idioms in pattern rewriting, making it a fair proxy for more complex workloads, but is also sufficiently simple to rewrite by hand into a fully specialised form.
 The rewriter first matches against the integer addition operation to fold \circledbase{pairedOneLightBlue}{1}, exercising operation type checks. Next, it checks the invariant of our workload that both addition operands are constant \circledbase{pairedTwoDarkBlue}{\scriptsize{2}}, exercising trait lookups. After this, it gets the value of each operand, exercising operation properties \circledbase{pairedThreeLightGreen}{\scriptsize{3}}. Finally, it replaces the matched operation with a new one, exercising the rewriting mechanism \circledbase{pairedFourDarkGreen}{\scriptsize{4}}.
 % Link
 

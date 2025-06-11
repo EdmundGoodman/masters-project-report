@@ -175,7 +175,7 @@ Stoltz et al. define constant folding as ``a well-known static compiler techniqu
 It has been leveraged for both performance and space improvements since the earliest optimising compilers. Despite this, it remains relevant even over more modern, exotic optimisations due to its simplicity, efficient implementation, and high impact on generated \ac{ir}.
 In addition to this, procedural generation of \ac{ir} which can be constant folded is simply parameterised in length (\autoref{sec:constant-folding-workload-impl}), facilitating experiments examining performance scaling.
 % Link
-We show an example \ac{ir} segment with three constants below (\autoref{listing:constant-folding-workload-example}).
+We show an example \ac{ir} segment with three constants below (Listing \ref{listing:constant-folding-workload-example}).
 
 % \vspace{2em}
 
@@ -305,7 +305,7 @@ Despite its simplicity, this initial experiment reveals a number of interesting 
 % Argument
 Firstly, the slow-down from xDSL to \ac{mlir} for the first two passes is approximately $50\times$. This provides an initial baseline for the overhead incurred by the combination of xDSL's language runtime and implementation details over the \ac{mlir} implementation.
 Secondly, the slow-down for the printer is much lower than the other two phases, at only $3\times$.
-The constant folded output is very short, containing only two \ac{ir} instructions (\autoref{listing:constant-folding-workload-folded}) for any length input of that schema. As such, the overhead of writing to the standard output is greater than the processing time for those few operations. In contrast, the logic implement parsing and canonicalisation rewrites is much longer than any fixed overhead they incur, such as the parser reading the \ac{ir} from a file.
+The constant folded output is very short, containing only two \ac{ir} instructions (Listing \ref{listing:constant-folding-workload-folded}) for any length input of that schema. As such, the overhead of writing to the standard output is greater than the processing time for those few operations. In contrast, the logic implement parsing and canonicalisation rewrites is much longer than any fixed overhead they incur, such as the parser reading the \ac{ir} from a file.
 % Link
 
 % Hook
@@ -388,6 +388,7 @@ In both \ac{mlir} and xDSL, there are two main ways an operation can be construc
 
             // Benchmark £\circledbase{pairedOneLightBlue}{\footnotesize{1}}£
             OperationState opState(unknownLoc, "testbench.empty");
+
             Operation::create(opState);
             // Benchmark £\circledbase{pairedTwoDarkBlue}{\footnotesize{2}}£
             b.create<EmptyOp>(unknownLoc);
@@ -401,6 +402,7 @@ In both \ac{mlir} and xDSL, there are two main ways an operation can be construc
         \begin{minted}[fontsize=\footnotesize,escapeinside=££]{text}
             # Benchmark £\circledbase{pairedOneLightBlue}{\footnotesize{1}}£
             EmptyOp.create()
+
             # Benchmark £\circledbase{pairedTwoDarkBlue}{\footnotesize{2}}£
             EmptyOp()
         \end{minted}
@@ -480,7 +482,7 @@ These methods are used frequently in common tasks. For example, when pattern rew
             # Benchmark
             has_trait = op.has_trait(SingleBlock)
         \end{minted}
-        \footnotesize\vspace{2em}
+        \footnotesize\vspace{3em}
         \caption{xDSL Python implementation.}
         \label{listing:ubenchmark-trait-checks-bench-xdsl}
     \end{subfigure}
@@ -615,15 +617,15 @@ Micro-benchmarks of checking traits for both implementations show a slow-down of
 % Hook
 These micro-benchmarks provide a number of insights into the baseline performance of xDSL.
 % Argument
-Firstly, we can see that xDSL's implementation incurs a performance tradeoff for the expressivity of its API, with convenient helper methods performing much less well than direct interactions with the underlying data structures. This motivates our work specialising xDSL for a single workload to elide this overhead (\autoref{chap:specialising-optimising-pattern-rewriting}).
-Secondly, we begin to quantify the performance overhead of the CPython language runtime over C++ through workloads with trivial implementations such as iterating directly over the operations in a block. From this, we can see that CPython 3.10 incurs at least a $20\times$ slowdown over C++.
+Firstly, we can see that xDSL's implementation incurs a performance trade-off for the expressivity of its API, with convenient helper methods performing much less well than direct interactions with the underlying data structures. This motivates our work specialising xDSL for a single workload to elide this overhead (\autoref{chap:specialising-optimising-pattern-rewriting}).
+Secondly, we begin to quantify the performance overhead of the CPython language runtime over C++ through workloads with trivial implementations such as instantiating empty operations. From this, we can see that CPython 3.10 incurs at least a $25\times$ slowdown over C++.
 This motivates our work examining and understanding the impact of recent optimisations to CPython such as the specialising adaptive interpreter and baseline JIT (\autoref{chap:impact-cpython-pattern-rewriting}), along with the necessary cost of dynamism required to implement Python's semantics (\autoref{chap:dynamism-pattern-rewriting}).
 % Link
 
 % Hook
-In addition to the micro-benchmarks matching ``How Slow is MLIR'' discussed in detail above, we also developed a further xDSL-only suite to instrument key functions invoked by the pattern rewriter.
+In addition to the micro-benchmarks matching those provided in ``How Slow is MLIR'', a subset of which is discussed in detail above, we also developed a further xDSL-only suite to instrument key functions invoked by the pattern rewriter.
 % Argument
-Whilst these micro-benchmarks are useful in their own right as performance measurements, they also facilitate further experiments. Their small size means they can be reasoned about at the bytecode level (\autoref{chap:profiling-bytecode}), providing useful information about the dynamism of the workload.
+While these micro-benchmarks are useful in their own right as performance measurements, they also facilitate further experiments. Their small size means they can be reasoned about at the bytecode level (\autoref{chap:profiling-bytecode}), providing useful information about the dynamism of the workload.
 % Link
 
 

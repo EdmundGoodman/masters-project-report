@@ -57,7 +57,7 @@ For example, LLVM's low-level \ac{ir} is not well suited to abstract over the hi
 % Hook
 \acf{mlir} addresses these modern challenges, providing ``compiler infrastructure for the end of Moore's law'' \cite{lattnerMLIRScalingCompiler2021a}.
 % Argument
-Its key contribution is allowing users to easily define multiple levels of abstraction supporting heterogeneous recursively nested structures, referred to as dialects. This contrasts the fixed low-level abstractions and homogeneous flat structures of LLVM \ac{ir}, which is less dynamic as a result of having a shape known at runtime. As a result of this, \ac{mlir} allows different problem domains to define their own operations and transformation passes while sharing common infrastructure. This facilitates efficiently expressing optimisations at the most appropriate abstraction level, which can be each by applied by lowering from high-level domain-specific representations to low-level hardware-specific ones. Lowering extensively leverages pattern rewriting, a declarative way to express transformations as patterns which match \ac{ir} constructs and replace them with lowered versions.
+Its key contribution is allowing users to easily define multiple levels of abstraction supporting heterogeneous recursively nested structures, referred to as dialects. This contrasts the fixed low-level abstractions and homogeneous flat structures of LLVM \ac{ir}, whose shape is known at runtime, resulting in less dynamic dispatch and control flow. As a result of this, \ac{mlir} allows different problem domains to define their own operations and transformation passes while sharing common infrastructure. This facilitates efficiently expressing optimisations at the most appropriate abstraction level, which can then each be applied, lowering from high-level domain-specific representations to low-level hardware-specific ones. Lowering extensively leverages pattern rewriting, a declarative way to express transformations as patterns which match \ac{ir} constructs and replace them with lowered versions.
 The provision of common infrastructure including documentation generation, parsing and printing logic, and location tracking further reduces the engineering effort required to develop complex optimisations and support custom hardware targets.
 \ac{mlir} is implemented in C++, providing desirable performance characteristics, but having long build times and a verbose syntax.
 % Link
@@ -75,9 +75,9 @@ These issues are partially mitigated by \ac{irdl}, ``a domain-specific language 
 xDSL is a Python-native compiler framework, originally written as a re-implementation of \ac{mlir}'s data structures and associated logic.
 % Argument
 As a result of its similar data structures and shared textual \ac{ir}, xDSL can be used as a side-kick compiler for \ac{mlir}, facilitating modular replacement of individual components of its pipeline. This is achieved with a DSL implementation in Python of \ac{irdl}.
-In contrast to \ac{mlir}, xDSL prioritises developer productivity through Python's easy-to-use syntax and fast build times, along with first-class support for user-extensibility which allows adding new operations at runtime. xDSL's implementation in Python incurs a performance cost over C++, as a consequence of the overhead of its virtual machine, and lack of support for ahead-of-time optimisations.
+In contrast to \ac{mlir}, xDSL prioritises developer productivity through Python's easy-to-use syntax and fast build times, along with first-class support for user-extensibility which allows adding new operations at runtime.
 % Link
-This trade-off has benefits for modern compiler developers, where improvements to developer productivity are critical to minimise delay for state-of-the-art workloads (\autoref{fig:compilers-lagging}). In addition to this, this thesis argues that the loss of ahead-of-time optimisations is less impactful for highly dynamic workloads such as compiler infrastructures.
+This design choice has benefits for modern compiler developers, where improvements to developer productivity are critical to minimise delay for state-of-the-art workloads (\autoref{fig:compilers-lagging}).
 
 
 \section{Dynamic languages and workloads}
@@ -109,8 +109,8 @@ This dynamic, pointer-chasing workload is inherently memory bound, having irregu
 % Hook
 Python is a high-level, dynamically typed-checked programming language, known for its readable syntax and extensive library support \cite{guidovanrossumPythonCpython2025}.
 % Argument
-The language has many implementations, from its reference implementation CPython to alternatives such as PyPy's \ac{jit} compiler \cite{thepypyteamPypyPypy2025}.
-CPython operates by compiling Python source code into a stack-based bytecode. This bytecode is executed by a virtual machine in an interpreter loop, fetching and evaluating the compiled sequence of instructions one at a time. This approach limits performance compared with static ahead-of-time compiled languages such as C++ by the overhead of the virtual machine and having fewer opportunities for ahead-of-time optimisation. However, it also provides great flexibility, supporting Python's dynamic type system and runtime meta-programming capabilities.
+The language has many implementations, from its reference implementation, CPython, to alternatives such as PyPy's \ac{jit} compiler \cite{thepypyteamPypyPypy2025}.
+CPython operates by compiling Python source code into a stack-based bytecode. This bytecode is executed by a virtual machine in an interpreter loop, fetching and evaluating the compiled sequence of instructions one at a time. This approach limits performance compared with static ahead-of-time compiled languages by the overhead of the virtual machine and having fewer opportunities for ahead-of-time optimisation. However, it also provides great flexibility, supporting Python's dynamic type system and runtime meta-programming capabilities.
 % Link
 The Faster CPython project is an ongoing effort to improve the performance of Python by applying techniques such as adaptive optimisation and \ac{jit} compilation.
 When improving the performance of a language implementation, it is critical to have a suite of programs to measure progress. In Python, this is provided by PyPerformance, ``an authoritative source of benchmarks for all Python implementations'' \cite{collinwinterPythonPyperformance2025}.
@@ -134,7 +134,7 @@ While \acf{jit} compilation can refer to any program translation occurring at ru
 % Argument
 Compilation during runtime exposes information from actual program behaviour which is not available to traditional ahead-of-time compilers.
 % Link
-This allows \ac{jit} compilers to effectively optimise the generated machine code, and unblocks the optimisation of dynamic runtimes for which there is insufficient information to optimise ahead-of-time.
+This allows \ac{jit} compilers to optimise the generated machine code, and unblocks the optimisation of dynamic runtimes for which there is insufficient information to optimise ahead-of-time.
 
 %% Motivation
 % Hook
@@ -154,6 +154,6 @@ Instead of compiling code from scratch at runtime, a library of machine code ste
 In addition to generating machine code on-the-fly, runtime information can be used to adapt program execution to the current workload.
 % Argument
 A significant overhead in the performance of dynamically typed languages is checking types at runtime, which is required to select the matching operation implementation for the type.
-Whilst this type information cannot be known ahead of time in dynamically typed languages, information collected at runtime can be used to optimised the type-checking process. This adaptive optimisation approach relies on the assumption that if a variable has had a fixed type for a sufficient span of time previously, it is likely that it will have the same type in future. For example, whilst a variable being used as an integer counter in a loop can take any value, if its type in the earlier iterations has always been an integer, it is likely to remain an integer throughout later iterations.
+While this type information cannot be known ahead of time in dynamically typed languages, information collected at runtime can be used to optimised the type-checking process. This adaptive optimisation approach relies on the assumption that if a variable has had a fixed type for a sufficient span of time previously, it is likely that it will have the same type in future. For example, while a variable being used as an integer counter in a loop can take any value, if its type in the earlier iterations has always been an integer, it is likely to remain an integer throughout later iterations.
 % Link
 In an interpreted language, this assumption can be leveraged to replace general instructions with faster, specialised variants. A concrete implementation of this is Python's specialising adaptive interpreter, discussed in \autoref{sec:specialising-adaptive-interpreter}.
