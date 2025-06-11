@@ -52,11 +52,11 @@ As such, specialisation to remove this overhead can vastly reduce the complexity
 
 \begin{figure}[H]
     \centering
-        \begin{tikzpicture}
-            \node[anchor=south west,inner sep=0] (image) at (0,0) {\includegraphics[width=\textwidth]{images/specialising_optimising_xdsl_rewriting/annotated_create.drawio.pdf}};
-            \node[circledstyle, fill=pairedOneLightBlue] at (6.1,1.75) {A};
-            \node[circledstyle, fill=pairedTwoDarkBlue] at (12.6,1.25) {B};
-        \end{tikzpicture}
+    \begin{tikzpicture}
+        \node[anchor=south west,inner sep=0] (image) at (0,0) {\includegraphics[width=\textwidth]{images/specialising_optimising_xdsl_rewriting/annotated_create.drawio.pdf}};
+        \node[circledstyle, fill=pairedOneLightBlue] at (6.1,1.75) {A};
+        \node[circledstyle, fill=pairedTwoDarkBlue] at (12.6,1.25) {B};
+    \end{tikzpicture}
     \captionsetup{width=0.8\textwidth}
     \caption{The unspecialised \texttt{EmptyOp} constructor (top) has a high overhead, including checking known invariants and building empty properties. This overhead can be avoided through specialisation to construct the same operation (bottom).}
     \label{fig:ubenchmark-instantiation-xdsl-viztracer}
@@ -160,27 +160,31 @@ By examination of its emitted bytecode (Listing \ref{listing:bytecode-profiles-o
 % Hook
 The second micro-benchmark discussed involved checking traits on operations, and was measured to perform $80\times$ worse in xDSL than \ac{mlir}.
 % Argument
-Similarly to the operation instantiation micro-benchmark, this slow-down comes as a result of a high proportion of method's logic not being required by the core functionality (\autoref{fig:ubenchmark-hastrait-original-viztracer}). In this case, this logic improves the expressivity of the API, supporting both concrete objects and types as arguments, along with handling the edge case of unregistered operations. However, this logic lies on the hot path of execution, and again these properties are known as runtime invariants. As such, specialisation can again be leveraged to remove this implementation overhead (\autoref{fig:ubenchmark-hastrait-optimised-viztracer}).
+Similarly to the operation instantiation micro-benchmark, this slow-down comes as a result of a high proportion of method's logic not being required by the core functionality (\autoref{fig:ubenchmark-hastrait-viztracer}, top trace). In this case, this logic improves the expressivity of the API, supporting both concrete objects and types as arguments, along with handling the edge case of unregistered operations. However, this logic lies on the hot path of execution, and again these properties are known as runtime invariants. As such, specialisation can again be leveraged to remove this implementation overhead (\autoref{fig:ubenchmark-hastrait-viztracer}, bottom trace).
 % Link
 
 \begin{figure}[H]
     \centering
-    \begin{subfigure}[b]{\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{images/specialising_optimising_xdsl_rewriting/original_hastrait_scale.png}
-        \captionsetup{width=0.8\textwidth}
-        \caption{\mintinline{python}{issubclass} and \mintinline{python}{isinstance} checks, type \mintinline{python}{cast}ing, and constructing iterators constitutes over three quarters of xDSL's \mintinline{python}{has_trait}s runtime.}
-        \label{fig:ubenchmark-hastrait-original-viztracer}
-    \end{subfigure}
-    \begin{subfigure}[b]{\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{images/specialising_optimising_xdsl_rewriting/optimised_hastrait_scale.png}
-        \captionsetup{width=0.8\textwidth}
-        \caption{Specialisation to narrow the interface and optimisation to avoid extraneous work on hot paths can significantly accelerate \mintinline{python}{has_trait}.}
-        \label{fig:ubenchmark-hastrait-optimised-viztracer}
-    \end{subfigure}
-    \caption{Profiling the \texttt{has\_trait} method before (top) and after (bottom) specialisation with \texttt{viztracer} reveals unnecessary computation.}
+    \includegraphics[width=\textwidth]{images/specialising_optimising_xdsl_rewriting/annotated_has_trait.drawio.pdf}
+    \captionsetup{width=0.8\textwidth}
+    \caption{\mintinline{python}{issubclass} and \mintinline{python}{isinstance} checks, type \mintinline{python}{cast}ing, and constructing iterators constitutes over three quarters of xDSL's unspecialised \mintinline{python}{has_trait}s runtime (top). Specialisation to narrow the interface and optimisation to avoid extraneous work on hot paths can significantly accelerate \mintinline{python}{has_trait} (bottom).}
     \label{fig:ubenchmark-hastrait-viztracer}
+    % \begin{subfigure}[b]{\textwidth}
+    %     \centering
+    %     \includegraphics[width=\textwidth]{images/specialising_optimising_xdsl_rewriting/original_hastrait_scale.png}
+    %     \captionsetup{width=0.8\textwidth}
+    %     \caption{\mintinline{python}{issubclass} and \mintinline{python}{isinstance} checks, type \mintinline{python}{cast}ing, and constructing iterators constitutes over three quarters of xDSL's \mintinline{python}{has_trait}s runtime.}
+    %     \label{fig:ubenchmark-hastrait-original-viztracer}
+    % \end{subfigure}
+    % \begin{subfigure}[b]{\textwidth}
+    %     \centering
+    %     \includegraphics[width=\textwidth]{images/specialising_optimising_xdsl_rewriting/optimised_hastrait_scale.png}
+    %     \captionsetup{width=0.8\textwidth}
+    %     \caption{Specialisation to narrow the interface and optimisation to avoid extraneous work on hot paths can significantly accelerate \mintinline{python}{has_trait}.}
+    %     \label{fig:ubenchmark-hastrait-optimised-viztracer}
+    % \end{subfigure}
+    % \caption{Profiling the \texttt{has\_trait} method before (top) and after (bottom) specialisation with \texttt{viztracer} reveals unnecessary computation.}
+    % \label{fig:ubenchmark-hastrait-viztracer}
 \end{figure}
 
 %% Describe specialisation/optimisation
@@ -189,7 +193,7 @@ Examining the implementation of this micro-benchmark (Listing \ref{listing:ubenc
 % Argument
 The execution trace shows that checking whether an operation is unregistered $\circledbase{pairedOneLightBlue}{1}$ accounts for over one third of the micro-benchmark runtime. Through specialisation under the runtime invariant that all operations are registered, this check can be removed -- reducing computation. Furthermore, this inspires a general optimisation to xDSL to avoid this check by overloading \mintinline{python}{UnregisteredOp.has_trait} rather than checking on all code paths.
 In addition to this, function invocation in Python incurs a performance cost due to the overhead of modifying the stack frame. As such, inlining the call to \mintinline{python}{get_trait} \circledbase{pairedTwoDarkBlue}{2} is another beneficial specialisation.
-Finally, argument types are dynamically checked \circledbase{pairedThreeLightGreen}{3} and cast \circledbase{pairedFourDarkGreen}{4}, incurring a performance overhead. However, the type of these arguments are runtime invariants of the caller, so the checks can be specialised away.
+Finally, argument types are dynamically checked \circledbase{pairedThreeLightGreen}{3} and cast \circledbase{pairedFourDarkGreen}{4}, incurring\newpage a performance overhead. However, the type of these arguments are runtime invariants of the caller, so the checks can be specialised away.
 % Link
 
 \begin{figure}[H]
