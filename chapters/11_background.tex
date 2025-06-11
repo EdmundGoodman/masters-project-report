@@ -88,7 +88,7 @@ This design choice has benefits for modern compiler developers, where improvemen
 Programming language design is a game of trade-offs, with a wide variety of design choices incurring differing benefits and costs.
 % Argument
 One such choice is the degree of dynamism, defined by Williams et al. as ``allowing properties of programs to be defined at run-time'' \cite{williamsDynamicInterpretationDynamic2010}. As such, static languages fix properties ahead of time, whereas dynamic languages offer more flexibility at runtime.
-The literature of programming language design discusses these trade-offs for features including dynamic dispatch and runtime meta-programming (\autoref{sec:impact-dynamism-related-work}).
+These trade-offs for features including dynamic dispatch and runtime meta-programming are discussed in the literature (\nameref{chap:related-work}, \autoref{sec:impact-dynamism-related-work}).
 % Link
 
 %% Dynamism of workloads
@@ -112,7 +112,8 @@ The language has many implementations, from its reference implementation, CPytho
 CPython operates by compiling Python source code into a stack-based bytecode. This bytecode is executed by a virtual machine in an interpreter loop, fetching and evaluating the compiled sequence of instructions one at a time. This approach limits performance compared with static ahead-of-time compiled languages by the overhead of the virtual machine and having fewer opportunities for ahead-of-time optimisation. However, it also provides great flexibility, supporting Python's dynamic type system and runtime meta-programming capabilities.
 % Link
 The Faster CPython project is an ongoing effort to improve the performance of Python by applying techniques such as adaptive optimisation and \ac{jit} compilation.
-When improving the performance of a language implementation, it is critical to have a suite of programs to measure progress. In Python, this is provided by PyPerformance, ``an authoritative source of benchmarks for all Python implementations'' \cite{collinwinterPythonPyperformance2025}.
+% When improving the performance of a language implementation, it is critical to have a suite of programs to measure progress.
+For such efforts, it is critical to have a suite of programs with which to benchmark performance. In Python, this is provided by PyPerformance, ``an authoritative source of benchmarks for all Python implementations'' \cite{collinwinterPythonPyperformance2025}.
 
 
 

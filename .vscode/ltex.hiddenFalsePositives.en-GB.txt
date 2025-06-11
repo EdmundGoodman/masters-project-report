@@ -7,3 +7,5 @@
 {"rule":"PASSIVE_VOICE","sentence":"^\\QThe term was coined by Saavedra et al. in their 1995 paper \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q “Performance Characterization of Optimizing Compilers”.\\E$"}
 {"rule":"THREE_NN","sentence":"^\\QSimilarly to operation instantiation, there are three ways operations in a block can be traversed: directly iterating over the internal operation array pairedOneLightBlue 1; directly iterating over the iterable provided by the block pairedTwoDarkBlue 2; and using the recursive walk helper method pairedThreeLightGreen 3 (Listing \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q).\\E$"}
 {"rule":"THREE_NN","sentence":"^\\QPython performance measurement and optimisation.\\E$"}
+{"rule":"PUNCTUATION_PARAGRAPH_END","sentence":"^\\QMechanism MLIR [ns] xDSL [ns] \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q Create \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q Build \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q \\E(?:Dummy|Ina|Jimmy-)[0-9]+$"}
+{"rule":"PUNCTUATION_PARAGRAPH_END","sentence":"^\\QMLIR [ns] xDSL [ns] \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q \\E(?:Dummy|Ina|Jimmy-)[0-9]+$"}

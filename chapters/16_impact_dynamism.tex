@@ -5,8 +5,8 @@
 % Hook
 A key difference between the Python and C++ runtimes is their degree of dynamism.
 % Argument
-\ac{mlir}'s C++ runtime incurs overhead when dynamically dispatching functions (\autoref{fig:narrative}, \circledbase{pairedThreeLightGreen}{3}), which is worsened by prohibiting ahead-of-time performance optimisations.
-In contrast, Python dynamically evaluates each bytecode operation individually in its interpreter loop, incurring an overhead each time. % OLD: In contrast, almost every bytecode operation evaluated by the Python interpreter is dynamic, each incurring an overhead.
+The C++ runtime incurs overhead when dynamically dispatching functions (\autoref{fig:narrative}, \circledbase{pairedThreeLightGreen}{3}), which is worsened by prohibiting ahead-of-time performance optimisations.
+In contrast, Python dynamically evaluates each bytecode operation individually in its interpreter loop, incurring an overhead each time.
 As such, we expect the difference in performance between language runtimes (\autoref{fig:narrative}, \circledbase{pairedFourDarkGreen}{4}) to be smaller for more dynamic workloads.
 % Link
 In this chapter, we quantify this difference by examining synthetic examples within static and dynamic language runtimes. We then apply this information to understand the difference in performance between pattern rewriting workloads using xDSL and \ac{mlir} through the lens of overhead incurred by dynamism.
@@ -17,11 +17,11 @@ In this chapter, we quantify this difference by examining synthetic examples wit
 
 %% Introduce the issue, and where it is in the micro-benchmark
 % Hook
-In static languages such as C++, the exact address function calls can often be resolved at compile time. In contrast, dynamic languages such as Python must resolve the address of each function call at runtime, incurring an overhead.
+In static languages such as C++, the function calls can often be resolved at compile time. In contrast, dynamic languages such as Python must resolve the address of each function call at runtime, incurring an overhead.
 % Also optimisation boundary and stuff
 % Argument
 However, the address of some function calls can only be known at runtime, for example as a result of object polymorphism. This address then must be resolved during execution by the language runtime in both static and dynamic languages. Furthermore, this information being known only at runtime presents an optimisation boundary, precluding common rewrites such as function inlining which contribute to the performance of ahead-of-time compiled languages.
-We argue further that the difference between static and dynamic languages is reduced for highly dynamic workloads with insufficient information to resolve function addresses ahead of time.
+We argue further that the difference between static and dynamic languages is reduced for workloads with insufficient information to resolve function addresses ahead of time.
 % Link
 We justify this by examining the mechanisms of dynamic dispatch in Python and C++, and contrasting them through both synthetic examples and our micro-benchmark suite.
 
@@ -100,7 +100,7 @@ int main(int argc, char *argv[]) {
 % Hook
 This synthetic example exercises polymorphic methods which must be resolved dynamically using a \ac{vtable} at runtime \circledbase{pairedFourDarkGreen}{\scriptsize{a}}, along with methods which can be statically resolved ahead of time during compilation \circledbase{pairedTwoDarkBlue}{\scriptsize{b}}.
 % Argument
-A challenge when constructing this workload is providing data whose value is known only at runtime. We implement this by taking arguments from the command line \circledbase{pairedNegOneLightGray}{\scriptsize{c}}, as opposed to defining static variables which the compiler could reason about to inform ahead of time optimisations. This is necessary to exercise dynamic dispatch of functions, which requires a polymorphic object whose type is only known at runtime \circledbase{pairedNegTwoDarkGray}{\scriptsize{d}}. Since this simple synthetic example is amenable to compiler optimisations such as function inlining, we use variable attributes to hint to the compiler that certain methods should not be inlined \circledbase{pairedThreeLightGreen}{\scriptsize{e}}.
+A challenge when constructing this workload is providing data whose value is known only at runtime. We implement this by taking arguments from the command line \circledbase{pairedNegOneLightGray}{\scriptsize{c}}, as opposed to defining static variables which the compiler could reason about to inform ahead of time optimisations. This is necessary to exercise dynamic dispatch of functions, which requires a polymorphic object whose type is known only at runtime \circledbase{pairedNegTwoDarkGray}{\scriptsize{d}}. Since this simple synthetic example is amenable to compiler optimisations such as function inlining, we use variable attributes to hint to the compiler that certain methods should not be inlined \circledbase{pairedThreeLightGreen}{\scriptsize{e}}.
 % Link
 
 \begin{figure}[H]
@@ -134,9 +134,9 @@ Despite both these direct and indirect costs, Python function invocation remains
 
 % %% Where does this occur?
 % Hook
-Functions which can only be dispatched at runtime are one way a workload can be dynamic.
+Functions which can only be dispatched at runtime are one way a workload can exhibit dynamism.
 % Argument
-Having a high proportion of such functions is one way in which user-extensible compiler frameworks are highly dynamic. For example, since the Operation objects composing the \ac{ir} being processed are necessarily only known at runtime, their methods such as verification and printing must be dispatched dynamically.
+An example of this in the domain of compiler frameworks is the \texttt{Operation} objects composing the \ac{ir} being processed are necessarily only known at runtime, their methods such as verification and printing must be dispatched dynamically.
 In other cases, \ac{mlir} is optimised to avoid this cost. For example, the \mintinline{text}{TypeID::get<Traits>} function uses template meta-programming to monomorphise the generic function calls. However, this approach is only applicable when there is sufficient information at runtime.
 % Link
 
@@ -159,7 +159,7 @@ As before, we justify this be examining the details of this mechanism, using our
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.75\textwidth]{images/impact_dynamism/dynamic_cast.pdf}
-    \caption{Both checking and casting LLVM \ac{rtti} have a similar runtime cost, constrasting Python, which is $10\times$ slower for checking and $25\times$ slower for casting.}
+    \caption{Both checking and casting LLVM \ac{rtti} have a similar runtime cost, contrasting Python, which is $10\times$ slower for checking and $25\times$ slower for casting.}
     \label{figure:impact-rtti}
 \end{figure}
 
@@ -212,7 +212,7 @@ However, the implementation of the \texttt{cast} function is the identity, doing
 % Hook
 From the previous section we can see that dynamism incurs overhead and precludes ahead of time optimisations.
 % Argument
-This narrows the performance gap between dynamic and static languages for the implementation of this infrastructure, because the cost traditionally associated with Python's dynamic interpreted runtime is lessened by the commensurate dynamism of the user-extensible compiler framework workload. Contrasting the $60,000\times$ slowdown from C++ implementations of structured workloads such as \ac{gemm} \cite{emerybergerPythonPerformanceMatters2022}, specialised implementations of real-world xDSL workloads demonstrate Python can close this gap to only $10\times$.
+This narrows the performance gap between dynamic and static languages for the implementation of this infrastructure, because the cost traditionally associated with Python's dynamic interpreted runtime is lessened by the commensurate dynamism of the user-extensible compiler framework workload. Contrasting the $60,000\times$ slowdown claimed of C++ implementations of structured workloads such as \ac{gemm} \cite{emerybergerPythonPerformanceMatters2022}, specialised implementations of real-world xDSL workloads demonstrate Python can close this gap to only $10\times$.
 In combination with developer productivity being critical for modern compiler engineers to achieve their performance goals (\autoref{chap:background}), this narrowed gap challenges the status quo of \ac{mlir} being implemented static, ahead-of-time compiled C++.
 Instead, xDSL's approach of using Python improves developer productivity with its expressive syntax and fast build times, empowering fast prototypes during development.
 % Link

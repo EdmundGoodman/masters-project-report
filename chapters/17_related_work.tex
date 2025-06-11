@@ -58,7 +58,7 @@ This talk aimed to quantify the feeling in the LLVM community that \ac{mlir} inc
 The presenters first discuss the implementation details of \ac{mlir}, including the design choices made to match common workloads.
 Next, they provide a set of micro-benchmarks for key functionality provided by \ac{mlir}, along with traditional benchmarks for constant folding and loop unrolling workloads. For the micro-benchmarks and constant folding workloads, \ac{mlir} is approximately four times slower than traditional LLVM. However, \ac{mlir}'s more expressive \ac{ir} representation yields an eighty-eight times speed up over LLVM for loop unrolling.
 % Link
-While these results provides valuable insights into \ac{mlir}'s performance characteristics, further research is needed to fully understand the trade-offs between expressiveness and efficiency.
+% While these results provides valuable insights into \ac{mlir}'s performance characteristics, further research is needed to fully understand the trade-offs between expressiveness and efficiency.
 
 %% General compiler performance
 % Hook
@@ -88,7 +88,7 @@ Secondly, having performance measurements and instrumentation for both \ac{mlir}
 Driven by Python's immense popularity, significant research effort has been expended developing tools and techniques to characterise its performance.
 % Argument
 % Link
-This section discusses a relevant subset of these tools and techniques, and contrasts them with our novel contributions.
+This section discusses a relevant subset of these approaches, and contrasts them with our novel contributions.
 
 
 \subsection{Measuring application performance in Python}
@@ -113,7 +113,7 @@ A key contribution of our research is our application of these tools to produce 
 % Argument
 In addition to the research contribution of these measurements themselves, our work further supports ongoing research using the xDSL framework by providing re-usable performance benchmarks and associated tooling to measure performance.
 % Link
-However, sometimes measurements with finer than end-to-end granularity are required to characterise performance properties more deeply. As such, our tooling also provides a simple user interface for applying performance profilers to these benchmarks.
+However, sometimes measurements with finer than end-to-end granularity are required. As such, our tooling also provides a simple user interface for applying performance profilers to these benchmarks.
 
 
 \subsection{Profiling to understand Python's performance}
@@ -138,7 +138,7 @@ We fill this gap in the existing provision with ByteSight, a Python-native traci
 % Argument
 ByteSight extends existing work outputting and rewriting bytecode sequences \cite{0xecCodingReversingHacking2017} \cite{clementrouaultUnderstandingPythonExecution} \cite{nedbatchelderWickedHackPython2008}, providing an easily installable package with the novel capability of performance profiling individual bytecode instructions.
 % Link
-This contribution also unblocks other work in this thesis, facilitating close examination of specialised implementations and providing information about the performance of dynamic bytecode instructions.
+This contribution also unblocks other work in this thesis, facilitating close examination of specialised implementations and providing information about the performance of individual dynamic bytecode instructions.
 
 
 

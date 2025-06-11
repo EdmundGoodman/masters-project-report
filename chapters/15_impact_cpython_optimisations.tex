@@ -65,7 +65,7 @@ The specialising adaptive interpreter's documentation claims a speedup of $10\%$
 % Of these benchmarks, the one with the greatest improvement is \texttt{scimark\_monte\_carlo}, with a $66\%$ speedup. The implementation of this benchmark
 % \footnote{\scriptsize{\url{https://github.com/python/pyperformance/blob/ec9e29/.../bm_scimark/run\_benchmark.py\#L201}}}
 % Link
-This is substantiated by an ablation of the feature across the previously discussed real-world workload and micro-benchmarks.
+This is substantiated by an ablation of the feature across the both previously discussed real-world constant folding workload and micro-benchmarks.
 
 
 \begin{table}[H]
@@ -105,7 +105,7 @@ This speedup is greater than the $1.26\times$ recorded across the PyPerformance 
 Since the specialising adaptive interpreter works by quickening highly dynamic instructions into specialised versions, this demonstrates that xDSL as a proxy for user-extensible compiler framework workloads is more dynamic than the baseline of PyPerformance workloads. From this proxy measurement, we hypothesise that user-extensible compiler framework workload is a highly dynamic one, motivating our later quantification of this (\autoref{chap:dynamism-pattern-rewriting}).
 % OLD: Since the specialising adaptive interpreter works by quickening highly dynamic instructions into specialised versions, this demonstrates that user-extensible compiler framework workloads are more dynamic than the baseline of PyPerformance workloads.
 The documentation of PyPerformance states ``the focus is on real-world benchmarks, rather than synthetic benchmarks, using whole applications when possible.'' \cite{collinwinterPythonPyperformance2025}, further widening this conclusion to user-extensible compiler framework workloads being more dynamic than the average of a set workload representative of the real-world use of Python.
-In addition to this, the specialised versions of each workload yield a greater speedup after applying the manual specialisation process described in \autoref{chap:specialising-optimising-pattern-rewriting}. This shows a further benefit of the manual specialisation process in revealing optimisation opportunities by the language runtime.
+In addition to this, the specialised versions of each workload yield a greater speedup after applying the manual specialisation process described in \autoref{chap:specialising-optimising-pattern-rewriting}. This shows a further benefit of specialisation in revealing optimisation opportunities by the language runtime.
 
 %% TODO: Not enough space to include the listing needed to explain this!
 % By examining the instructions emitted by these workloads using ByteSight with adaptive instructions enabled, we can see that...

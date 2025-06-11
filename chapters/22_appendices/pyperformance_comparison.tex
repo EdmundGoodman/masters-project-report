@@ -2,13 +2,13 @@
 \label{chap:pyperformance-version-comparison}
 
 % Hook
-The following section describes the procedure and provides the raw results used to evaluate the speedups between CPython versions.
+The following section describes the procedure and provides the raw results used to evaluate the speed-ups between CPython versions.
 % Argument
 Each of the CPython versions was compiled from source with the \texttt{--enable-optimizations} and \texttt{--with-lto} configuration flags. This compilation was performed on the experimental machine (detailed in \autoref{ssec:experimental-setup}) to avoid issues with cross-compilation.
-The PyPerformance tool runs a suite of benchmarks, each resulting in their own speedup value (tabulated for each version comparison in Tables \ref{listing:pyperformance-results-310-311}, \ref{listing:pyperformance-results-311-313}, and \ref{listing:pyperformance-results-313-313-jit}). These speedup values are aggregated into a single speedup value as the geometric mean. %, using a bash command (Listing \ref{listing:bash-geomean-pyperformance}).
+The PyPerformance tool runs a suite of benchmarks, each resulting in their own speed-up value (tabulated for each version comparison in Tables \ref{listing:pyperformance-results-310-311}, \ref{listing:pyperformance-results-311-313}, and \ref{listing:pyperformance-results-313-313-jit}). These speed-up values are aggregated into a single speed-up value as the geometric mean. %, using a bash command (Listing \ref{listing:bash-geomean-pyperformance}).
 A geometric mean is used because it is less skewed by outlying data. % TODO: Weights better than arithmetic for this use case + source
 % Link
-The calculated speedups are shown in the main body of the thesis (\autoref{tab:faster-cpython}).
+The calculated speed-ups are shown in the main body of the thesis (\autoref{tab:faster-cpython}).
 
 \vspace{2em}
 

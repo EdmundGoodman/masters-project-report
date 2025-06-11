@@ -33,7 +33,7 @@ An important component of our experimental suite is micro-benchmarks, measuring 
 Re-using these micro-benchmarks for specialisation allows the isolation of specific dynamic language features, and further provides a mechanism to precisely measure the impact of specialisation. % Their small size makes them tractable first targets for manual specialisation and optimisation, with the performance impact of this process easily characterised by repeating their measurement.
 By manually examining the traces of their execution, we can identify and eliminate any unnecessary computation in the current implementation.
 % Link
-Having done this, we re-run the micro-benchmarks to quantify the performance of the specialised implementation, facilitating comparison of the language runtime only for user-extensible compiler framework workloads.
+Having done this, we re-run the micro-benchmarks to quantify the performance of the specialised implementation, facilitating comparison of the language runtime only for  compiler framework workloads.
 
 
 \subsection{Operation instantiation}
@@ -449,7 +449,7 @@ Having constructed these implementations, we can follow the same specialisation 
 
 %% What does specialisation mean in this context (inlining/eliding/...)
 % Link
-Although our constant folding pass is less intricate than existing passes such as canonicalisation, it is still much more complex than any of the above micro-benchmarks (\autoref{fig:constant-fold-original-viztracer}).
+Although our constant folding pass is less intricate than existing passes such as canonicalization, it is still much more complex than any of the above micro-benchmarks (\autoref{fig:constant-fold-original-viztracer}).
 % As such, there are many more opportunities for the specialisation of its implementation.
 % Argument
 Instead of one or two helper functions in xDSL's API, aspects of the pattern rewriter such as replacing the matched operation have a deep call stack, invoking methods to set many aspects of the \ac{ir}'s object representation.
@@ -491,9 +491,10 @@ Through specialising the constant folding implemenation, we achieve a $8\times$ 
 However, this performance uplift comes at the cost of ease of implementation, increasing the constant folding implementation length by $7\times$.
 As with the specialised micro-benchmarks, we can leverage our novel bytecode profiling tool to explain this improvement in terms of dispatched bytecode instructions, with the workload dropping from $5465$ to $977$ instructions required to implement its functionality.
 By examining the implementation and its emitted bytecode instructions, we are confident that it is close to optimal for the workload within the context of xDSL's data structures.
-In combination with the modifications made to \ac{mlir} to similarly avoid extraneous computation, these two implementations are both directly comparable and complex enough to be representative of real-world workloads. Comparison cannot be made with the unmodified version, as \ac{mlir}'s implementation of pattern rewriting applies constant folding within the framework machinery, clobbering any user-defined constant folding pass.
-% Link
+In combination with the modifications made to \ac{mlir} to similarly avoid extraneous computation, these two implementations are both directly comparable and complex enough to be representative of real-world workloads.
 This facilitates their later use for exploring the impact of dynamism on such workloads.
+% Link
+Comparison cannot be made with the unmodified version, as \ac{mlir}'s implementation of pattern rewriting applies constant folding within the framework machinery, clobbering any user-defined constant folding pass.
 
 % TODO? Further weaknesses of workload so large hard to reason about and MLIR itself has implementation details adding overhead -- but does demonstrate xDSL can be improved and lower bound C++ performance
 

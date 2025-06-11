@@ -28,7 +28,8 @@ ByteSight, our novel tool for the performance profiling of CPython bytecode, add
 ByteSight is a tracing profiler which operates on the bytecode level of the Python interpreter. It is implemented natively in Python using only the standard library, and its source code is available under the MIT licence on GitHub.\ifsubmission\else\footnote{\scriptsize{\url{https://github.com/EdmundGoodman/bytesight}}}\fi
 It does not require patches to Python's language implementation. This makes it portable, robust across language versions, and simple to install from the \acf{pypi}.
 % Link
-In this chapter, we discuss the approach and the challenges of its implementation, along with providing examples of its use.
+In this chapter, we discuss its implementation and provide examples of its use.
+% In this chapter, we discuss the approach and the challenges of its implementation, along with providing examples of its use.
 
 
 \section{Implementation}
@@ -105,7 +106,7 @@ In more recent Python versions such as CPython 3.13, aspects of the tracing infr
 % In background (\autoref{}) we introduced the structure of python's interpreter
 Code objects in CPython are executed by the \texttt{\_PyEval\_EvalFrameDefault} function (Listing \ref{listing:cpython-evaluation-overview-code}). This begins with initialisation to ready for evaluation \circledbase{pairedOneLightBlue}{a}, then enters an unbounded evaluation loop \circledbase{pairedTwoDarkBlue}{b}. This loop decodes the next bytecode instruction \circledbase{pairedThreeLightGreen}{c}, then switches on it to select the appropriate logic to execute \circledbase{pairedFourDarkGreen}{d}, and repeats until an exception is thrown or the code object terminates.
 % Link
-Having an understanding of the evaluation loop, we can next discuss how it is instrumented for tracing.
+Having an understanding of the evaluation loop, we can next discuss how it is instrumented. % for tracing.
 
 \begin{figure}[H]
     \centering
