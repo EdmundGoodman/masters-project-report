@@ -4,6 +4,6 @@ The LaTeX source code for my Masters project report, in partial requirement for 
 
 <p align="center" style="width: 100%;">
 <a href="https://github.com/EdmundGoodman/masters-project-report/releases/download/moodle-submission/edjg2-project-1.pdf">
-<img src="https://github.com/EdmundGoodman/masters-project-report/blob/main/images/project-cover.png?raw=true" style="width: 60%;">
+<img src="https://github.com/EdmundGoodman/masters-project-report/blob/main/images/project-cover.png?raw=true" style="width: 60%; border: 1px solid #000;">
 </a>
 </p>
